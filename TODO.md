@@ -91,11 +91,11 @@ Urutan ini disusun berdasarkan prioritas P0 → P8 dari brief, karena tiap tahap
 
 ## TAHAP 5 — Bukti Onchain (P5)
 
-- [ ] Tulis kontrak `DecisionRegistry.sol` (custom, lihat §3.5)
-- [ ] Deploy `DecisionRegistry.sol` ke testnet Robinhood Chain, catat alamatnya
-- [ ] Buat logic: serialize keputusan (JSON) → hash `keccak256` → panggil `commitDecision(hash)` via Safe SDK dari server
-- [ ] Simpan hasilnya ke database: `decision_hash`, `transaction_hash`, `chain_id`, `contract_address`, `block_number`, `timestamp`
-- [ ] Buat tombol/link "Verify Onchain" yang mengarah ke `robinhoodchain.blockscout.com/tx/<hash>`
+- [x] Tulis kontrak `DecisionRegistry.sol` (custom, lihat §3.5)
+- [x] Deploy `DecisionRegistry.sol` ke testnet Robinhood Chain, catat alamatnya
+- [x] Buat logic: serialize keputusan (JSON) → hash `keccak256` → panggil `commitDecision(hash)` via Safe SDK dari server
+- [x] Simpan hasilnya ke database: `decision_hash`, `transaction_hash`, `chain_id`, `contract_address`, `block_number`, `timestamp`
+- [x] Buat tombol/link "Verify Onchain" yang mengarah ke `robinhoodchain.blockscout.com/tx/<hash>`
 
 > **💡 Tips:**
 > - Pastikan Safe di kontrak ini **hanya** boleh memanggil `DECISION_REGISTRY_CONTRACT_ADDRESS` dan `IDENTITY_REGISTRY_CONTRACT_ADDRESS` — bukan kontrak sembarangan.

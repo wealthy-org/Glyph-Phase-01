@@ -15,6 +15,7 @@ import {
 import { evaluateAgentTradeProposal } from "@/lib/policy";
 import { openSimulatedPosition } from "@/lib/portfolio";
 import { getTreasurySummary } from "@/lib/treasury";
+import { commitDecisionOnchain } from "@/lib/onchain/registry";
 import { SynthesizedResearch } from "@/types/market";
 
 export interface DecisionRunResult {
@@ -28,6 +29,9 @@ export interface DecisionRunResult {
   tradeNumber?: string;
   runId: string;
   decision: GlyphDecisionOutput;
+  decisionHash?: string;
+  transactionHash?: string;
+  explorerUrl?: string;
 }
 
 /**
@@ -270,7 +274,15 @@ export async function executeGlyphDecisionCycle(
     });
   }
 
-  // 7. Observability Trace (Brief §25, §3.7)
+  // 7. Commit Decision Hash Onchain (Brief §12, §3.5)
+  let onchainResult = null;
+  try {
+    onchainResult = await commitDecisionOnchain(decisionRecord.id);
+  } catch (err) {
+    console.warn(`[DecisionEngine] Onchain commit warning:`, err);
+  }
+
+  // 8. Observability Trace (Brief §25, §3.7)
   const agentRun = await prisma.agentRun.create({
     data: {
       agentId: agent.id,
@@ -282,6 +294,7 @@ export async function executeGlyphDecisionCycle(
       decision: decision as any,
       policyResult: policyResult.policyResult,
       tradeId,
+      transactionHash: onchainResult?.transactionHash,
     },
   });
 
@@ -296,5 +309,8 @@ export async function executeGlyphDecisionCycle(
     tradeNumber,
     runId: agentRun.id,
     decision,
+    decisionHash: onchainResult?.decisionHash,
+    transactionHash: onchainResult?.transactionHash,
+    explorerUrl: onchainResult?.explorerUrl,
   };
 }
