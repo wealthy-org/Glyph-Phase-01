@@ -5,6 +5,7 @@ import Link from "next/link";
 import { CURRENT_THESIS } from "@/data/glyph";
 import { Button } from "@/components/ui/button";
 import { ArrowUpRight, ShieldAlert, CheckCircle2 } from "lucide-react";
+import { motion } from "framer-motion";
 
 export const CurrentThesis: React.FC = () => {
   const thesis = CURRENT_THESIS;
@@ -102,9 +103,12 @@ export const CurrentThesis: React.FC = () => {
                   <span className="text-[#f3f3f4]">{thesis.fundamental} / 100</span>
                 </div>
                 <div className="w-full bg-[#141414] h-1 overflow-hidden">
-                  <div
-                    className="bg-[#f0f0f1] h-full transition-all duration-300"
-                    style={{ width: `${thesis.fundamental}%` }}
+                  <motion.div
+                    className="bg-[#f0f0f1] h-full"
+                    initial={{ width: "0%" }}
+                    whileInView={{ width: `${thesis.fundamental}%` }}
+                    viewport={{ once: true, amount: 0.4, margin: "0px 0px -40px 0px" }}
+                    transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
                   />
                 </div>
               </div>
@@ -116,9 +120,12 @@ export const CurrentThesis: React.FC = () => {
                   <span className="text-[#6fe39a]">{thesis.technical} / 100</span>
                 </div>
                 <div className="w-full bg-[#141414] h-1 overflow-hidden">
-                  <div
-                    className="bg-[#6fe39a] h-full transition-all duration-300 shadow-[0_0_8px_rgba(111,227,154,0.3)]"
-                    style={{ width: `${thesis.technical}%` }}
+                  <motion.div
+                    className="bg-[#6fe39a] h-full shadow-[0_0_8px_rgba(111,227,154,0.3)]"
+                    initial={{ width: "0%" }}
+                    whileInView={{ width: `${thesis.technical}%` }}
+                    viewport={{ once: true, amount: 0.4, margin: "0px 0px -40px 0px" }}
+                    transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
                   />
                 </div>
               </div>
@@ -133,7 +140,13 @@ export const CurrentThesis: React.FC = () => {
                   </span>
                 </div>
                 <div className="w-full bg-[#141414] h-1 overflow-hidden">
-                  <div className="bg-[#6fe39a] h-full w-full opacity-80" />
+                  <motion.div
+                    className="bg-[#6fe39a] h-full opacity-80"
+                    initial={{ width: "0%" }}
+                    whileInView={{ width: "100%" }}
+                    viewport={{ once: true, amount: 0.4, margin: "0px 0px -40px 0px" }}
+                    transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
+                  />
                 </div>
               </div>
 
@@ -144,9 +157,12 @@ export const CurrentThesis: React.FC = () => {
                   <span className="text-[#b8a77a]">{thesis.risk} / 100</span>
                 </div>
                 <div className="w-full bg-[#141414] h-1 overflow-hidden">
-                  <div
-                    className="bg-[#b8a77a] h-full transition-all duration-300"
-                    style={{ width: `${thesis.risk}%` }}
+                  <motion.div
+                    className="bg-[#b8a77a] h-full"
+                    initial={{ width: "0%" }}
+                    whileInView={{ width: `${thesis.risk}%` }}
+                    viewport={{ once: true, amount: 0.4, margin: "0px 0px -40px 0px" }}
+                    transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.55 }}
                   />
                 </div>
               </div>

@@ -127,8 +127,8 @@ Urutan ini disusun berdasarkan prioritas P0 → P8 dari brief, karena tiap tahap
 - [ ] Bangun 6 halaman publik:
   - [ ] `/` — Homepage (treasury, tujuan, posisi aktif, keputusan terbaru, reputasi, event terbaru)
   - [ ] `/life` — Life Log, **digenerate dari tabel `economic_events` asli**
-  - [ ] `/trades` — daftar semua trade
-  - [ ] `/trade/[id]` — detail 1 trade ("Kenapa Saya Trading")
+  - [x] `/trades` — daftar semua trade
+  - [x] `/trade/[id]` — detail 1 trade ("Kenapa Saya Trading")
   - [ ] `/identity` — info ERC-8004
   - [ ] `/about` — penjelasan konsep
 - [ ] Terapkan visual direction: near-black background, tipografi grotesk, data pakai monospace, tanpa tombol "Connect Wallet" untuk pengunjung

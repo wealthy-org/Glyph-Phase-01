@@ -1,19 +1,27 @@
 "use client";
 
 import React, { useState } from "react";
-import { TradeFilter } from "../types";
+import { Trade, TradeFilter, TradeSummaryStats } from "../types";
 import { TRADE_SUMMARY_DATA, GLYPH_TRADES_DATA } from "../data";
 import { TradeSummary } from "./TradeSummary";
 import { TradeFilters } from "./TradeFilters";
 import { TradeTable } from "./TradeTable";
 
-export const TradesSection: React.FC = () => {
+interface TradesSectionProps {
+  initialTrades?: Trade[];
+  initialStats?: TradeSummaryStats;
+}
+
+export const TradesSection: React.FC<TradesSectionProps> = ({
+  initialTrades = GLYPH_TRADES_DATA,
+  initialStats = TRADE_SUMMARY_DATA,
+}) => {
   const [filter, setFilter] = useState<TradeFilter>("ALL");
 
   const filteredTrades =
     filter === "ALL"
-      ? GLYPH_TRADES_DATA
-      : GLYPH_TRADES_DATA.filter((t) => t.thesis === filter);
+      ? initialTrades
+      : initialTrades.filter((t) => t.thesis === filter);
 
   return (
     <div className="w-full space-y-10 sm:space-y-12">
@@ -29,7 +37,7 @@ export const TradesSection: React.FC = () => {
       </header>
 
       {/* Summary Metrics */}
-      <TradeSummary stats={TRADE_SUMMARY_DATA} />
+      <TradeSummary stats={initialStats} />
 
       {/* Filter Tabs & Counter */}
       <TradeFilters

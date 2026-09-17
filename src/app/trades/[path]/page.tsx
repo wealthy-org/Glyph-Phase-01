@@ -1,16 +1,19 @@
 import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
-import { getTradeDetail, TradeDecisionDetailView } from "@/features/trades";
+import { TradeDecisionDetailView } from "@/features/trades";
+import { fetchLiveTradeDetail } from "@/features/trades/queries";
 
 interface TradeDetailPageProps {
   params: Promise<{ path: string }>;
 }
 
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({
   params,
 }: TradeDetailPageProps): Promise<Metadata> {
   const { path } = await params;
-  const trade = getTradeDetail(path);
+  const trade = await fetchLiveTradeDetail(path);
 
   return {
     title: `${trade.tradeNumber} — ${trade.asset} [${trade.action}] | Glyph Decision Record`,
@@ -20,7 +23,7 @@ export async function generateMetadata({
 
 export default async function TradeDetailPage({ params }: TradeDetailPageProps) {
   const { path } = await params;
-  const trade = getTradeDetail(path);
+  const trade = await fetchLiveTradeDetail(path);
 
   return (
     <div className="flex-1 flex flex-col bg-[#000000] text-[#f3f3f4] relative selection:bg-[#202020] selection:text-[#f3f3f4]">
