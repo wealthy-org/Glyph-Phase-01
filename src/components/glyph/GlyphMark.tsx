@@ -2,8 +2,9 @@ import React from "react";
 import { cn } from "@/lib/utils";
 
 export interface GlyphMarkProps {
-  size?: "xs" | "sm" | "md" | "lg" | "xl";
+  size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
   animated?: boolean;
+  pulseVariant?: "subtle" | "modern";
   className?: string;
 }
 
@@ -13,19 +14,27 @@ const sizeMap = {
   md: "w-9 h-9",
   lg: "w-12 h-12",
   xl: "w-18 h-18",
+  "2xl": "w-24 h-24 lg:w-28 lg:h-28",
 };
 
 export const GlyphMark: React.FC<GlyphMarkProps> = ({
   size = "md",
   animated = true,
+  pulseVariant = "subtle",
   className,
 }) => {
+  const pulseClass = animated
+    ? pulseVariant === "modern"
+      ? "animate-modern-pulse"
+      : "animate-entity-pulse"
+    : "";
+
   return (
     <div
       className={cn(
         "relative flex items-center justify-center select-none aspect-square shrink-0",
         sizeMap[size],
-        animated && "animate-entity-pulse",
+        pulseClass,
         className
       )}
       aria-label="Glyph Entity Mark"

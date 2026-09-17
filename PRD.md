@@ -1,6 +1,6 @@
 # GLYPH — PHASE 01
 
-## Vibe Coding Product Requirements Document
+## Product Requirements Document
 
 **Project:** Glyph
 **Phase:** Phase 01 — Testnet / MVP

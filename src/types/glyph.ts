@@ -9,6 +9,23 @@ export type GlyphState = {
     risk: number;
   };
   onchainAddress: string;
+  cognitiveCycle?: number;
+  beingStatus?: string;
+  lastHeartbeat?: string;
+  simulatedPortfolio?: number;
+  simulatedPnL?: string;
+  simulatedPnLPercent?: string;
+  paperEconomyLabel?: string;
+  latestDecisionId?: string;
+  latestDecisionLabel?: string;
+  decisionProof?: {
+    txHash: string;
+    network: string;
+    blockNumber: number;
+    stateRoot: string;
+    timestamp: string;
+    explorerUrl: string;
+  };
 };
 
 export type Thesis = {
@@ -37,3 +54,13 @@ export type Reputation = {
   profitable: number;
   onchainProofs: number;
 };
+
+export type AdaptiveLearning = {
+  id: string;
+  decisionId: string;
+  triggerEvent: string;
+  insight: string;
+  adaptation: string;
+  weightShift: string;
+};
+

@@ -1,10 +1,10 @@
-import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { Hero } from "@/components/sections/Hero";
-import { LiveState } from "@/components/sections/LiveState";
-import { CurrentThesis } from "@/components/sections/CurrentThesis";
-import { EconomicActivity } from "@/components/sections/EconomicActivity";
-import { Reputation } from "@/components/sections/Reputation";
+import { Navbar } from "@/components/layout/Navbar";
+import { CurrentThesis } from "@/features/landing/components/CurrentThesis";
+import { EconomicActivity } from "@/features/landing/components/EconomicActivity";
+import { Hero } from "@/features/landing/components/Hero";
+import { LiveState } from "@/features/landing/components/LiveState";
+import { Reputation } from "@/features/landing/components/Reputation";
 
 export default function Home() {
   return (

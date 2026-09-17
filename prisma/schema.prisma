@@ -1,0 +1,486 @@
+// ==========================================================================
+// GLYPH PHASE 01 — DATABASE SCHEMA
+// Derived from: BRIEF.md (§7, §9–19, §3.0B, §3.5, §3.7, §18, §19)
+//
+// KEY DESIGN DECISION (Brief §3.0B):
+//   `decisions` and `trades` are SEPARATE tables.
+//   A Decision records every Glyph reasoning cycle, including NO_TRADE.
+//   A Trade is only created when policy_result = APPROVED and action ≠ NO_TRADE.
+//   decision.trade_id is nullable FK → trades.id.
+//
+// ORM: Prisma | Database: PostgreSQL (Supabase recommended)
+// ==========================================================================
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// --------------------------------------------------------------------------
+// ENUMS (derived from Brief §7, §9, §10, §19)
+// --------------------------------------------------------------------------
+
+/// Decision action proposed by Glyph Brain (§7, §3.0B)
+enum DecisionAction {
+  LONG
+  SHORT
+  NO_TRADE
+}
+
+/// Policy engine verdict — deterministic, independent of LLM (§10, §3.0B)
+enum PolicyResult {
+  APPROVED
+  REJECTED
+}
+
+/// Trade lifecycle status (§11)
+enum TradeStatus {
+  OPEN
+  CLOSED
+  LIQUIDATED // simulated liquidation (§3.10 point 2)
+}
+
+/// Position side for the paper engine (§11)
+enum PositionSide {
+  LONG
+  SHORT
+}
+
+/// Economic event types for Life Log generation (§19, §2.4)
+enum EconomicEventType {
+  AGENT_BORN
+  IDENTITY_REGISTERED
+  WALLET_CREATED
+  TREASURY_FUNDED
+  RESEARCH_STARTED
+  DECISION_MADE
+  TRADE_OPENED
+  TRADE_CLOSED
+  PROFIT_RECORDED
+  LOSS_RECORDED
+  MEMORY_CREATED
+  REPUTATION_UPDATED
+}
+
+/// Memory outcome classification (§15)
+enum MemoryOutcome {
+  WIN
+  LOSS
+  BREAKEVEN
+}
+
+/// Thesis accuracy verdict used in memory (§15)
+enum ThesisResult {
+  CORRECT
+  INCORRECT
+  PARTIAL
+  PENDING
+}
+
+/// Confidence calibration grade (§15)
+enum ConfidenceCalibration {
+  GOOD
+  OVER_CONFIDENT
+  UNDER_CONFIDENT
+  NEUTRAL
+}
+
+// --------------------------------------------------------------------------
+// 1. AGENT (Brief §6, §17, §18 — table: agents)
+//    The root Glyph entity. Phase 01 = exactly 1 agent.
+// --------------------------------------------------------------------------
+
+model Agent {
+  id          String   @id @default(uuid())
+  agentId     String   @unique // On-chain ERC-8004 agent ID
+  name        String   @default("Glyph")
+  status      String   @default("ACTIVE")
+  metadataUri String? // URI to agent JSON metadata (§4.3)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relationships (§18, §24 relationship model)
+  wallet            AgentWallet?
+  policy            AgentPolicy?
+  decisions         Decision[]
+  trades            Trade[]
+  positions         Position[]
+  memories          Memory[]
+  economicEvents    EconomicEvent[]
+  reputationMetrics ReputationMetrics?
+  agentRuns         AgentRun[]
+
+  @@map("agents")
+}
+
+// --------------------------------------------------------------------------
+// 2. AGENT WALLET (Brief §6, §3.2, §18 — table: agent_wallets)
+//    Glyph's own smart account (Safe). NOT a user wallet.
+// --------------------------------------------------------------------------
+
+model AgentWallet {
+  id      String @id @default(uuid())
+  agentId String @unique
+  agent   Agent  @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+  walletAddress String // Safe smart account address
+  network       String @default("Robinhood Chain Testnet")
+  chainId       Int    @default(46630)
+
+  createdAt DateTime @default(now())
+
+  @@map("agent_wallets")
+}
+
+// --------------------------------------------------------------------------
+// 3. AGENT POLICY (Brief §10, §3.0C, §18 — table: agent_policies)
+//    Deterministic risk policy. LLM proposes, policy validates.
+// --------------------------------------------------------------------------
+
+model AgentPolicy {
+  id      String @id @default(uuid())
+  agentId String @unique
+  agent   Agent  @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+  maxPositionPercent  Decimal  @default(10) @db.Decimal(5, 2)
+  maxLeverage         Decimal  @default(2) @db.Decimal(4, 2)
+  maxDailyLossPercent Decimal  @default(5) @db.Decimal(5, 2)
+  maxOpenPositions    Int      @default(3)
+  minConfidence       Int      @default(60) // 0-100
+  allowedAssets       String[] // e.g. ["NVDA", "BTC", "ETH", "SOL", "MSFT"]
+  simulatedFeePercent Decimal  @default(0.1) @db.Decimal(5, 4) // §3.10 point 1
+
+  updatedAt DateTime @updatedAt
+
+  @@map("agent_policies")
+}
+
+// --------------------------------------------------------------------------
+// 4. MARKET ASSETS (Brief §18 — table: market_assets)
+//    Whitelisted assets Glyph can analyze and trade.
+// --------------------------------------------------------------------------
+
+model MarketAsset {
+  id        String  @id @default(uuid())
+  symbol    String  @unique // e.g. "NVDA"
+  name      String // e.g. "NVIDIA Corporation"
+  assetType String  @default("EQUITY") // EQUITY, CRYPTO, etc.
+  isActive  Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  @@map("market_assets")
+}
+
+// --------------------------------------------------------------------------
+// 5. RESEARCH SNAPSHOT (Brief §8, §14, §18 — table: research_snapshots)
+//    Immutable snapshot: "What Glyph knew when it made the decision."
+//    MUST NOT be silently overwritten after creation.
+// --------------------------------------------------------------------------
+
+model ResearchSnapshot {
+  id String @id @default(uuid())
+
+  asset           String // e.g. "NVDA"
+  marketData      Json? // price, OHLCV, etc.
+  fundamentalData Json? // revenue, earnings, valuation, catalysts
+  technicalData   Json? // trend, momentum, support/resistance, indicators
+  newsData        Json? // recent news items + sentiment
+  sourceMetadata  Json? // provider name, timestamp of data pull, etc.
+
+  createdAt DateTime @default(now())
+
+  // Back-reference
+  decisions Decision[]
+
+  @@map("research_snapshots")
+}
+
+// --------------------------------------------------------------------------
+// 6. DECISION (Brief §7, §9, §3.0B, §12, §26 — table: decisions)
+//
+//    ⚠️  CRITICAL: This is SEPARATE from trades (Brief §3.0B).
+//    Every Glyph reasoning cycle creates a Decision — including NO_TRADE
+//    and policy-rejected proposals.
+//
+//    trade_id is nullable: only populated when the decision actually
+//    resulted in a Trade (policy_result=APPROVED, action≠NO_TRADE).
+// --------------------------------------------------------------------------
+
+model Decision {
+  id      String @id @default(uuid())
+  agentId String
+  agent   Agent  @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+  // What the Glyph Brain proposed (§7 structured JSON)
+  asset               String // e.g. "NVDA"
+  action              DecisionAction // LONG | SHORT | NO_TRADE
+  conviction          Int // 0-100
+  timeHorizon         String? // e.g. "1d_to_14d"
+  fundamentalScore    Int? // 0-100
+  technicalScore      Int? // 0-100
+  riskScore           Int? // 0-100
+  positionSizePercent Decimal?       @db.Decimal(5, 2) // LLM proposed %
+  leverage            Decimal?       @db.Decimal(4, 2) // LLM proposed, clamped by policy (§3.0C)
+
+  // Thesis breakdown (§7 thesis object)
+  thesis Json // { fundamental, technical, catalyst, risk, invalidation }
+
+  // Policy engine result (§10, §3.0B)
+  policyResult       PolicyResult // APPROVED | REJECTED
+  policyRejectReason String? // Why policy rejected (null if approved)
+
+  // Research provenance (§8, §14)
+  researchSnapshotId String?
+  researchSnapshot   ResearchSnapshot? @relation(fields: [researchSnapshotId], references: [id], onDelete: SetNull)
+
+  // Prompt versioning (§26, §3.0D)
+  promptVersion String @default("V1") // e.g. "GLYPH_DECISION_PROMPT_V1"
+
+  // Link to resulting trade — nullable (§3.0B)
+  tradeId String? @unique
+  trade   Trade?  @relation(fields: [tradeId], references: [id], onDelete: SetNull)
+
+  // Onchain proof (§12)
+  decisionHash    String? // keccak256 of canonical decision JSON
+  transactionHash String? // Robinhood Chain testnet tx hash
+
+  createdAt DateTime @default(now())
+
+  @@index([agentId])
+  @@index([asset])
+  @@index([policyResult])
+  @@map("decisions")
+}
+
+// --------------------------------------------------------------------------
+// 7. TRADE (Brief §11, §13, §3.0B — table: trades)
+//
+//    Only created when Decision has policy_result=APPROVED and action≠NO_TRADE.
+//    Each trade has a unique trade_number (e.g. "GLYPH-0012").
+// --------------------------------------------------------------------------
+
+model Trade {
+  id          String @id @default(uuid())
+  tradeNumber String @unique // e.g. "GLYPH-0001"
+  agentId     String
+  agent       Agent  @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+  asset        String // e.g. "NVDA"
+  action       PositionSide // LONG | SHORT
+  entryPrice   Decimal      @db.Decimal(18, 4)
+  exitPrice    Decimal?     @db.Decimal(18, 4)
+  positionSize Decimal      @db.Decimal(18, 4) // dollar value
+  leverage     Decimal      @default(1) @db.Decimal(4, 2) // clamped by policy
+
+  // Scores copied from decision at creation time (for fast UI reads)
+  conviction       Int?
+  fundamentalScore Int?
+  technicalScore   Int?
+  riskScore        Int?
+  thesis           Json? // { fundamental, technical, catalyst, risk, invalidation }
+
+  // PnL — simulated (§11)
+  simulatedPnl        Decimal? @db.Decimal(18, 4)
+  simulatedPnlPercent Decimal? @db.Decimal(8, 4)
+  fees                Decimal  @default(0) @db.Decimal(18, 4) // simulated fee (§3.10)
+
+  status TradeStatus @default(OPEN) // OPEN | CLOSED | LIQUIDATED
+
+  // Onchain proof ref (§12) — denormalized for quick access
+  decisionHash    String?
+  transactionHash String?
+
+  // Research snapshot ref for "What Glyph knew" (§14)
+  researchSnapshotId String?
+
+  createdAt DateTime  @default(now())
+  closedAt  DateTime?
+
+  // Back-references
+  decision Decision?
+  position Position?
+
+  @@index([agentId])
+  @@index([asset])
+  @@index([status])
+  @@map("trades")
+}
+
+// --------------------------------------------------------------------------
+// 8. POSITION (Brief §11, §18 — table: positions)
+//    Active open positions in the paper engine.
+// --------------------------------------------------------------------------
+
+model Position {
+  id      String @id @default(uuid())
+  agentId String
+  agent   Agent  @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+  tradeId String @unique
+  trade   Trade  @relation(fields: [tradeId], references: [id], onDelete: Cascade)
+
+  asset        String
+  side         PositionSide // LONG | SHORT
+  entryPrice   Decimal      @db.Decimal(18, 4)
+  currentPrice Decimal      @db.Decimal(18, 4)
+  positionSize Decimal      @db.Decimal(18, 4) // dollar value
+  leverage     Decimal      @default(1) @db.Decimal(4, 2)
+
+  unrealizedPnl        Decimal @default(0) @db.Decimal(18, 4)
+  unrealizedPnlPercent Decimal @default(0) @db.Decimal(8, 4)
+
+  // Simulated risk boundaries (§11)
+  stopLoss          Decimal? @db.Decimal(18, 4)
+  liquidationPrice  Decimal? @db.Decimal(18, 4)
+  invalidationLevel Decimal? @db.Decimal(18, 4)
+  targetPrice       Decimal? @db.Decimal(18, 4)
+
+  isOpen Boolean @default(true)
+
+  openedAt DateTime  @default(now())
+  closedAt DateTime?
+
+  @@index([agentId])
+  @@index([isOpen])
+  @@map("positions")
+}
+
+// --------------------------------------------------------------------------
+// 9. ONCHAIN TRANSACTION (Brief §12, §18 — table: transactions)
+//    Onchain records: decision commits + identity registration.
+// --------------------------------------------------------------------------
+
+model Transaction {
+  id String @id @default(uuid())
+
+  transactionHash String  @unique // Robinhood Chain tx hash
+  chainId         Int     @default(46630)
+  contractAddress String? // DecisionRegistry or IdentityRegistry address
+  blockNumber     Int?
+  decisionHash    String? // keccak256 payload committed
+  eventType       String? // e.g. "DECISION_COMMITTED", "IDENTITY_REGISTERED"
+
+  timestamp DateTime @default(now())
+
+  @@map("transactions")
+}
+
+// --------------------------------------------------------------------------
+// 10. MEMORY (Brief §15, §18 — table: memories)
+//     Persistent state influencing future decisions.
+// --------------------------------------------------------------------------
+
+model Memory {
+  id      String @id @default(uuid())
+  agentId String
+  agent   Agent  @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+  tradeId               String? // FK to trade this memory derives from
+  outcome               MemoryOutcome // WIN | LOSS | BREAKEVEN
+  pnlPercent            Decimal?              @db.Decimal(8, 4)
+  thesisResult          ThesisResult // CORRECT | INCORRECT | PARTIAL | PENDING
+  lesson                String                @db.Text
+  confidenceCalibration ConfidenceCalibration @default(NEUTRAL)
+
+  // Adaptive learning context (weight shifts, model adjustments)
+  adaptation  String? @db.Text
+  weightShift String? // e.g. "+4.2% Momentum / -2.1% Macro Drag"
+
+  createdAt DateTime @default(now())
+
+  @@index([agentId])
+  @@map("memories")
+}
+
+// --------------------------------------------------------------------------
+// 11. REPUTATION METRICS (Brief §16, §18 — table: reputation_metrics)
+//     Show underlying metrics, avoid misleading single score.
+// --------------------------------------------------------------------------
+
+model ReputationMetrics {
+  id      String @id @default(uuid())
+  agentId String @unique
+  agent   Agent  @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+  decisionsCount Int     @default(0)
+  tradesCount    Int     @default(0)
+  winRate        Decimal @default(0) @db.Decimal(5, 2) // percentage
+  realizedPnl    Decimal @default(0) @db.Decimal(18, 4)
+  averageReturn  Decimal @default(0) @db.Decimal(8, 4) // percentage
+  maxDrawdown    Decimal @default(0) @db.Decimal(8, 4) // percentage
+  thesisAccuracy Decimal @default(0) @db.Decimal(5, 2) // percentage
+  riskViolations Int     @default(0)
+  timeActiveDays Int     @default(0)
+
+  updatedAt DateTime @updatedAt
+
+  @@map("reputation_metrics")
+}
+
+// --------------------------------------------------------------------------
+// 12. ECONOMIC EVENTS (Brief §19, §2.4 — table: economic_events)
+//     Foundation for Life Log. MUST be generated from real events,
+//     NOT hardcoded narrative text (§2.5).
+// --------------------------------------------------------------------------
+
+model EconomicEvent {
+  id      String @id @default(uuid())
+  agentId String
+  agent   Agent  @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+  eventType   EconomicEventType
+  title       String // Human-readable event title
+  description String?           @db.Text
+  day         Int? // Day number since agent birth (for Life Log)
+  result      String? // e.g. "+8.4%"
+
+  // Optional references
+  tradeId    String?
+  decisionId String?
+  txHash     String?
+
+  timestamp DateTime @default(now())
+
+  @@index([agentId])
+  @@index([eventType])
+  @@index([timestamp])
+  @@map("economic_events")
+}
+
+// --------------------------------------------------------------------------
+// 13. AGENT RUNS — Observability (Brief §25, §3.7 — table: agent_runs)
+//     Every reasoning cycle gets a trace. Never silently discard failures.
+// --------------------------------------------------------------------------
+
+model AgentRun {
+  id      String @id @default(uuid())
+  agentId String
+  agent   Agent  @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+
+  // Snapshot of what happened
+  marketSnapshot Json? // market state at time of run
+  model          String? // LLM model used (from OPENROUTER_MODEL)
+  promptVersion  String? // e.g. "GLYPH_DECISION_PROMPT_V1"
+  decision       Json? // raw structured decision output
+  policyResult   String? // "APPROVED" | "REJECTED" | null
+
+  // Outcome references
+  tradeId         String?
+  transactionHash String?
+
+  // Error tracking
+  error     String? @db.Text
+  errorCode String?
+
+  @@index([agentId])
+  @@index([startedAt])
+  @@map("agent_runs")
+}
