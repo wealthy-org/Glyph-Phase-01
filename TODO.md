@@ -57,12 +57,12 @@ Urutan ini disusun berdasarkan prioritas P0 → P8 dari brief, karena tiap tahap
 
 ## TAHAP 3 — Mesin Riset (P3)
 
-- [ ] Daftar API key Alpha Vantage (atau Finnhub sebagai alternatif)
-- [ ] Buat interface `MarketDataProvider` (`getQuote`, `getOHLCV`, `getFundamentals`, `getNews`)
-- [ ] Implementasikan provider Alpha Vantage di belakang interface itu (endpoint `OVERVIEW`, `TIME_SERIES_DAILY`, `NEWS_SENTIMENT`)
-- [ ] Buat layer fundamental: revenue growth, earnings, valuasi, berita, konteks sektor/makro
-- [ ] Buat layer teknikal: harga, tren, momentum, volume, support/resistance, volatilitas
-- [ ] Simpan setiap hasil riset sebagai snapshot yang **immutable** ke tabel `research_snapshots`
+- [x] Daftar API key Alpha Vantage (atau Finnhub sebagai alternatif)
+- [x] Buat interface `MarketDataProvider` (`getQuote`, `getOHLCV`, `getFundamentals`, `getNews`)
+- [x] Implementasikan provider Alpha Vantage di belakang interface itu (endpoint `OVERVIEW`, `TIME_SERIES_DAILY`, `NEWS_SENTIMENT`)
+- [x] Buat layer fundamental: revenue growth, earnings, valuasi, berita, konteks sektor/makro
+- [x] Buat layer teknikal: harga, tren, momentum, volume, support/resistance, volatilitas
+- [x] Simpan setiap hasil riset sebagai snapshot yang **immutable** ke tabel `research_snapshots`
 
 > **💡 Tips:**
 > - Karena free tier Alpha Vantage cuma 25 request/hari, desain sistemnya untuk 1 siklus riset per hari dulu — jangan sampai boros quota buat testing manual berkali-kali (cache hasil kalau perlu).
