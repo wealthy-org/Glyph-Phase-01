@@ -1,12 +1,13 @@
 import React from "react";
 import Link from "next/link";
 import { GlyphMark } from "@/components/glyph/GlyphMark";
+import { Separator } from "@/components/ui/separator";
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="w-full border-t border-[#242424] bg-[#080808] py-16 mt-auto">
+    <footer className="w-full border-t border-[#242424] bg-[#080808] z-10 py-16 mt-auto">
       <div className="max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 pb-12 border-b border-[#181818]">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 pb-12">
           {/* Col 1: Identity */}
           <div className="space-y-3">
             <div className="flex items-center gap-3">
@@ -84,6 +85,8 @@ export const Footer: React.FC = () => {
             </ul>
           </div>
         </div>
+
+        <Separator className="bg-[#181818]" />
 
         {/* Bottom copyright / timestamp */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-[11px] text-[#666666]">

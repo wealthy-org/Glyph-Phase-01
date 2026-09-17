@@ -3,6 +3,9 @@
 import React, { useState } from "react";
 import { GLYPH_STATE } from "@/data/glyph";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import { Copy, Check, ExternalLink } from "lucide-react";
 
 export const LiveState: React.FC = () => {
@@ -27,7 +30,7 @@ export const LiveState: React.FC = () => {
         />
 
         {/* Editorial Financial Information Matrix */}
-        <div className="divide-y divide-[#242424]">
+        <div className="space-y-0">
           {/* Row 1: Treasury & Objective */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 py-8 items-start">
             <div className="lg:col-span-4 space-y-2">
@@ -38,9 +41,12 @@ export const LiveState: React.FC = () => {
                 <span className="font-mono text-4xl sm:text-5xl font-light text-[#F5F5F5] tracking-tight">
                   ${data.treasury.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </span>
-                <span className="font-mono text-xs text-[#8FB996] px-1.5 py-0.5 border border-[#181818] bg-[#0D0D0D]">
+                <Badge
+                  variant="outline"
+                  className="font-mono text-xs text-[#8FB996] px-1.5 py-0.5 border border-[#181818] bg-[#0D0D0D] rounded-none font-normal"
+                >
                   USD-SIM
-                </span>
+                </Badge>
               </div>
               <p className="font-mono text-[11px] text-[#666666]">
                 Available capital for allocation & margin reserves
@@ -62,6 +68,8 @@ export const LiveState: React.FC = () => {
             </div>
           </div>
 
+          <Separator className="bg-[#242424]" />
+
           {/* Row 2: Current Position & Conviction */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 py-8 items-start">
             <div className="lg:col-span-8 space-y-2">
@@ -72,10 +80,13 @@ export const LiveState: React.FC = () => {
                 {data.currentPosition}
               </div>
               <div className="flex flex-wrap items-center gap-4 font-mono text-xs text-[#A0A0A0] pt-1">
-                <span className="text-[#8FB996] flex items-center gap-1.5">
+                <Badge
+                  variant="outline"
+                  className="border-[#242424] bg-[#0D0D0D] text-[#8FB996] font-mono text-xs rounded-none font-normal flex items-center gap-1.5 py-0.5 px-2"
+                >
                   <span className="w-1.5 h-1.5 rounded-full bg-[#8FB996]" />
                   EXPOSURE ACTIVE
-                </span>
+                </Badge>
                 <span className="text-[#242424]">/</span>
                 <span>ENTRY: $174.20</span>
                 <span className="text-[#242424]">/</span>
@@ -103,6 +114,8 @@ export const LiveState: React.FC = () => {
               </div>
             </div>
           </div>
+
+          <Separator className="bg-[#242424]" />
 
           {/* Row 3: Latest Decision & Onchain Proof */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 py-8 items-start">
@@ -160,15 +173,17 @@ export const LiveState: React.FC = () => {
                 <span className="font-mono text-base text-[#F5F5F5]">
                   {shortAddress}
                 </span>
-                <button
+                <Button
                   type="button"
+                  variant="outline"
+                  size="icon-xs"
                   onClick={copyAddress}
-                  className="p-1 text-[#A0A0A0] hover:text-[#F5F5F5] border border-[#242424] hover:border-[#666666] transition-colors"
+                  className="border-[#242424] hover:border-[#666666] bg-transparent text-[#A0A0A0] hover:text-[#F5F5F5] rounded-none cursor-pointer"
                   title="Copy full address"
                   aria-label="Copy onchain address"
                 >
                   {copied ? <Check size={13} className="text-[#8FB996]" /> : <Copy size={13} />}
-                </button>
+                </Button>
               </div>
               <div className="font-mono text-[11px] text-[#666666] flex items-center gap-2">
                 <span>IDENTITY PROOF: BASE SEPOLIA</span>

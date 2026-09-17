@@ -1,23 +1,32 @@
+import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { IdentitySection } from "@/features/identity";
+
+export const metadata: Metadata = {
+  title: "Glyph Identity — Public Cryptographic Registry",
+  description:
+    "The public identity of Economic Being #001. A verifiable cryptographic entity anchored to decentralized state.",
+};
 
 export default function IdentityPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-[#080808] text-[#F5F5F5]">
+    <div className="min-h-screen flex flex-col bg-[#080808] text-[#F5F5F5] relative selection:bg-[#242424] selection:text-[#F5F5F5]">
+      {/* Technical laboratory grid watermark */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.025] bg-[linear-gradient(to_right,#F5F5F5_1px,transparent_1px),linear-gradient(to_bottom,#F5F5F5_1px,transparent_1px)] bg-[size:4rem_4rem]"
+        aria-hidden="true"
+      />
+
+      {/* Global Navigation */}
       <Navbar />
-      <main className="flex-1 max-w-[1280px] w-full mx-auto px-5 sm:px-8 lg:px-12 py-20">
-        <div className="border border-[#242424] bg-[#0D0D0D] p-8 sm:p-12 space-y-4">
-          <div className="font-mono text-xs text-[#8FB996] tracking-widest uppercase">
-            [ ROUTE: /identity ]
-          </div>
-          <h1 className="text-3xl sm:text-4xl font-light tracking-tight text-[#F5F5F5]">
-            IDENTITY
-          </h1>
-          <p className="font-mono text-xs text-[#666666] tracking-wider uppercase">
-            ONCHAIN REGISTRY & CRYPTOGRAPHIC ATTESTATIONS
-          </p>
-        </div>
+
+      {/* Main Content Area */}
+      <main className="flex-1 w-full max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-12 py-16 sm:py-24 relative z-10">
+        <IdentitySection />
       </main>
+
+      {/* Global Footer */}
       <Footer />
     </div>
   );

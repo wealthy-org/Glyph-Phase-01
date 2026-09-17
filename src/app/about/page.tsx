@@ -1,23 +1,32 @@
+import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { AboutSection } from "@/features/about";
+
+export const metadata: Metadata = {
+  title: "About Glyph — Editorial Specification",
+  description:
+    "Glyph is an autonomous digital being designed to maintain an observable economic life. Review its core philosophy, decision loops, and Phase 01 testnet architecture.",
+};
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-[#080808] text-[#F5F5F5]">
+    <div className="min-h-screen flex flex-col bg-[#080808] text-[#F5F5F5] relative selection:bg-[#242424] selection:text-[#F5F5F5]">
+      {/* Technical laboratory grid watermark */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.025] bg-[linear-gradient(to_right,#F5F5F5_1px,transparent_1px),linear-gradient(to_bottom,#F5F5F5_1px,transparent_1px)] bg-[size:4rem_4rem]"
+        aria-hidden="true"
+      />
+
+      {/* Global Navigation */}
       <Navbar />
-      <main className="flex-1 max-w-[1280px] w-full mx-auto px-5 sm:px-8 lg:px-12 py-20">
-        <div className="border border-[#242424] bg-[#0D0D0D] p-8 sm:p-12 space-y-4">
-          <div className="font-mono text-xs text-[#8FB996] tracking-widest uppercase">
-            [ ROUTE: /about ]
-          </div>
-          <h1 className="text-3xl sm:text-4xl font-light tracking-tight text-[#F5F5F5]">
-            ABOUT
-          </h1>
-          <p className="font-mono text-xs text-[#666666] tracking-wider uppercase">
-            ECONOMIC ENTITY RESEARCH & MISSION CONSTITUTION
-          </p>
-        </div>
+
+      {/* Main Content Area */}
+      <main className="flex-1 w-full max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-12 py-16 sm:py-24 relative z-10">
+        <AboutSection />
       </main>
+
+      {/* Global Footer */}
       <Footer />
     </div>
   );

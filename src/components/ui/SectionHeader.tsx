@@ -1,5 +1,6 @@
 import React from "react";
 import { cn } from "@/lib/utils";
+import { Separator } from "@/components/ui/separator";
 
 interface SectionHeaderProps {
   index?: string;
@@ -15,8 +16,8 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
   className,
 }) => {
   return (
-    <div className={cn("border-b border-[#242424] pb-4 mb-8 sm:mb-12", className)}>
-      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
+    <div className={cn("mb-8 sm:mb-12", className)}>
+      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 pb-4">
         <div className="flex items-baseline gap-3">
           {index && (
             <span className="font-mono text-xs text-[#666666] tracking-wider">
@@ -33,6 +34,7 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
           </p>
         )}
       </div>
+      <Separator className="bg-[#242424]" />
     </div>
   );
 };

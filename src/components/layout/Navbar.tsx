@@ -5,6 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { GlyphMark } from "@/components/glyph/GlyphMark";
 import { StatusIndicator } from "@/components/ui/StatusIndicator";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -26,7 +28,7 @@ export const Navbar: React.FC = () => {
 
   const isItemActive = (href: string) => {
     if (href === "/trades") {
-      return pathname === "/trades" || pathname.startsWith("/trade");
+      return pathname.startsWith("/trades");
     }
     return pathname === href || (href !== "/" && pathname.startsWith(href));
   };
@@ -79,18 +81,20 @@ export const Navbar: React.FC = () => {
           <StatusIndicator network="TESTNET" status="ONLINE" />
         </div>
 
-        {/* Mobile Hamburger Button */}
+        {/* Mobile Hamburger Button using shadcn Button */}
         <div className="flex items-center gap-3 sm:hidden">
           <StatusIndicator network="SIM" status="ON" className="gap-1.5 text-[10px]" />
-          <button
+          <Button
             type="button"
+            variant="outline"
+            size="icon-xs"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-1.5 text-[#A0A0A0] hover:text-[#F5F5F5] focus:outline-none focus-visible:ring-1 focus-visible:ring-[#F5F5F5] border border-[#242424]"
+            className="p-1.5 text-[#A0A0A0] hover:text-[#F5F5F5] border-[#242424] hover:border-[#666666] bg-transparent rounded-none cursor-pointer"
             aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
             aria-expanded={mobileMenuOpen}
           >
             {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -126,9 +130,12 @@ export const Navbar: React.FC = () => {
               );
             })}
           </nav>
-          <div className="pt-4 border-t border-[#181818] flex items-center justify-between">
-            <span className="font-mono text-[10px] text-[#666666]">SYSTEM STATE</span>
-            <StatusIndicator network="TESTNET" status="ONLINE" />
+          <div className="pt-4 space-y-4">
+            <Separator className="bg-[#181818]" />
+            <div className="flex items-center justify-between">
+              <span className="font-mono text-[10px] text-[#666666]">SYSTEM STATE</span>
+              <StatusIndicator network="TESTNET" status="ONLINE" />
+            </div>
           </div>
         </div>
       )}

@@ -3,6 +3,9 @@
 import React, { useState } from "react";
 import { CURRENT_THESIS } from "@/data/glyph";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import { ArrowUpRight, ShieldAlert, CheckCircle2 } from "lucide-react";
 
 export const CurrentThesis: React.FC = () => {
@@ -22,10 +25,13 @@ export const CurrentThesis: React.FC = () => {
           {/* Left Column: Asset, Direction, & Narrative */}
           <div className="lg:col-span-7 space-y-8">
             <div className="space-y-3">
-              <div className="inline-flex items-center gap-2 px-2.5 py-1 border border-[#242424] bg-[#0D0D0D] font-mono text-xs text-[#8FB996]">
+              <Badge
+                variant="outline"
+                className="inline-flex items-center gap-2 px-2.5 py-1 border-[#242424] bg-[#0D0D0D] font-mono text-xs text-[#8FB996] rounded-none font-normal"
+              >
                 <span className="w-1.5 h-1.5 rounded-full bg-[#8FB996]" />
                 DIRECTION ACTIVE
-              </div>
+              </Badge>
               <div className="flex items-baseline gap-4">
                 <h3 className="font-mono text-4xl sm:text-5xl font-light text-[#F5F5F5] tracking-tight">
                   {thesis.asset}
@@ -59,16 +65,16 @@ export const CurrentThesis: React.FC = () => {
               </div>
             </div>
 
-            {/* CTA */}
+            {/* CTA using shadcn Button */}
             <div>
-              <button
-                type="button"
+              <Button
+                variant="outline"
                 onClick={() => setModalOpen(true)}
-                className="inline-flex items-center gap-2 px-5 py-2.5 border border-[#242424] hover:border-[#666666] bg-[#0D0D0D] text-[#F5F5F5] font-mono text-xs tracking-wider uppercase transition-colors"
+                className="inline-flex items-center gap-2 px-5 py-2.5 border border-[#242424] hover:border-[#666666] bg-[#0D0D0D] text-[#F5F5F5] font-mono text-xs tracking-wider uppercase transition-colors rounded-none h-auto cursor-pointer"
               >
                 <span>READ FULL THESIS</span>
                 <ArrowUpRight size={14} />
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -136,7 +142,9 @@ export const CurrentThesis: React.FC = () => {
               </div>
             </div>
 
-            <div className="pt-4 border-t border-[#181818] font-mono text-[11px] text-[#666666] leading-relaxed">
+            <Separator className="bg-[#181818]" />
+
+            <div className="font-mono text-[11px] text-[#666666] leading-relaxed">
               MODEL PARAMS: Multi-modal macro data + Blackwell server delivery pipeline + short-term gamma exposure.
             </div>
           </div>
@@ -153,17 +161,22 @@ export const CurrentThesis: React.FC = () => {
             className="w-full max-w-xl bg-[#0D0D0D] border border-[#242424] p-6 sm:p-8 space-y-6"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between border-b border-[#242424] pb-4">
-              <div className="font-mono text-xs text-[#A0A0A0] uppercase">
-                THESIS MEMORANDUM // #{thesis.asset}-L1
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="font-mono text-xs text-[#A0A0A0] uppercase">
+                  THESIS MEMORANDUM // #{thesis.asset}-L1
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon-xs"
+                  onClick={() => setModalOpen(false)}
+                  className="font-mono text-xs text-[#666666] hover:text-[#F5F5F5] border border-[#242424] rounded-none cursor-pointer"
+                >
+                  ESC [×]
+                </Button>
               </div>
-              <button
-                type="button"
-                onClick={() => setModalOpen(false)}
-                className="font-mono text-xs text-[#666666] hover:text-[#F5F5F5] p-1 border border-[#242424]"
-              >
-                ESC [×]
-              </button>
+              <Separator className="bg-[#242424]" />
             </div>
 
             <div className="space-y-4 text-sm text-[#A0A0A0] leading-relaxed font-light">
@@ -181,14 +194,18 @@ export const CurrentThesis: React.FC = () => {
               </div>
             </div>
 
-            <div className="pt-4 border-t border-[#242424] flex justify-end">
-              <button
-                type="button"
-                onClick={() => setModalOpen(false)}
-                className="px-4 py-2 border border-[#242424] hover:bg-[#181818] text-[#F5F5F5] font-mono text-xs tracking-wider uppercase"
-              >
-                CLOSE MEMORANDUM
-              </button>
+            <div className="space-y-4">
+              <Separator className="bg-[#242424]" />
+              <div className="flex justify-end">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setModalOpen(false)}
+                  className="px-4 py-2 border border-[#242424] hover:bg-[#181818] text-[#F5F5F5] font-mono text-xs tracking-wider uppercase rounded-none h-auto cursor-pointer"
+                >
+                  CLOSE MEMORANDUM
+                </Button>
+              </div>
             </div>
           </div>
         </div>

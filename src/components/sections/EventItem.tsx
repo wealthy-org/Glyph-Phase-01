@@ -1,6 +1,7 @@
 import React from "react";
 import { EconomicEvent } from "@/types/glyph";
 import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 interface EventItemProps {
   event: EconomicEvent;
@@ -29,16 +30,17 @@ export const EventItem: React.FC<EventItemProps> = ({ event, isLast = false }) =
             {formattedDay}
           </span>
           {event.result && (
-            <span
+            <Badge
+              variant="outline"
               className={cn(
-                "px-2 py-0.5 border text-[11px] font-mono",
+                "px-2 py-0.5 border text-[11px] font-mono rounded-none font-normal",
                 event.result.startsWith("+")
                   ? "border-[#8FB996]/30 bg-[#8FB996]/10 text-[#8FB996]"
                   : "border-[#242424] bg-[#0D0D0D] text-[#A0A0A0]"
               )}
             >
               {event.result}
-            </span>
+            </Badge>
           )}
         </div>
 
