@@ -73,14 +73,14 @@ Urutan ini disusun berdasarkan prioritas P0 → P8 dari brief, karena tiap tahap
 
 ## TAHAP 4 — Mesin Keputusan (P4)
 
-- [ ] Daftar OpenRouter, pilih model gratis (`:free`) yang reputasinya bagus di structured output
-- [ ] Tulis prompt yang minta output JSON eksplisit (asset, action, conviction, scores, thesis, position_size_percent, leverage)
-- [ ] Buat skema validasi **Zod** yang strict untuk output AI
-- [ ] Implementasikan logic retry: gagal validasi → retry maksimal 2x → masih gagal → fallback `NO_TRADE`
-- [ ] Buat konstanta versi prompt (`GLYPH_DECISION_PROMPT_VERSION = "V1"`) di kode
-- [ ] Sambungkan output AI ke Policy Engine dari Tahap 2 (validasi & clamp leverage/ukuran posisi)
-- [ ] Buat tabel `decisions` terpisah dari `trades` (lihat poin B §3.0) — simpan **semua** keputusan termasuk `NO_TRADE`
-- [ ] Trade baru dibuat di tabel `trades` **hanya jika** `policy_result = 'APPROVED'` dan `action != 'NO_TRADE'`
+- [x] Daftar OpenRouter, pilih model gratis (`:free`) yang reputasinya bagus di structured output
+- [x] Tulis prompt yang minta output JSON eksplisit (asset, action, conviction, scores, thesis, position_size_percent, leverage)
+- [x] Buat skema validasi **Zod** yang strict untuk output AI
+- [x] Implementasikan logic retry: gagal validasi → retry maksimal 2x → masih gagal → fallback `NO_TRADE`
+- [x] Buat konstanta versi prompt (`GLYPH_DECISION_PROMPT_VERSION = "V1"`) di kode
+- [x] Sambungkan output AI ke Policy Engine dari Tahap 2 (validasi & clamp leverage/ukuran posisi)
+- [x] Buat tabel `decisions` terpisah dari `trades` (lihat poin B §3.0) — simpan **semua** keputusan termasuk `NO_TRADE`
+- [x] Trade baru dibuat di tabel `trades` **hanya jika** `policy_result = 'APPROVED'` dan `action != 'NO_TRADE'`
 
 > **💡 Tips:**
 > - Ini bagian paling rawan salah desain — kalau bingung, gambar dulu diagramnya: satu keputusan bisa menghasilkan nol atau satu trade, tapi keputusan selalu dicatat.
