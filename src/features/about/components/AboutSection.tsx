@@ -23,12 +23,12 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ className }) => {
         quote={data.quote}
       />
 
-      <Separator className="bg-[#181818]" />
+      <Separator className="bg-[#171717]" />
 
       {/* 2. Conceptual Philosophy & Reasoning Blocks */}
       <ConceptualBlocks blocks={data.conceptualBlocks} />
 
-      <Separator className="bg-[#181818]" />
+      <Separator className="bg-[#171717]" />
 
       {/* 3. The Phase 01 Decision Loop Process Flow */}
       <DecisionLoopSection
@@ -39,7 +39,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ className }) => {
       />
 
       {/* Observational Technical Footnote */}
-      <footer className="pt-8 pb-12 border-t border-[#181818] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 font-mono text-xs text-[#666666]">
+      <footer className="pt-8 pb-12 border-t border-[#171717] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 font-mono text-xs text-[#55555a]">
         <span>SPECIFICATION REVISION: 2026.09 // PHASE 01 TESTNET</span>
         <span>ARCHITECTURE: AUTONOMOUS ECONOMIC PERSISTENCE</span>
       </footer>

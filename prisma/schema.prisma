@@ -106,6 +106,7 @@ model Agent {
   // Relationships (§18, §24 relationship model)
   wallet            AgentWallet?
   policy            AgentPolicy?
+  treasury          AgentTreasury?
   decisions         Decision[]
   trades            Trade[]
   positions         Position[]
@@ -483,4 +484,24 @@ model AgentRun {
   @@index([agentId])
   @@index([startedAt])
   @@map("agent_runs")
+}
+
+// --------------------------------------------------------------------------
+// 14. AGENT TREASURY (Brief §295 P2, PRD §10 — table: agent_treasuries)
+//     Paper economy cash balances and capital tracking.
+// --------------------------------------------------------------------------
+
+model AgentTreasury {
+  id             String   @id @default(uuid())
+  agentId        String   @unique
+  agent          Agent    @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+  initialCapital Decimal  @default(1000) @db.Decimal(18, 4) // Initial seed capital ($1,000 USD-SIM)
+  currentBalance Decimal  @default(1000) @db.Decimal(18, 4) // Available unallocated cash
+  currency       String   @default("USD-SIM")
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("agent_treasuries")
 }

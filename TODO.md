@@ -39,7 +39,7 @@ Urutan ini disusun berdasarkan prioritas P0 → P8 dari brief, karena tiap tahap
 
 ## TAHAP 2 — Simulasi Ekonomi (P2)
 
-- [ ] Buat sistem treasury simulasi (mulai dari modal awal, misal $1.000)
+- [x] Buat sistem treasury simulasi (mulai dari modal awal, misal $1.000)
 - [ ] Buat logic portofolio: posisi terbuka, ukuran posisi, leverage simulasi
 - [ ] Buat kalkulasi PnL (untung/rugi belum realisasi & sudah realisasi)
 - [ ] Implementasikan **Policy Engine** (`GLYPH_POLICY`) sebagai kode biasa, terpisah dari AI:

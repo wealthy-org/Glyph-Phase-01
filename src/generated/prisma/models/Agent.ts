@@ -200,6 +200,7 @@ export type AgentWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Agent"> | Date | string
   wallet?: Prisma.XOR<Prisma.AgentWalletNullableScalarRelationFilter, Prisma.AgentWalletWhereInput> | null
   policy?: Prisma.XOR<Prisma.AgentPolicyNullableScalarRelationFilter, Prisma.AgentPolicyWhereInput> | null
+  treasury?: Prisma.XOR<Prisma.AgentTreasuryNullableScalarRelationFilter, Prisma.AgentTreasuryWhereInput> | null
   decisions?: Prisma.DecisionListRelationFilter
   trades?: Prisma.TradeListRelationFilter
   positions?: Prisma.PositionListRelationFilter
@@ -219,6 +220,7 @@ export type AgentOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   wallet?: Prisma.AgentWalletOrderByWithRelationInput
   policy?: Prisma.AgentPolicyOrderByWithRelationInput
+  treasury?: Prisma.AgentTreasuryOrderByWithRelationInput
   decisions?: Prisma.DecisionOrderByRelationAggregateInput
   trades?: Prisma.TradeOrderByRelationAggregateInput
   positions?: Prisma.PositionOrderByRelationAggregateInput
@@ -241,6 +243,7 @@ export type AgentWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Agent"> | Date | string
   wallet?: Prisma.XOR<Prisma.AgentWalletNullableScalarRelationFilter, Prisma.AgentWalletWhereInput> | null
   policy?: Prisma.XOR<Prisma.AgentPolicyNullableScalarRelationFilter, Prisma.AgentPolicyWhereInput> | null
+  treasury?: Prisma.XOR<Prisma.AgentTreasuryNullableScalarRelationFilter, Prisma.AgentTreasuryWhereInput> | null
   decisions?: Prisma.DecisionListRelationFilter
   trades?: Prisma.TradeListRelationFilter
   positions?: Prisma.PositionListRelationFilter
@@ -286,6 +289,7 @@ export type AgentCreateInput = {
   updatedAt?: Date | string
   wallet?: Prisma.AgentWalletCreateNestedOneWithoutAgentInput
   policy?: Prisma.AgentPolicyCreateNestedOneWithoutAgentInput
+  treasury?: Prisma.AgentTreasuryCreateNestedOneWithoutAgentInput
   decisions?: Prisma.DecisionCreateNestedManyWithoutAgentInput
   trades?: Prisma.TradeCreateNestedManyWithoutAgentInput
   positions?: Prisma.PositionCreateNestedManyWithoutAgentInput
@@ -305,6 +309,7 @@ export type AgentUncheckedCreateInput = {
   updatedAt?: Date | string
   wallet?: Prisma.AgentWalletUncheckedCreateNestedOneWithoutAgentInput
   policy?: Prisma.AgentPolicyUncheckedCreateNestedOneWithoutAgentInput
+  treasury?: Prisma.AgentTreasuryUncheckedCreateNestedOneWithoutAgentInput
   decisions?: Prisma.DecisionUncheckedCreateNestedManyWithoutAgentInput
   trades?: Prisma.TradeUncheckedCreateNestedManyWithoutAgentInput
   positions?: Prisma.PositionUncheckedCreateNestedManyWithoutAgentInput
@@ -324,6 +329,7 @@ export type AgentUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   wallet?: Prisma.AgentWalletUpdateOneWithoutAgentNestedInput
   policy?: Prisma.AgentPolicyUpdateOneWithoutAgentNestedInput
+  treasury?: Prisma.AgentTreasuryUpdateOneWithoutAgentNestedInput
   decisions?: Prisma.DecisionUpdateManyWithoutAgentNestedInput
   trades?: Prisma.TradeUpdateManyWithoutAgentNestedInput
   positions?: Prisma.PositionUpdateManyWithoutAgentNestedInput
@@ -343,6 +349,7 @@ export type AgentUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   wallet?: Prisma.AgentWalletUncheckedUpdateOneWithoutAgentNestedInput
   policy?: Prisma.AgentPolicyUncheckedUpdateOneWithoutAgentNestedInput
+  treasury?: Prisma.AgentTreasuryUncheckedUpdateOneWithoutAgentNestedInput
   decisions?: Prisma.DecisionUncheckedUpdateManyWithoutAgentNestedInput
   trades?: Prisma.TradeUncheckedUpdateManyWithoutAgentNestedInput
   positions?: Prisma.PositionUncheckedUpdateManyWithoutAgentNestedInput
@@ -555,6 +562,20 @@ export type AgentUpdateOneRequiredWithoutAgentRunsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AgentUpdateToOneWithWhereWithoutAgentRunsInput, Prisma.AgentUpdateWithoutAgentRunsInput>, Prisma.AgentUncheckedUpdateWithoutAgentRunsInput>
 }
 
+export type AgentCreateNestedOneWithoutTreasuryInput = {
+  create?: Prisma.XOR<Prisma.AgentCreateWithoutTreasuryInput, Prisma.AgentUncheckedCreateWithoutTreasuryInput>
+  connectOrCreate?: Prisma.AgentCreateOrConnectWithoutTreasuryInput
+  connect?: Prisma.AgentWhereUniqueInput
+}
+
+export type AgentUpdateOneRequiredWithoutTreasuryNestedInput = {
+  create?: Prisma.XOR<Prisma.AgentCreateWithoutTreasuryInput, Prisma.AgentUncheckedCreateWithoutTreasuryInput>
+  connectOrCreate?: Prisma.AgentCreateOrConnectWithoutTreasuryInput
+  upsert?: Prisma.AgentUpsertWithoutTreasuryInput
+  connect?: Prisma.AgentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AgentUpdateToOneWithWhereWithoutTreasuryInput, Prisma.AgentUpdateWithoutTreasuryInput>, Prisma.AgentUncheckedUpdateWithoutTreasuryInput>
+}
+
 export type AgentCreateWithoutWalletInput = {
   id?: string
   agentId: string
@@ -564,6 +585,7 @@ export type AgentCreateWithoutWalletInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   policy?: Prisma.AgentPolicyCreateNestedOneWithoutAgentInput
+  treasury?: Prisma.AgentTreasuryCreateNestedOneWithoutAgentInput
   decisions?: Prisma.DecisionCreateNestedManyWithoutAgentInput
   trades?: Prisma.TradeCreateNestedManyWithoutAgentInput
   positions?: Prisma.PositionCreateNestedManyWithoutAgentInput
@@ -582,6 +604,7 @@ export type AgentUncheckedCreateWithoutWalletInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   policy?: Prisma.AgentPolicyUncheckedCreateNestedOneWithoutAgentInput
+  treasury?: Prisma.AgentTreasuryUncheckedCreateNestedOneWithoutAgentInput
   decisions?: Prisma.DecisionUncheckedCreateNestedManyWithoutAgentInput
   trades?: Prisma.TradeUncheckedCreateNestedManyWithoutAgentInput
   positions?: Prisma.PositionUncheckedCreateNestedManyWithoutAgentInput
@@ -616,6 +639,7 @@ export type AgentUpdateWithoutWalletInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   policy?: Prisma.AgentPolicyUpdateOneWithoutAgentNestedInput
+  treasury?: Prisma.AgentTreasuryUpdateOneWithoutAgentNestedInput
   decisions?: Prisma.DecisionUpdateManyWithoutAgentNestedInput
   trades?: Prisma.TradeUpdateManyWithoutAgentNestedInput
   positions?: Prisma.PositionUpdateManyWithoutAgentNestedInput
@@ -634,6 +658,7 @@ export type AgentUncheckedUpdateWithoutWalletInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   policy?: Prisma.AgentPolicyUncheckedUpdateOneWithoutAgentNestedInput
+  treasury?: Prisma.AgentTreasuryUncheckedUpdateOneWithoutAgentNestedInput
   decisions?: Prisma.DecisionUncheckedUpdateManyWithoutAgentNestedInput
   trades?: Prisma.TradeUncheckedUpdateManyWithoutAgentNestedInput
   positions?: Prisma.PositionUncheckedUpdateManyWithoutAgentNestedInput
@@ -652,6 +677,7 @@ export type AgentCreateWithoutPolicyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   wallet?: Prisma.AgentWalletCreateNestedOneWithoutAgentInput
+  treasury?: Prisma.AgentTreasuryCreateNestedOneWithoutAgentInput
   decisions?: Prisma.DecisionCreateNestedManyWithoutAgentInput
   trades?: Prisma.TradeCreateNestedManyWithoutAgentInput
   positions?: Prisma.PositionCreateNestedManyWithoutAgentInput
@@ -670,6 +696,7 @@ export type AgentUncheckedCreateWithoutPolicyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   wallet?: Prisma.AgentWalletUncheckedCreateNestedOneWithoutAgentInput
+  treasury?: Prisma.AgentTreasuryUncheckedCreateNestedOneWithoutAgentInput
   decisions?: Prisma.DecisionUncheckedCreateNestedManyWithoutAgentInput
   trades?: Prisma.TradeUncheckedCreateNestedManyWithoutAgentInput
   positions?: Prisma.PositionUncheckedCreateNestedManyWithoutAgentInput
@@ -704,6 +731,7 @@ export type AgentUpdateWithoutPolicyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   wallet?: Prisma.AgentWalletUpdateOneWithoutAgentNestedInput
+  treasury?: Prisma.AgentTreasuryUpdateOneWithoutAgentNestedInput
   decisions?: Prisma.DecisionUpdateManyWithoutAgentNestedInput
   trades?: Prisma.TradeUpdateManyWithoutAgentNestedInput
   positions?: Prisma.PositionUpdateManyWithoutAgentNestedInput
@@ -722,6 +750,7 @@ export type AgentUncheckedUpdateWithoutPolicyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   wallet?: Prisma.AgentWalletUncheckedUpdateOneWithoutAgentNestedInput
+  treasury?: Prisma.AgentTreasuryUncheckedUpdateOneWithoutAgentNestedInput
   decisions?: Prisma.DecisionUncheckedUpdateManyWithoutAgentNestedInput
   trades?: Prisma.TradeUncheckedUpdateManyWithoutAgentNestedInput
   positions?: Prisma.PositionUncheckedUpdateManyWithoutAgentNestedInput
@@ -741,6 +770,7 @@ export type AgentCreateWithoutDecisionsInput = {
   updatedAt?: Date | string
   wallet?: Prisma.AgentWalletCreateNestedOneWithoutAgentInput
   policy?: Prisma.AgentPolicyCreateNestedOneWithoutAgentInput
+  treasury?: Prisma.AgentTreasuryCreateNestedOneWithoutAgentInput
   trades?: Prisma.TradeCreateNestedManyWithoutAgentInput
   positions?: Prisma.PositionCreateNestedManyWithoutAgentInput
   memories?: Prisma.MemoryCreateNestedManyWithoutAgentInput
@@ -759,6 +789,7 @@ export type AgentUncheckedCreateWithoutDecisionsInput = {
   updatedAt?: Date | string
   wallet?: Prisma.AgentWalletUncheckedCreateNestedOneWithoutAgentInput
   policy?: Prisma.AgentPolicyUncheckedCreateNestedOneWithoutAgentInput
+  treasury?: Prisma.AgentTreasuryUncheckedCreateNestedOneWithoutAgentInput
   trades?: Prisma.TradeUncheckedCreateNestedManyWithoutAgentInput
   positions?: Prisma.PositionUncheckedCreateNestedManyWithoutAgentInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutAgentInput
@@ -793,6 +824,7 @@ export type AgentUpdateWithoutDecisionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   wallet?: Prisma.AgentWalletUpdateOneWithoutAgentNestedInput
   policy?: Prisma.AgentPolicyUpdateOneWithoutAgentNestedInput
+  treasury?: Prisma.AgentTreasuryUpdateOneWithoutAgentNestedInput
   trades?: Prisma.TradeUpdateManyWithoutAgentNestedInput
   positions?: Prisma.PositionUpdateManyWithoutAgentNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutAgentNestedInput
@@ -811,6 +843,7 @@ export type AgentUncheckedUpdateWithoutDecisionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   wallet?: Prisma.AgentWalletUncheckedUpdateOneWithoutAgentNestedInput
   policy?: Prisma.AgentPolicyUncheckedUpdateOneWithoutAgentNestedInput
+  treasury?: Prisma.AgentTreasuryUncheckedUpdateOneWithoutAgentNestedInput
   trades?: Prisma.TradeUncheckedUpdateManyWithoutAgentNestedInput
   positions?: Prisma.PositionUncheckedUpdateManyWithoutAgentNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutAgentNestedInput
@@ -829,6 +862,7 @@ export type AgentCreateWithoutTradesInput = {
   updatedAt?: Date | string
   wallet?: Prisma.AgentWalletCreateNestedOneWithoutAgentInput
   policy?: Prisma.AgentPolicyCreateNestedOneWithoutAgentInput
+  treasury?: Prisma.AgentTreasuryCreateNestedOneWithoutAgentInput
   decisions?: Prisma.DecisionCreateNestedManyWithoutAgentInput
   positions?: Prisma.PositionCreateNestedManyWithoutAgentInput
   memories?: Prisma.MemoryCreateNestedManyWithoutAgentInput
@@ -847,6 +881,7 @@ export type AgentUncheckedCreateWithoutTradesInput = {
   updatedAt?: Date | string
   wallet?: Prisma.AgentWalletUncheckedCreateNestedOneWithoutAgentInput
   policy?: Prisma.AgentPolicyUncheckedCreateNestedOneWithoutAgentInput
+  treasury?: Prisma.AgentTreasuryUncheckedCreateNestedOneWithoutAgentInput
   decisions?: Prisma.DecisionUncheckedCreateNestedManyWithoutAgentInput
   positions?: Prisma.PositionUncheckedCreateNestedManyWithoutAgentInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutAgentInput
@@ -881,6 +916,7 @@ export type AgentUpdateWithoutTradesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   wallet?: Prisma.AgentWalletUpdateOneWithoutAgentNestedInput
   policy?: Prisma.AgentPolicyUpdateOneWithoutAgentNestedInput
+  treasury?: Prisma.AgentTreasuryUpdateOneWithoutAgentNestedInput
   decisions?: Prisma.DecisionUpdateManyWithoutAgentNestedInput
   positions?: Prisma.PositionUpdateManyWithoutAgentNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutAgentNestedInput
@@ -899,6 +935,7 @@ export type AgentUncheckedUpdateWithoutTradesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   wallet?: Prisma.AgentWalletUncheckedUpdateOneWithoutAgentNestedInput
   policy?: Prisma.AgentPolicyUncheckedUpdateOneWithoutAgentNestedInput
+  treasury?: Prisma.AgentTreasuryUncheckedUpdateOneWithoutAgentNestedInput
   decisions?: Prisma.DecisionUncheckedUpdateManyWithoutAgentNestedInput
   positions?: Prisma.PositionUncheckedUpdateManyWithoutAgentNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutAgentNestedInput
@@ -917,6 +954,7 @@ export type AgentCreateWithoutPositionsInput = {
   updatedAt?: Date | string
   wallet?: Prisma.AgentWalletCreateNestedOneWithoutAgentInput
   policy?: Prisma.AgentPolicyCreateNestedOneWithoutAgentInput
+  treasury?: Prisma.AgentTreasuryCreateNestedOneWithoutAgentInput
   decisions?: Prisma.DecisionCreateNestedManyWithoutAgentInput
   trades?: Prisma.TradeCreateNestedManyWithoutAgentInput
   memories?: Prisma.MemoryCreateNestedManyWithoutAgentInput
@@ -935,6 +973,7 @@ export type AgentUncheckedCreateWithoutPositionsInput = {
   updatedAt?: Date | string
   wallet?: Prisma.AgentWalletUncheckedCreateNestedOneWithoutAgentInput
   policy?: Prisma.AgentPolicyUncheckedCreateNestedOneWithoutAgentInput
+  treasury?: Prisma.AgentTreasuryUncheckedCreateNestedOneWithoutAgentInput
   decisions?: Prisma.DecisionUncheckedCreateNestedManyWithoutAgentInput
   trades?: Prisma.TradeUncheckedCreateNestedManyWithoutAgentInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutAgentInput
@@ -969,6 +1008,7 @@ export type AgentUpdateWithoutPositionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   wallet?: Prisma.AgentWalletUpdateOneWithoutAgentNestedInput
   policy?: Prisma.AgentPolicyUpdateOneWithoutAgentNestedInput
+  treasury?: Prisma.AgentTreasuryUpdateOneWithoutAgentNestedInput
   decisions?: Prisma.DecisionUpdateManyWithoutAgentNestedInput
   trades?: Prisma.TradeUpdateManyWithoutAgentNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutAgentNestedInput
@@ -987,6 +1027,7 @@ export type AgentUncheckedUpdateWithoutPositionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   wallet?: Prisma.AgentWalletUncheckedUpdateOneWithoutAgentNestedInput
   policy?: Prisma.AgentPolicyUncheckedUpdateOneWithoutAgentNestedInput
+  treasury?: Prisma.AgentTreasuryUncheckedUpdateOneWithoutAgentNestedInput
   decisions?: Prisma.DecisionUncheckedUpdateManyWithoutAgentNestedInput
   trades?: Prisma.TradeUncheckedUpdateManyWithoutAgentNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutAgentNestedInput
@@ -1005,6 +1046,7 @@ export type AgentCreateWithoutMemoriesInput = {
   updatedAt?: Date | string
   wallet?: Prisma.AgentWalletCreateNestedOneWithoutAgentInput
   policy?: Prisma.AgentPolicyCreateNestedOneWithoutAgentInput
+  treasury?: Prisma.AgentTreasuryCreateNestedOneWithoutAgentInput
   decisions?: Prisma.DecisionCreateNestedManyWithoutAgentInput
   trades?: Prisma.TradeCreateNestedManyWithoutAgentInput
   positions?: Prisma.PositionCreateNestedManyWithoutAgentInput
@@ -1023,6 +1065,7 @@ export type AgentUncheckedCreateWithoutMemoriesInput = {
   updatedAt?: Date | string
   wallet?: Prisma.AgentWalletUncheckedCreateNestedOneWithoutAgentInput
   policy?: Prisma.AgentPolicyUncheckedCreateNestedOneWithoutAgentInput
+  treasury?: Prisma.AgentTreasuryUncheckedCreateNestedOneWithoutAgentInput
   decisions?: Prisma.DecisionUncheckedCreateNestedManyWithoutAgentInput
   trades?: Prisma.TradeUncheckedCreateNestedManyWithoutAgentInput
   positions?: Prisma.PositionUncheckedCreateNestedManyWithoutAgentInput
@@ -1057,6 +1100,7 @@ export type AgentUpdateWithoutMemoriesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   wallet?: Prisma.AgentWalletUpdateOneWithoutAgentNestedInput
   policy?: Prisma.AgentPolicyUpdateOneWithoutAgentNestedInput
+  treasury?: Prisma.AgentTreasuryUpdateOneWithoutAgentNestedInput
   decisions?: Prisma.DecisionUpdateManyWithoutAgentNestedInput
   trades?: Prisma.TradeUpdateManyWithoutAgentNestedInput
   positions?: Prisma.PositionUpdateManyWithoutAgentNestedInput
@@ -1075,6 +1119,7 @@ export type AgentUncheckedUpdateWithoutMemoriesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   wallet?: Prisma.AgentWalletUncheckedUpdateOneWithoutAgentNestedInput
   policy?: Prisma.AgentPolicyUncheckedUpdateOneWithoutAgentNestedInput
+  treasury?: Prisma.AgentTreasuryUncheckedUpdateOneWithoutAgentNestedInput
   decisions?: Prisma.DecisionUncheckedUpdateManyWithoutAgentNestedInput
   trades?: Prisma.TradeUncheckedUpdateManyWithoutAgentNestedInput
   positions?: Prisma.PositionUncheckedUpdateManyWithoutAgentNestedInput
@@ -1093,6 +1138,7 @@ export type AgentCreateWithoutReputationMetricsInput = {
   updatedAt?: Date | string
   wallet?: Prisma.AgentWalletCreateNestedOneWithoutAgentInput
   policy?: Prisma.AgentPolicyCreateNestedOneWithoutAgentInput
+  treasury?: Prisma.AgentTreasuryCreateNestedOneWithoutAgentInput
   decisions?: Prisma.DecisionCreateNestedManyWithoutAgentInput
   trades?: Prisma.TradeCreateNestedManyWithoutAgentInput
   positions?: Prisma.PositionCreateNestedManyWithoutAgentInput
@@ -1111,6 +1157,7 @@ export type AgentUncheckedCreateWithoutReputationMetricsInput = {
   updatedAt?: Date | string
   wallet?: Prisma.AgentWalletUncheckedCreateNestedOneWithoutAgentInput
   policy?: Prisma.AgentPolicyUncheckedCreateNestedOneWithoutAgentInput
+  treasury?: Prisma.AgentTreasuryUncheckedCreateNestedOneWithoutAgentInput
   decisions?: Prisma.DecisionUncheckedCreateNestedManyWithoutAgentInput
   trades?: Prisma.TradeUncheckedCreateNestedManyWithoutAgentInput
   positions?: Prisma.PositionUncheckedCreateNestedManyWithoutAgentInput
@@ -1145,6 +1192,7 @@ export type AgentUpdateWithoutReputationMetricsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   wallet?: Prisma.AgentWalletUpdateOneWithoutAgentNestedInput
   policy?: Prisma.AgentPolicyUpdateOneWithoutAgentNestedInput
+  treasury?: Prisma.AgentTreasuryUpdateOneWithoutAgentNestedInput
   decisions?: Prisma.DecisionUpdateManyWithoutAgentNestedInput
   trades?: Prisma.TradeUpdateManyWithoutAgentNestedInput
   positions?: Prisma.PositionUpdateManyWithoutAgentNestedInput
@@ -1163,6 +1211,7 @@ export type AgentUncheckedUpdateWithoutReputationMetricsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   wallet?: Prisma.AgentWalletUncheckedUpdateOneWithoutAgentNestedInput
   policy?: Prisma.AgentPolicyUncheckedUpdateOneWithoutAgentNestedInput
+  treasury?: Prisma.AgentTreasuryUncheckedUpdateOneWithoutAgentNestedInput
   decisions?: Prisma.DecisionUncheckedUpdateManyWithoutAgentNestedInput
   trades?: Prisma.TradeUncheckedUpdateManyWithoutAgentNestedInput
   positions?: Prisma.PositionUncheckedUpdateManyWithoutAgentNestedInput
@@ -1181,6 +1230,7 @@ export type AgentCreateWithoutEconomicEventsInput = {
   updatedAt?: Date | string
   wallet?: Prisma.AgentWalletCreateNestedOneWithoutAgentInput
   policy?: Prisma.AgentPolicyCreateNestedOneWithoutAgentInput
+  treasury?: Prisma.AgentTreasuryCreateNestedOneWithoutAgentInput
   decisions?: Prisma.DecisionCreateNestedManyWithoutAgentInput
   trades?: Prisma.TradeCreateNestedManyWithoutAgentInput
   positions?: Prisma.PositionCreateNestedManyWithoutAgentInput
@@ -1199,6 +1249,7 @@ export type AgentUncheckedCreateWithoutEconomicEventsInput = {
   updatedAt?: Date | string
   wallet?: Prisma.AgentWalletUncheckedCreateNestedOneWithoutAgentInput
   policy?: Prisma.AgentPolicyUncheckedCreateNestedOneWithoutAgentInput
+  treasury?: Prisma.AgentTreasuryUncheckedCreateNestedOneWithoutAgentInput
   decisions?: Prisma.DecisionUncheckedCreateNestedManyWithoutAgentInput
   trades?: Prisma.TradeUncheckedCreateNestedManyWithoutAgentInput
   positions?: Prisma.PositionUncheckedCreateNestedManyWithoutAgentInput
@@ -1233,6 +1284,7 @@ export type AgentUpdateWithoutEconomicEventsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   wallet?: Prisma.AgentWalletUpdateOneWithoutAgentNestedInput
   policy?: Prisma.AgentPolicyUpdateOneWithoutAgentNestedInput
+  treasury?: Prisma.AgentTreasuryUpdateOneWithoutAgentNestedInput
   decisions?: Prisma.DecisionUpdateManyWithoutAgentNestedInput
   trades?: Prisma.TradeUpdateManyWithoutAgentNestedInput
   positions?: Prisma.PositionUpdateManyWithoutAgentNestedInput
@@ -1251,6 +1303,7 @@ export type AgentUncheckedUpdateWithoutEconomicEventsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   wallet?: Prisma.AgentWalletUncheckedUpdateOneWithoutAgentNestedInput
   policy?: Prisma.AgentPolicyUncheckedUpdateOneWithoutAgentNestedInput
+  treasury?: Prisma.AgentTreasuryUncheckedUpdateOneWithoutAgentNestedInput
   decisions?: Prisma.DecisionUncheckedUpdateManyWithoutAgentNestedInput
   trades?: Prisma.TradeUncheckedUpdateManyWithoutAgentNestedInput
   positions?: Prisma.PositionUncheckedUpdateManyWithoutAgentNestedInput
@@ -1269,6 +1322,7 @@ export type AgentCreateWithoutAgentRunsInput = {
   updatedAt?: Date | string
   wallet?: Prisma.AgentWalletCreateNestedOneWithoutAgentInput
   policy?: Prisma.AgentPolicyCreateNestedOneWithoutAgentInput
+  treasury?: Prisma.AgentTreasuryCreateNestedOneWithoutAgentInput
   decisions?: Prisma.DecisionCreateNestedManyWithoutAgentInput
   trades?: Prisma.TradeCreateNestedManyWithoutAgentInput
   positions?: Prisma.PositionCreateNestedManyWithoutAgentInput
@@ -1287,6 +1341,7 @@ export type AgentUncheckedCreateWithoutAgentRunsInput = {
   updatedAt?: Date | string
   wallet?: Prisma.AgentWalletUncheckedCreateNestedOneWithoutAgentInput
   policy?: Prisma.AgentPolicyUncheckedCreateNestedOneWithoutAgentInput
+  treasury?: Prisma.AgentTreasuryUncheckedCreateNestedOneWithoutAgentInput
   decisions?: Prisma.DecisionUncheckedCreateNestedManyWithoutAgentInput
   trades?: Prisma.TradeUncheckedCreateNestedManyWithoutAgentInput
   positions?: Prisma.PositionUncheckedCreateNestedManyWithoutAgentInput
@@ -1321,6 +1376,7 @@ export type AgentUpdateWithoutAgentRunsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   wallet?: Prisma.AgentWalletUpdateOneWithoutAgentNestedInput
   policy?: Prisma.AgentPolicyUpdateOneWithoutAgentNestedInput
+  treasury?: Prisma.AgentTreasuryUpdateOneWithoutAgentNestedInput
   decisions?: Prisma.DecisionUpdateManyWithoutAgentNestedInput
   trades?: Prisma.TradeUpdateManyWithoutAgentNestedInput
   positions?: Prisma.PositionUpdateManyWithoutAgentNestedInput
@@ -1339,12 +1395,105 @@ export type AgentUncheckedUpdateWithoutAgentRunsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   wallet?: Prisma.AgentWalletUncheckedUpdateOneWithoutAgentNestedInput
   policy?: Prisma.AgentPolicyUncheckedUpdateOneWithoutAgentNestedInput
+  treasury?: Prisma.AgentTreasuryUncheckedUpdateOneWithoutAgentNestedInput
   decisions?: Prisma.DecisionUncheckedUpdateManyWithoutAgentNestedInput
   trades?: Prisma.TradeUncheckedUpdateManyWithoutAgentNestedInput
   positions?: Prisma.PositionUncheckedUpdateManyWithoutAgentNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutAgentNestedInput
   economicEvents?: Prisma.EconomicEventUncheckedUpdateManyWithoutAgentNestedInput
   reputationMetrics?: Prisma.ReputationMetricsUncheckedUpdateOneWithoutAgentNestedInput
+}
+
+export type AgentCreateWithoutTreasuryInput = {
+  id?: string
+  agentId: string
+  name?: string
+  status?: string
+  metadataUri?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  wallet?: Prisma.AgentWalletCreateNestedOneWithoutAgentInput
+  policy?: Prisma.AgentPolicyCreateNestedOneWithoutAgentInput
+  decisions?: Prisma.DecisionCreateNestedManyWithoutAgentInput
+  trades?: Prisma.TradeCreateNestedManyWithoutAgentInput
+  positions?: Prisma.PositionCreateNestedManyWithoutAgentInput
+  memories?: Prisma.MemoryCreateNestedManyWithoutAgentInput
+  economicEvents?: Prisma.EconomicEventCreateNestedManyWithoutAgentInput
+  reputationMetrics?: Prisma.ReputationMetricsCreateNestedOneWithoutAgentInput
+  agentRuns?: Prisma.AgentRunCreateNestedManyWithoutAgentInput
+}
+
+export type AgentUncheckedCreateWithoutTreasuryInput = {
+  id?: string
+  agentId: string
+  name?: string
+  status?: string
+  metadataUri?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  wallet?: Prisma.AgentWalletUncheckedCreateNestedOneWithoutAgentInput
+  policy?: Prisma.AgentPolicyUncheckedCreateNestedOneWithoutAgentInput
+  decisions?: Prisma.DecisionUncheckedCreateNestedManyWithoutAgentInput
+  trades?: Prisma.TradeUncheckedCreateNestedManyWithoutAgentInput
+  positions?: Prisma.PositionUncheckedCreateNestedManyWithoutAgentInput
+  memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutAgentInput
+  economicEvents?: Prisma.EconomicEventUncheckedCreateNestedManyWithoutAgentInput
+  reputationMetrics?: Prisma.ReputationMetricsUncheckedCreateNestedOneWithoutAgentInput
+  agentRuns?: Prisma.AgentRunUncheckedCreateNestedManyWithoutAgentInput
+}
+
+export type AgentCreateOrConnectWithoutTreasuryInput = {
+  where: Prisma.AgentWhereUniqueInput
+  create: Prisma.XOR<Prisma.AgentCreateWithoutTreasuryInput, Prisma.AgentUncheckedCreateWithoutTreasuryInput>
+}
+
+export type AgentUpsertWithoutTreasuryInput = {
+  update: Prisma.XOR<Prisma.AgentUpdateWithoutTreasuryInput, Prisma.AgentUncheckedUpdateWithoutTreasuryInput>
+  create: Prisma.XOR<Prisma.AgentCreateWithoutTreasuryInput, Prisma.AgentUncheckedCreateWithoutTreasuryInput>
+  where?: Prisma.AgentWhereInput
+}
+
+export type AgentUpdateToOneWithWhereWithoutTreasuryInput = {
+  where?: Prisma.AgentWhereInput
+  data: Prisma.XOR<Prisma.AgentUpdateWithoutTreasuryInput, Prisma.AgentUncheckedUpdateWithoutTreasuryInput>
+}
+
+export type AgentUpdateWithoutTreasuryInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  agentId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  metadataUri?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.AgentWalletUpdateOneWithoutAgentNestedInput
+  policy?: Prisma.AgentPolicyUpdateOneWithoutAgentNestedInput
+  decisions?: Prisma.DecisionUpdateManyWithoutAgentNestedInput
+  trades?: Prisma.TradeUpdateManyWithoutAgentNestedInput
+  positions?: Prisma.PositionUpdateManyWithoutAgentNestedInput
+  memories?: Prisma.MemoryUpdateManyWithoutAgentNestedInput
+  economicEvents?: Prisma.EconomicEventUpdateManyWithoutAgentNestedInput
+  reputationMetrics?: Prisma.ReputationMetricsUpdateOneWithoutAgentNestedInput
+  agentRuns?: Prisma.AgentRunUpdateManyWithoutAgentNestedInput
+}
+
+export type AgentUncheckedUpdateWithoutTreasuryInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  agentId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  metadataUri?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.AgentWalletUncheckedUpdateOneWithoutAgentNestedInput
+  policy?: Prisma.AgentPolicyUncheckedUpdateOneWithoutAgentNestedInput
+  decisions?: Prisma.DecisionUncheckedUpdateManyWithoutAgentNestedInput
+  trades?: Prisma.TradeUncheckedUpdateManyWithoutAgentNestedInput
+  positions?: Prisma.PositionUncheckedUpdateManyWithoutAgentNestedInput
+  memories?: Prisma.MemoryUncheckedUpdateManyWithoutAgentNestedInput
+  economicEvents?: Prisma.EconomicEventUncheckedUpdateManyWithoutAgentNestedInput
+  reputationMetrics?: Prisma.ReputationMetricsUncheckedUpdateOneWithoutAgentNestedInput
+  agentRuns?: Prisma.AgentRunUncheckedUpdateManyWithoutAgentNestedInput
 }
 
 
@@ -1433,6 +1582,7 @@ export type AgentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   updatedAt?: boolean
   wallet?: boolean | Prisma.Agent$walletArgs<ExtArgs>
   policy?: boolean | Prisma.Agent$policyArgs<ExtArgs>
+  treasury?: boolean | Prisma.Agent$treasuryArgs<ExtArgs>
   decisions?: boolean | Prisma.Agent$decisionsArgs<ExtArgs>
   trades?: boolean | Prisma.Agent$tradesArgs<ExtArgs>
   positions?: boolean | Prisma.Agent$positionsArgs<ExtArgs>
@@ -1477,6 +1627,7 @@ export type AgentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
 export type AgentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   wallet?: boolean | Prisma.Agent$walletArgs<ExtArgs>
   policy?: boolean | Prisma.Agent$policyArgs<ExtArgs>
+  treasury?: boolean | Prisma.Agent$treasuryArgs<ExtArgs>
   decisions?: boolean | Prisma.Agent$decisionsArgs<ExtArgs>
   trades?: boolean | Prisma.Agent$tradesArgs<ExtArgs>
   positions?: boolean | Prisma.Agent$positionsArgs<ExtArgs>
@@ -1494,6 +1645,7 @@ export type $AgentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   objects: {
     wallet: Prisma.$AgentWalletPayload<ExtArgs> | null
     policy: Prisma.$AgentPolicyPayload<ExtArgs> | null
+    treasury: Prisma.$AgentTreasuryPayload<ExtArgs> | null
     decisions: Prisma.$DecisionPayload<ExtArgs>[]
     trades: Prisma.$TradePayload<ExtArgs>[]
     positions: Prisma.$PositionPayload<ExtArgs>[]
@@ -1906,6 +2058,7 @@ export interface Prisma__AgentClient<T, Null = never, ExtArgs extends runtime.Ty
   readonly [Symbol.toStringTag]: "PrismaPromise"
   wallet<T extends Prisma.Agent$walletArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Agent$walletArgs<ExtArgs>>): Prisma.Prisma__AgentWalletClient<runtime.Types.Result.GetResult<Prisma.$AgentWalletPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   policy<T extends Prisma.Agent$policyArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Agent$policyArgs<ExtArgs>>): Prisma.Prisma__AgentPolicyClient<runtime.Types.Result.GetResult<Prisma.$AgentPolicyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  treasury<T extends Prisma.Agent$treasuryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Agent$treasuryArgs<ExtArgs>>): Prisma.Prisma__AgentTreasuryClient<runtime.Types.Result.GetResult<Prisma.$AgentTreasuryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   decisions<T extends Prisma.Agent$decisionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Agent$decisionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DecisionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   trades<T extends Prisma.Agent$tradesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Agent$tradesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TradePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   positions<T extends Prisma.Agent$positionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Agent$positionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PositionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2377,6 +2530,25 @@ export type Agent$policyArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    */
   include?: Prisma.AgentPolicyInclude<ExtArgs> | null
   where?: Prisma.AgentPolicyWhereInput
+}
+
+/**
+ * Agent.treasury
+ */
+export type Agent$treasuryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AgentTreasury
+   */
+  select?: Prisma.AgentTreasurySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AgentTreasury
+   */
+  omit?: Prisma.AgentTreasuryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AgentTreasuryInclude<ExtArgs> | null
+  where?: Prisma.AgentTreasuryWhereInput
 }
 
 /**

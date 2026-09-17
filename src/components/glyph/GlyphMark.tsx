@@ -44,7 +44,7 @@ export const GlyphMark: React.FC<GlyphMarkProps> = ({
         viewBox="0 0 64 64"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="w-full h-full text-[#F5F5F5] overflow-visible"
+        className="w-full h-full text-[#f3f3f4] overflow-visible"
       >
         {/* Outer geometric bounding square / diamond alignment */}
         <rect

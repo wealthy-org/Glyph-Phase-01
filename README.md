@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Glyph — Phase 01
+
+> Autonomous Economic Being with Onchain Identity
+
+Glyph is an autonomous digital being with an onchain identity, wallet, memory, economic history, and the ability to make and record market decisions. Phase 01 is a **Testnet / Paper Trading MVP**.
+
+## Core Loop
+
+**Identity → Wallet → Capital Simulation → Research → Decision → Onchain Record → Outcome → Memory → Reputation**
+
+## Tech Stack
+
+- **Framework:** Next.js 16
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS 4, Framer Motion
+- **Database:** PostgreSQL + Prisma ORM
+- **Blockchain:** Wagmi, Viem, OpenZeppelin (ERC-8004)
+- **UI:** shadcn/ui, Lucide Icons
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js ≥ 18
+- PostgreSQL
+
+### Installation
 
 ```bash
+# Install dependencies
+npm install
+
+# Copy environment variables
+cp .env.example .env
+
+# Setup database
+npx prisma generate
+npx prisma db push
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/             # Next.js App Router pages
+│   ├── about/       # About page
+│   ├── identity/    # Identity module
+│   ├── life/        # Life module
+│   └── trades/      # Trades module
+├── features/        # Feature-based modules
+contracts/           # Smart contracts (Solidity)
+prisma/              # Database schema & migrations
+```
 
-## Learn More
+## Scripts
 
-To learn more about Next.js, take a look at the following resources:
+| Command            | Description                  |
+| ------------------ | ---------------------------- |
+| `npm run dev`      | Start development server     |
+| `npm run build`    | Build for production         |
+| `npm run start`    | Start production server      |
+| `npm run lint`     | Run ESLint                   |
+| `npm run prisma:reset` | Reset & seed database   |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## License
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Private — All rights reserved.

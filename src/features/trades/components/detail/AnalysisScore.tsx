@@ -16,18 +16,18 @@ export const AnalysisScore: React.FC<AnalysisScoreProps> = ({
   indicatorClassName,
 }) => {
   return (
-    <div className={cn("space-y-2.5 pt-2", className)}>
+    <div className={cn("space-y-2 pt-2", className)}>
       <div className="flex items-center justify-between font-mono text-xs">
-        <span className="text-[#666666] tracking-widest uppercase">SCORE</span>
-        <span className="text-[#F5F5F5] font-medium tracking-wider">
-          {score} <span className="text-[#666666]">/ {maxScore}</span>
+        <span className="text-[#55555a] tracking-widest uppercase">SCORE</span>
+        <span className="text-[#f3f3f4] font-medium tracking-wider">
+          {score} <span className="text-[#55555a]">/ {maxScore}</span>
         </span>
       </div>
       <Progress
         value={score}
         max={maxScore}
-        className="h-[3px] bg-[#1A1A1A]"
-        indicatorClassName={cn("bg-[#8FB996]", indicatorClassName)}
+        className="h-[2px] bg-[#171717]"
+        indicatorClassName={cn("bg-[#f0f0f1]", indicatorClassName)}
       />
     </div>
   );

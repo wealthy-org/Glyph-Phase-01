@@ -409,7 +409,8 @@ export const ModelName = {
   Memory: 'Memory',
   ReputationMetrics: 'ReputationMetrics',
   EconomicEvent: 'EconomicEvent',
-  AgentRun: 'AgentRun'
+  AgentRun: 'AgentRun',
+  AgentTreasury: 'AgentTreasury'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -425,7 +426,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "agent" | "agentWallet" | "agentPolicy" | "marketAsset" | "researchSnapshot" | "decision" | "trade" | "position" | "transaction" | "memory" | "reputationMetrics" | "economicEvent" | "agentRun"
+    modelProps: "agent" | "agentWallet" | "agentPolicy" | "marketAsset" | "researchSnapshot" | "decision" | "trade" | "position" | "transaction" | "memory" | "reputationMetrics" | "economicEvent" | "agentRun" | "agentTreasury"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1391,6 +1392,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    AgentTreasury: {
+      payload: Prisma.$AgentTreasuryPayload<ExtArgs>
+      fields: Prisma.AgentTreasuryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AgentTreasuryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgentTreasuryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AgentTreasuryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgentTreasuryPayload>
+        }
+        findFirst: {
+          args: Prisma.AgentTreasuryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgentTreasuryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AgentTreasuryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgentTreasuryPayload>
+        }
+        findMany: {
+          args: Prisma.AgentTreasuryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgentTreasuryPayload>[]
+        }
+        create: {
+          args: Prisma.AgentTreasuryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgentTreasuryPayload>
+        }
+        createMany: {
+          args: Prisma.AgentTreasuryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AgentTreasuryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgentTreasuryPayload>[]
+        }
+        delete: {
+          args: Prisma.AgentTreasuryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgentTreasuryPayload>
+        }
+        update: {
+          args: Prisma.AgentTreasuryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgentTreasuryPayload>
+        }
+        deleteMany: {
+          args: Prisma.AgentTreasuryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AgentTreasuryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AgentTreasuryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgentTreasuryPayload>[]
+        }
+        upsert: {
+          args: Prisma.AgentTreasuryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgentTreasuryPayload>
+        }
+        aggregate: {
+          args: Prisma.AgentTreasuryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAgentTreasury>
+        }
+        groupBy: {
+          args: Prisma.AgentTreasuryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AgentTreasuryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AgentTreasuryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AgentTreasuryCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1659,6 +1734,19 @@ export const AgentRunScalarFieldEnum = {
 } as const
 
 export type AgentRunScalarFieldEnum = (typeof AgentRunScalarFieldEnum)[keyof typeof AgentRunScalarFieldEnum]
+
+
+export const AgentTreasuryScalarFieldEnum = {
+  id: 'id',
+  agentId: 'agentId',
+  initialCapital: 'initialCapital',
+  currentBalance: 'currentBalance',
+  currency: 'currency',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AgentTreasuryScalarFieldEnum = (typeof AgentTreasuryScalarFieldEnum)[keyof typeof AgentTreasuryScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -2081,6 +2169,7 @@ export type GlobalOmitConfig = {
   reputationMetrics?: Prisma.ReputationMetricsOmit
   economicEvent?: Prisma.EconomicEventOmit
   agentRun?: Prisma.AgentRunOmit
+  agentTreasury?: Prisma.AgentTreasuryOmit
 }
 
 /* Types for Logging */

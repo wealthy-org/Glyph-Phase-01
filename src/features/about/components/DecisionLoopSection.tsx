@@ -22,19 +22,19 @@ export const DecisionLoopSection: React.FC<DecisionLoopSectionProps> = ({
     <section className={cn("space-y-8 sm:space-y-10 pt-8 sm:pt-12", className)} aria-label="Process Cycle">
       {/* Section Header */}
       <div className="space-y-1">
-        <div className="font-mono text-xs text-[#8FB996] tracking-widest">
-          {eyebrow}
+        <div className="eyebrow">
+          <span>{eyebrow}</span>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-normal tracking-tight text-[#F5F5F5] uppercase">
+        <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-[#f3f3f4] uppercase">
           {heading}
         </h2>
-        <p className="text-sm text-[#A0A0A0] font-light">
+        <p className="text-sm text-[#85858a] font-light">
           {description}
         </p>
       </div>
 
       {/* Process Flow Outer Panel */}
-      <div className="border border-[#242424] bg-[#0D0D0D]/40 p-6 sm:p-10 md:p-14">
+      <div className="border border-[#171717] bg-[#050505] p-6 sm:p-10 md:p-14">
         <div className="max-w-2xl mx-auto space-y-3">
           {steps.map((step, idx) => (
             <React.Fragment key={step.step}>
@@ -43,8 +43,8 @@ export const DecisionLoopSection: React.FC<DecisionLoopSectionProps> = ({
                 className={cn(
                   "border p-4 sm:p-5 flex items-start gap-4 transition-colors",
                   step.isHighlighted
-                    ? "border-[#8FB996]/50 bg-[#8FB996]/5 hover:border-[#8FB996]"
-                    : "border-[#242424] bg-[#080808] hover:border-[#383838]"
+                    ? "border-[#6fe39a]/40 bg-[#6fe39a]/5 hover:border-[#6fe39a]"
+                    : "border-[#171717] bg-[#080808] hover:border-[#262626]"
                 )}
               >
                 {/* Step Index Badge */}
@@ -52,8 +52,8 @@ export const DecisionLoopSection: React.FC<DecisionLoopSectionProps> = ({
                   className={cn(
                     "font-mono text-xs px-2 py-0.5 border rounded-none shrink-0 font-medium",
                     step.isHighlighted
-                      ? "border-[#8FB996]/50 text-[#8FB996] bg-[#8FB996]/10"
-                      : "border-[#242424] text-[#8FB996] bg-[#0D0D0D]"
+                      ? "border-[#6fe39a]/50 text-[#6fe39a] bg-[#6fe39a]/10"
+                      : "border-[#171717] text-[#85858a] bg-[#0a0a0a]"
                   )}
                 >
                   {step.step}
@@ -64,12 +64,12 @@ export const DecisionLoopSection: React.FC<DecisionLoopSectionProps> = ({
                   <h3
                     className={cn(
                       "font-mono text-xs sm:text-sm font-medium tracking-wider uppercase",
-                      step.isHighlighted ? "text-[#8FB996]" : "text-[#F5F5F5]"
+                      step.isHighlighted ? "text-[#6fe39a]" : "text-[#f3f3f4]"
                     )}
                   >
                     {step.label}
                   </h3>
-                  <p className="font-mono text-xs text-[#A0A0A0] leading-relaxed">
+                  <p className="font-mono text-xs text-[#85858a] leading-relaxed">
                     {step.description}
                   </p>
                 </div>
@@ -78,10 +78,10 @@ export const DecisionLoopSection: React.FC<DecisionLoopSectionProps> = ({
               {/* Downward Connector Arrow */}
               {idx < steps.length - 1 && (
                 <div
-                  className="flex justify-center py-1 text-[#666666]"
+                  className="flex justify-center py-1 text-[#333338]"
                   aria-hidden="true"
                 >
-                  <ArrowDown size={14} className="text-[#666666]" />
+                  <ArrowDown size={14} className="text-[#55555a]" />
                 </div>
               )}
             </React.Fragment>

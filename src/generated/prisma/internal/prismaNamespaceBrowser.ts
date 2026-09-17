@@ -63,7 +63,8 @@ export const ModelName = {
   Memory: 'Memory',
   ReputationMetrics: 'ReputationMetrics',
   EconomicEvent: 'EconomicEvent',
-  AgentRun: 'AgentRun'
+  AgentRun: 'AgentRun',
+  AgentTreasury: 'AgentTreasury'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -311,6 +312,19 @@ export const AgentRunScalarFieldEnum = {
 } as const
 
 export type AgentRunScalarFieldEnum = (typeof AgentRunScalarFieldEnum)[keyof typeof AgentRunScalarFieldEnum]
+
+
+export const AgentTreasuryScalarFieldEnum = {
+  id: 'id',
+  agentId: 'agentId',
+  initialCapital: 'initialCapital',
+  currentBalance: 'currentBalance',
+  currency: 'currency',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AgentTreasuryScalarFieldEnum = (typeof AgentTreasuryScalarFieldEnum)[keyof typeof AgentTreasuryScalarFieldEnum]
 
 
 export const SortOrder = {

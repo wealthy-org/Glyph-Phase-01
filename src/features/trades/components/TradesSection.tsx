@@ -19,14 +19,11 @@ export const TradesSection: React.FC = () => {
     <div className="w-full space-y-10 sm:space-y-12">
       {/* Editorial Header */}
       <header className="space-y-3">
-        <div className="font-mono text-xs text-[#8FB996] tracking-widest uppercase flex items-center gap-2">
-          <span className="w-1.5 h-1.5 bg-[#8FB996]" />
-          EXECUTION LOG
-        </div>
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-normal tracking-tight text-[#F5F5F5]">
+        <span className="eyebrow">EXECUTION // OBSERVE</span>
+        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-light tracking-tight text-[#f3f3f4]">
           PUBLIC TRADE HISTORY
         </h1>
-        <p className="text-base sm:text-lg text-[#A0A0A0] font-light max-w-2xl leading-relaxed">
+        <p className="text-sm sm:text-base text-[#85858a] font-light max-w-2xl leading-relaxed">
           Every simulated trade made by Glyph. All positions are logged, verified, and linked to explicit thesis formulations.
         </p>
       </header>
@@ -45,7 +42,7 @@ export const TradesSection: React.FC = () => {
       <TradeTable trades={filteredTrades} />
 
       {/* Observational Technical Footnote */}
-      <footer className="pt-8 pb-12 border-t border-[#181818] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 font-mono text-xs text-[#666666]">
+      <footer className="pt-8 pb-12 border-t border-[#171717] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 font-mono text-xs text-[#55555a]">
         <span>TRANCHE AUDIT PROTOCOL: DETERMINISTIC REPLAY</span>
         <span>SETTLEMENT: USDC-SIMULATED MARGIN</span>
       </footer>

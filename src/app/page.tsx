@@ -1,4 +1,3 @@
-import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
 import { CurrentThesis } from "@/features/landing/components/CurrentThesis";
 import { EconomicActivity } from "@/features/landing/components/EconomicActivity";
@@ -8,7 +7,7 @@ import { Reputation } from "@/features/landing/components/Reputation";
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col bg-[#080808] text-[#F5F5F5]">
+    <div className="flex-1 flex flex-col bg-[#000000] text-[#f3f3f4]">
       {/* Top Observation Navigation */}
       <Navbar />
 
@@ -29,9 +28,6 @@ export default function Home() {
         {/* Section 5: Reputation */}
         <Reputation />
       </main>
-
-      {/* Persistent Quiet Minimal Footer */}
-      <Footer />
     </div>
   );
 }

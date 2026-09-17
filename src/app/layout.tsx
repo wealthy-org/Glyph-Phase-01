@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Footer } from "@/components/layout/Footer";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -41,7 +42,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#080808",
+  themeColor: "#000000",
 };
 
 export default function RootLayout({
@@ -52,10 +53,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} dark bg-[#080808] text-[#F5F5F5] antialiased selection:bg-[#242424] selection:text-[#F5F5F5]`}
+      className={`${geistSans.variable} ${geistMono.variable} dark bg-[#000000] text-[#f3f3f4] antialiased selection:bg-[#1c1c1c] selection:text-[#f3f3f4]`}
     >
-      <body className="min-h-screen bg-[#080808] text-[#F5F5F5] font-sans flex flex-col">
-        {children}
+      <body className="min-h-screen bg-[#000000] text-[#f3f3f4] font-sans flex flex-col">
+        <div className="w-full max-w-[1920px] mx-auto min-h-screen flex flex-col border-x border-[#171717] bg-[#000000] relative">
+          {children}
+          <Footer />
+        </div>
       </body>
     </html>
   );

@@ -33,7 +33,7 @@ export const IdentitySection: React.FC<IdentitySectionProps> = ({
       <RegistryArchitecture cards={data.architectureCards} />
 
       {/* Observational Technical Footnote */}
-      <footer className="pt-8 pb-12 border-t border-[#181818] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 font-mono text-xs text-[#666666]">
+      <footer className="pt-8 pb-12 border-t border-[#171717] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 font-mono text-xs text-[#55555a]">
         <span>REGISTRY SPECIFICATION: ERC-8004 // PHASE 01</span>
         <span>ATTESTATION PROOF: CRYPTOGRAPHICALLY PINNED</span>
       </footer>

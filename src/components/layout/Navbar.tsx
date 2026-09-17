@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { GlyphMark } from "@/components/glyph/GlyphMark";
@@ -24,7 +24,17 @@ const NAV_ITEMS: NavItem[] = [
 
 export const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 8);
+    };
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const isItemActive = (href: string) => {
     if (href === "/trades") {
@@ -34,27 +44,37 @@ export const Navbar: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-[#080808]/90 backdrop-blur-md border-b border-[#242424]">
-      <div className="max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-12 h-16 flex items-center justify-between">
+    <header
+      className={cn(
+        "sticky top-0 z-50 w-full transition-all duration-300 border-b",
+        scrolled
+          ? "bg-black/65 backdrop-blur-xl supports-[backdrop-filter]:bg-black/55 border-[#171717] shadow-[0_8px_32px_rgba(0,0,0,0.6)]"
+          : "bg-black/40 backdrop-blur-md supports-[backdrop-filter]:bg-black/30 border-[#171717]/60"
+      )}
+    >
+      <div className="max-w-[1920px] mx-auto px-5 sm:px-8 lg:px-12 h-12 sm:h-14 flex items-center justify-between">
         {/* Left: Brand Identity */}
         <Link
           href="/"
-          className="flex items-center gap-3 group focus:outline-none focus-visible:ring-1 focus-visible:ring-[#F5F5F5]"
+          className="flex items-center gap-2.5 group focus:outline-none"
+          aria-label="Glyph Home"
         >
-          <GlyphMark size="sm" animated={true} />
-          <div className="flex flex-col">
-            <span className="font-sans text-sm font-semibold tracking-widest text-[#F5F5F5] group-hover:text-white transition-colors">
+          <span className="w-3 h-3 border border-[#e6e6e6] grid place-items-center shrink-0">
+            <span className="w-1 h-1 bg-[#e6e6e6] block" />
+          </span>
+          <div className="flex items-center gap-2">
+            <span className="font-sans text-xs sm:text-sm font-medium tracking-tight text-[#f0f0f0] group-hover:text-white transition-colors">
               GLYPH
             </span>
-            <span className="font-mono text-[9px] text-[#666666] tracking-wider hidden sm:block">
-              BEING #001
+            <span className="font-mono text-[9px] text-[#55555a] tracking-widest hidden sm:inline-block">
+              // 001
             </span>
           </div>
         </Link>
 
         {/* Center: Navigation Links (Desktop) */}
         <nav
-          className="hidden md:flex items-center gap-8 text-xs font-mono tracking-widest"
+          className="hidden md:flex items-center gap-8 text-[11px] font-mono tracking-wider"
           aria-label="Primary Navigation"
         >
           {NAV_ITEMS.map((item) => {
@@ -64,10 +84,10 @@ export const Navbar: React.FC = () => {
                 key={item.label}
                 href={item.href}
                 className={cn(
-                  "py-1 relative transition-colors",
+                  "py-1 relative transition-colors uppercase tracking-[0.08em]",
                   active
-                    ? "text-[#F5F5F5] font-medium after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-[#F5F5F5]"
-                    : "text-[#A0A0A0] hover:text-[#F5F5F5] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-[#F5F5F5] hover:after:w-full after:transition-all after:duration-200"
+                    ? "text-[#f3f3f4] font-medium"
+                    : "text-[#77777b] hover:text-[#eeeeee]"
                 )}
               >
                 {item.label}
@@ -80,35 +100,35 @@ export const Navbar: React.FC = () => {
         <div className="hidden sm:flex items-center gap-3">
           <Link
             href="/identity"
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#8FB996]/10 border border-[#8FB996]/30 text-[#8FB996] text-[11px] font-mono tracking-wider hover:bg-[#8FB996]/20 transition-colors"
+            className="inline-flex items-center gap-2 px-3 py-1 bg-transparent border border-[#1a1a1a] hover:border-[#2b2b2b] text-[#85858a] hover:text-[#f3f3f4] text-[10px] font-mono tracking-wider transition-colors"
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-[#8FB996]" />
-            Verified Agent · ID #1
+            <span className="w-1.5 h-1.5 rounded-full bg-[#6fe39a] shadow-[0_0_0_3px_rgba(111,227,154,0.18)] animate-livepulse" />
+            <span>VERIFIED AGENT · ID #1</span>
           </Link>
-          <StatusIndicator network="TESTNET" status="ONLINE" />
+          <StatusIndicator network="TESTNET" status="LIVE" />
         </div>
 
-        {/* Mobile Hamburger Button using shadcn Button */}
+        {/* Mobile Hamburger Button */}
         <div className="flex items-center gap-3 sm:hidden">
-          <StatusIndicator network="SIM" status="ON" className="gap-1.5 text-[10px]" />
+          <StatusIndicator network="SIM" status="LIVE" className="gap-1 text-[10px]" />
           <Button
             type="button"
             variant="outline"
             size="icon-xs"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-1.5 text-[#A0A0A0] hover:text-[#F5F5F5] border-[#242424] hover:border-[#666666] bg-transparent rounded-none cursor-pointer"
+            className="p-1 text-[#85858a] hover:text-[#f3f3f4] border-[#1a1a1a] bg-transparent rounded-none cursor-pointer"
             aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
             aria-expanded={mobileMenuOpen}
           >
-            {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
+            {mobileMenuOpen ? <X size={16} /> : <Menu size={16} />}
           </Button>
         </div>
       </div>
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="sm:hidden border-b border-[#242424] bg-[#0D0D0D] px-5 py-6 space-y-4">
-          <nav className="flex flex-col space-y-4 font-mono text-xs tracking-widest text-[#A0A0A0]">
+        <div className="sm:hidden border-b border-[#171717] bg-black/85 backdrop-blur-xl px-5 py-6 space-y-4">
+          <nav className="flex flex-col space-y-4 font-mono text-xs tracking-widest text-[#85858a]">
             {NAV_ITEMS.map((item) => {
               const active = isItemActive(item.href);
               return (
@@ -117,18 +137,18 @@ export const Navbar: React.FC = () => {
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
                   className={cn(
-                    "transition-colors py-1.5 flex items-center justify-between",
-                    active ? "text-[#F5F5F5] font-medium" : "hover:text-[#F5F5F5]"
+                    "transition-colors py-1.5 flex items-center justify-between uppercase",
+                    active ? "text-[#f3f3f4] font-medium" : "hover:text-[#f3f3f4]"
                   )}
                 >
                   <div className="flex items-center gap-2">
-                    {active && <span className="w-1.5 h-1.5 bg-[#8FB996] rounded-full" />}
+                    {active && <span className="w-1.5 h-1.5 bg-[#6fe39a] rounded-full" />}
                     <span>{item.label}</span>
                   </div>
                   <span
                     className={cn(
                       "text-[10px]",
-                      active ? "text-[#8FB996]" : "text-[#666666]"
+                      active ? "text-[#6fe39a]" : "text-[#55555a]"
                     )}
                   >
                     {active ? "ACTIVE" : "→"}
@@ -138,10 +158,10 @@ export const Navbar: React.FC = () => {
             })}
           </nav>
           <div className="pt-4 space-y-4">
-            <Separator className="bg-[#181818]" />
+            <Separator className="bg-[#171717]" />
             <div className="flex items-center justify-between">
-              <span className="font-mono text-[10px] text-[#666666]">SYSTEM STATE</span>
-              <StatusIndicator network="TESTNET" status="ONLINE" />
+              <span className="font-mono text-[10px] text-[#55555a]">SYSTEM STATE</span>
+              <StatusIndicator network="TESTNET" status="LIVE" />
             </div>
           </div>
         </div>

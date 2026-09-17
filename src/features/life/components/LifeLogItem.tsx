@@ -16,14 +16,14 @@ export const LifeLogItem: React.FC<LifeLogItemProps> = ({ event, isLast = false 
       {/* Spine vertical line */}
       {!isLast && (
         <div
-          className="absolute left-[7px] top-4 bottom-0 w-[1px] bg-[#242424]"
+          className="absolute left-[7px] top-4 bottom-0 w-[1px] bg-[#171717] group-hover:bg-[#252525] transition-colors"
           aria-hidden="true"
         />
       )}
 
       {/* Geometric minimal marker on the spine */}
-      <div className="relative z-10 flex items-center justify-center w-[15px] h-[15px] bg-[#080808] border border-[#242424] group-hover:border-[#666666] shrink-0 mt-1 transition-colors">
-        <div className="w-[3px] h-[3px] bg-[#F5F5F5] group-hover:bg-[#8FB996] transition-colors" />
+      <div className="relative z-10 flex items-center justify-center w-[15px] h-[15px] bg-[#000000] border border-[#1a1a1a] group-hover:border-[#55555a] shrink-0 mt-1 transition-colors">
+        <div className="w-[3px] h-[3px] bg-[#f3f3f4] group-hover:bg-[#6fe39a] transition-colors" />
       </div>
 
       {/* Content block */}
@@ -31,14 +31,14 @@ export const LifeLogItem: React.FC<LifeLogItemProps> = ({ event, isLast = false 
         {/* Metadata row: Day, Date, Category Badge, and Result */}
         <div className="flex flex-wrap items-center justify-between gap-2 font-mono text-xs">
           <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
-            <span className="text-[#A0A0A0] font-medium tracking-wider">
+            <span className="text-[#85858a] font-medium tracking-wider">
               {formattedDay}
             </span>
-            <span className="text-[#666666]">·</span>
-            <span className="text-[#666666] tracking-tight">{event.date}</span>
+            <span className="text-[#333333]">·</span>
+            <span className="text-[#55555a] tracking-tight">{event.date}</span>
             <Badge
               variant="outline"
-              className="border-[#242424] bg-[#0D0D0D] text-[#A0A0A0] text-[10px] font-mono tracking-wider uppercase px-1.5 py-0.5 rounded-none font-normal"
+              className="border-[#1a1a1a] bg-[#050505] text-[#85858a] text-[10px] font-mono tracking-wider uppercase px-1.5 py-0.5 rounded-none font-normal"
             >
               {event.category}
             </Badge>
@@ -50,10 +50,10 @@ export const LifeLogItem: React.FC<LifeLogItemProps> = ({ event, isLast = false 
               className={cn(
                 "font-mono text-xs font-medium tracking-tight",
                 event.result.startsWith("+")
-                  ? "text-[#8FB996]"
+                  ? "text-[#6fe39a]"
                   : event.result.startsWith("-")
-                  ? "text-[#C47A7A]"
-                  : "text-[#F5F5F5]"
+                  ? "text-[#c47a7a]"
+                  : "text-[#f3f3f4]"
               )}
             >
               {event.result}
@@ -62,18 +62,18 @@ export const LifeLogItem: React.FC<LifeLogItemProps> = ({ event, isLast = false 
         </div>
 
         {/* Title */}
-        <h3 className="text-base sm:text-lg font-normal text-[#F5F5F5] tracking-tight leading-snug">
+        <h3 className="text-base sm:text-lg font-normal text-[#f3f3f4] tracking-tight leading-snug">
           {event.title}
         </h3>
 
         {/* Description */}
-        <p className="text-xs sm:text-sm text-[#A0A0A0] font-light leading-relaxed">
+        <p className="text-xs sm:text-sm text-[#85858a] font-light leading-relaxed">
           {event.description}
         </p>
 
         {/* Transaction hash */}
         <div className="pt-1">
-          <span className="font-mono text-[11px] text-[#666666] tracking-wider select-all">
+          <span className="font-mono text-[11px] text-[#55555a] tracking-wider select-all">
             TX: {event.tx}
           </span>
         </div>

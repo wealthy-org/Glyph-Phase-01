@@ -21,28 +21,28 @@ export const WhyITradedSection: React.FC<WhyITradedSectionProps> = ({
   return (
     <section
       className={cn(
-        "border border-[#242424] bg-[#0D0D0D] p-6 sm:p-8 md:p-10 space-y-6 sm:space-y-8",
+        "border border-[#171717] bg-[#050505] p-6 sm:p-8 md:p-10 space-y-6 sm:space-y-8",
         className
       )}
       aria-label="Rationale: Why I Traded"
     >
       {/* Section Header */}
       <div>
-        <h2 className="font-mono text-xs sm:text-sm text-[#A0A0A0] tracking-widest uppercase font-medium">
+        <h2 className="font-mono text-xs sm:text-sm text-[#85858a] tracking-widest uppercase font-medium">
           WHY I TRADED
         </h2>
       </div>
 
-      <Separator className="bg-[#242424]" />
+      <Separator className="bg-[#171717]" />
 
       {/* Two-column layout on desktop, stacked on mobile */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
         {/* Left Column: Fundamental Analysis */}
         <div className="space-y-3">
-          <h3 className="text-base sm:text-lg font-medium text-[#F5F5F5] tracking-tight">
+          <h3 className="text-base sm:text-lg font-medium text-[#f3f3f4] tracking-tight">
             {fundamental.title}
           </h3>
-          <p className="text-sm text-[#A0A0A0] leading-relaxed">
+          <p className="text-sm text-[#85858a] leading-relaxed font-light">
             {fundamental.description}
           </p>
           <AnalysisScore score={fundamental.score} maxScore={fundamental.maxScore} />
@@ -50,18 +50,18 @@ export const WhyITradedSection: React.FC<WhyITradedSectionProps> = ({
 
         {/* Right Column: Technical Analysis */}
         <div className="space-y-3">
-          <h3 className="text-base sm:text-lg font-medium text-[#F5F5F5] tracking-tight">
+          <h3 className="text-base sm:text-lg font-medium text-[#f3f3f4] tracking-tight">
             {technical.title}
           </h3>
-          <p className="text-sm text-[#A0A0A0] leading-relaxed">
+          <p className="text-sm text-[#85858a] leading-relaxed font-light">
             {technical.description}
           </p>
-          <AnalysisScore score={technical.score} maxScore={technical.maxScore} />
+          <AnalysisScore score={technical.score} maxScore={technical.maxScore} indicatorClassName="bg-[#6fe39a]" />
         </div>
       </div>
 
       {/* Divider */}
-      <Separator className="bg-[#242424]" />
+      <Separator className="bg-[#171717]" />
 
       {/* Catalyst */}
       <CatalystSection catalyst={catalyst} />

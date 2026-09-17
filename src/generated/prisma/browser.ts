@@ -82,3 +82,8 @@ export type EconomicEvent = Prisma.EconomicEventModel
  * 
  */
 export type AgentRun = Prisma.AgentRunModel
+/**
+ * Model AgentTreasury
+ * 
+ */
+export type AgentTreasury = Prisma.AgentTreasuryModel

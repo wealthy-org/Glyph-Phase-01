@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { TradeFilter } from "../types";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -9,7 +11,11 @@ interface TradeFiltersProps {
   count: number;
 }
 
-const FILTERS: TradeFilter[] = ["ALL", "VALIDATED", "INVALIDATED"];
+const FILTERS: { id: TradeFilter; label: string }[] = [
+  { id: "ALL", label: "All Executions" },
+  { id: "VALIDATED", label: "Validated" },
+  { id: "INVALIDATED", label: "Invalidated" },
+];
 
 export const TradeFilters: React.FC<TradeFiltersProps> = ({
   currentFilter,
@@ -19,39 +25,44 @@ export const TradeFilters: React.FC<TradeFiltersProps> = ({
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        {/* Tabs Filter */}
+        {/* Modern Tabs Filter */}
         <Tabs
           value={currentFilter}
           onValueChange={(val) => onFilterChange(val as TradeFilter)}
           className="w-auto"
         >
-          <TabsList className="bg-transparent p-0 flex flex-wrap gap-2 !h-auto group-data-horizontal/tabs:!h-auto border-0">
+          <TabsList className="bg-[#0a0a0e] p-1 rounded-lg border border-[#1e1e24] flex flex-wrap gap-1 !h-auto group-data-horizontal/tabs:!h-auto">
             {FILTERS.map((filter) => {
-              const isActive = currentFilter === filter;
+              const isActive = currentFilter === filter.id;
               return (
                 <TabsTrigger
-                  key={filter}
-                  value={filter}
-                  className={`rounded-none border font-mono text-xs tracking-wider uppercase px-3 py-1.5 transition-colors cursor-pointer ${
+                  key={filter.id}
+                  value={filter.id}
+                  className={`rounded-md font-sans text-xs font-medium px-3.5 py-1.5 transition-all cursor-pointer ${
                     isActive
-                      ? "bg-[#F5F5F5] text-[#080808] border-[#F5F5F5] font-medium"
-                      : "bg-[#0D0D0D] text-[#A0A0A0] border-[#242424] hover:text-[#F5F5F5] hover:border-[#666666]"
+                      ? "bg-[#f4f4f5] text-[#09090b] font-semibold shadow-sm"
+                      : "text-[#8e8e93] hover:text-[#f4f4f5] hover:bg-[#14141a]"
                   }`}
                 >
-                  {filter}
+                  {filter.label}
                 </TabsTrigger>
               );
             })}
           </TabsList>
         </Tabs>
 
-        {/* Counter metadata */}
-        <span className="font-mono text-xs text-[#666666] tracking-wider uppercase">
-          SHOWING {count} {count === 1 ? "RECORD" : "RECORDS"}
-        </span>
+        {/* Counter metadata pill */}
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-[#0a0a0e] border border-[#1e1e24] font-mono text-xs text-[#8e8e93]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#6fe39a]" />
+            <span>
+              {count} {count === 1 ? "RECORD LOGGED" : "RECORDS LOGGED"}
+            </span>
+          </span>
+        </div>
       </div>
 
-      <Separator className="bg-[#242424]" />
+      <Separator className="bg-[#18181f]" />
     </div>
   );
 };

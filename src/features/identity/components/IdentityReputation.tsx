@@ -14,32 +14,30 @@ export const IdentityReputation: React.FC<IdentityReputationProps> = ({
   return (
     <section className={cn("space-y-6", className)} aria-label="Reputation Record">
       {/* Numbered Section Header matching reference */}
-      <div className="space-y-1">
-        <div className="font-mono text-xs text-[#8FB996] tracking-widest">
-          // 01
-        </div>
-        <h2 className="text-2xl sm:text-3xl font-normal tracking-tight text-[#F5F5F5] uppercase">
+      <div className="space-y-2">
+        <span className="eyebrow">REPUTATION // 001</span>
+        <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-[#f3f3f4] uppercase">
           REPUTATION
         </h2>
-        <p className="text-sm text-[#A0A0A0] font-light">
+        <p className="text-sm text-[#85858a] font-light">
           Verifiable track record committed to autonomous registry state.
         </p>
       </div>
 
       {/* 4 Metric Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-[#171717] border border-[#171717]">
         {metrics.map((metric) => (
           <div
             key={metric.label}
-            className="border border-[#242424] bg-[#0D0D0D] p-5 sm:p-6 space-y-2 hover:border-[#383838] transition-colors"
+            className="bg-[#050505] p-5 sm:p-6 space-y-3 hover:bg-[#080808] transition-colors"
           >
-            <span className="font-mono text-xs text-[#666666] tracking-widest uppercase block">
+            <span className="font-mono text-[10px] sm:text-[11px] text-[#55555a] tracking-widest uppercase block">
               {metric.label}
             </span>
             <div
               className={cn(
-                "font-mono text-3xl sm:text-4xl font-light tracking-tight",
-                metric.highlight ? "text-[#8FB996]" : "text-[#F5F5F5]"
+                "font-mono text-3xl sm:text-4xl font-light tracking-tight tabular-nums",
+                metric.highlight ? "text-[#6fe39a]" : "text-[#f3f3f4]"
               )}
             >
               {metric.value}

@@ -18,23 +18,23 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
   return (
     <div className={cn("mb-8 sm:mb-12", className)}>
       <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 pb-4">
-        <div className="flex items-baseline gap-3">
+        <div className="flex items-center gap-3">
           {index && (
-            <span className="font-mono text-xs text-[#666666] tracking-wider">
+            <span className="eyebrow">
               {index}
             </span>
           )}
-          <h2 className="text-sm sm:text-base font-medium tracking-widest text-[#F5F5F5] uppercase">
+          <h2 className="text-sm sm:text-base font-normal tracking-widest text-[#f3f3f4] uppercase font-mono">
             {title}
           </h2>
         </div>
         {description && (
-          <p className="font-mono text-xs text-[#666666] tracking-tight">
+          <p className="font-mono text-[11px] text-[#76767a] tracking-wider uppercase">
             {description}
           </p>
         )}
       </div>
-      <Separator className="bg-[#242424]" />
+      <Separator className="bg-[#171717]" />
     </div>
   );
 };

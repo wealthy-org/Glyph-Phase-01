@@ -13,11 +13,11 @@ export const DecisionThesis: React.FC<DecisionThesisProps> = ({
   return (
     <div
       className={cn(
-        "border-l-2 border-[#8FB996]/60 pl-5 sm:pl-6 py-2 my-2 sm:my-4",
+        "border-l-2 border-[#6fe39a]/60 pl-5 sm:pl-6 py-2 my-2 sm:my-4",
         className
       )}
     >
-      <blockquote className="italic font-sans text-base sm:text-lg text-[#D4D4D4] font-light leading-relaxed tracking-normal">
+      <blockquote className="italic font-sans text-base sm:text-lg text-[#f3f3f4] font-light leading-relaxed tracking-normal">
         &ldquo;{thesis}&rdquo;
       </blockquote>
     </div>

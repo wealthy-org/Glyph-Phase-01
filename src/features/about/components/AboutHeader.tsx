@@ -19,21 +19,20 @@ export const AboutHeader: React.FC<AboutHeaderProps> = ({
   return (
     <header className={cn("space-y-6 sm:space-y-8", className)}>
       <div className="space-y-3">
-        <div className="font-mono text-xs text-[#8FB996] tracking-widest uppercase flex items-center gap-2">
-          <span className="w-1.5 h-1.5 bg-[#8FB996]" />
-          {eyebrow}
+        <div className="eyebrow">
+          <span>{eyebrow}</span>
         </div>
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-normal tracking-tight text-[#F5F5F5]">
+        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-light tracking-[-0.04em] text-[#f3f3f4]">
           {heading}
         </h1>
-        <p className="text-base sm:text-lg text-[#A0A0A0] font-light max-w-2xl leading-relaxed">
+        <p className="text-sm sm:text-base text-[#85858a] font-light max-w-2xl leading-relaxed">
           {statement}
         </p>
       </div>
 
       {/* Editorial Documentation Quote */}
-      <div className="border-l-2 border-[#8FB996]/60 pl-5 sm:pl-6 py-2.5 max-w-3xl">
-        <blockquote className="italic font-sans text-base sm:text-lg text-[#D4D4D4] font-light leading-relaxed">
+      <div className="border-l-2 border-[#6fe39a]/60 pl-5 sm:pl-6 py-2.5 max-w-3xl">
+        <blockquote className="italic font-sans text-base sm:text-lg text-[#f3f3f4] font-light leading-relaxed">
           &ldquo;{quote}&rdquo;
         </blockquote>
       </div>

@@ -5,3 +5,4 @@ export * from "./components/IdentityRecordCard";
 export * from "./components/IdentityReputation";
 export * from "./components/RegistryArchitecture";
 export * from "./components/IdentitySection";
+export * from "./components/IdentitySkeleton";

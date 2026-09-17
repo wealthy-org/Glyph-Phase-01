@@ -21,13 +21,13 @@ export const ConceptualBlocks: React.FC<ConceptualBlocksProps> = ({
     >
       {blocks.map((block) => (
         <article key={block.id} className="space-y-3 sm:space-y-4">
-          <div className="font-mono text-xs text-[#8FB996] tracking-widest">
-            {block.eyebrow}
+          <div className="eyebrow">
+            <span>{block.eyebrow}</span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-normal tracking-tight text-[#F5F5F5] uppercase">
+          <h2 className="text-xl sm:text-2xl font-light tracking-tight text-[#f3f3f4] uppercase">
             {block.heading}
           </h2>
-          <div className="space-y-3 text-xs sm:text-sm font-mono text-[#A0A0A0] leading-relaxed font-light">
+          <div className="space-y-3 text-xs sm:text-sm font-sans text-[#85858a] leading-relaxed font-light">
             {block.paragraphs.map((p, idx) => (
               <p key={idx}>{p}</p>
             ))}

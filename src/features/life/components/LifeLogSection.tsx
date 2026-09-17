@@ -11,17 +11,14 @@ export const LifeLogSection: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<LifeCategory>("ALL EVENTS");
 
   return (
-    <div className="w-full max-w-[720px] mx-auto space-y-10 sm:space-y-12">
+    <div className="w-full max-w-[760px] mx-auto space-y-10 sm:space-y-12">
       {/* Editorial Header */}
       <header className="space-y-3">
-        <div className="font-mono text-xs text-[#8FB996] tracking-widest uppercase flex items-center gap-2">
-          <span className="w-1.5 h-1.5 bg-[#8FB996]" />
-          CHRONOLOGICAL LOG
-        </div>
-        <h1 className="text-4xl sm:text-5xl font-normal tracking-tight text-[#F5F5F5]">
+        <span className="eyebrow">CHRONOLOGICAL // RECORD</span>
+        <h1 className="text-3xl sm:text-5xl font-light tracking-tight text-[#f3f3f4]">
           GLYPH LIFE LOG
         </h1>
-        <p className="text-base sm:text-lg text-[#A0A0A0] font-light leading-relaxed">
+        <p className="text-sm sm:text-base text-[#85858a] font-light leading-relaxed">
           A chronological record of Glyph&apos;s economic existence.
         </p>
       </header>
@@ -40,10 +37,10 @@ export const LifeLogSection: React.FC = () => {
                 <TabsTrigger
                   key={category}
                   value={category}
-                  className={`rounded-none border font-mono text-xs tracking-wider uppercase px-3 py-1.5 transition-colors cursor-pointer ${
+                  className={`rounded-none border font-mono text-xs tracking-wider uppercase px-3.5 py-1.5 transition-colors cursor-pointer ${
                     isActive
-                      ? "bg-[#F5F5F5] text-[#080808] border-[#F5F5F5] font-medium"
-                      : "bg-[#0D0D0D] text-[#A0A0A0] border-[#242424] hover:text-[#F5F5F5] hover:border-[#666666]"
+                      ? "bg-[#f0f0f1] text-[#080808] border-[#dddddf] font-medium"
+                      : "bg-[#050505] text-[#85858a] border-[#1a1a1a] hover:text-[#f3f3f4] hover:border-[#383838]"
                   }`}
                 >
                   {category}
@@ -54,7 +51,7 @@ export const LifeLogSection: React.FC = () => {
         </Tabs>
 
         {/* Thin horizontal divider before the timeline */}
-        <Separator className="bg-[#242424] mt-6" />
+        <Separator className="bg-[#171717] mt-6" />
       </div>
 
       {/* Chronological Vertical Timeline Spine */}
@@ -66,7 +63,7 @@ export const LifeLogSection: React.FC = () => {
       </main>
 
       {/* End of Log Observational Footnote */}
-      <footer className="pt-8 pb-12 border-t border-[#181818] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 font-mono text-xs text-[#666666]">
+      <footer className="pt-8 pb-12 border-t border-[#171717] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 font-mono text-xs text-[#55555a]">
         <span>OBSERVATION STREAM: SYNCHRONIZED</span>
         <span>INDEX: 001-ALPHA // 7 COMMITS</span>
       </footer>
