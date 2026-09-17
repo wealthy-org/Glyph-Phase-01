@@ -40,13 +40,13 @@ Urutan ini disusun berdasarkan prioritas P0 → P8 dari brief, karena tiap tahap
 ## TAHAP 2 — Simulasi Ekonomi (P2)
 
 - [x] Buat sistem treasury simulasi (mulai dari modal awal, misal $1.000)
-- [ ] Buat logic portofolio: posisi terbuka, ukuran posisi, leverage simulasi
-- [ ] Buat kalkulasi PnL (untung/rugi belum realisasi & sudah realisasi)
-- [ ] Implementasikan **Policy Engine** (`GLYPH_POLICY`) sebagai kode biasa, terpisah dari AI:
+- [x] Buat logic portofolio: posisi terbuka, ukuran posisi, leverage simulasi
+- [x] Buat kalkulasi PnL (untung/rugi belum realisasi & sudah realisasi)
+- [x] Implementasikan **Policy Engine** (`GLYPH_POLICY`) sebagai kode biasa, terpisah dari AI:
   - `maxPositionPercent`, `maxLeverage`, `maxDailyLossPercent`, `maxOpenPositions`, `allowedAssets`, `minConfidence`
-- [ ] Pastikan `allowedAssets` di-hardcode di kode (bukan disimpan di database yang bisa diubah)
-- [ ] Buat logic simulasi fee transaksi (default saran: 0.1% per transaksi, jadikan konstanta)
-- [ ] Buat logic simulasi likuidasi (kalau kena threshold → status `LIQUIDATED`, catat sebagai `LOSS_RECORDED`)
+- [x] Pastikan `allowedAssets` di-hardcode di kode (bukan disimpan di database yang bisa diubah)
+- [x] Buat logic simulasi fee transaksi (default saran: 0.1% per transaksi, jadikan konstanta)
+- [x] Buat logic simulasi likuidasi (kalau kena threshold → status `LIQUIDATED`, catat sebagai `LOSS_RECORDED`)
 
 > **💡 Tips:**
 > - Policy Engine ini adalah "rem" untuk AI — pastikan dia jalan sebagai kode deterministik biasa, bukan dipengaruhi prompt AI sama sekali.
