@@ -31,15 +31,39 @@ CRITICAL INSTRUCTIONS:
 
 export function buildDecisionUserPrompt(
   research: SynthesizedResearch,
-  treasuryState?: { cash: number; equity: number }
+  treasuryState?: { cash: number; equity: number },
+  recentMemories?: Array<{
+    asset?: string;
+    outcome: string;
+    pnlPercent: number;
+    lesson: string;
+    confidenceCalibration: string;
+    weightShift?: string | null;
+  }>
 ): string {
   const cash = treasuryState?.cash ?? 1000;
   const equity = treasuryState?.equity ?? 1000;
 
+  let memoriesBlock = "";
+  if (recentMemories && recentMemories.length > 0) {
+    memoriesBlock = `\nPersistent Memory & Historical Reflection for ${research.asset} (Past Lessons):
+${recentMemories
+  .map(
+    (m, i) =>
+      `  ${i + 1}. [${m.asset ? `${m.asset} ` : ""}Outcome: ${m.outcome} (${m.pnlPercent > 0 ? "+" : ""}${m.pnlPercent.toFixed(
+        2
+      )}%)]: "${m.lesson}" | Calibration: ${m.confidenceCalibration}${
+        m.weightShift ? ` | Weight Shift: ${m.weightShift}` : ""
+      }`
+  )
+  .join("\n")}
+Important: Incorporate these past lessons for ${research.asset} to calibrate your conviction, risk score, and thesis invalidation.\n`;
+  }
+
   return `Current Agent Economic State:
 - Treasury Cash: $${cash.toFixed(2)}
 - Total Portfolio Equity: $${equity.toFixed(2)}
-
+${memoriesBlock}
 Comprehensive Market Research Snapshot for ${research.asset}:
 - Current Market Price: $${research.marketData.quote.price} (${research.marketData.quote.changePercent}%)
 - 24h Volume: ${research.marketData.quote.volume.toLocaleString()}

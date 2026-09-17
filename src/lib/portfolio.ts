@@ -16,6 +16,7 @@ import {
   DEFAULT_FEE_PERCENT,
 } from "./simulation-math";
 import { getTreasurySummary } from "./treasury";
+import { createTradeMemory } from "./memory";
 
 export interface OpenPositionInput {
   agentId?: string;
@@ -374,10 +375,10 @@ export async function closeSimulatedPosition(
     returnedToTreasury = Math.max(0, margin + realizedPnl - closingFee);
   }
 
-  const tradeStatus = reason === "LIQUIDATION" ? "LIQUIDATED" : "CLOSED";
+  const tradeStatus: "CLOSED" | "LIQUIDATED" = reason === "LIQUIDATION" ? "LIQUIDATED" : "CLOSED";
   const totalFees = Number(position.trade.fees) + closingFee;
 
-  return await prisma.$transaction(async (tx) => {
+  const txResult = await prisma.$transaction(async (tx) => {
     // 1. Credit returned funds back into treasury cash
     const updatedTreasury = await tx.agentTreasury.update({
       where: { id: agent.treasury!.id },
@@ -460,6 +461,24 @@ export async function closeSimulatedPosition(
       newBalance: Number(updatedTreasury.currentBalance),
     };
   });
+
+  // Automatically form persistent memory of this trade (§15)
+  try {
+    await createTradeMemory({
+      tradeId: position.tradeId,
+      agentId: agent.id,
+      asset: position.asset,
+      side: position.side,
+      pnlPercent: realizedPnlPercent,
+      conviction: position.trade.conviction,
+      thesis: position.trade.thesis,
+      reason,
+    });
+  } catch (err) {
+    console.warn(`[Portfolio] Memory creation notice:`, err);
+  }
+
+  return txResult;
 }
 
 /**

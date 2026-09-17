@@ -35,7 +35,17 @@ export const TRADE_DECISION_DETAILS: Record<string, TradeDecisionDetail> = {
     onchainProof: {
       txHash: "0x8f3c71a3962d8544e390c9b0e1df59b3291ac",
       network: "ROBINHOOD CHAIN TESTNET",
-      explorerUrl: "https://sepolia.basescan.org/tx/0x8f3c71a3962d8544e390c9b0e1df59b3291ac",
+      explorerUrl: "https://explorer.testnet.chain.robinhood.com/tx/0x8f3c71a3962d8544e390c9b0e1df59b3291ac",
+    },
+    memory: {
+      outcome: "WIN",
+      thesisResult: "CORRECT",
+      lesson:
+        "Breakout confirmation combined with strong earnings momentum produced a favorable result. Invalidation level preserved downside risk.",
+      confidenceCalibration: "GOOD",
+      adaptation:
+        "Reinforce high-conviction momentum thesis patterns for tier-1 semiconductor leaders.",
+      weightShift: "+3.8% Momentum / +2.1% Catalyst Alignment",
     },
   },
   "nvda-sep17": {

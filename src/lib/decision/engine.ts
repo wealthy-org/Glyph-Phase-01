@@ -16,6 +16,7 @@ import { evaluateAgentTradeProposal } from "@/lib/policy";
 import { openSimulatedPosition } from "@/lib/portfolio";
 import { getTreasurySummary } from "@/lib/treasury";
 import { commitDecisionOnchain } from "@/lib/onchain/registry";
+import { getRecentMemories } from "@/lib/memory";
 import { SynthesizedResearch } from "@/types/market";
 
 export interface DecisionRunResult {
@@ -197,10 +198,16 @@ export async function executeGlyphDecisionCycle(
     sourceMetadata: snapshot.sourceMetadata as any,
   };
 
-  const userPrompt = buildDecisionUserPrompt(researchPayload, {
-    cash: treasurySummary.currentBalance,
-    equity: treasurySummary.totalEquity,
-  });
+  // Fetch recent memories strictly for this asset to avoid cross-asset bias
+  const recentMemories = await getRecentMemories(agentIdentifier, 3, snapshot.asset);
+  const userPrompt = buildDecisionUserPrompt(
+    researchPayload,
+    {
+      cash: treasurySummary.currentBalance,
+      equity: treasurySummary.totalEquity,
+    },
+    recentMemories
+  );
 
   // 3. Call LLM with Zod validation & retry (§3.4)
   const { decision, rawOutput } = await callLlmWithRetry(

@@ -8,4 +8,5 @@ export * from "./WhyITradedSection";
 export * from "./InvalidationAlert";
 export * from "./RiskSection";
 export * from "./OnchainProofSection";
+export * from "./MemorySection";
 export * from "./TradeDecisionDetailView";

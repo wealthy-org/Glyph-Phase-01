@@ -57,4 +57,12 @@ export interface TradeDecisionDetail {
     network: string;
     explorerUrl: string;
   };
+  memory?: {
+    outcome: "WIN" | "LOSS" | "BREAKEVEN";
+    thesisResult: "CORRECT" | "INCORRECT" | "PARTIAL";
+    lesson: string;
+    confidenceCalibration: "GOOD" | "OVER_CONFIDENT" | "UNDER_CONFIDENT" | "NEUTRAL";
+    adaptation?: string;
+    weightShift?: string;
+  };
 }

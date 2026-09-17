@@ -106,10 +106,10 @@ Urutan ini disusun berdasarkan prioritas P0 → P8 dari brief, karena tiap tahap
 
 ## TAHAP 6 — Memori (P6)
 
-- [ ] Buat logic yang menghasilkan entri memori setelah trade ditutup: outcome (WIN/LOSS), pnl_percent, thesis_result (CORRECT/INCORRECT), lesson, confidence_calibration
-- [ ] Simpan memori ke tabel `memories`, terhubung ke `trade_id`
-- [ ] Tampilkan memori ini di UI (bagian dari halaman detail trade dan/atau Life Log)
-- [ ] (Opsional tapi disarankan) Pastikan memori lama bisa "dibaca ulang" saat AI membuat keputusan baru — supaya benar-benar mempengaruhi keputusan berikutnya, bukan cuma catatan pasif
+- [x] Buat logic yang menghasilkan entri memori setelah trade ditutup: outcome (WIN/LOSS), pnl_percent, thesis_result (CORRECT/INCORRECT), lesson, confidence_calibration
+- [x] Simpan memori ke tabel `memories`, terhubung ke `trade_id`
+- [x] Tampilkan memori ini di UI (bagian dari halaman detail trade dan/atau Life Log)
+- [x] (Opsional tapi disarankan) Pastikan memori lama bisa "dibaca ulang" saat AI membuat keputusan baru — supaya benar-benar mempengaruhi keputusan berikutnya, bukan cuma catatan pasif
 
 > **💡 Tips:**
 > - Jaga narasinya tetap jujur: ini adalah "state yang persisten", bukan klaim bahwa Glyph "sadar" atau "belajar" seperti manusia.

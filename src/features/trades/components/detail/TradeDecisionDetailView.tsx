@@ -6,6 +6,7 @@ import { BackNavigation } from "./BackNavigation";
 import { TradeHeader } from "./TradeHeader";
 import { WhyITradedSection } from "./WhyITradedSection";
 import { RiskSection } from "./RiskSection";
+import { MemorySection } from "./MemorySection";
 import { OnchainProofSection } from "./OnchainProofSection";
 import { cn } from "@/lib/utils";
 
@@ -42,7 +43,10 @@ export const TradeDecisionDetailView: React.FC<TradeDecisionDetailViewProps> = (
         invalidation={trade.invalidationLevel}
       />
 
-      {/* 8. Onchain Proof */}
+      {/* 8. Persistent Memory & Historical Reflection (§15) */}
+      {trade.memory && <MemorySection memory={trade.memory} />}
+
+      {/* 9. Onchain Proof */}
       <OnchainProofSection
         txHash={trade.onchainProof.txHash}
         network={trade.onchainProof.network}
