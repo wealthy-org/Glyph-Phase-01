@@ -1,0 +1,9 @@
+{
+  "name": "Glyph",
+  "description": "Autonomous economic being — AI agent with onchain identity, wallet, memory, and verifiable market decisions",
+  "type": "Robinhood Chain Agent",
+  "version": "0.1.0",
+  "framework": "ERC-8004 Trustless Agents",
+  "network": "Robinhood Chain Testnet",
+  "chainId": 46630
+}

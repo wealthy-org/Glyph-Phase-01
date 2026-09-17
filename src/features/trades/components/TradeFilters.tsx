@@ -25,7 +25,7 @@ export const TradeFilters: React.FC<TradeFiltersProps> = ({
           onValueChange={(val) => onFilterChange(val as TradeFilter)}
           className="w-auto"
         >
-          <TabsList className="bg-transparent p-0 flex gap-2 h-auto border-0">
+          <TabsList className="bg-transparent p-0 flex flex-wrap gap-2 !h-auto group-data-horizontal/tabs:!h-auto border-0">
             {FILTERS.map((filter) => {
               const isActive = currentFilter === filter;
               return (

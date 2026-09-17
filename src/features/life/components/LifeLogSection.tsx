@@ -33,7 +33,7 @@ export const LifeLogSection: React.FC = () => {
           onValueChange={(val) => setSelectedCategory(val as LifeCategory)}
           className="w-full"
         >
-          <TabsList className="bg-transparent p-0 flex flex-wrap gap-2 h-auto justify-start border-0">
+          <TabsList className="bg-transparent p-0 flex flex-wrap gap-2 !h-auto group-data-horizontal/tabs:!h-auto justify-start border-0">
             {LIFE_CATEGORIES.map((category) => {
               const isActive = selectedCategory === category;
               return (
@@ -54,7 +54,7 @@ export const LifeLogSection: React.FC = () => {
         </Tabs>
 
         {/* Thin horizontal divider before the timeline */}
-        <Separator className="bg-[#242424]" />
+        <Separator className="bg-[#242424] mt-6" />
       </div>
 
       {/* Chronological Vertical Timeline Spine */}

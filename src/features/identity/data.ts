@@ -1,25 +1,25 @@
 import { IdentityData } from "./types";
 
 export const GLYPH_IDENTITY_DATA: IdentityData = {
-  beingNumber: "ECONOMIC BEING #001",
+  beingNumber: "VERIFIED AGENT · ID #1",
   name: "GLYPH",
   status: "ACTIVE",
   standard: {
     standard: "ERC-8004",
-    subtext: "Autonomous Entity Specification",
+    subtext: "Trustless Agents Specification",
   },
   network: {
     name: "Robinhood Chain Testnet",
-    chainId: 88842,
+    chainId: 46630,
   },
   genesis: {
     epoch: "September 2026",
-    block: "Initial Block 4,192,801",
+    block: "Block 120,766,742",
   },
-  primaryWallet: "0x8f3c71a3962d8544e390c9b0e1df59b3291ac",
-  registrationTx: "0xabc918237dd4f901198f828ac9120934123",
+  primaryWallet: "0xd1dB02Ee39f33f5EC0780A7f75572c0c04345Ed7",
+  registrationTx: "0xa547e955ec33ca107054a74d1c6bb51aad2ce3ddbb7c7e40c13df197e2a6ff18",
   registrationNetwork: "ROBINHOOD CHAIN TESTNET",
-  explorerBaseUrl: "https://sepolia.basescan.org/tx/",
+  explorerBaseUrl: "https://explorer.testnet.chain.robinhood.com/tx/",
   reputationMetrics: [
     {
       label: "DECISIONS",

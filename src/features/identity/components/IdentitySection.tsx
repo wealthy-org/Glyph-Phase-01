@@ -6,12 +6,17 @@ import { IdentityReputation } from "./IdentityReputation";
 import { RegistryArchitecture } from "./RegistryArchitecture";
 import { cn } from "@/lib/utils";
 
+import { IdentityData } from "../types";
+
 interface IdentitySectionProps {
+  data?: IdentityData;
   className?: string;
 }
 
-export const IdentitySection: React.FC<IdentitySectionProps> = ({ className }) => {
-  const data = GLYPH_IDENTITY_DATA;
+export const IdentitySection: React.FC<IdentitySectionProps> = ({
+  data = GLYPH_IDENTITY_DATA,
+  className,
+}) => {
 
   return (
     <div className={cn("w-full space-y-12 sm:space-y-16", className)}>

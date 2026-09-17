@@ -6,13 +6,13 @@ Urutan ini disusun berdasarkan prioritas P0 → P8 dari brief, karena tiap tahap
 
 ## TAHAP 0 — Fondasi (P0)
 
-- [#] Setup project Next.js (App Router) + TypeScript + Tailwind CSS
-- [#] Setup Supabase (database PostgreSQL)
-- [#] Buat semua tabel database dasar sesuai §18: `agents`, `agent_wallets`, `agent_policies`, `market_assets`, `market_snapshots`, `research_snapshots`, `decisions`, `trades`, `positions`, `transactions`, `memories`, `reputation_metrics`, `economic_events`
-- [] Install `viem`, `wagmi`, OpenZeppelin contracts
-- [] Konfigurasi koneksi ke testnet Robinhood Chain (Chain ID `46630`, RPC `https://rpc.testnet.chain.robinhood.com`)
-- [ ] Setup smart account Glyph pakai **Safe** (`@safe-global/protocol-kit`, `@safe-global/api-kit`) — ini dilakukan di **backend/server**, bukan tombol connect di frontend
-- [ ] Isi semua environment variable dasar (lihat daftar lengkap §3.1)
+- [x] Setup project Next.js (App Router) + TypeScript + Tailwind CSS
+- [x] Setup Supabase (database PostgreSQL)
+- [x] Buat semua tabel database dasar sesuai §18: `agents`, `agent_wallets`, `agent_policies`, `market_assets`, `market_snapshots`, `research_snapshots`, `decisions`, `trades`, `positions`, `transactions`, `memories`, `reputation_metrics`, `economic_events`
+- [x] Install `viem`, `wagmi`, OpenZeppelin contracts
+- [x] Konfigurasi koneksi ke testnet Robinhood Chain (Chain ID `46630`, RPC `https://rpc.testnet.chain.robinhood.com`)
+- [x] Setup smart account Glyph pakai **Safe** (`@safe-global/protocol-kit`, `@safe-global/api-kit`) — ini dilakukan di **backend/server**, bukan tombol connect di frontend
+- [x] Isi semua environment variable dasar (lihat daftar lengkap §3.1)
 
 > **💡 Tips:**
 > - Bikin dulu skema database-nya di atas kertas/diagram sebelum ngoding — tabel `decisions` vs `trades` itu paling gampang salah desain di awal (lihat poin B di bawah).
@@ -23,12 +23,12 @@ Urutan ini disusun berdasarkan prioritas P0 → P8 dari brief, karena tiap tahap
 
 ## TAHAP 1 — Identitas (P1)
 
-- [ ] Ambil kode `IdentityRegistry.sol` dari repo resmi ERC-8004 (`github.com/erc-8004/erc-8004-contracts`), baca dulu sebelum deploy
-- [ ] Deploy `IdentityRegistry.sol` ke testnet Robinhood Chain, catat alamat kontraknya
-- [ ] Siapkan metadata JSON Glyph (`/public/agents/glyph.json`), harus bisa diakses publik via URL
-- [ ] Panggil `register(agentURI)` sekali → simpan `agentId` yang didapat
-- [ ] Simpan `agentId` & alamat wallet Glyph ke database
-- [ ] Buat halaman profil identitas dasar (badge "Verified Agent · ID #")
+- [x] Ambil kode `IdentityRegistry.sol` dari repo resmi ERC-8004 (`github.com/erc-8004/erc-8004-contracts`), baca dulu sebelum deploy
+- [x] Deploy `IdentityRegistry.sol` ke testnet Robinhood Chain, catat alamat kontraknya
+- [x] Siapkan metadata JSON Glyph (`/public/agents/glyph.json`), harus bisa diakses publik via URL
+- [x] Panggil `register(agentURI)` sekali → simpan `agentId` yang didapat
+- [x] Simpan `agentId` & alamat wallet Glyph ke database
+- [x] Buat halaman profil identitas dasar (badge "Verified Agent · ID #")
 
 > **💡 Tips:**
 > - Standar ERC-8004 masih **DRAFT** — jangan overselling di copy/UI seolah ini "sertifikasi resmi Ethereum". Cukup bilang "agent terdaftar dengan ID onchain".

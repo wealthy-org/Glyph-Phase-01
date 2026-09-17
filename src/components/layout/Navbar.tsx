@@ -76,8 +76,15 @@ export const Navbar: React.FC = () => {
           })}
         </nav>
 
-        {/* Right: Operational Status */}
-        <div className="hidden sm:flex items-center gap-4">
+        {/* Right: Operational Status & Verified Agent Badge */}
+        <div className="hidden sm:flex items-center gap-3">
+          <Link
+            href="/identity"
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#8FB996]/10 border border-[#8FB996]/30 text-[#8FB996] text-[11px] font-mono tracking-wider hover:bg-[#8FB996]/20 transition-colors"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-[#8FB996]" />
+            Verified Agent · ID #1
+          </Link>
           <StatusIndicator network="TESTNET" status="ONLINE" />
         </div>
 
