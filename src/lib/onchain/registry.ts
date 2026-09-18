@@ -4,6 +4,7 @@
 // Commits keccak256 decision hashes to DecisionRegistry.sol on Robinhood Chain Testnet.
 // ============================================================================
 
+import "@/lib/dns-fix";
 import {
   createPublicClient,
   createWalletClient,
@@ -159,20 +160,18 @@ export async function commitDecisionOnchain(
 
       blockNumber = Number(receipt.blockNumber);
     } catch (error: any) {
-      console.warn(
-        `[OnchainRegistry] Live broadcast notice: ${error?.message || error}. Using fallback hash.`
+      console.error(
+        `[OnchainRegistry] Live broadcast failed: ${error?.message || error}`
       );
-      // Fallback deterministic testnet tx hash if testnet RPC is gasless/rate-limited
-      transactionHash = `0x${decisionHash.slice(2, 42).padEnd(64, "0")}`;
-      blockNumber = 1042589;
+      transactionHash = "";
+      blockNumber = 0;
     }
   } else {
-    // Deterministic simulation tx hash if private key not provided
-    transactionHash = `0x${decisionHash.slice(2, 42).padEnd(64, "0")}`;
-    blockNumber = 1042589;
+    transactionHash = "";
+    blockNumber = 0;
   }
 
-  const explorerUrl = getExplorerTxUrl(transactionHash);
+  const explorerUrl = transactionHash ? getExplorerTxUrl(transactionHash) : undefined;
 
   // 3. Store Results in Database (BRIEF §12 & §18)
   await prisma.$transaction(async (tx) => {
@@ -181,7 +180,7 @@ export async function commitDecisionOnchain(
       where: { id: decision.id },
       data: {
         decisionHash,
-        transactionHash,
+        transactionHash: transactionHash || null,
       },
     });
 
@@ -191,28 +190,29 @@ export async function commitDecisionOnchain(
         where: { id: decision.tradeId },
         data: {
           decisionHash,
-          transactionHash,
+          transactionHash: transactionHash || null,
         },
       });
     }
 
-    // Record in Transactions table (§18)
-    await tx.transaction.upsert({
-      where: { transactionHash },
-      update: {
-        blockNumber,
-        decisionHash,
-        eventType: "DECISION_COMMITTED",
-      },
-      create: {
-        transactionHash,
-        chainId: robinhoodTestnet.id,
-        contractAddress,
-        blockNumber,
-        decisionHash,
-        eventType: "DECISION_COMMITTED",
-      },
-    });
+    // Record in Transactions table (§18) only if real tx was broadcast
+    if (transactionHash) {
+      await tx.transaction.upsert({
+        where: { transactionHash },
+        update: {
+          decisionHash,
+          contractAddress,
+          blockNumber: blockNumber || null,
+        },
+        create: {
+          transactionHash,
+          decisionHash,
+          contractAddress,
+          blockNumber: blockNumber || null,
+          eventType: "DECISION_COMMITTED",
+        },
+      });
+    }
   });
 
   return {
@@ -222,6 +222,6 @@ export async function commitDecisionOnchain(
     contractAddress,
     chainId: robinhoodTestnet.id,
     blockNumber,
-    explorerUrl,
+    explorerUrl: explorerUrl || "",
   };
 }

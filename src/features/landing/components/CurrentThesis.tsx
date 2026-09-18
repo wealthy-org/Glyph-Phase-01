@@ -2,18 +2,59 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { CURRENT_THESIS } from "@/data/glyph";
 import { Button } from "@/components/ui/button";
-import { ArrowUpRight, ShieldAlert, CheckCircle2 } from "lucide-react";
+import { GridBackground } from "@/components/ui/GridBackground";
+import { ArrowUpRight, ShieldAlert, CheckCircle2, AlertTriangle } from "lucide-react";
 import { motion } from "framer-motion";
+import { LandingLatestDecision } from "../types";
 
-export const CurrentThesis: React.FC = () => {
-  const thesis = CURRENT_THESIS;
+interface CurrentThesisProps {
+  latestDecision: LandingLatestDecision | null;
+}
+
+export const CurrentThesis: React.FC<CurrentThesisProps> = ({ latestDecision }) => {
   const [modalOpen, setModalOpen] = useState(false);
 
+  if (!latestDecision) {
+    return (
+      <section id="current-thesis" className="relative w-full py-16 sm:py-24 border-b border-[#171717] bg-[#000000] overflow-hidden">
+        <GridBackground glowColor="emerald" intensity="medium" gridSize={36} />
+        <div className="relative z-10 max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-12 space-y-6">
+          <span className="eyebrow">THESIS // CONVERGENCE</span>
+          <h2 className="text-3xl sm:text-5xl font-light tracking-tight text-[#f3f3f4]">
+            No thesis recorded.
+          </h2>
+          <p className="font-mono text-xs text-[#85858a]">
+            Glyph has not published an autonomous research thesis in the current epoch.
+          </p>
+        </div>
+      </section>
+    );
+  }
+
+  const fundamentalScore = latestDecision.fundamentalScore ?? 0;
+  const technicalScore = latestDecision.technicalScore ?? 0;
+  const riskScore = latestDecision.riskScore ?? 0;
+  const thesis = latestDecision.thesis;
+
+  const coreSynthesis =
+    thesis.fundamental ||
+    thesis.technical ||
+    "Autonomous agent reasoning cycle evaluated macro catalysts and technical indicators.";
+
+  const invalidationBoundary =
+    thesis.invalidation ||
+    "Invalidation triggered on key support level breach or adverse sector momentum.";
+
+  const catalystSummary =
+    thesis.catalyst || "Positive sector momentum and earnings guidance";
+
   return (
-    <section id="current-thesis" className="w-full py-16 sm:py-24 border-b border-[#171717] bg-[#000000]">
-      <div className="max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-12 space-y-12">
+    <section id="current-thesis" className="relative w-full py-16 sm:py-24 border-b border-[#171717] bg-[#000000] overflow-hidden">
+      {/* Subtle modern thin grid background with subtle convergence glow */}
+      <GridBackground glowColor="emerald" intensity="medium" gridSize={36} />
+
+      <div className="relative z-10 max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-12 space-y-12">
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
           <div className="space-y-3">
@@ -33,18 +74,34 @@ export const CurrentThesis: React.FC = () => {
           {/* Left Column: Asset, Direction, Core Synthesis */}
           <div className="lg:col-span-7 space-y-8">
             <div className="space-y-3">
-              <div className="inline-flex items-center gap-2 px-2.5 py-1 border border-[#1a1a1a] bg-[#050505] font-mono text-[10px] text-[#6fe39a] uppercase tracking-wider">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#6fe39a] animate-livepulse" />
-                <span>ACTIVE EXPOSURE</span>
+              <div className="flex flex-wrap items-center gap-3">
+                <div className="inline-flex items-center gap-2 px-2.5 py-1 border border-[#1a1a1a] bg-[#050505] font-mono text-[10px] text-[#6fe39a] uppercase tracking-wider">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#6fe39a] animate-livepulse" />
+                  <span>LATEST EVALUATION</span>
+                </div>
+
+                {latestDecision.policyResult === "REJECTED" ? (
+                  <span className="inline-flex items-center gap-1.5 px-2 py-0.5 border border-[#b8a77a]/40 bg-[#b8a77a]/10 font-mono text-[10px] text-[#b8a77a] uppercase tracking-wider">
+                    <AlertTriangle size={11} />
+                    <span>POLICY REJECTED</span>
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1.5 px-2 py-0.5 border border-[#6fe39a]/30 bg-[#6fe39a]/10 font-mono text-[10px] text-[#6fe39a] uppercase tracking-wider">
+                    <span>POLICY APPROVED</span>
+                  </span>
+                )}
               </div>
 
               <div className="flex items-baseline gap-4">
                 <h3 className="font-mono text-4xl sm:text-6xl font-light text-[#f3f3f4] tracking-tight">
-                  {thesis.asset}
+                  {latestDecision.asset}
                 </h3>
                 <span className="font-mono text-2xl sm:text-3xl text-[#444448]">/</span>
                 <span className="font-mono text-3xl sm:text-4xl text-[#6fe39a] font-normal tracking-wide">
-                  {thesis.direction}
+                  {latestDecision.action}
+                </span>
+                <span className="font-mono text-lg sm:text-xl text-[#85858a]">
+                  ({latestDecision.conviction}% Conviction)
                 </span>
               </div>
             </div>
@@ -54,7 +111,7 @@ export const CurrentThesis: React.FC = () => {
                 CORE SYNTHESIS
               </span>
               <p className="text-base sm:text-lg text-[#f0f0f2] font-light leading-relaxed">
-                {thesis.summary}
+                {coreSynthesis}
               </p>
             </div>
 
@@ -66,7 +123,7 @@ export const CurrentThesis: React.FC = () => {
                   INVALIDATION BOUNDARY
                 </span>
                 <p className="font-mono text-sm text-[#f3f3f4]">
-                  {thesis.invalidation}
+                  {invalidationBoundary}
                 </p>
               </div>
             </div>
@@ -100,14 +157,14 @@ export const CurrentThesis: React.FC = () => {
               <div className="space-y-2">
                 <div className="flex justify-between font-mono text-xs">
                   <span className="text-[#85858a]">Fundamental Score</span>
-                  <span className="text-[#f3f3f4]">{thesis.fundamental} / 100</span>
+                  <span className="text-[#f3f3f4]">{fundamentalScore} / 100</span>
                 </div>
                 <div className="w-full bg-[#141414] h-1 overflow-hidden">
                   <motion.div
                     className="bg-[#f0f0f1] h-full"
                     initial={{ width: "0%" }}
-                    whileInView={{ width: `${thesis.fundamental}%` }}
-                    viewport={{ once: true, amount: 0.4, margin: "0px 0px -40px 0px" }}
+                    whileInView={{ width: `${fundamentalScore}%` }}
+                    viewport={{ once: true, amount: 0.4 }}
                     transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
                   />
                 </div>
@@ -117,14 +174,14 @@ export const CurrentThesis: React.FC = () => {
               <div className="space-y-2">
                 <div className="flex justify-between font-mono text-xs">
                   <span className="text-[#85858a]">Technical Momentum</span>
-                  <span className="text-[#6fe39a]">{thesis.technical} / 100</span>
+                  <span className="text-[#6fe39a]">{technicalScore} / 100</span>
                 </div>
                 <div className="w-full bg-[#141414] h-1 overflow-hidden">
                   <motion.div
                     className="bg-[#6fe39a] h-full shadow-[0_0_8px_rgba(111,227,154,0.3)]"
                     initial={{ width: "0%" }}
-                    whileInView={{ width: `${thesis.technical}%` }}
-                    viewport={{ once: true, amount: 0.4, margin: "0px 0px -40px 0px" }}
+                    whileInView={{ width: `${technicalScore}%` }}
+                    viewport={{ once: true, amount: 0.4 }}
                     transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
                   />
                 </div>
@@ -133,10 +190,10 @@ export const CurrentThesis: React.FC = () => {
               {/* Catalyst */}
               <div className="space-y-2">
                 <div className="flex justify-between font-mono text-xs">
-                  <span className="text-[#85858a]">Catalyst Vector</span>
-                  <span className="text-[#6fe39a] flex items-center gap-1">
-                    <CheckCircle2 size={12} />
-                    {thesis.catalyst}
+                  <span className="text-[#85858a]">Catalyst Alignment</span>
+                  <span className="text-[#6fe39a] flex items-center gap-1 truncate max-w-[240px]">
+                    <CheckCircle2 size={12} className="shrink-0" />
+                    <span className="truncate">{catalystSummary}</span>
                   </span>
                 </div>
                 <div className="w-full bg-[#141414] h-1 overflow-hidden">
@@ -144,7 +201,7 @@ export const CurrentThesis: React.FC = () => {
                     className="bg-[#6fe39a] h-full opacity-80"
                     initial={{ width: "0%" }}
                     whileInView={{ width: "100%" }}
-                    viewport={{ once: true, amount: 0.4, margin: "0px 0px -40px 0px" }}
+                    viewport={{ once: true, amount: 0.4 }}
                     transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
                   />
                 </div>
@@ -154,14 +211,14 @@ export const CurrentThesis: React.FC = () => {
               <div className="space-y-2">
                 <div className="flex justify-between font-mono text-xs">
                   <span className="text-[#85858a]">Risk Coefficient</span>
-                  <span className="text-[#b8a77a]">{thesis.risk} / 100</span>
+                  <span className="text-[#b8a77a]">{riskScore} / 100</span>
                 </div>
                 <div className="w-full bg-[#141414] h-1 overflow-hidden">
                   <motion.div
                     className="bg-[#b8a77a] h-full"
                     initial={{ width: "0%" }}
-                    whileInView={{ width: `${thesis.risk}%` }}
-                    viewport={{ once: true, amount: 0.4, margin: "0px 0px -40px 0px" }}
+                    whileInView={{ width: `${riskScore}%` }}
+                    viewport={{ once: true, amount: 0.4 }}
                     transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.55 }}
                   />
                 </div>
@@ -169,12 +226,12 @@ export const CurrentThesis: React.FC = () => {
             </div>
 
             <div className="pt-4 border-t border-[#171717] font-mono text-[11px] text-[#55555a] leading-relaxed">
-              MODEL SIGNALS: Multi-modal macro data + Blackwell server delivery pipeline + short-term gamma exposure.
+              MODEL SIGNALS: Multi-vector research snapshot anchoring fundamental CapEx guidance + technical volume structure.
             </div>
           </div>
         </div>
 
-        {/* 5-Card Capabilities Grid from glyph.html */}
+        {/* 3-Card Capabilities Grid */}
         <div className="pt-8 space-y-6">
           <div className="flex items-center justify-between border-b border-[#171717] pb-3">
             <span className="font-mono text-xs text-[#85858a] tracking-wider uppercase">
@@ -186,7 +243,6 @@ export const CurrentThesis: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-[#171717] border border-[#171717]">
-            {/* Card 1 */}
             <div className="bg-[#050505] p-6 sm:p-7 space-y-3 hover:bg-[#090909] transition-colors">
               <span className="font-mono text-[10px] text-[#6fe39a] uppercase tracking-wider block">
                 01 // IDENTIFICATION
@@ -197,7 +253,6 @@ export const CurrentThesis: React.FC = () => {
               </p>
             </div>
 
-            {/* Card 2 */}
             <div className="bg-[#050505] p-6 sm:p-7 space-y-3 hover:bg-[#090909] transition-colors">
               <span className="font-mono text-[10px] text-[#6fe39a] uppercase tracking-wider block">
                 02 // GOVERNANCE
@@ -208,7 +263,6 @@ export const CurrentThesis: React.FC = () => {
               </p>
             </div>
 
-            {/* Card 3 */}
             <div className="bg-[#050505] p-6 sm:p-7 space-y-3 hover:bg-[#090909] transition-colors">
               <span className="font-mono text-[10px] text-[#6fe39a] uppercase tracking-wider block">
                 03 // AUDITABILITY
@@ -229,7 +283,7 @@ export const CurrentThesis: React.FC = () => {
           onClick={() => setModalOpen(false)}
         >
           <div
-            className="w-full max-w-xl bg-[#080808] border border-[#202020] p-6 sm:p-8 space-y-6 shadow-2xl"
+            className="w-full max-w-xl bg-[#080808] border border-[#202020] p-6 sm:p-8 space-y-6 shadow-2xl max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
@@ -237,7 +291,7 @@ export const CurrentThesis: React.FC = () => {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <div className="font-mono text-xs text-[#6fe39a] uppercase tracking-wider">
-                  THESIS MEMORANDUM // #{thesis.asset}-L1
+                  THESIS MEMORANDUM // #{latestDecision.id.slice(0, 8)}
                 </div>
                 <button
                   type="button"
@@ -254,47 +308,71 @@ export const CurrentThesis: React.FC = () => {
               <div className="p-3 bg-[#030303] border border-[#171717] space-y-1.5">
                 <div className="font-mono text-xs text-[#6fe39a] uppercase flex items-center justify-between">
                   <span>FUNDAMENTAL THESIS</span>
-                  <span className="text-[#f3f3f4]">{thesis.fundamental} / 100</span>
+                  <span className="text-[#f3f3f4]">{fundamentalScore} / 100</span>
                 </div>
                 <p className="text-xs text-[#f0f0f2] font-light">
-                  Autonomous agent reasoning cycle evaluated Q3/Q4 hyperscaler CapEx guidance. Commitments indicate sustained datacenter buildouts through 2026. Custom ASIC competition remains fragmented, preserving gross margin resilience.
+                  {thesis.fundamental || "No fundamental thesis notes logged."}
                 </p>
               </div>
 
               <div className="p-3 bg-[#030303] border border-[#171717] space-y-1.5">
                 <div className="font-mono text-xs text-[#6fe39a] uppercase flex items-center justify-between">
                   <span>TECHNICAL THESIS</span>
-                  <span className="text-[#f3f3f4]">{thesis.technical} / 100</span>
+                  <span className="text-[#f3f3f4]">{technicalScore} / 100</span>
                 </div>
                 <p className="text-xs text-[#f0f0f2] font-light">
-                  Bullish trend structure confirmed. Price reclaimed 50-day moving average on above-average volume with clean breakout above $170 consolidation range.
+                  {thesis.technical || "No technical thesis notes logged."}
                 </p>
               </div>
 
-              <div className="bg-[#030303] p-3 border border-[#171717] font-mono text-xs space-y-1">
+              <div className="bg-[#030303] p-3 border border-[#171717] font-mono text-xs space-y-1.5">
                 <div className="text-[#55555a] uppercase">RISK & INVALIDATION CONSTRAINTS:</div>
-                <div className="text-[#f3f3f4]">• Simulated Leverage: 2.0×</div>
-                <div className="text-[#b8a77a]">• Invalidation Level: {thesis.invalidation}</div>
-                <div className="text-[#85858a]">• Holding Horizon: 14 - 21 Trading Days</div>
+                <div className="text-[#f3f3f4]">
+                  • Policy Result:{" "}
+                  <span
+                    className={
+                      latestDecision.policyResult === "APPROVED"
+                        ? "text-[#6fe39a]"
+                        : "text-[#b8a77a]"
+                    }
+                  >
+                    {latestDecision.policyResult}
+                  </span>
+                </div>
+                {latestDecision.policyRejectReason && (
+                  <div className="text-[#b8a77a]">• Reason: {latestDecision.policyRejectReason}</div>
+                )}
+                <div className="text-[#b8a77a]">• Invalidation Level: {invalidationBoundary}</div>
+                {thesis.risk && <div className="text-[#85858a] pt-1">• Risk Analysis: {thesis.risk}</div>}
               </div>
             </div>
 
             <div className="space-y-4">
               <div className="h-px bg-[#171717]" />
               <div className="flex flex-wrap items-center justify-between gap-3">
-                <Link
-                  href="/trades/0012"
-                  className="inline-flex items-center gap-1.5 font-mono text-xs text-[#6fe39a] hover:underline uppercase"
-                >
-                  <span>INSPECT ASSOCIATED TRADE #0012</span>
-                  <ArrowUpRight size={12} />
-                </Link>
+                {latestDecision.tradeId ? (
+                  <Link
+                    href={`/trade/${latestDecision.tradeId}`}
+                    className="inline-flex items-center gap-1.5 font-mono text-xs text-[#6fe39a] hover:underline uppercase"
+                  >
+                    <span>INSPECT ASSOCIATED TRADE {latestDecision.tradeNumber || ""}</span>
+                    <ArrowUpRight size={12} />
+                  </Link>
+                ) : (
+                  <Link
+                    href="/trades"
+                    className="inline-flex items-center gap-1.5 font-mono text-xs text-[#85858a] hover:text-[#f3f3f4] uppercase"
+                  >
+                    <span>EXPLORE ALL TRADES</span>
+                    <ArrowUpRight size={12} />
+                  </Link>
+                )}
 
                 <Button
                   type="button"
                   variant="outline"
                   onClick={() => setModalOpen(false)}
-                  className="h-8 px-4 rounded-[3px] font-sans text-xs font-normal"
+                  className="h-8 px-4 rounded-[3px] font-sans text-xs font-normal cursor-pointer"
                 >
                   Close Memorandum
                 </Button>

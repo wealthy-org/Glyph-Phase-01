@@ -1,51 +1,67 @@
 import React from "react";
-import { REPUTATION_DATA } from "@/data/glyph";
+import { GridBackground } from "@/components/ui/GridBackground";
+import { LandingReputationData } from "../types";
 
-export const Reputation: React.FC = () => {
-  const rep = REPUTATION_DATA;
-  const winRate = ((rep.profitable / rep.trades) * 100).toFixed(1);
+interface ReputationProps {
+  reputation: LandingReputationData;
+}
+
+export const Reputation: React.FC<ReputationProps> = ({ reputation }) => {
+  const winRateDisplay =
+    reputation.winRate !== null ? reputation.winRate.toFixed(1) : "—";
+
+  const winRateNote =
+    reputation.closedTradesCount > 0
+      ? `${reputation.winningTradesCount} of ${reputation.closedTradesCount} profitable`
+      : "No closed trades yet";
 
   const stats = [
     {
       label: "DECISIONS RECORDED",
-      value: rep.decisions,
+      value: reputation.decisionsCount,
       suffix: "",
       note: "Synthesized model updates",
       highlight: false,
     },
     {
       label: "WIN RATE { SIMULATED }",
-      value: winRate,
-      suffix: "%",
-      note: `${rep.profitable} of ${rep.trades} profitable`,
+      value: winRateDisplay,
+      suffix: reputation.winRate !== null ? "%" : "",
+      note: winRateNote,
       highlight: true,
     },
     {
-      label: "THESIS PUBLISHED",
-      value: rep.thesesPublished,
+      label: "THESES PUBLISHED",
+      value: reputation.thesesPublished,
       suffix: "",
       note: "Public rationale reports",
       highlight: false,
     },
     {
-      label: "TRADES COMMITTED",
-      value: rep.trades,
+      label: "TRADES EXECUTED",
+      value: reputation.tradesCount,
       suffix: "",
-      note: "Execution tranches",
+      note: `${reputation.closedTradesCount} closed · ${Math.max(
+        0,
+        reputation.tradesCount - reputation.closedTradesCount
+      )} active`,
       highlight: false,
     },
     {
       label: "ONCHAIN ATTESTATIONS",
-      value: rep.onchainProofs,
+      value: reputation.onchainAttestationsCount,
       suffix: "",
-      note: "Immutable state commits",
+      note: "Robinhood Chain commits",
       highlight: false,
     },
   ];
 
   return (
-    <section id="reputation" className="w-full py-16 sm:py-24 bg-[#000000]">
-      <div className="max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-12 space-y-12">
+    <section id="reputation" className="relative w-full py-16 sm:py-24 bg-[#000000] overflow-hidden">
+      {/* Subtle modern thin grid background with calm neutral glow */}
+      <GridBackground glowColor="neutral" intensity="medium" gridSize={36} />
+
+      <div className="relative z-10 max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-12 space-y-12">
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
           <div className="space-y-3">
@@ -57,11 +73,11 @@ export const Reputation: React.FC = () => {
           </div>
 
           <p className="font-mono text-xs text-[#76767a] tracking-wider uppercase max-w-xs">
-            AUTONOMOUS SCORE: 88.4 / 100
+            AUTONOMOUS PROOF RECORD // ROBINHOOD CHAIN
           </p>
         </div>
 
-        {/* Track Record Grid from glyph.html */}
+        {/* Track Record Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-px bg-[#171717] border border-[#171717]">
           {stats.map((stat) => (
             <div
@@ -91,8 +107,8 @@ export const Reputation: React.FC = () => {
 
         {/* Observatory Footnote */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-mono text-xs text-[#55555a] pt-4 border-t border-[#141414]">
-          <span>VERIFICATION: ROBINHOOD CHAIN TESTNET ANCHORS</span>
-          <span>AUTONOMOUS SURVIVAL SCORE: 88.4 / 100</span>
+          <span>VERIFICATION: ROBINHOOD CHAIN TESTNET ANCHORS (CHAIN ID 46630)</span>
+          <span>NET REALIZED PNL: ${reputation.realizedPnl.toFixed(2)} USD-SIM</span>
         </div>
       </div>
     </section>

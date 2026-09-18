@@ -1,13 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
-import { LifeCategory } from "../types";
+import { LifeEvent, LifeCategory } from "../types";
 import { LIFE_CATEGORIES, GLYPH_LIFE_EVENTS } from "../data";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { LifeLogTimeline } from "./LifeLogTimeline";
 
-export const LifeLogSection: React.FC = () => {
+interface LifeLogSectionProps {
+  initialEvents?: LifeEvent[];
+}
+
+export const LifeLogSection: React.FC<LifeLogSectionProps> = ({ initialEvents }) => {
+  const events = initialEvents && initialEvents.length > 0 ? initialEvents : GLYPH_LIFE_EVENTS;
   const [selectedCategory, setSelectedCategory] = useState<LifeCategory>("ALL EVENTS");
 
   return (
@@ -57,7 +62,7 @@ export const LifeLogSection: React.FC = () => {
       {/* Chronological Vertical Timeline Spine */}
       <main>
         <LifeLogTimeline
-          events={GLYPH_LIFE_EVENTS}
+          events={events}
           selectedCategory={selectedCategory}
         />
       </main>
@@ -65,7 +70,7 @@ export const LifeLogSection: React.FC = () => {
       {/* End of Log Observational Footnote */}
       <footer className="pt-8 pb-12 border-t border-[#171717] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 font-mono text-xs text-[#55555a]">
         <span>OBSERVATION STREAM: SYNCHRONIZED</span>
-        <span>INDEX: 001-ALPHA // 7 COMMITS</span>
+        <span>INDEX: 001-ALPHA // {events.length} EVENTS</span>
       </footer>
     </div>
   );

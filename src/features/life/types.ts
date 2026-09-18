@@ -19,9 +19,12 @@ export interface LifeEvent {
   id: string;
   day: number;
   date: string;
+  time?: string;
+  timestamp?: string;
   category: EventCategory;
   title: string;
   description: string;
-  tx: string;
-  result?: string;
+  tx?: string | null;
+  txHash?: string | null;
+  result?: string | null;
 }

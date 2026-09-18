@@ -1,10 +1,37 @@
-import { ADAPTIVE_LEARNINGS, RECENT_EVENTS } from "@/data/glyph";
+"use client";
+
 import { EventTimeline } from "@/features/landing/components/EventTimeline";
 import { ArrowRight, History } from "lucide-react";
 import Link from "next/link";
 import React from "react";
+import {
+  LandingEconomicEvent,
+  LandingMemoryItem,
+  LandingAgentMeta,
+} from "../types";
 
-export const EconomicActivity: React.FC = () => {
+interface EconomicActivityProps {
+  recentEvents: LandingEconomicEvent[];
+  latestMemory: LandingMemoryItem | null;
+  adaptiveLearnings: LandingMemoryItem[];
+  agent: LandingAgentMeta;
+}
+
+export const EconomicActivity: React.FC<EconomicActivityProps> = ({
+  recentEvents,
+  latestMemory,
+  adaptiveLearnings,
+  agent,
+}) => {
+  const pnlPercent = latestMemory?.pnlPercent ?? null;
+  const pnlDisplay =
+    pnlPercent !== null
+      ? `${pnlPercent >= 0 ? "+" : ""}${pnlPercent.toFixed(1)}%`
+      : "—";
+
+  const isWin = latestMemory?.outcome === "WIN";
+  const ringColor = isWin ? "#6fe39a" : latestMemory ? "#c47a7a" : "#444448";
+
   return (
     <section id="economic-activity" className="w-full py-16 sm:py-24 border-b border-[#171717] bg-[#000000]">
       <div className="max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-12 space-y-12">
@@ -30,7 +57,7 @@ export const EconomicActivity: React.FC = () => {
           </div>
         </div>
 
-        {/* Memory Showcase Block from glyph.html */}
+        {/* Memory Showcase Block */}
         <div className="border border-[#171717] bg-[#050505] p-6 sm:p-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Radial Ring Graphic Visualizer */}
           <div className="lg:col-span-5 flex justify-center">
@@ -49,23 +76,26 @@ export const EconomicActivity: React.FC = () => {
                   cy="80"
                   r="68"
                   fill="none"
-                  stroke="#6fe39a"
+                  stroke={ringColor}
                   strokeWidth="3.5"
                   strokeLinecap="round"
                   strokeDasharray="427"
-                  strokeDashoffset="72"
+                  strokeDashoffset={latestMemory ? "100" : "427"}
                   className="filter drop-shadow-[0_0_8px_rgba(111,227,154,0.45)] transition-all duration-1000"
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 font-mono">
-                <span className="text-[#6fe39a] text-xs font-semibold tracking-widest uppercase">
-                  WIN
+                <span
+                  className="text-xs font-semibold tracking-widest uppercase"
+                  style={{ color: ringColor }}
+                >
+                  {latestMemory?.outcome || "INITIALIZING"}
                 </span>
                 <span className="text-3xl sm:text-4xl font-light text-[#f0f0f1] tracking-tight">
-                  +8.4%
+                  {pnlDisplay}
                 </span>
                 <span className="text-[10px] text-[#55555a] tracking-widest uppercase">
-                  TRADE #0012
+                  {latestMemory ? "LATEST MEMORY" : "AWAITING TRADE"}
                 </span>
               </div>
             </div>
@@ -74,13 +104,32 @@ export const EconomicActivity: React.FC = () => {
           {/* Memory Editorial Rationale */}
           <div className="lg:col-span-7 space-y-4">
             <span className="eyebrow">GLYPH PERSISTENT MEMORY</span>
-            <blockquote className="italic font-sans text-xl sm:text-2xl text-[#f0f0f1] font-light leading-snug">
-              &ldquo;Breakout confirmation combined with strong earnings momentum produced a favorable result.&rdquo;
-            </blockquote>
-            <div className="pt-2 font-mono text-xs text-[#85858a] tracking-wider uppercase space-y-1">
-              <div className="text-[#e7e7e9]">NVDA · LONG · 2× SIMULATED LEVERAGE</div>
-              <div className="text-[#55555a] text-[11px]">Thesis result: correct · Confidence calibration: good</div>
-            </div>
+            {latestMemory ? (
+              <>
+                <blockquote className="italic font-sans text-xl sm:text-2xl text-[#f0f0f1] font-light leading-snug">
+                  &ldquo;{latestMemory.lesson}&rdquo;
+                </blockquote>
+                <div className="pt-2 font-mono text-xs text-[#85858a] tracking-wider uppercase space-y-1">
+                  <div className="text-[#e7e7e9]">
+                    THESIS VERDICT: {latestMemory.thesisResult}
+                  </div>
+                  {latestMemory.adaptation && (
+                    <div className="text-[#55555a] text-[11px]">
+                      {latestMemory.adaptation}
+                    </div>
+                  )}
+                </div>
+              </>
+            ) : (
+              <div className="space-y-2">
+                <blockquote className="italic font-sans text-lg sm:text-xl text-[#76767a] font-light leading-snug">
+                  &ldquo;No reflections recorded. Autonomous reflection will be formed upon the completion of the first closed trade.&rdquo;
+                </blockquote>
+                <div className="pt-2 font-mono text-xs text-[#55555a] tracking-wider uppercase">
+                  STATE: AWAITING POSITION RESOLUTION
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -93,15 +142,21 @@ export const EconomicActivity: React.FC = () => {
                 RECENT LIFELOG ENTRIES
               </span>
               <span className="font-mono text-[10px] text-[#55555a] uppercase">
-                RECORDED // 6
+                RECORDED // {recentEvents.length}
               </span>
             </div>
 
-            <EventTimeline events={RECENT_EVENTS} />
+            {recentEvents.length > 0 ? (
+              <EventTimeline events={recentEvents} />
+            ) : (
+              <div className="py-12 text-center font-mono text-xs text-[#55555a] border border-[#171717] bg-[#050505]">
+                NO ECONOMIC EVENTS RECORDED
+              </div>
+            )}
 
             <div className="pt-4 flex items-center justify-between font-mono text-xs border-t border-[#141414]">
               <span className="text-[#55555a]">
-                SHOWING RECENT 6 OF 24 RECORDED EVENTS
+                SHOWING RECENT {recentEvents.length} RECORDED EVENTS
               </span>
               <Link
                 href="/life"
@@ -120,39 +175,51 @@ export const EconomicActivity: React.FC = () => {
                 HOW GLYPH LEARNS (WEIGHT SHIFTS)
               </span>
               <span className="font-mono text-[10px] text-[#6fe39a] uppercase">
-                ACTIVE
+                {adaptiveLearnings.length > 0 ? "ACTIVE" : "STANDBY"}
               </span>
             </div>
 
             <div className="space-y-3">
-              {ADAPTIVE_LEARNINGS.map((learning) => (
-                <div
-                  key={learning.id}
-                  className="p-4 border border-[#181818] bg-[#050505] space-y-2 font-mono"
-                >
-                  <div className="flex items-center justify-between text-[11px]">
-                    <span className="text-[#6fe39a] font-medium">{learning.triggerEvent}</span>
-                    <span className="text-[#55555a]">
-                      DECISION #{learning.decisionId}
-                    </span>
-                  </div>
-
-                  <p className="text-xs text-[#f0f0f2] font-light leading-relaxed font-sans">
-                    {learning.insight}
-                  </p>
-
-                  <div className="pt-2 text-[11px] text-[#85858a] border-t border-[#141414] space-y-1">
-                    <div>
-                      <span className="text-[#55555a]">ADAPTATION: </span>
-                      {learning.adaptation}
+              {adaptiveLearnings.length > 0 ? (
+                adaptiveLearnings.map((learning) => (
+                  <div
+                    key={learning.id}
+                    className="p-4 border border-[#181818] bg-[#050505] space-y-2 font-mono"
+                  >
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-[#6fe39a] font-medium">
+                        {learning.outcome} REFLECTION
+                      </span>
+                      <span className="text-[#55555a]">
+                        {learning.thesisResult}
+                      </span>
                     </div>
-                    <div className="text-[#6fe39a]">
-                      <span className="text-[#55555a]">WEIGHT SHIFT: </span>
-                      {learning.weightShift}
+
+                    <p className="text-xs text-[#f0f0f2] font-light leading-relaxed font-sans">
+                      {learning.lesson}
+                    </p>
+
+                    <div className="pt-2 text-[11px] text-[#85858a] border-t border-[#141414] space-y-1">
+                      {learning.adaptation && (
+                        <div>
+                          <span className="text-[#55555a]">ADAPTATION: </span>
+                          {learning.adaptation}
+                        </div>
+                      )}
+                      {learning.weightShift && (
+                        <div className="text-[#6fe39a]">
+                          <span className="text-[#55555a]">WEIGHT SHIFT: </span>
+                          {learning.weightShift}
+                        </div>
+                      )}
                     </div>
                   </div>
+                ))
+              ) : (
+                <div className="p-6 border border-[#181818] bg-[#050505] text-center font-mono text-xs text-[#55555a]">
+                  NO ADAPTIVE UPDATES RECORDED
                 </div>
-              ))}
+              )}
             </div>
 
             {/* Survival Runtime Status Card */}
@@ -161,7 +228,7 @@ export const EconomicActivity: React.FC = () => {
                 AUTONOMOUS SURVIVAL RUNTIME
               </span>
               <div className="font-mono text-2xl text-[#f3f3f4] font-light">
-                13 DAYS 08 HOURS
+                {agent.activeDays} DAYS {String(agent.activeHours).padStart(2, "0")} HOURS
               </div>
               <div className="text-[11px] text-[#6fe39a] font-mono flex items-center justify-between pt-1 border-t border-[#141414]">
                 <span>Zero human overrides committed</span>

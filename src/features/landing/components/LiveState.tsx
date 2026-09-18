@@ -2,35 +2,67 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { GLYPH_STATE } from "@/data/glyph";
 import { Button } from "@/components/ui/button";
-import { Copy, Check, ExternalLink, ShieldCheck, ArrowRight } from "lucide-react";
+import { GridBackground } from "@/components/ui/GridBackground";
+import { Copy, Check, ExternalLink, ShieldCheck, ArrowRight, AlertTriangle } from "lucide-react";
+import {
+  LandingTreasuryData,
+  LandingPositionItem,
+  LandingLatestDecision,
+  LandingAgentMeta,
+} from "../types";
 
-export const LiveState: React.FC = () => {
+interface LiveStateProps {
+  treasury: LandingTreasuryData;
+  openPositions: LandingPositionItem[];
+  latestDecision: LandingLatestDecision | null;
+  agent: LandingAgentMeta;
+  cognitiveCycleCount: number;
+}
+
+export const LiveState: React.FC<LiveStateProps> = ({
+  treasury,
+  openPositions,
+  latestDecision,
+  agent,
+  cognitiveCycleCount,
+}) => {
   const [copiedTx, setCopiedTx] = useState(false);
   const [verifyModalOpen, setVerifyModalOpen] = useState(false);
-  const data = GLYPH_STATE;
 
-  const proof = data.decisionProof || {
-    txHash: "0x8f3c71a3962d8544e390c9b0e1df59b3291ac",
-    network: "Robinhood Chain Testnet (Simulated Proof)",
-    blockNumber: 19482014,
-    stateRoot: "0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3",
-    timestamp: "Sep 17, 2026 · 11:42:09 UTC",
-    explorerUrl: "https://sepolia.basescan.org/tx/0x8f3c71a3962d8544e390c9b0e1df59b3291ac",
-  };
+  const txHash = latestDecision?.transactionHash || null;
+  const shortTxHash = txHash
+    ? `${txHash.slice(0, 6)}...${txHash.slice(-4)}`
+    : "NO ONCHAIN ATTESTATION";
 
   const copyTxHash = () => {
-    navigator.clipboard.writeText(proof.txHash);
+    if (!txHash) return;
+    navigator.clipboard.writeText(txHash);
     setCopiedTx(true);
     setTimeout(() => setCopiedTx(false), 2000);
   };
 
-  const shortTxHash = `${proof.txHash.slice(0, 6)}...${proof.txHash.slice(-4)}`;
+  const pnlSign = treasury.pnlDollar >= 0 ? "+" : "";
+  const pnlColor =
+    treasury.pnlDollar > 0
+      ? "text-[#6fe39a]"
+      : treasury.pnlDollar < 0
+      ? "text-[#c47a7a]"
+      : "text-[#85858a]";
+
+  const primaryPosition = openPositions[0];
+  const positionBadgeText = primaryPosition
+    ? openPositions.length > 1
+      ? `${openPositions.length} OPEN · ${primaryPosition.asset} ${primaryPosition.leverage}×`
+      : `${primaryPosition.asset} · ${primaryPosition.side} · ${primaryPosition.leverage}× SIM`
+    : "0 OPEN POSITIONS";
 
   return (
-    <section id="live-state" className="w-full py-16 sm:py-24 border-b border-[#171717] bg-[#000000]">
-      <div className="max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-12 space-y-12">
+    <section id="live-state" className="relative w-full py-16 sm:py-24 border-b border-[#171717] bg-[#000000] overflow-hidden">
+      {/* Subtle modern thin grid background */}
+      <GridBackground glowColor="emerald" intensity="medium" gridSize={36} />
+
+      <div className="relative z-10 max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-12 space-y-12">
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
           <div className="space-y-3">
@@ -45,12 +77,12 @@ export const LiveState: React.FC = () => {
           <div className="flex items-center gap-3 font-mono text-[11px] border border-[#1a1a1a] bg-[#050505] px-3.5 py-1.5 self-start sm:self-auto">
             <span className="w-1.5 h-1.5 rounded-full bg-[#6fe39a] shadow-[0_0_0_3px_rgba(111,227,154,0.18)] animate-livepulse" />
             <span className="text-[#6fe39a] tracking-wider font-medium uppercase">
-              BEING ACTIVE
+              BEING {agent.status}
             </span>
             <span className="text-[#252525]">|</span>
-            <span className="text-[#85858a]">CYCLE #{data.cognitiveCycle || 849}</span>
+            <span className="text-[#85858a]">CYCLE #{cognitiveCycleCount}</span>
             <span className="text-[#252525]">|</span>
-            <span className="text-[#55555a]">TICK 4S AGO</span>
+            <span className="text-[#55555a]">ID #{agent.agentId}</span>
           </div>
         </div>
 
@@ -69,13 +101,19 @@ export const LiveState: React.FC = () => {
               {/* Terminal Tabs */}
               <div className="flex items-center gap-4 sm:gap-6 font-mono text-[11px] uppercase tracking-wider">
                 <span className="text-[#f3f3f4] border-b border-[#f3f3f4] pb-0.5 font-medium cursor-default">
-                  GLYPH
+                  {agent.name}
                 </span>
                 <Link
                   href="/life"
                   className="text-[#606064] hover:text-[#a4a4a7] transition-colors"
                 >
                   LIFE LOG
+                </Link>
+                <Link
+                  href="/trades"
+                  className="text-[#606064] hover:text-[#a4a4a7] transition-colors"
+                >
+                  TRADES
                 </Link>
                 <Link
                   href="/identity"
@@ -100,47 +138,134 @@ export const LiveState: React.FC = () => {
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-1">
                   <span className="font-mono text-[10px] sm:text-xs text-[#55555a] tracking-wider uppercase block">
-                    TREASURY (SIMULATED)
+                    TOTAL PORTFOLIO EQUITY (NAV)
                   </span>
                   <div className="font-mono text-3xl sm:text-4xl lg:text-5xl font-light text-[#e8e8e9] tracking-tight">
-                    ${(data.simulatedPortfolio || 1351.63).toLocaleString("en-US", {
+                    ${treasury.totalEquity.toLocaleString("en-US", {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
                     })}
                   </div>
                   <div className="flex items-center gap-2 pt-1 font-mono text-xs">
-                    <span className="text-[#6fe39a]">
-                      {data.simulatedPnL || "+$104.21"} ({data.simulatedPnLPercent || "+8.4%"})
+                    <span className={pnlColor}>
+                      {pnlSign}${Math.abs(treasury.pnlDollar).toFixed(2)} ({pnlSign}
+                      {treasury.pnlPercent.toFixed(1)}%)
                     </span>
                     <span className="text-[#333333]">·</span>
-                    <span className="text-[#85858a]">CASH: ${data.treasury.toFixed(2)} USD-SIM</span>
+                    <span className="text-[#85858a]">
+                      CASH: ${treasury.cashBalance.toFixed(2)} {treasury.currency}
+                    </span>
+                    {treasury.allocatedMargin > 0 && (
+                      <>
+                        <span className="text-[#333333]">·</span>
+                        <span className="text-[#69696d]">
+                          MARGIN: ${treasury.allocatedMargin.toFixed(2)}
+                        </span>
+                      </>
+                    )}
                   </div>
                 </div>
 
                 <div className="px-3 py-1 border border-[#292929] bg-[#101010] text-[#85858a] font-mono text-[10px] sm:text-xs uppercase tracking-wider">
-                  {data.currentPosition || "NVDA · 2× SIM"}
+                  {positionBadgeText}
                 </div>
               </div>
 
-              {/* Graphical Visual Bars from glyph.html */}
-              <div className="pt-12 sm:pt-16 pb-2">
-                <div className="h-28 sm:h-36 flex items-end gap-3 sm:gap-4 px-2 border-b border-[#141414] pb-2">
-                  <div className="flex-1 bg-[#1b1b1b] h-[34%] hover:bg-[#252525] transition-all" title="Day 1: $1,000" />
-                  <div className="flex-1 bg-[#222222] h-[22%] hover:bg-[#2b2b2b] transition-all" title="Day 2: $940" />
-                  <div className="flex-1 bg-[#2f2f2f] h-[48%] hover:bg-[#383838] transition-all" title="Day 3: $1,120" />
-                  <div className="flex-1 bg-[#444444] h-[39%] hover:bg-[#505050] transition-all" title="Day 4: $1,060" />
-                  <div
-                    className="flex-1 bg-[#6fe39a] h-[30%] shadow-[0_0_15px_rgba(111,227,154,0.25)] hover:bg-[#8ef5b4] transition-all"
-                    title="Active Position: NVDA Long"
-                  />
-                  <div
-                    className="flex-1 bg-[#f0f0f0] h-[61%] shadow-[0_0_15px_rgba(255,255,255,0.2)] hover:bg-white transition-all"
-                    title="Current NAV: $1,351.63"
-                  />
-                </div>
-                <div className="flex justify-between font-mono text-[9px] text-[#444448] uppercase tracking-wider pt-2 px-2">
+              {/* Graphical Visual Bars dynamically computed from authoritative portfolio state */}
+              <div className="pt-10 sm:pt-14 pb-2">
+                {(() => {
+                  const totalNotional = openPositions.reduce((sum, p) => sum + p.notional, 0);
+                  const baseMax = Math.max(
+                    treasury.totalEquity,
+                    treasury.initialCapital,
+                    totalNotional,
+                    100
+                  );
+                  const seedH = Math.max(18, Math.min(95, Math.round((treasury.initialCapital / baseMax) * 85)));
+                  const cashH = Math.max(18, Math.min(95, Math.round((treasury.cashBalance / baseMax) * 85)));
+                  const marginH =
+                    treasury.allocatedMargin > 0
+                      ? Math.max(18, Math.min(95, Math.round((treasury.allocatedMargin / baseMax) * 85)))
+                      : 6;
+                  const notionalH =
+                    totalNotional > 0
+                      ? Math.max(20, Math.min(95, Math.round((totalNotional / baseMax) * 85)))
+                      : 6;
+                  const navH = Math.max(20, Math.min(95, Math.round((treasury.totalEquity / baseMax) * 85)));
+
+                  const chartBars = [
+                    {
+                      label: "SEED",
+                      value: `$${Math.round(treasury.initialCapital)}`,
+                      height: `${seedH}%`,
+                      bg: "bg-[#1f1f1f] hover:bg-[#2b2b2b]",
+                      title: `Initial Seed Capital: $${treasury.initialCapital.toFixed(2)}`,
+                    },
+                    {
+                      label: "CASH",
+                      value: `$${Math.round(treasury.cashBalance)}`,
+                      height: `${cashH}%`,
+                      bg: "bg-[#282828] hover:bg-[#333333]",
+                      title: `Available Unallocated Cash: $${treasury.cashBalance.toFixed(2)}`,
+                    },
+                    {
+                      label: "MARGIN",
+                      value: `$${Math.round(treasury.allocatedMargin)}`,
+                      height: `${marginH}%`,
+                      bg: treasury.allocatedMargin > 0 ? "bg-[#3d3d42] hover:bg-[#4d4d54]" : "bg-[#151515]",
+                      title: `Committed Position Margin: $${treasury.allocatedMargin.toFixed(2)}`,
+                    },
+                    {
+                      label: "NOTIONAL",
+                      value: `$${Math.round(totalNotional)}`,
+                      height: `${notionalH}%`,
+                      bg:
+                        totalNotional > 0
+                          ? "bg-[#457858] hover:bg-[#52936a]"
+                          : "bg-[#151515]",
+                      title: `Total Market Exposure (Notional): $${totalNotional.toFixed(2)}`,
+                    },
+                    {
+                      label: "NAV",
+                      value: `$${Math.round(treasury.totalEquity)}`,
+                      height: `${navH}%`,
+                      bg: "bg-[#6fe39a] shadow-[0_0_15px_rgba(111,227,154,0.3)] hover:bg-[#8ef5b4]",
+                      title: `Net Total Equity (NAV): $${treasury.totalEquity.toFixed(2)}`,
+                    },
+                  ];
+
+                  return (
+                    <>
+                      <div className="h-28 sm:h-36 flex items-end gap-3 sm:gap-4 px-2 border-b border-[#141414] pb-2">
+                        {chartBars.map((bar, idx) => (
+                          <div
+                            key={idx}
+                            className="flex-1 flex flex-col justify-end items-center h-full group/bar"
+                          >
+                            <span className="font-mono text-[9px] text-[#55555a] group-hover/bar:text-[#f3f3f4] transition-colors pb-1 tabular-nums">
+                              {bar.value}
+                            </span>
+                            <div
+                              style={{ height: bar.height }}
+                              className={`w-full ${bar.bg} transition-all duration-500 rounded-t-[1px]`}
+                              title={bar.title}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                      <div className="flex justify-between font-mono text-[9px] text-[#55555a] uppercase tracking-wider pt-2 px-2">
+                        {chartBars.map((bar, idx) => (
+                          <span key={idx} className="flex-1 text-center truncate">
+                            {bar.label}
+                          </span>
+                        ))}
+                      </div>
+                    </>
+                  );
+                })()}
+                <div className="flex justify-between font-mono text-[9px] text-[#3e3e42] uppercase tracking-wider pt-2 px-2 border-t border-[#101010] mt-2">
                   <span>EPOCH 001 GENESIS</span>
-                  <span>CURRENT CYCLE #{data.cognitiveCycle || 849}</span>
+                  <span>CURRENT CYCLE #{cognitiveCycleCount}</span>
                 </div>
               </div>
             </div>
@@ -152,53 +277,90 @@ export const LiveState: React.FC = () => {
                   <span className="font-mono text-[10px] sm:text-xs text-[#59595e] tracking-wider uppercase block">
                     LATEST DECISION
                   </span>
-                  <span className="font-mono text-[10px] text-[#6fe39a] uppercase tracking-wider">
-                    VERIFIED
-                  </span>
+                  {latestDecision ? (
+                    latestDecision.policyResult === "APPROVED" ? (
+                      <span className="font-mono text-[10px] text-[#6fe39a] uppercase tracking-wider">
+                        APPROVED
+                      </span>
+                    ) : (
+                      <span className="font-mono text-[10px] text-[#b8a77a] uppercase tracking-wider flex items-center gap-1">
+                        <AlertTriangle size={11} />
+                        <span>REJECTED</span>
+                      </span>
+                    )
+                  ) : (
+                    <span className="font-mono text-[10px] text-[#55555a] uppercase tracking-wider">
+                      NO DECISIONS
+                    </span>
+                  )}
                 </div>
 
-                {/* Score Breakdown Rows matching glyph.html */}
-                <div className="space-y-3 font-mono text-xs">
-                  <div className="flex justify-between items-center py-1 border-b border-[#111111]">
-                    <span className="text-[#c6c6c9] flex items-center gap-2">
-                      <span className="w-1 h-1 bg-[#6e6e72] rounded-full" />
-                      Fundamental
-                    </span>
-                    <span className="text-[#f3f3f4] font-medium">
-                      {data.latestDecision.fundamental}
-                    </span>
-                  </div>
+                {latestDecision ? (
+                  <>
+                    {/* Score Breakdown Rows */}
+                    <div className="space-y-3 font-mono text-xs">
+                      <div className="flex justify-between items-center py-1 border-b border-[#111111]">
+                        <span className="text-[#c6c6c9] flex items-center gap-2">
+                          <span className="w-1 h-1 bg-[#6e6e72] rounded-full" />
+                          Target Asset
+                        </span>
+                        <span className="text-[#f3f3f4] font-medium">
+                          {latestDecision.asset} · {latestDecision.action}
+                        </span>
+                      </div>
 
-                  <div className="flex justify-between items-center py-1 border-b border-[#111111]">
-                    <span className="text-[#c6c6c9] flex items-center gap-2">
-                      <span className="w-1 h-1 bg-[#6e6e72] rounded-full" />
-                      Technical
-                    </span>
-                    <span className="text-[#6fe39a] font-medium">
-                      {data.latestDecision.technical}
-                    </span>
-                  </div>
+                      <div className="flex justify-between items-center py-1 border-b border-[#111111]">
+                        <span className="text-[#c6c6c9] flex items-center gap-2">
+                          <span className="w-1 h-1 bg-[#6e6e72] rounded-full" />
+                          Fundamental
+                        </span>
+                        <span className="text-[#f3f3f4] font-medium">
+                          {latestDecision.fundamentalScore ?? "—"}
+                        </span>
+                      </div>
 
-                  <div className="flex justify-between items-center py-1 border-b border-[#111111]">
-                    <span className="text-[#c6c6c9] flex items-center gap-2">
-                      <span className="w-1 h-1 bg-[#6e6e72] rounded-full" />
-                      Risk
-                    </span>
-                    <span className="text-[#b8a77a] font-medium">
-                      {data.latestDecision.risk}
-                    </span>
-                  </div>
+                      <div className="flex justify-between items-center py-1 border-b border-[#111111]">
+                        <span className="text-[#c6c6c9] flex items-center gap-2">
+                          <span className="w-1 h-1 bg-[#6e6e72] rounded-full" />
+                          Technical
+                        </span>
+                        <span className="text-[#6fe39a] font-medium">
+                          {latestDecision.technicalScore ?? "—"}
+                        </span>
+                      </div>
 
-                  <div className="flex justify-between items-center py-1 border-b border-[#111111]">
-                    <span className="text-[#c6c6c9] flex items-center gap-2">
-                      <span className="w-1 h-1 bg-[#6e6e72] rounded-full" />
-                      Conviction
-                    </span>
-                    <span className="text-[#f3f3f4] font-medium">
-                      {data.conviction}%
-                    </span>
+                      <div className="flex justify-between items-center py-1 border-b border-[#111111]">
+                        <span className="text-[#c6c6c9] flex items-center gap-2">
+                          <span className="w-1 h-1 bg-[#6e6e72] rounded-full" />
+                          Risk Score
+                        </span>
+                        <span className="text-[#b8a77a] font-medium">
+                          {latestDecision.riskScore ?? "—"}
+                        </span>
+                      </div>
+
+                      <div className="flex justify-between items-center py-1 border-b border-[#111111]">
+                        <span className="text-[#c6c6c9] flex items-center gap-2">
+                          <span className="w-1 h-1 bg-[#6e6e72] rounded-full" />
+                          Conviction
+                        </span>
+                        <span className="text-[#f3f3f4] font-medium">
+                          {latestDecision.conviction}%
+                        </span>
+                      </div>
+                    </div>
+
+                    {latestDecision.policyRejectReason && (
+                      <div className="p-2 border border-[#b8a77a]/30 bg-[#b8a77a]/5 text-[10px] font-mono text-[#b8a77a] leading-tight">
+                        POLICY: {latestDecision.policyRejectReason}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="py-6 text-center text-xs font-mono text-[#55555a]">
+                    NO DECISION RECORDED YET
                   </div>
-                </div>
+                )}
               </div>
 
               {/* Onchain Record & Attestation Button */}
@@ -208,40 +370,60 @@ export const LiveState: React.FC = () => {
                     ONCHAIN RECORD
                   </span>
                   <div className="flex items-center justify-between">
-                    <span className="font-mono text-xs text-[#8f8f93] hover:text-[#f3f3f4] transition-colors">
+                    <span className="font-mono text-xs text-[#8f8f93] hover:text-[#f3f3f4] transition-colors truncate max-w-[200px]">
                       {shortTxHash}
                     </span>
-                    <button
-                      type="button"
-                      onClick={copyTxHash}
-                      className="text-[#55555a] hover:text-[#f3f3f4] text-xs p-1"
-                      title="Copy full hash"
-                      aria-label="Copy onchain transaction hash"
-                    >
-                      {copiedTx ? <Check size={13} className="text-[#6fe39a]" /> : <Copy size={13} />}
-                    </button>
+                    {txHash && (
+                      <button
+                        type="button"
+                        onClick={copyTxHash}
+                        className="text-[#55555a] hover:text-[#f3f3f4] text-xs p-1 cursor-pointer"
+                        title="Copy full hash"
+                        aria-label="Copy onchain transaction hash"
+                      >
+                        {copiedTx ? <Check size={13} className="text-[#6fe39a]" /> : <Copy size={13} />}
+                      </button>
+                    )}
                   </div>
                 </div>
 
                 <div className="pt-1 flex flex-col gap-2">
-                  <Button
-                    type="button"
-                    onClick={() => setVerifyModalOpen(true)}
-                    className="w-full h-9 bg-transparent hover:bg-[#101010] text-[#6fe39a] hover:text-[#8ef5b4] border border-[#6fe39a]/40 hover:border-[#6fe39a] font-sans text-xs font-normal transition-colors rounded-[3px] flex items-center justify-center gap-2"
-                  >
-                    <ShieldCheck size={13} />
-                    <span>Verify Onchain</span>
-                  </Button>
-
-                  <Link href="/trades/0012">
+                  {txHash ? (
                     <Button
-                      variant="secondary"
-                      className="w-full h-9 text-xs font-sans font-normal rounded-[3px] flex items-center justify-center gap-1.5"
+                      type="button"
+                      onClick={() => setVerifyModalOpen(true)}
+                      className="w-full h-9 bg-transparent hover:bg-[#101010] text-[#6fe39a] hover:text-[#8ef5b4] border border-[#6fe39a]/40 hover:border-[#6fe39a] font-sans text-xs font-normal transition-colors rounded-[3px] flex items-center justify-center gap-2 cursor-pointer"
                     >
-                      <span>Inspect Decision</span>
-                      <ArrowRight size={12} />
+                      <ShieldCheck size={13} />
+                      <span>Verify Onchain</span>
                     </Button>
-                  </Link>
+                  ) : (
+                    <div className="w-full h-9 border border-[#1f1f1f] bg-[#030303] text-[#55555a] font-mono text-[11px] flex items-center justify-center">
+                      NO ONCHAIN ATTESTATION
+                    </div>
+                  )}
+
+                  {latestDecision?.tradeId ? (
+                    <Link href={`/trade/${latestDecision.tradeId}`}>
+                      <Button
+                        variant="secondary"
+                        className="w-full h-9 text-xs font-sans font-normal rounded-[3px] flex items-center justify-center gap-1.5"
+                      >
+                        <span>Inspect Trade {latestDecision.tradeNumber || ""}</span>
+                        <ArrowRight size={12} />
+                      </Button>
+                    </Link>
+                  ) : (
+                    <Link href="/trades">
+                      <Button
+                        variant="secondary"
+                        className="w-full h-9 text-xs font-sans font-normal rounded-[3px] flex items-center justify-center gap-1.5"
+                      >
+                        <span>View All Trades</span>
+                        <ArrowRight size={12} />
+                      </Button>
+                    </Link>
+                  )}
                 </div>
               </div>
             </div>
@@ -252,7 +434,7 @@ export const LiveState: React.FC = () => {
             <div className="flex items-center gap-3 text-[#85858a]">
               <span className="text-[#55555a] uppercase tracking-wider text-[10px]">OBJECTIVE:</span>
               <span className="text-[#f3f3f4] font-light truncate max-w-xl">
-                {data.objective}
+                {agent.objective}
               </span>
             </div>
             <div className="flex items-center gap-4 text-[10px] text-[#69696d] uppercase tracking-wider shrink-0">
@@ -264,8 +446,8 @@ export const LiveState: React.FC = () => {
         </div>
       </div>
 
-      {/* Cryptographic Attestation Modal (Preserved Functionality) */}
-      {verifyModalOpen && (
+      {/* Cryptographic Attestation Modal */}
+      {verifyModalOpen && latestDecision && txHash && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-4"
           onClick={() => setVerifyModalOpen(false)}
@@ -295,10 +477,10 @@ export const LiveState: React.FC = () => {
                 </button>
               </div>
               <h4 className="text-lg font-light text-[#f3f3f4]">
-                Decision #{data.latestDecisionId || "0012"} State Commit
+                Decision #{latestDecision.id.slice(0, 8)} Onchain Proof
               </h4>
               <p className="text-xs text-[#85858a] font-light leading-relaxed">
-                Verification proof anchoring Glyph&apos;s autonomous market decision to the blockchain testnet.
+                Immutable verification proof anchoring Glyph&apos;s autonomous market decision to Robinhood Chain Testnet.
               </p>
             </div>
 
@@ -309,12 +491,12 @@ export const LiveState: React.FC = () => {
                 <span className="text-[#55555a] block text-[11px] uppercase">TRANSACTION HASH</span>
                 <div className="flex items-center justify-between p-2.5 bg-[#030303] border border-[#171717] break-all">
                   <span className="text-[#f3f3f4] text-[11px] sm:text-xs">
-                    {proof.txHash}
+                    {txHash}
                   </span>
                   <button
                     type="button"
                     onClick={copyTxHash}
-                    className="ml-2 p-1 text-[#85858a] hover:text-[#f3f3f4]"
+                    className="ml-2 p-1 text-[#85858a] hover:text-[#f3f3f4] cursor-pointer"
                     aria-label="Copy full hash"
                   >
                     {copiedTx ? <Check size={13} className="text-[#6fe39a]" /> : <Copy size={13} />}
@@ -325,47 +507,53 @@ export const LiveState: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <span className="text-[#55555a] block text-[11px] uppercase">NETWORK</span>
-                  <p className="text-[#f3f3f4] text-xs">{proof.network}</p>
+                  <p className="text-[#f3f3f4] text-xs">Robinhood Chain Testnet (Chain ID 46630)</p>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-[#55555a] block text-[11px] uppercase">BLOCK NUMBER</span>
-                  <p className="text-[#f3f3f4] text-xs">#{proof.blockNumber.toLocaleString()}</p>
+                  <span className="text-[#55555a] block text-[11px] uppercase">POLICY STATUS</span>
+                  <p className={latestDecision.policyResult === "APPROVED" ? "text-[#6fe39a]" : "text-[#b8a77a]"}>
+                    {latestDecision.policyResult}
+                  </p>
                 </div>
               </div>
 
-              <div className="space-y-1">
-                <span className="text-[#55555a] block text-[11px] uppercase">STATE MERKLE ROOT</span>
-                <p className="p-2.5 bg-[#030303] border border-[#171717] text-[#85858a] text-[10px] sm:text-[11px] break-all">
-                  {proof.stateRoot}
-                </p>
-              </div>
+              {latestDecision.decisionHash && (
+                <div className="space-y-1">
+                  <span className="text-[#55555a] block text-[11px] uppercase">CANONICAL DECISION HASH</span>
+                  <p className="p-2.5 bg-[#030303] border border-[#171717] text-[#85858a] text-[10px] sm:text-[11px] break-all">
+                    {latestDecision.decisionHash}
+                  </p>
+                </div>
+              )}
 
               <div className="p-3 bg-[#030303] border border-[#171717] text-[11px] text-[#76767a] leading-relaxed">
                 <span className="text-[#6fe39a] font-medium block mb-1">
                   PROOF OF DECISION INTEGRITY
                 </span>
-                The payload contains the exact fundamental score ({data.latestDecision.fundamental}), technical score ({data.latestDecision.technical}), invalidation parameter ($168), and timestamp. Modifying any thesis reasoning after execution causes cryptographic invalidation.
+                The payload contains the exact fundamental score ({latestDecision.fundamentalScore ?? "N/A"}), technical score ({latestDecision.technicalScore ?? "N/A"}), risk score ({latestDecision.riskScore ?? "N/A"}), and timestamp. Modifying any thesis reasoning after execution causes cryptographic invalidation.
               </div>
             </div>
 
             <div className="h-px bg-[#171717]" />
 
             <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
-              <a
-                href={proof.explorerUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs font-mono text-[#6fe39a] hover:underline uppercase"
-              >
-                <span>VIEW IN TESTNET EXPLORER</span>
-                <ExternalLink size={12} />
-              </a>
+              {latestDecision.explorerUrl && (
+                <a
+                  href={latestDecision.explorerUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 text-xs font-mono text-[#6fe39a] hover:underline uppercase"
+                >
+                  <span>VIEW IN ROBINHOOD TESTNET EXPLORER</span>
+                  <ExternalLink size={12} />
+                </a>
+              )}
 
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => setVerifyModalOpen(false)}
-                className="h-8 px-4 rounded-[3px] text-xs font-sans font-normal"
+                className="h-8 px-4 rounded-[3px] text-xs font-sans font-normal cursor-pointer"
               >
                 Close Audit
               </Button>

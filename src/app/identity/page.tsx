@@ -29,30 +29,54 @@ export default async function IdentityPage() {
 
     if (agent) {
       const regEvent = agent.economicEvents[0];
+
+      // Query real dynamic counts from database
+      const [decisionsCount, verifiedEventsCount, tradesCount, closedTrades] = await Promise.all([
+        prisma.decision.count({ where: { agentId: agent.id } }),
+        prisma.economicEvent.count({ where: { agentId: agent.id } }),
+        prisma.trade.count({ where: { agentId: agent.id } }),
+        prisma.trade.findMany({
+          where: { agentId: agent.id, status: "CLOSED" },
+          select: { simulatedPnl: true },
+        }),
+      ]);
+
+      const winningTrades = closedTrades.filter(
+        (t) => t.simulatedPnl && Number(t.simulatedPnl) > 0
+      ).length;
+
+      const winRate =
+        closedTrades.length > 0
+          ? Math.round((winningTrades / closedTrades.length) * 100)
+          : Number(agent.reputationMetrics?.winRate ?? 0);
+
       identityData = {
         ...GLYPH_IDENTITY_DATA,
         beingNumber: `VERIFIED AGENT · ID #${agent.agentId}`,
         name: agent.name,
         status: agent.status,
-        primaryWallet: agent.wallet?.walletAddress || GLYPH_IDENTITY_DATA.primaryWallet,
+        primaryWallet:
+          agent.wallet?.walletAddress ||
+          process.env.NEXT_PUBLIC_GLYPH_WALLET_ADDRESS ||
+          GLYPH_IDENTITY_DATA.primaryWallet,
         registrationTx: regEvent?.txHash || GLYPH_IDENTITY_DATA.registrationTx,
         reputationMetrics: [
           {
             label: "DECISIONS",
-            value: agent.reputationMetrics?.decisionsCount ?? 0,
+            value: decisionsCount,
           },
           {
             label: "VERIFIED EVENTS",
-            value: 2,
+            value: verifiedEventsCount,
             highlight: true,
           },
           {
             label: "WIN RATE",
-            value: `${agent.reputationMetrics?.winRate ?? 0}%`,
+            value: `${winRate}%`,
           },
           {
             label: "TRADES",
-            value: agent.reputationMetrics?.tradesCount ?? 0,
+            value: tradesCount,
           },
         ],
       };

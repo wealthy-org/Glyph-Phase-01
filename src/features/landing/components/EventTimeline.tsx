@@ -1,9 +1,9 @@
 import { EventItem } from "@/features/landing/components/EventItem";
-import { EconomicEvent } from "@/types/glyph";
+import { LandingEconomicEvent } from "../types";
 import React from "react";
 
 interface EventTimelineProps {
-  events: EconomicEvent[];
+  events: LandingEconomicEvent[];
   className?: string;
 }
 

@@ -289,7 +289,40 @@ export async function executeGlyphDecisionCycle(
     console.warn(`[DecisionEngine] Onchain commit warning:`, err);
   }
 
-  // 8. Observability Trace (Brief §25, §3.7)
+  // 8. Record Economic Event for Life Log & User Observability (§19)
+  try {
+    const now = new Date();
+    const eventUtc = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+    const birthDate = new Date(agent.createdAt);
+    const birthUtc = Date.UTC(
+      birthDate.getUTCFullYear(),
+      birthDate.getUTCMonth(),
+      birthDate.getUTCDate()
+    );
+    const day = Math.max(1, Math.floor((eventUtc - birthUtc) / (24 * 60 * 60 * 1000)) + 1);
+
+    const eventDesc = policyResult.approved
+      ? `Policy APPROVED. Position: ${policyResult.clampedPositionPercent}%, Leverage: ${policyResult.clampedLeverage}x. Thesis: ${decision.thesis.catalyst}`
+      : `Policy REJECTED: ${policyResult.rejectReason}. Thesis: ${decision.thesis.catalyst}`;
+
+    await prisma.economicEvent.create({
+      data: {
+        agentId: agent.id,
+        eventType: "DECISION_MADE",
+        title: `Evaluated ${decision.asset} — Proposed ${decision.action} (${decision.conviction}%)`,
+        description: eventDesc,
+        day,
+        result: policyResult.policyResult,
+        decisionId: decisionRecord.id,
+        tradeId,
+        txHash: onchainResult?.transactionHash,
+      },
+    });
+  } catch (evtErr) {
+    console.warn("[DecisionEngine] Failed to record DECISION_MADE economic event:", evtErr);
+  }
+
+  // 9. Observability Trace (Brief §25, §3.7)
   const agentRun = await prisma.agentRun.create({
     data: {
       agentId: agent.id,

@@ -121,18 +121,18 @@ Urutan ini disusun berdasarkan prioritas P0 → P8 dari brief, karena tiap tahap
 
 - [ ] Setup Agent Scheduler / cron:
   - [ ] Daftar di cron-job.org
-  - [ ] Buat endpoint `/api/cron/glyph-cycle` (method `POST`, validasi header `Authorization: Bearer <CRON_SECRET>`)
+  - [x] Buat endpoint `/api/cron/glyph-cycle` (method `POST`, validasi header `Authorization: Bearer <CRON_SECRET>`)
   - [ ] Jadwalkan 1x/hari, arahkan cron-job.org ke endpoint itu
-  - [ ] Pastikan 1 endpoint ini menjalankan siklus penuh: data market → riset → keputusan → validasi → policy → trade/no-trade → commit hash → update DB (termasuk cek posisi terbuka di siklus yang sama)
-- [ ] Bangun 6 halaman publik:
-  - [ ] `/` — Homepage (treasury, tujuan, posisi aktif, keputusan terbaru, reputasi, event terbaru)
-  - [ ] `/life` — Life Log, **digenerate dari tabel `economic_events` asli**
+  - [x] Pastikan 1 endpoint ini menjalankan siklus penuh: data market → riset → keputusan → validasi → policy → trade/no-trade → commit hash → update DB (termasuk cek posisi terbuka di siklus yang sama)
+- [x] Bangun 6 halaman publik:
+  - [x] `/` — Homepage (treasury, tujuan, posisi aktif, keputusan terbaru, reputasi, event terbaru)
+  - [x] `/life` — Life Log, **digenerate dari tabel `economic_events` asli**
   - [x] `/trades` — daftar semua trade
   - [x] `/trade/[id]` — detail 1 trade ("Kenapa Saya Trading")
-  - [ ] `/identity` — info ERC-8004
-  - [ ] `/about` — penjelasan konsep
-- [ ] Terapkan visual direction: near-black background, tipografi grotesk, data pakai monospace, tanpa tombol "Connect Wallet" untuk pengunjung
-- [ ] Pastikan semua 6 halaman bisa diakses tanpa connect wallet apapun
+  - [x] `/identity` — info ERC-8004
+  - [x] `/about` — penjelasan konsep
+- [x] Terapkan visual direction: near-black background, tipografi grotesk, data pakai monospace, tanpa tombol "Connect Wallet" untuk pengunjung
+- [x] Pastikan semua 6 halaman bisa diakses tanpa connect wallet apapun
 
 > **💡 Tips:**
 > - Bangun homepage paling akhir dari 6 halaman itu, setelah `/trades` dan `/trade/[id]` — karena homepage cuma nge-summary data yang sama.

@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import { LifeEvent } from "../types";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -10,6 +12,39 @@ interface LifeLogItemProps {
 
 export const LifeLogItem: React.FC<LifeLogItemProps> = ({ event, isLast = false }) => {
   const formattedDay = `DAY ${event.day.toString().padStart(2, "0")}`;
+  const [localTime, setLocalTime] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (event.timestamp) {
+      try {
+        const d = new Date(event.timestamp);
+        const timeStr = d.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: false,
+        });
+
+        // Retrieve local timezone abbreviation or code (e.g., WIB, GMT+7, PDT, EDT)
+        let tzName = "";
+        try {
+          const parts = new Intl.DateTimeFormat([], { timeZoneName: "short" }).formatToParts(d);
+          const tzPart = parts.find((p) => p.type === "timeZoneName");
+          if (tzPart?.value) {
+            tzName = tzPart.value;
+          }
+        } catch {
+          // ignore
+        }
+
+        setLocalTime(tzName ? `${timeStr} ${tzName}` : timeStr);
+      } catch {
+        // ignore
+      }
+    }
+  }, [event.timestamp]);
+
+  const displayTime = localTime ?? event.time;
 
   return (
     <div className="relative flex items-start gap-4 sm:gap-6 group">
@@ -36,6 +71,17 @@ export const LifeLogItem: React.FC<LifeLogItemProps> = ({ event, isLast = false 
             </span>
             <span className="text-[#333333]">·</span>
             <span className="text-[#55555a] tracking-tight">{event.date}</span>
+            {displayTime && (
+              <>
+                <span className="text-[#333333]">·</span>
+                <span
+                  suppressHydrationWarning
+                  className="text-[#65656b] tracking-tight tabular-nums font-mono text-[11px]"
+                >
+                  {displayTime}
+                </span>
+              </>
+            )}
             <Badge
               variant="outline"
               className="border-[#1a1a1a] bg-[#050505] text-[#85858a] text-[10px] font-mono tracking-wider uppercase px-1.5 py-0.5 rounded-none font-normal"
@@ -72,11 +118,26 @@ export const LifeLogItem: React.FC<LifeLogItemProps> = ({ event, isLast = false 
         </p>
 
         {/* Transaction hash */}
-        <div className="pt-1">
-          <span className="font-mono text-[11px] text-[#55555a] tracking-wider select-all">
-            TX: {event.tx}
-          </span>
-        </div>
+        {event.tx && (
+          <div className="pt-1">
+            {event.txHash ? (
+              <a
+                href={`https://explorer.testnet.chain.robinhood.com/tx/${event.txHash}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 font-mono text-[11px] text-[#55555a] hover:text-[#6fe39a] transition-colors select-all"
+                title="Verify transaction on Robinhood Chain Explorer"
+              >
+                <span>TX: {event.tx}</span>
+                <span className="text-[9px] opacity-70">↗</span>
+              </a>
+            ) : (
+              <span className="font-mono text-[11px] text-[#55555a] tracking-wider select-all">
+                TX: {event.tx}
+              </span>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
