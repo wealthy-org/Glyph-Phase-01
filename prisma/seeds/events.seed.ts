@@ -37,7 +37,7 @@ export async function seedEvents(prisma: PrismaClient, agentId: string) {
         "Cryptographic identifier anchored to autonomous agent registry on Robinhood Chain Testnet.",
       day: 4,
       result: "ERC-8004",
-      txHash: "0xa547e955ec33ca107054a74d1c6bb51aad2ce3ddbb7c7e40c13df197e2a6ff18",
+      txHash: null, // Will be populated by register-agent.ts
     },
     {
       agentId,
@@ -47,7 +47,7 @@ export async function seedEvents(prisma: PrismaClient, agentId: string) {
         "Autonomous multi-signature Safe vault deployed to hold gas capital and execute on-chain commitments.",
       day: 4,
       result: "SAFE-EVM",
-      txHash: "0xa547e955ec33ca107054a74d1c6bb51aad2ce3ddbb7c7e40c13df197e2a6ff18",
+      txHash: null, // Will be populated by register-agent.ts
     },
     {
       agentId,

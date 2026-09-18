@@ -143,12 +143,12 @@ Urutan ini disusun berdasarkan prioritas P0 → P8 dari brief, karena tiap tahap
 
 ## TAHAP 8 — Polish (P8)
 
-- [ ] Tambahkan motion/animasi halus (transisi, loading state)
-- [ ] Buat 1 entitas visual Glyph yang mudah dikenali (bukan mascot robot generik)
+- [X] Tambahkan motion/animasi halus (transisi, loading state)
+- [X] Buat 1 entitas visual Glyph yang mudah dikenali (bukan mascot robot generik)
 - [x] Tambahkan proper loading & error state di semua halaman
-- [ ] Setup observability ringan: tabel `agent_runs` (run_id, started_at, completed_at, market_snapshot, model, prompt_version, decision, policy_result, trade_id, transaction_hash, error)
-- [ ] Pastikan setiap run agent (gagal ataupun sukses) tercatat, tidak ada yang diam-diam dibuang
-- [ ] Tulis dokumentasi singkat internal (setup, env var, cara re-deploy kontrak)
+- [x] Setup observability ringan: tabel `agent_runs` (run_id, started_at, completed_at, market_snapshot, model, prompt_version, decision, policy_result, trade_id, transaction_hash, error)
+- [x] Pastikan setiap run agent (gagal ataupun sukses) tercatat, tidak ada yang diam-diam dibuang
+- [x] Tulis dokumentasi singkat internal (setup, env var, cara re-deploy kontrak)
 
 > **💡 Tips:**
 > - Jangan skip observability walau kesannya "cuma logging" — ini yang bikin kamu gampang debug kalau nanti ada trade aneh di production/testnet.
@@ -160,8 +160,8 @@ Urutan ini disusun berdasarkan prioritas P0 → P8 dari brief, karena tiap tahap
 
 Jalankan skenario demo end-to-end ini (§34) minimal 1x penuh:
 
-- [ ] Glyph "lahir" → identitas onchain terdaftar → wallet dibuat
-- [ ] Treasury simulasi terisi $1.000
+- [x] Glyph "lahir" → identitas onchain terdaftar → wallet dibuat
+- [x] Treasury simulasi terisi $1.000
 - [ ] Glyph menganalisis 1 aset (misal NVDA)
 - [ ] Thesis fundamental + teknikal terbentuk
 - [ ] Risk engine menyetujui posisi (misal 2x leverage simulasi)

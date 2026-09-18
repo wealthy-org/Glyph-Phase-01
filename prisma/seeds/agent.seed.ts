@@ -1,17 +1,24 @@
 import { PrismaClient } from "../../src/generated/prisma/client";
+import "dotenv/config";
 
 export async function seedAgent(prisma: PrismaClient) {
   console.log("  ↳ [1/5] Seeding Agent & Safe Wallet...");
 
+  const walletAddress =
+    process.env.NEXT_PUBLIC_GLYPH_WALLET_ADDRESS ||
+    "0x0000000000000000000000000000000000000000";
+
+  const agentId = process.env.GLYPH_AGENT_ID || "1";
+
   // 1. Agent Root Identity (ERC-8004)
   const agent = await prisma.agent.upsert({
-    where: { agentId: "1" },
+    where: { agentId },
     update: {
       name: "GLYPH",
       status: "ACTIVE",
     },
     create: {
-      agentId: "1",
+      agentId,
       name: "GLYPH",
       status: "ACTIVE",
     },
@@ -21,13 +28,13 @@ export async function seedAgent(prisma: PrismaClient) {
   const wallet = await prisma.agentWallet.upsert({
     where: { agentId: agent.id },
     update: {
-      walletAddress: "0xd1dB02Ee39f33f5EC0780A7f75572c0c04345Ed7",
+      walletAddress,
       network: "Robinhood Chain Testnet",
       chainId: 46630,
     },
     create: {
       agentId: agent.id,
-      walletAddress: "0xd1dB02Ee39f33f5EC0780A7f75572c0c04345Ed7",
+      walletAddress,
       network: "Robinhood Chain Testnet",
       chainId: 46630,
     },

@@ -6,6 +6,7 @@ import {
   http,
   parseAbi,
   defineChain,
+  decodeEventLog,
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { prisma } from "../src/lib/prisma";
@@ -44,6 +45,7 @@ const identityRegistryAbi = parseAbi([
 
 async function main() {
   console.log("\n🚀 [GLYPH] Memulai registrasi identitas on-chain (ERC-8004)...");
+  console.log("   Mode: FRESH REGISTRATION (wallet baru)\n");
 
   const contractAddress = process.env.IDENTITY_REGISTRY_CONTRACT_ADDRESS as `0x${string}`;
   const privateKey = process.env.SMART_ACCOUNT_OWNER_PRIVATE_KEY as `0x${string}`;
@@ -55,8 +57,9 @@ async function main() {
   }
 
   const account = privateKeyToAccount(privateKey);
-  console.log(`👤 Signer Server Address: ${account.address}`);
+  console.log(`👤 Signer Address: ${account.address}`);
   console.log(`🏛️  Kontrak IdentityRegistry: ${contractAddress}`);
+  console.log(`💼 Glyph Wallet Address: ${glyphWallet}`);
 
   const publicClient = createPublicClient({
     chain: robinhoodTestnet,
@@ -69,33 +72,47 @@ async function main() {
     transport: http(),
   });
 
+  // =========================================================================
+  // STEP 1: Register Identity On-Chain (Always register new)
+  // =========================================================================
+  console.log(`\n📝 Memanggil register("${agentURI}")...`);
+
+  const registerTxHash = await walletClient.writeContract({
+    address: contractAddress,
+    abi: identityRegistryAbi,
+    functionName: "register",
+    args: [agentURI],
+  });
+
+  console.log(`⏳ Menunggu konfirmasi transaksi: ${registerTxHash}`);
+  const receipt = await publicClient.waitForTransactionReceipt({ hash: registerTxHash, timeout: 30000 });
+  console.log(`✅ Registrasi berhasil di blok: ${receipt.blockNumber}`);
+
+  // Parse agentId from event log
   let agentIdBigInt: bigint = BigInt(1);
-  let txHash: string | undefined;
-
-  // Cek apakah agentId 1 sudah pernah di-mint sebelumnya
-  try {
-    const existingOwner = await publicClient.readContract({
-      address: contractAddress,
-      abi: identityRegistryAbi,
-      functionName: "ownerOf",
-      args: [BigInt(1)],
-    });
-    console.log(`ℹ️  Agent #1 sudah terdaftar on-chain. Pemilik: ${existingOwner}`);
-  } catch {
-    console.log(`📝 Memanggil register("${agentURI}")...`);
-    txHash = await walletClient.writeContract({
-      address: contractAddress,
-      abi: identityRegistryAbi,
-      functionName: "register",
-      args: [agentURI],
-    });
-
-    console.log(`⏳ Menunggu konfirmasi transaksi: ${txHash}`);
-    const receipt = await publicClient.waitForTransactionReceipt({ hash: txHash as `0x${string}` });
-    console.log(`✅ Registrasi berhasil di blok: ${receipt.blockNumber}`);
+  for (const log of receipt.logs) {
+    try {
+      const decoded = decodeEventLog({
+        abi: identityRegistryAbi,
+        data: log.data,
+        topics: log.topics,
+      });
+      if (decoded.eventName === "AgentRegistered") {
+        agentIdBigInt = (decoded.args as any).agentId;
+        console.log(`🆔 Agent ID dari event: #${agentIdBigInt}`);
+        break;
+      }
+    } catch {
+      // Skip non-matching logs
+    }
   }
 
-  // Set Agent Wallet on-chain jika belum terhubung
+  console.log(`🆔 Menggunakan Agent ID: #${agentIdBigInt}`);
+
+  // =========================================================================
+  // STEP 2: Set Agent Wallet On-Chain
+  // =========================================================================
+  let setWalletTxHash: string | undefined;
   try {
     const currentWallet = await publicClient.readContract({
       address: contractAddress,
@@ -106,14 +123,14 @@ async function main() {
 
     if (currentWallet.toLowerCase() !== glyphWallet.toLowerCase()) {
       console.log(`🔗 Menghubungkan dompet agen ke on-chain: ${glyphWallet}...`);
-      const setWalletTx = await walletClient.writeContract({
+      setWalletTxHash = await walletClient.writeContract({
         address: contractAddress,
         abi: identityRegistryAbi,
         functionName: "setAgentWallet",
         args: [agentIdBigInt, glyphWallet],
       });
-      await publicClient.waitForTransactionReceipt({ hash: setWalletTx });
-      console.log(`✅ Dompet agen berhasil dihubungkan di on-chain: ${setWalletTx}`);
+      await publicClient.waitForTransactionReceipt({ hash: setWalletTxHash as `0x${string}` });
+      console.log(`✅ Dompet agen berhasil dihubungkan: ${setWalletTxHash}`);
     } else {
       console.log(`ℹ️  Dompet agen on-chain sudah sesuai: ${currentWallet}`);
     }
@@ -121,25 +138,32 @@ async function main() {
     console.warn("⚠️  Peringatan saat memeriksa wallet on-chain:", err instanceof Error ? err.message : String(err));
   }
 
-  // Simpan ke Database PostgreSQL (Supabase) via Prisma
-  console.log("\n💾 Menyimpan data agen dan wallet ke database...");
+  // =========================================================================
+  // STEP 3: Save to Database
+  // =========================================================================
+  let agentRecord = await prisma.agent.findFirst();
+  if (agentRecord) {
+    agentRecord = await prisma.agent.update({
+      where: { id: agentRecord.id },
+      data: {
+        agentId: String(agentIdBigInt),
+        name: "Glyph",
+        status: "ACTIVE",
+        metadataUri: agentURI,
+      },
+    });
+  } else {
+    agentRecord = await prisma.agent.create({
+      data: {
+        agentId: String(agentIdBigInt),
+        name: "Glyph",
+        status: "ACTIVE",
+        metadataUri: agentURI,
+      },
+    });
+  }
 
-  const agentRecord = await prisma.agent.upsert({
-    where: { agentId: String(agentIdBigInt) },
-    update: {
-      name: "Glyph",
-      status: "ACTIVE",
-      metadataUri: agentURI,
-    },
-    create: {
-      agentId: String(agentIdBigInt),
-      name: "Glyph",
-      status: "ACTIVE",
-      metadataUri: agentURI,
-    },
-  });
-
-  console.log(`✅ Data Agent disimpan (ID DB: ${agentRecord.id}, agentId: ${agentRecord.agentId})`);
+  console.log(`✅ Data Agent disimpan (ID DB: ${agentRecord.id}, agentId: #${agentRecord.agentId})`);
 
   // Simpan Agent Wallet
   const walletRecord = await prisma.agentWallet.upsert({
@@ -159,7 +183,7 @@ async function main() {
 
   console.log(`✅ Data Agent Wallet disimpan: ${walletRecord.walletAddress}`);
 
-  // Simpan Default Policy jika belum ada
+  // Simpan Default Policy
   await prisma.agentPolicy.upsert({
     where: { agentId: agentRecord.id },
     update: {},
@@ -195,44 +219,112 @@ async function main() {
   });
   console.log("✅ Data Reputation Metrics diinisialisasi");
 
-  // Catat Economic Events awal untuk Life Log
-  const existingBirthEvent = await prisma.economicEvent.findFirst({
-    where: { agentId: agentRecord.id, eventType: "AGENT_BORN" },
+  // =========================================================================
+  // STEP 4: Treasury ($1,000 USD-SIM)
+  // =========================================================================
+  const treasury = await prisma.agentTreasury.upsert({
+    where: { agentId: agentRecord.id },
+    update: {
+      initialCapital: 1000,
+      currentBalance: 1000,
+      currency: "USD-SIM",
+    },
+    create: {
+      agentId: agentRecord.id,
+      initialCapital: 1000,
+      currentBalance: 1000,
+      currency: "USD-SIM",
+    },
+  });
+  console.log(`✅ Treasury diinisialisasi: $${Number(treasury.currentBalance).toFixed(2)} USD-SIM`);
+
+  // =========================================================================
+  // STEP 5: Economic Events (Life Log Genesis)
+  // =========================================================================
+  console.log("\n📜 Mencatat genesis economic events (Life Log)...");
+
+  // Clear existing genesis events
+  await prisma.economicEvent.deleteMany({
+    where: {
+      agentId: agentRecord.id,
+      eventType: {
+        in: ["AGENT_BORN", "IDENTITY_REGISTERED", "WALLET_CREATED", "TREASURY_FUNDED"],
+      },
+    },
   });
 
-  if (!existingBirthEvent) {
-    await prisma.economicEvent.create({
-      data: {
-        agentId: agentRecord.id,
-        eventType: "AGENT_BORN",
-        title: "Glyph Born",
-        description: "Glyph agent lahir sebagai entitas ekonomi otonom di Robinhood Chain Testnet.",
-        day: 1,
-      },
-    });
-    console.log("✅ Event AGENT_BORN dicatat di Life Log");
+  const genesisEvents = [
+    {
+      agentId: agentRecord.id,
+      eventType: "AGENT_BORN" as const,
+      title: "Glyph Born",
+      description: "Glyph agent lahir sebagai entitas ekonomi otonom di Robinhood Chain Testnet.",
+      day: 1,
+      result: "GENESIS",
+    },
+    {
+      agentId: agentRecord.id,
+      eventType: "IDENTITY_REGISTERED" as const,
+      title: "ERC-8004 Identity Registered",
+      description: `Identitas on-chain resmi terdaftar dengan Agent ID #${agentIdBigInt}.`,
+      day: 1,
+      txHash: registerTxHash,
+    },
+    {
+      agentId: agentRecord.id,
+      eventType: "WALLET_CREATED" as const,
+      title: "Smart Account Wallet Created",
+      description: `Dompet otonom dibuat di Robinhood Chain Testnet: ${glyphWallet}`,
+      day: 1,
+      txHash: setWalletTxHash || registerTxHash,
+    },
+    {
+      agentId: agentRecord.id,
+      eventType: "TREASURY_FUNDED" as const,
+      title: "Treasury Funded",
+      description: "Modal simulasi awal $1,000.00 USD-SIM dialokasikan ke pool ekonomi otonom.",
+      day: 1,
+      result: "+$1,000.00",
+    },
+  ];
+
+  for (const event of genesisEvents) {
+    await prisma.economicEvent.create({ data: event });
+    console.log(`  ✅ Event ${event.eventType} dicatat`);
   }
 
-  const existingIdentityEvent = await prisma.economicEvent.findFirst({
-    where: { agentId: agentRecord.id, eventType: "IDENTITY_REGISTERED" },
+  // Record the registration transaction
+  await prisma.transaction.upsert({
+    where: { transactionHash: registerTxHash },
+    update: {
+      contractAddress,
+      blockNumber: Number(receipt.blockNumber),
+    },
+    create: {
+      transactionHash: registerTxHash,
+      contractAddress,
+      blockNumber: Number(receipt.blockNumber),
+      eventType: "IDENTITY_REGISTERED",
+    },
   });
+  console.log(`✅ Transaction record disimpan: ${registerTxHash}`);
 
-  if (!existingIdentityEvent) {
-    await prisma.economicEvent.create({
-      data: {
-        agentId: agentRecord.id,
-        eventType: "IDENTITY_REGISTERED",
-        title: "ERC-8004 Identity Registered",
-        description: `Identitas on-chain resmi terdaftar dengan Agent ID #${agentIdBigInt}.`,
-        day: 1,
-        txHash: txHash,
-      },
-    });
-    console.log("✅ Event IDENTITY_REGISTERED dicatat di Life Log");
-  }
+  // =========================================================================
+  // DONE
+  // =========================================================================
+  const explorerUrl = `${process.env.BLOCK_EXPLORER_URL || "https://explorer.testnet.chain.robinhood.com"}`;
 
-  console.log("\n🎉 SELURUH PROSES REGISTRASI IDENTITAS & DATABASE SUKSES!");
-  console.log(`🔗 Verifikasi di Explorer: https://explorer.testnet.chain.robinhood.com/address/${contractAddress}`);
+  console.log("\n🎉 ═══════════════════════════════════════════════════════");
+  console.log("   SELURUH PROSES 'GLYPH LAHIR' SUKSES!");
+  console.log("   ═══════════════════════════════════════════════════════");
+  console.log(`   🆔 Agent ID:    #${agentIdBigInt}`);
+  console.log(`   💼 Wallet:      ${glyphWallet}`);
+  console.log(`   💰 Treasury:    $1,000.00 USD-SIM`);
+  console.log(`   📝 Tx Hash:     ${registerTxHash}`);
+  console.log(`   🔗 Explorer:    ${explorerUrl}/tx/${registerTxHash}`);
+  console.log("");
+  console.log(`   ⚠️  PENTING: Update .env → GLYPH_AGENT_ID=${agentIdBigInt}`);
+  console.log("   ═══════════════════════════════════════════════════════\n");
 }
 
 main()
