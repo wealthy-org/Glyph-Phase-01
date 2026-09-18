@@ -226,7 +226,7 @@ export async function openSimulatedPosition(input: OpenPositionInput) {
  */
 export async function updatePositionsMarketPrices(
   quotes: Record<string, number>,
-  agentIdentifier = "1"
+  agentIdentifier = process.env.GLYPH_AGENT_ID || "3"
 ) {
   const agent = await prisma.agent.findFirst({
     where: { agentId: agentIdentifier },
@@ -484,7 +484,9 @@ export async function closeSimulatedPosition(
 /**
  * Returns all active open positions for the agent with aggregated stats.
  */
-export async function getActivePositions(agentIdentifier = "1") {
+export async function getActivePositions(
+  agentIdentifier = process.env.GLYPH_AGENT_ID || "3"
+) {
   const agent = await prisma.agent.findFirst({
     where: { agentId: agentIdentifier },
     include: {

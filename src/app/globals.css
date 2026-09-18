@@ -74,10 +74,13 @@ body {
 
 /* Live pulse keyframe from glyph.html */
 @keyframes livepulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
     transform: scale(1);
   }
+
   50% {
     opacity: 0.35;
     transform: scale(0.9);
@@ -116,6 +119,7 @@ body {
   from {
     transform: translateX(0);
   }
+
   to {
     transform: translateX(-50%);
   }
@@ -141,6 +145,7 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .animate-livepulse,
   .animate-marquee {
     animation: none !important;
@@ -149,7 +154,7 @@ body {
 
 /* Subtle modern technical grid pattern */
 .bg-grid-subtle {
-  background-image: 
+  background-image:
     linear-gradient(to right, rgba(255, 255, 255, 0.065) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.065) 1px, transparent 1px);
   background-size: 36px 36px;
@@ -264,9 +269,11 @@ body {
   * {
     @apply border-border outline-ring/40;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+
   html {
     @apply font-sans;
   }

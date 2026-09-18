@@ -1,5 +1,5 @@
-import React from "react";
 import { cn } from "@/lib/utils";
+import React from "react";
 
 export interface GlyphMarkProps {
   size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl";

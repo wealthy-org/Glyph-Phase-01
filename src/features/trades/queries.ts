@@ -25,8 +25,15 @@ export async function fetchLiveTradesData(): Promise<{
 
     if (!dbTrades || dbTrades.length === 0) {
       return {
-        trades: GLYPH_TRADES_DATA,
-        stats: TRADE_SUMMARY_DATA,
+        trades: [],
+        stats: {
+          totalExecuted: "0",
+          netPnl: "$0.00",
+          winRatio: "0.0%",
+          loggedRatio: "0 / 0 ATTESTED",
+          network: "ROBINHOOD",
+          networkChain: "TESTNET // 46630",
+        },
       };
     }
 
@@ -110,10 +117,17 @@ export async function fetchLiveTradesData(): Promise<{
 
     return { trades, stats };
   } catch (error) {
-    console.error("[TradesQuery] Failed to fetch live trades, falling back to mock:", error);
+    console.error("[TradesQuery] Failed to fetch live trades:", error);
     return {
-      trades: GLYPH_TRADES_DATA,
-      stats: TRADE_SUMMARY_DATA,
+      trades: [],
+      stats: {
+        totalExecuted: "0",
+        netPnl: "$0.00",
+        winRatio: "0.0%",
+        loggedRatio: "0 / 0 ATTESTED",
+        network: "ROBINHOOD",
+        networkChain: "TESTNET // 46630",
+      },
     };
   }
 }
