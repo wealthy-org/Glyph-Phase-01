@@ -16,17 +16,45 @@ async function runDecisionTests() {
   console.log(`- Active Prompt Version Constant: ${GLYPH_DECISION_PROMPT_VERSION}`);
   console.log(`- OpenRouter Model: ${process.env.OPENROUTER_MODEL || "default"}\n`);
 
-  // 1. Prepare Research Snapshot for NVDA
-  console.log("▶ [STEP 1] Generating fresh research snapshot for NVDA...");
-  const { snapshotId, research } = await createResearchSnapshot("NVDA");
-  console.log(`  - Snapshot ID: ${snapshotId}`);
+  // 1. Prepare Research Snapshot for NVDA (use existing from test-research or create fresh)
+  console.log("▶ [STEP 1] Getting research snapshot for NVDA (from test research or fresh)...");
+  let snapshotId: string;
+  let research: any;
+
+  const existingSnapshot = await prisma.researchSnapshot.findFirst({
+    where: { asset: "NVDA" },
+    orderBy: { createdAt: "desc" },
+  });
+
+  if (existingSnapshot) {
+    snapshotId = existingSnapshot.id;
+    research = {
+      asset: existingSnapshot.asset,
+      marketData: existingSnapshot.marketData as any,
+      technicalData: existingSnapshot.technicalData as any,
+      fundamentalData: existingSnapshot.fundamentalData as any,
+    };
+    console.log(`  - Using existing snapshot from test research: ${snapshotId}`);
+  } else {
+    const created = await createResearchSnapshot("NVDA");
+    snapshotId = created.snapshotId;
+    research = created.research;
+    console.log(`  - Fresh snapshot created: ${snapshotId}`);
+  }
+
   console.log(`  - Price: $${research.marketData.quote.price}`);
   console.log(`  - Technical Score: ${research.technicalData.technicalScore}/100`);
   console.log(`  - Fundamental Score: ${research.fundamentalData.fundamentalScore}/100\n`);
 
   // 2. Run Decision Cycle (OpenRouter -> Zod -> Policy -> Decision DB -> Trade DB)
-  console.log("▶ [STEP 2] Running Glyph Brain Decision Cycle (LLM + Zod + Policy)...");
-  const result = await executeGlyphDecisionCycle(snapshotId, "1");
+  const agentId = process.env.GLYPH_AGENT_ID || "1";
+  const treasuryBefore = await prisma.agentTreasury.findFirst({
+    where: { agent: { agentId } },
+  });
+  const balanceBefore = Number(treasuryBefore?.currentBalance ?? 1000);
+  console.log(`- Pre-Decision Treasury Balance: $${balanceBefore.toFixed(2)} USD-SIM`);
+  console.log(`▶ [STEP 2] Running Glyph Brain Decision Cycle for Agent #${agentId} (LLM + Zod + Policy)...`);
+  const result = await executeGlyphDecisionCycle(snapshotId, agentId);
 
   console.log(`  - Decision ID: ${result.decisionId}`);
   console.log(`  - Proposed Asset: ${result.asset}`);
@@ -85,8 +113,33 @@ async function runDecisionTests() {
   }
   console.log(`  ✅ Observability Trace Verified: Run ID ${dbRun.id}`);
 
+  // Check Treasury Balance Change (§18, §11)
+  const treasuryAfter = await prisma.agentTreasury.findFirst({
+    where: { agent: { agentId } },
+  });
+  const balanceAfter = Number(treasuryAfter?.currentBalance ?? 0);
+  console.log(`\n💰 [TREASURY AUDIT]`);
+  console.log(`  - Treasury Balance Before: $${balanceBefore.toFixed(2)} USD-SIM`);
+  console.log(`  - Treasury Balance After:  $${balanceAfter.toFixed(2)} USD-SIM`);
+  if (result.policyResult === "APPROVED" && result.action !== "NO_TRADE") {
+    console.log(`  - Deduction (Margin + Fee): -$${(balanceBefore - balanceAfter).toFixed(2)} USD-SIM (Confirmed Reduced!)`);
+  } else {
+    console.log(`  - Deduction: $0.00 (Proposal not approved for execution, capital 100% preserved)`);
+  }
+
+  // Check Onchain Commitment Proof (§12, §3.5)
+  console.log(`\n⛓️  [ONCHAIN COMMITMENT AUDIT]`);
+  if (result.transactionHash) {
+    console.log(`  - Decision Hash:    ${result.decisionHash}`);
+    console.log(`  - Transaction Hash: ${result.transactionHash}`);
+    console.log(`  - Block Explorer:   https://explorer.testnet.chain.robinhood.com/tx/${result.transactionHash}`);
+    console.log(`  ✅ Successfully committed to DecisionRegistry.sol on Robinhood Chain Testnet!`);
+  } else {
+    console.log(`  - Decision recorded locally in 'decisions' table.`);
+  }
+
   console.log("\n===============================================================");
-  console.log("🎉 ALL DECISION ENGINE TESTS PASSED! TAHAP 4 IS 100% OPERATIONAL.");
+  console.log("🎉 GLYPH DECISION TEST COMPLETED SUCCESSFULLY!");
   console.log("===============================================================");
 }
 

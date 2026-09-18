@@ -17,13 +17,15 @@ async function runMemoryTests() {
   console.log("🧠 GLYPH PERSISTENT MEMORY ENGINE — VERIFICATION SUITE");
   console.log("===============================================================\n");
 
+  const agentId = process.env.GLYPH_AGENT_ID || "1";
+
   // -------------------------------------------------------------------------
   // TEST 1: Automatic Memory Formation on Profitable Trade Close (WIN)
   // -------------------------------------------------------------------------
   console.log("▶ [TEST 1] Opening and Closing a WIN Trade...");
 
   const openRes1 = await openSimulatedPosition({
-    agentId: "1",
+    agentId,
     asset: "NVDA",
     side: "LONG",
     entryPrice: 120.0,
@@ -78,7 +80,7 @@ async function runMemoryTests() {
   console.log("▶ [TEST 2] Opening and Closing a LOSS Trade...");
 
   const openRes2 = await openSimulatedPosition({
-    agentId: "1",
+    agentId,
     asset: "ETH",
     side: "LONG",
     entryPrice: 3000.0,
@@ -115,7 +117,7 @@ async function runMemoryTests() {
   console.log("▶ [TEST 3] Testing Asset-Specific Memory Filtering...");
 
   // NVDA should only return NVDA memories
-  const nvdaMemories = await getRecentMemories("1", 3, "NVDA");
+  const nvdaMemories = await getRecentMemories(agentId, 3, "NVDA");
   console.log(`  - NVDA Filter: Retrieved ${nvdaMemories.length} memories (Expected: >= 1).`);
   for (const m of nvdaMemories) {
     console.log(`    ↳ Memory ID ${m.id} | Asset: ${m.asset} | Outcome: ${m.outcome}`);
@@ -125,7 +127,7 @@ async function runMemoryTests() {
   }
 
   // ETH should only return ETH memories
-  const ethMemories = await getRecentMemories("1", 3, "ETH");
+  const ethMemories = await getRecentMemories(agentId, 3, "ETH");
   console.log(`  - ETH Filter: Retrieved ${ethMemories.length} memories (Expected: >= 1).`);
   for (const m of ethMemories) {
     console.log(`    ↳ Memory ID ${m.id} | Asset: ${m.asset} | Outcome: ${m.outcome}`);
@@ -135,7 +137,7 @@ async function runMemoryTests() {
   }
 
   // BTC has not been traded yet, so BTC filter should return 0 memories (no cross-asset leakage from NVDA/ETH)
-  const btcMemories = await getRecentMemories("1", 3, "BTC");
+  const btcMemories = await getRecentMemories(agentId, 3, "BTC");
   console.log(`  - BTC Filter: Retrieved ${btcMemories.length} memories (Expected: 0).`);
   if (btcMemories.length !== 0) {
     throw new Error(`Failed: Unrelated memories leaked into BTC memory search! Length: ${btcMemories.length}`);
@@ -148,7 +150,7 @@ async function runMemoryTests() {
   console.log("▶ [TEST 4] Testing Feedback Loop into Next Decision Cycle for NVDA...");
 
   const { snapshotId } = await createResearchSnapshot("NVDA");
-  const nextDecision = await executeGlyphDecisionCycle(snapshotId, "1");
+  const nextDecision = await executeGlyphDecisionCycle(snapshotId, agentId);
 
   console.log(`  - New Decision Generated: ID ${nextDecision.decisionId}`);
   console.log(`  - Asset: ${nextDecision.asset}`);

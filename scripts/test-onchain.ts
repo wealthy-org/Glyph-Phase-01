@@ -89,7 +89,8 @@ async function runOnchainTests() {
   const { snapshotId } = await createResearchSnapshot("NVDA");
   console.log(`  - Research Snapshot Created: ${snapshotId}`);
 
-  const cycleResult = await executeGlyphDecisionCycle(snapshotId, "1");
+  const agentId = process.env.GLYPH_AGENT_ID || "1";
+  const cycleResult = await executeGlyphDecisionCycle(snapshotId, agentId);
 
   console.log(`  - Decision ID: ${cycleResult.decisionId}`);
   console.log(`  - Action: ${cycleResult.action} (Policy: ${cycleResult.policyResult})`);

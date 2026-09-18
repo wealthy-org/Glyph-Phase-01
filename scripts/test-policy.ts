@@ -147,7 +147,7 @@ async function runPolicyTests() {
   // -------------------------------------------------------------------------
   console.log("▶ [SCENARIO 7] Testing DB-connected evaluation (evaluateAgentTradeProposal)...");
   // Clean up any test positions/trades for hermetic test
-  const targetAgentId = process.env.GLYPH_AGENT_ID || "3";
+  const targetAgentId = process.env.GLYPH_AGENT_ID || "1";
   const agent = await prisma.agent.findFirst({
     where: { OR: [{ agentId: targetAgentId }, { agentId: "1" }] },
   });

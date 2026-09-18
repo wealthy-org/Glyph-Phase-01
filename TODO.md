@@ -165,9 +165,9 @@ Jalankan skenario demo end-to-end ini (§34) minimal 1x penuh:
 - [x] Glyph menganalisis 1 aset (misal NVDA)
 - [x] Thesis fundamental + teknikal terbentuk
 - [x] Risk engine menyetujui posisi (misal 2x leverage simulasi)
-- [ ] Trade dibuat
-- [ ] Hash keputusan berhasil dicommit onchain
-- [ ] Tombol "Verify Onchain" berfungsi, tx hash valid di block explorer
+- [x] Trade dibuat
+- [x] Hash keputusan berhasil dicommit onchain
+- [x] Tombol "Verify Onchain" berfungsi, tx hash valid di block explorer
 - [ ] Posisi ditutup, PnL dihitung dengan benar
 - [ ] Memori baru tercipta
 - [ ] Life Log mencatat semua event di atas secara otomatis (bukan hardcode)
@@ -175,5 +175,5 @@ Jalankan skenario demo end-to-end ini (§34) minimal 1x penuh:
 Kalau semua ini demonstrable dari awal sampai akhir tanpa campur tangan manual → **Fase 01 selesai.**
 
 > **💡 Tips terakhir:**
-> - Jangan uji tiap bagian secara terpisah terus lupa uji alur penuhnya — banyak bug baru muncul justru di persambungan antar-tahap (misal: hash yang dikirim ke blockchain beda dengan yang divalidasi di awal).
+> - Jangan uji tiap bagian secara terpisah terus lupa uji alur penuhnya — banyak bug baru muncul justru di persambungan antar-tahap (misa/l: hash yang dikirim ke blockchain beda dengan yang divalidasi di awal).
 > - Setelah lolos testnet, baru pikirkan langkah ke mainnet/Fase 02 — brief ini sengaja membatasi scope biar kamu tidak kewalahan (lihat §29, hal-hal yang **tidak perlu** dikerjakan dulu).

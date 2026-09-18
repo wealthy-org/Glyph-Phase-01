@@ -195,7 +195,7 @@ export async function createTradeMemory(
  * for that asset will be retrieved, preventing cross-asset bias.
  */
 export async function getRecentMemories(
-  agentIdentifier: string = "1",
+  agentIdentifier: string = process.env.GLYPH_AGENT_ID || "1",
   limit: number = 3,
   asset?: string
 ): Promise<TradeMemoryRecord[]> {

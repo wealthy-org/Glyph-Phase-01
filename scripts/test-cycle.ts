@@ -22,7 +22,7 @@ async function verifyCyclePipeline() {
   console.log("▶ [TEST 1] Running Autonomous Cycle Orchestrator directly...");
   const cycleResult = await runAutonomousGlyphCycle({
     targetAsset: "NVDA",
-    agentIdentifier: process.env.GLYPH_AGENT_ID || "3",
+    agentIdentifier: process.env.GLYPH_AGENT_ID || "1",
   });
 
   if (!cycleResult.success) {

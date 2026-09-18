@@ -19,10 +19,14 @@ export const DEFAULT_CURRENCY = "USD-SIM";
  * Retrieves the current verifiable treasury state for Glyph.
  * Aggregates cash balance with active position values to derive true equity.
  */
-export async function getTreasurySummary(agentId = "1"): Promise<TreasurySummary> {
+export async function getTreasurySummary(
+  agentId?: string
+): Promise<TreasurySummary> {
+  const targetAgentId = agentId || process.env.GLYPH_AGENT_ID || "1";
+
   try {
-    const agent = await prisma.agent.findFirst({
-      where: { agentId },
+    let agent = await prisma.agent.findFirst({
+      where: { agentId: targetAgentId },
       include: {
         treasury: true,
         positions: {
@@ -31,9 +35,21 @@ export async function getTreasurySummary(agentId = "1"): Promise<TreasurySummary
       },
     });
 
+    // Fallback to first agent if specific agentId not matched
+    if (!agent) {
+      agent = await prisma.agent.findFirst({
+        include: {
+          treasury: true,
+          positions: {
+            where: { isOpen: true },
+          },
+        },
+      });
+    }
+
     if (!agent || !agent.treasury) {
       return {
-        agentId,
+        agentId: targetAgentId,
         currency: DEFAULT_CURRENCY,
         initialCapital: DEFAULT_INITIAL_CAPITAL,
         currentBalance: DEFAULT_INITIAL_CAPITAL,
@@ -75,7 +91,7 @@ export async function getTreasurySummary(agentId = "1"): Promise<TreasurySummary
   } catch (error) {
     console.error("Failed to load treasury summary:", error);
     return {
-      agentId,
+      agentId: targetAgentId,
       currency: DEFAULT_CURRENCY,
       initialCapital: DEFAULT_INITIAL_CAPITAL,
       currentBalance: DEFAULT_INITIAL_CAPITAL,

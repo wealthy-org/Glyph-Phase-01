@@ -58,7 +58,7 @@ export async function getLandingPageData(agentIdentifier?: string): Promise<Land
 
   const agentMeta: LandingAgentMeta = {
     id: agent?.id || "",
-    agentId: agent?.agentId || agentIdentifier || process.env.GLYPH_AGENT_ID || "3",
+    agentId: agent?.agentId || agentIdentifier || process.env.GLYPH_AGENT_ID || "1",
     name: agent?.name || "GLYPH",
     status: agent?.status || "ACTIVE",
     objective: GLYPH_CORE_OBJECTIVE,
@@ -68,8 +68,9 @@ export async function getLandingPageData(agentIdentifier?: string): Promise<Land
   };
 
   // 2. Authoritative Treasury & Portfolio State
-  const treasurySummary = await getTreasurySummary(agentIdentifier);
-  const activePositionsData = await getActivePositions(agentIdentifier);
+  const resolvedAgentId = agent?.agentId || targetAgentId || process.env.GLYPH_AGENT_ID || "1";
+  const treasurySummary = await getTreasurySummary(resolvedAgentId);
+  const activePositionsData = await getActivePositions(resolvedAgentId);
 
   // Fetch closed trades for realized PnL and win-rate calculations
   const closedTrades = agent

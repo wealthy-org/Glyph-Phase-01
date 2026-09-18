@@ -164,7 +164,7 @@ async function callLlmWithRetry(
  */
 export async function executeGlyphDecisionCycle(
   researchSnapshotId: string,
-  agentIdentifier = process.env.GLYPH_AGENT_ID || "3"
+  agentIdentifier = process.env.GLYPH_AGENT_ID || "1"
 ): Promise<DecisionRunResult> {
   const runStart = new Date();
 

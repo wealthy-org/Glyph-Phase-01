@@ -29,7 +29,7 @@ export const Navbar: React.FC<NavbarProps> = ({ agentId: propAgentId }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
-  const agentId = propAgentId || process.env.NEXT_PUBLIC_GLYPH_AGENT_ID || "3";
+  const agentId = propAgentId || process.env.NEXT_PUBLIC_GLYPH_AGENT_ID || "1";
 
   useEffect(() => {
     const handleScroll = () => {
