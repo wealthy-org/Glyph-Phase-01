@@ -9,6 +9,8 @@
     "lint": "eslint",
     "prisma:reset": "prisma generate && prisma db push && prisma db seed",
     "db:seed": "npx tsx prisma/seed.ts",
+    "seed:trades": "npx tsx scripts/seed-trades.ts",
+    "reset:trades": "npx tsx scripts/reset-trades.ts",
     "test:analysis": "npx tsx scripts/preview-risk-analysis.ts",
     "test:decision": "npx tsx scripts/test-decision.ts",
     "test:cycle": "npx tsx scripts/test-cycle.ts",

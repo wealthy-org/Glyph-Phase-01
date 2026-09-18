@@ -43,6 +43,29 @@ async function runPolicyTests() {
   console.log("  ✅ Whitelist Guardrail Passed!\n");
 
   // -------------------------------------------------------------------------
+  // SCENARIO 1B: Whitelist Acceptance for MSFT & AAPL
+  // -------------------------------------------------------------------------
+  console.log("▶ [SCENARIO 1B] AI proposes newly whitelisted assets ('MSFT', 'AAPL')...");
+  const resMsft = validateTradeProposal({
+    asset: "MSFT",
+    action: "LONG",
+    conviction: 75,
+    positionSizePercent: 8,
+    leverage: 2,
+  });
+  const resAapl = validateTradeProposal({
+    asset: "AAPL",
+    action: "LONG",
+    conviction: 72,
+    positionSizePercent: 8,
+    leverage: 1.5,
+  });
+  if (!resMsft.approved || !resAapl.approved) {
+    throw new Error(`Failed: Whitelist did not approve MSFT (${resMsft.approved}) or AAPL (${resAapl.approved})`);
+  }
+  console.log("  ✅ MSFT & AAPL Whitelist Approval Passed!\n");
+
+  // -------------------------------------------------------------------------
   // SCENARIO 2: Low Confidence Rejection
   // -------------------------------------------------------------------------
   console.log("▶ [SCENARIO 2] AI proposes valid asset ('NVDA') but low conviction (54%)...");

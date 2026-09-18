@@ -20,44 +20,7 @@ interface TradeRowProps {
   trade: Trade;
 }
 
-const ASSET_METADATA: Record<
-  string,
-  { name: string; category: string; badgeColor: string }
-> = {
-  NVDA: {
-    name: "NVIDIA Corp.",
-    category: "US Equity",
-    badgeColor: "bg-[#76b900]/10 text-[#76b900] border-[#76b900]/30",
-  },
-  BTC: {
-    name: "Bitcoin",
-    category: "Crypto L1",
-    badgeColor: "bg-[#f7931a]/10 text-[#f7931a] border-[#f7931a]/30",
-  },
-  ETH: {
-    name: "Ethereum",
-    category: "Crypto L1",
-    badgeColor: "bg-[#627eea]/10 text-[#627eea] border-[#627eea]/30",
-  },
-  SOL: {
-    name: "Solana",
-    category: "Crypto L1",
-    badgeColor: "bg-[#14f195]/10 text-[#14f195] border-[#14f195]/30",
-  },
-  MSFT: {
-    name: "Microsoft Corp.",
-    category: "US Equity",
-    badgeColor: "bg-[#00a4ef]/10 text-[#00a4ef] border-[#00a4ef]/30",
-  },
-};
-
 export const TradeRow: React.FC<TradeRowProps> = ({ trade }) => {
-  const assetMeta = ASSET_METADATA[trade.asset] || {
-    name: trade.asset,
-    category: "Asset",
-    badgeColor: "bg-[#85858a]/10 text-[#f3f3f4] border-[#85858a]/30",
-  };
-
   return (
     <TableRow className="border-b border-[#18181f] hover:bg-[#0f0f15]/80 transition-colors group">
       {/* 1. DATE */}
@@ -78,22 +41,17 @@ export const TradeRow: React.FC<TradeRowProps> = ({ trade }) => {
           href={`/trades/${trade.id}`}
           className="flex items-center gap-3 group/asset"
         >
-          <div
-            className={cn(
-              "w-8 h-8 rounded-lg flex items-center justify-center font-mono text-xs font-semibold border shrink-0 transition-transform group-hover/asset:scale-105",
-              assetMeta.badgeColor
-            )}
-          >
-            {trade.asset.slice(0, 3)}
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center font-mono text-xs font-semibold border border-[#272730] bg-[#141418] text-[#e4e4e7] shrink-0 transition-transform group-hover/asset:scale-105">
+            {trade.asset.slice(0, 4)}
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="font-sans text-sm font-semibold text-[#f4f4f5] group-hover:text-white transition-colors">
+              <span className="font-mono text-sm font-semibold text-[#f4f4f5] group-hover:text-white transition-colors">
                 {trade.asset}
               </span>
             </div>
-            <span className="text-[11px] text-[#8e8e93] block font-sans leading-none mt-0.5">
-              {assetMeta.name}
+            <span className="text-[10px] text-[#71717a] block font-mono uppercase tracking-wider leading-none mt-0.5">
+              Instrument
             </span>
           </div>
         </Link>
@@ -122,14 +80,38 @@ export const TradeRow: React.FC<TradeRowProps> = ({ trade }) => {
       {/* 4. ENTRY */}
       <TableCell className="px-5 py-4 whitespace-nowrap text-right font-mono text-xs font-medium text-[#d4d4d8]">
         <Link href={`/trades/${trade.id}`} className="block group-hover:text-white">
-          {trade.entry}
+          <span>{trade.entry}</span>
+          <span className="block font-sans text-[10px] text-[#71717a] font-normal">
+            per share
+          </span>
         </Link>
       </TableCell>
 
-      {/* 5. EXIT */}
+      {/* 5. CAPITAL ALLOCATED */}
+      <TableCell className="px-5 py-4 whitespace-nowrap text-right font-mono text-xs">
+        <Link href={`/trades/${trade.id}`} className="block">
+          <span className="font-medium text-[#f4f4f5] group-hover:text-[#6fe39a] transition-colors block">
+            {trade.positionSize || "-"}
+          </span>
+          {trade.notional && trade.notional !== "-" && (
+            <span className="block font-sans text-[10px] text-[#71717a]">
+              {trade.notional} exp.
+            </span>
+          )}
+        </Link>
+      </TableCell>
+
+      {/* 6. EXIT */}
       <TableCell className="px-5 py-4 whitespace-nowrap text-right font-mono text-xs font-medium text-[#d4d4d8]">
         <Link href={`/trades/${trade.id}`} className="block group-hover:text-white">
-          {trade.exit}
+          <span className={cn(trade.exit === "ACTIVE" ? "text-[#6fe39a] font-semibold" : "")}>
+            {trade.exit}
+          </span>
+          {trade.exit === "ACTIVE" && (
+            <span className="block font-sans text-[10px] text-[#71717a] font-normal">
+              in progress
+            </span>
+          )}
         </Link>
       </TableCell>
 

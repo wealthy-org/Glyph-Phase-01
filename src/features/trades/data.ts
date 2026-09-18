@@ -1,15 +1,30 @@
 import { Trade, TradeSummaryStats } from "./types";
 
 export const TRADE_SUMMARY_DATA: TradeSummaryStats = {
-  totalExecuted: 5,
-  netPnl: "+$266.51",
-  winRatio: "80.0%",
-  loggedRatio: "4 OF 5 LOGGED",
+  totalExecuted: 6,
+  netPnl: "+$339.20",
+  winRatio: "83.3%",
+  loggedRatio: "5 OF 6 LOGGED",
   network: "TESTNET",
   networkChain: "ROBINHOOD CHAIN",
 };
 
 export const GLYPH_TRADES_DATA: Trade[] = [
+  {
+    id: "aapl-sep18",
+    date: "SEP 18",
+    asset: "AAPL",
+    action: "LONG",
+    entry: "$224.50",
+    exit: "$231.80",
+    leverage: "1×",
+    pnl: "+3.2%",
+    isPositive: true,
+    thesis: "VALIDATED",
+    proofUrl: "https://sepolia.basescan.org/tx/0x9d4a8e217c40b8a98150247f9b9326eb8f0365ee",
+    positionSize: "$50.00",
+    notional: "$50.00",
+  },
   {
     id: "nvda-sep17",
     date: "SEP 17",
@@ -22,6 +37,8 @@ export const GLYPH_TRADES_DATA: Trade[] = [
     isPositive: true,
     thesis: "VALIDATED",
     proofUrl: "https://sepolia.basescan.org/tx/0x8f3c7e492b10a8b98150247f9b9326eb8f0391ac",
+    positionSize: "$60.00",
+    notional: "$120.00",
   },
   {
     id: "btc-sep14",
@@ -35,6 +52,8 @@ export const GLYPH_TRADES_DATA: Trade[] = [
     isPositive: true,
     thesis: "VALIDATED",
     proofUrl: "https://sepolia.basescan.org/tx/0x7a2d8e319c50a1b98150247f9b9326eb8f0312bd",
+    positionSize: "$50.00",
+    notional: "$50.00",
   },
   {
     id: "eth-sep10",
@@ -48,6 +67,8 @@ export const GLYPH_TRADES_DATA: Trade[] = [
     isPositive: false,
     thesis: "INVALIDATED",
     proofUrl: "https://sepolia.basescan.org/tx/0x3c9f1a287b40a8b98150247f9b9326eb8f0376fe",
+    positionSize: "$50.00",
+    notional: "$50.00",
   },
   {
     id: "sol-sep08",
@@ -61,6 +82,8 @@ export const GLYPH_TRADES_DATA: Trade[] = [
     isPositive: true,
     thesis: "VALIDATED",
     proofUrl: "https://sepolia.basescan.org/tx/0x5e1b4c920a30a8b98150247f9b9326eb8f0343aa",
+    positionSize: "$40.00",
+    notional: "$60.00",
   },
   {
     id: "msft-sep05",
@@ -74,5 +97,7 @@ export const GLYPH_TRADES_DATA: Trade[] = [
     isPositive: true,
     thesis: "VALIDATED",
     proofUrl: "https://sepolia.basescan.org/tx/0x1f8c2b763e20a8b98150247f9b9326eb8f0388cc",
+    positionSize: "$50.00",
+    notional: "$50.00",
   },
 ];

@@ -40,30 +40,29 @@ async function resetTradesAndDecisions() {
   const delEvents = await prisma.economicEvent.deleteMany({
     where: {
       eventType: {
-        in: [
-          "DECISION_MADE",
-          "TRADE_OPENED",
-          "TRADE_CLOSED",
-          "PROFIT_RECORDED",
-          "LOSS_RECORDED",
-          "MEMORY_CREATED",
+        notIn: [
+          "AGENT_BORN",
+          "IDENTITY_REGISTERED",
+          "WALLET_CREATED",
+          "TREASURY_FUNDED",
         ],
       },
     },
   });
-  console.log(`   ↳ Deleted ${delEvents.count} economic event(s).`);
+  console.log(`   ↳ Deleted ${delEvents.count} non-genesis economic event(s).`);
 
   console.log("8. Resetting Treasury Balance to $1000.00 USD-SIM...");
-  const agentId = process.env.GLYPH_AGENT_ID || "1";
   const agent = await prisma.agent.findFirst({
-    where: { agentId },
     include: { treasury: true },
   });
 
   if (agent && agent.treasury) {
     await prisma.agentTreasury.update({
       where: { id: agent.treasury.id },
-      data: { currentBalance: "1000" },
+      data: {
+        currentBalance: "1000",
+        initialCapital: "1000",
+      },
     });
     console.log("   ↳ Treasury reset to $1,000.00 USD-SIM successfully.");
   }

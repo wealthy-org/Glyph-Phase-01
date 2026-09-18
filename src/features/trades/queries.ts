@@ -87,6 +87,10 @@ export async function fetchLiveTradesData(): Promise<{
         ? getExplorerTxUrl(t.transactionHash)
         : "https://explorer.testnet.chain.robinhood.com";
 
+      const marginNum = Number(t.positionSize ?? 0);
+      const levNum = Number(t.leverage ?? 1);
+      const notionalNum = marginNum * levNum;
+
       return {
         id: t.tradeNumber,
         date: dateStr,
@@ -99,6 +103,8 @@ export async function fetchLiveTradesData(): Promise<{
         isPositive,
         thesis: isPositive ? "VALIDATED" : "INVALIDATED",
         proofUrl,
+        positionSize: marginNum > 0 ? `$${marginNum.toFixed(2)}` : "-",
+        notional: notionalNum > 0 ? `$${notionalNum.toFixed(2)}` : "-",
       };
     });
 
@@ -240,6 +246,10 @@ export async function fetchLiveTradeDetail(
         }
       : undefined;
 
+    const marginNum = Number(trade.positionSize ?? 0);
+    const levNum = Number(trade.leverage ?? 1);
+    const notionalNum = marginNum * levNum;
+
     return {
       id: trade.tradeNumber,
       tradeNumber: trade.tradeNumber,
@@ -253,6 +263,8 @@ export async function fetchLiveTradeDetail(
       status: trade.status === "OPEN" ? "OPEN" : "CLOSED",
       entryPrice,
       exitPrice,
+      positionSize: marginNum > 0 ? `$${marginNum.toFixed(2)}` : "-",
+      notional: notionalNum > 0 ? `$${notionalNum.toFixed(2)}` : "-",
       pnlValue,
       decisionThesis,
       fundamentalAnalysis: {

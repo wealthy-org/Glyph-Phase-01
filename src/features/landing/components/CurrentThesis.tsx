@@ -352,7 +352,7 @@ export const CurrentThesis: React.FC<CurrentThesisProps> = ({ latestDecision }) 
               <div className="flex flex-wrap items-center justify-between gap-3">
                 {latestDecision.tradeId ? (
                   <Link
-                    href={`/trade/${latestDecision.tradeId}`}
+                    href={`/trades/${latestDecision.tradeNumber || latestDecision.tradeId}`}
                     className="inline-flex items-center gap-1.5 font-mono text-xs text-[#6fe39a] hover:underline uppercase"
                   >
                     <span>INSPECT ASSOCIATED TRADE {latestDecision.tradeNumber || ""}</span>

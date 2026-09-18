@@ -1,10 +1,10 @@
 import { prisma } from "../src/lib/prisma";
 
 async function main() {
-  console.log("Updating agent policies in DB to allowedAssets: ['NVDA']...");
+  console.log("Updating agent policies in DB to allowedAssets: ['NVDA', 'MSFT', 'AAPL']...");
   const updated = await prisma.agentPolicy.updateMany({
     data: {
-      allowedAssets: ["NVDA"],
+      allowedAssets: ["NVDA", "MSFT", "AAPL"],
     },
   });
   console.log(`Updated ${updated.count} policy record(s).`);

@@ -52,6 +52,14 @@ export const TradeHeader: React.FC<TradeHeaderProps> = ({ trade, className }) =>
             <span className="text-[#85858a] tracking-wider">
               {trade.leverageLabel}
             </span>
+            {trade.positionSize && trade.positionSize !== "-" && (
+              <>
+                <span className="text-[#333333]">·</span>
+                <span className="text-[#85858a] font-mono tracking-wider">
+                  {trade.positionSize} MARGIN ALLOCATED
+                </span>
+              </>
+            )}
           </div>
         </div>
 
@@ -77,9 +85,11 @@ export const TradeHeader: React.FC<TradeHeaderProps> = ({ trade, className }) =>
       {/* Divider 1 */}
       <Separator className="bg-[#171717]" />
 
-      {/* Trade Metrics Grid: 4-col desktop, 2-col tablet, 1-col mobile */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-        <TradeMetric label="ENTRY" value={trade.entryPrice} />
+      {/* Trade Metrics Grid: 6-col desktop, 3-col tablet, 2-col mobile */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5 sm:gap-6">
+        <TradeMetric label="ENTRY PRICE" value={trade.entryPrice} />
+        <TradeMetric label="CAPITAL (MARGIN)" value={trade.positionSize || "-"} />
+        <TradeMetric label="NOTIONAL EXP." value={trade.notional || "-"} />
         <TradeMetric label="EXIT" value={trade.exitPrice} />
         <TradeMetric label="LEVERAGE" value={trade.leverage} />
         <TradeMetric

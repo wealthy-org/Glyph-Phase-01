@@ -404,7 +404,7 @@ export const LiveState: React.FC<LiveStateProps> = ({
                   )}
 
                   {latestDecision?.tradeId ? (
-                    <Link href={`/trade/${latestDecision.tradeId}`}>
+                    <Link href={`/trades/${latestDecision.tradeNumber || latestDecision.tradeId}`}>
                       <Button
                         variant="secondary"
                         className="w-full h-9 text-xs font-sans font-normal rounded-[3px] flex items-center justify-center gap-1.5"

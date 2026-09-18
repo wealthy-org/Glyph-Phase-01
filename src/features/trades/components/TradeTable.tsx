@@ -28,37 +28,6 @@ interface TradeTableProps {
   trades: Trade[];
 }
 
-const ASSET_METADATA: Record<
-  string,
-  { name: string; category: string; badgeColor: string }
-> = {
-  NVDA: {
-    name: "NVIDIA Corp.",
-    category: "US Equity",
-    badgeColor: "bg-[#76b900]/10 text-[#76b900] border-[#76b900]/30",
-  },
-  BTC: {
-    name: "Bitcoin",
-    category: "Crypto L1",
-    badgeColor: "bg-[#f7931a]/10 text-[#f7931a] border-[#f7931a]/30",
-  },
-  ETH: {
-    name: "Ethereum",
-    category: "Crypto L1",
-    badgeColor: "bg-[#627eea]/10 text-[#627eea] border-[#627eea]/30",
-  },
-  SOL: {
-    name: "Solana",
-    category: "Crypto L1",
-    badgeColor: "bg-[#14f195]/10 text-[#14f195] border-[#14f195]/30",
-  },
-  MSFT: {
-    name: "Microsoft Corp.",
-    category: "US Equity",
-    badgeColor: "bg-[#00a4ef]/10 text-[#00a4ef] border-[#00a4ef]/30",
-  },
-};
-
 export const TradeTable: React.FC<TradeTableProps> = ({ trades }) => {
   if (trades.length === 0) {
     return (
@@ -117,10 +86,13 @@ export const TradeTable: React.FC<TradeTableProps> = ({ trades }) => {
                   Direction
                 </TableHead>
                 <TableHead className="font-sans text-xs font-semibold text-[#8e8e96] py-3.5 px-5 text-right">
-                  Entry
+                  Entry Price
                 </TableHead>
                 <TableHead className="font-sans text-xs font-semibold text-[#8e8e96] py-3.5 px-5 text-right">
-                  Exit
+                  Capital Allocated
+                </TableHead>
+                <TableHead className="font-sans text-xs font-semibold text-[#8e8e96] py-3.5 px-5 text-right">
+                  Exit Price
                 </TableHead>
                 <TableHead className="font-sans text-xs font-semibold text-[#8e8e96] py-3.5 px-5 text-center">
                   Leverage
@@ -147,59 +119,47 @@ export const TradeTable: React.FC<TradeTableProps> = ({ trades }) => {
 
       {/* Mobile Stacked Record View */}
       <div className="md:hidden space-y-3">
-        {trades.map((trade) => {
-          const assetMeta = ASSET_METADATA[trade.asset] || {
-            name: trade.asset,
-            category: "Asset",
-            badgeColor: "bg-[#85858a]/10 text-[#f3f3f4] border-[#85858a]/30",
-          };
-
-          return (
-            <div
-              key={trade.id}
-              className="p-4 rounded-xl border border-[#1e1e24] bg-gradient-to-b from-[#09090c] to-[#040405] space-y-3.5 shadow-md hover:border-[#2a2a34] transition-all"
-            >
-              {/* Header: Asset avatar, Ticker, Direction, Date & Net Return */}
-              <div className="flex items-start justify-between gap-2">
-                <div className="flex items-center gap-3">
-                  <div
-                    className={cn(
-                      "w-8 h-8 rounded-lg flex items-center justify-center font-mono text-xs font-semibold border shrink-0",
-                      assetMeta.badgeColor
-                    )}
-                  >
-                    {trade.asset.slice(0, 3)}
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <Link
-                        href={`/trades/${trade.id}`}
-                        className="font-sans text-sm font-semibold text-[#f4f4f5] hover:text-white"
-                      >
-                        {trade.asset}
-                      </Link>
-                      <Badge
-                        variant="outline"
-                        className={cn(
-                          "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium font-sans border",
-                          trade.action === "LONG"
-                            ? "border-[#6fe39a]/30 bg-[#6fe39a]/10 text-[#6fe39a]"
-                            : "border-[#c47a7a]/30 bg-[#c47a7a]/10 text-[#c47a7a]"
-                        )}
-                      >
-                        {trade.action === "LONG" ? (
-                          <ArrowUpRight size={10} className="stroke-[2.5]" />
-                        ) : (
-                          <ArrowDownRight size={10} className="stroke-[2.5]" />
-                        )}
-                        <span>{trade.action}</span>
-                      </Badge>
-                    </div>
-                    <span className="text-[11px] text-[#71717a] font-mono">
-                      {trade.date} · {assetMeta.name}
-                    </span>
-                  </div>
+        {trades.map((trade) => (
+          <div
+            key={trade.id}
+            className="p-4 rounded-xl border border-[#1e1e24] bg-gradient-to-b from-[#09090c] to-[#040405] space-y-3.5 shadow-md hover:border-[#2a2a34] transition-all"
+          >
+            {/* Header: Asset avatar, Ticker, Direction, Date & Net Return */}
+            <div className="flex items-start justify-between gap-2">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center font-mono text-xs font-semibold border border-[#272730] bg-[#141418] text-[#e4e4e7] shrink-0">
+                  {trade.asset.slice(0, 4)}
                 </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <Link
+                      href={`/trades/${trade.id}`}
+                      className="font-mono text-sm font-semibold text-[#f4f4f5] hover:text-white"
+                    >
+                      {trade.asset}
+                    </Link>
+                    <Badge
+                      variant="outline"
+                      className={cn(
+                        "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium font-sans border",
+                        trade.action === "LONG"
+                          ? "border-[#6fe39a]/30 bg-[#6fe39a]/10 text-[#6fe39a]"
+                          : "border-[#c47a7a]/30 bg-[#c47a7a]/10 text-[#c47a7a]"
+                      )}
+                    >
+                      {trade.action === "LONG" ? (
+                        <ArrowUpRight size={10} className="stroke-[2.5]" />
+                      ) : (
+                        <ArrowDownRight size={10} className="stroke-[2.5]" />
+                      )}
+                      <span>{trade.action}</span>
+                    </Badge>
+                  </div>
+                  <span className="text-[11px] text-[#71717a] font-mono">
+                    {trade.date}
+                  </span>
+                </div>
+              </div>
 
                 {/* Net Return Pill */}
                 <div
@@ -215,24 +175,35 @@ export const TradeTable: React.FC<TradeTableProps> = ({ trades }) => {
               </div>
 
               {/* Pricing details grid */}
-              <div className="grid grid-cols-3 gap-2 p-2.5 rounded-lg bg-[#07070a] border border-[#16161c] font-mono text-xs">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 p-2.5 rounded-lg bg-[#07070a] border border-[#16161c] font-mono text-xs">
                 <div>
                   <span className="text-[10px] text-[#71717a] uppercase block">
-                    Entry
+                    Entry Price
                   </span>
                   <span className="font-medium text-[#d4d4d8]">{trade.entry}</span>
                 </div>
                 <div>
                   <span className="text-[10px] text-[#71717a] uppercase block">
+                    Capital (Margin)
+                  </span>
+                  <span className="font-medium text-[#f4f4f5] block">{trade.positionSize || "-"}</span>
+                  {trade.notional && trade.notional !== "-" && (
+                    <span className="text-[9px] text-[#71717a] block">{trade.notional} exp.</span>
+                  )}
+                </div>
+                <div>
+                  <span className="text-[10px] text-[#71717a] uppercase block">
                     Exit
                   </span>
-                  <span className="font-medium text-[#d4d4d8]">{trade.exit}</span>
+                  <span className={cn("font-medium", trade.exit === "ACTIVE" ? "text-[#6fe39a]" : "text-[#d4d4d8]")}>
+                    {trade.exit}
+                  </span>
                 </div>
                 <div>
                   <span className="text-[10px] text-[#71717a] uppercase block">
                     Leverage
                   </span>
-                  <span className="inline-block px-1.5 py-0.2 rounded bg-[#121217] border border-[#22222b] text-[11px] text-[#a1a1aa]">
+                  <span className="inline-block px-1.5 py-0.5 rounded bg-[#121217] border border-[#22222b] text-[11px] text-[#a1a1aa]">
                     {trade.leverage}
                   </span>
                 </div>
@@ -286,8 +257,7 @@ export const TradeTable: React.FC<TradeTableProps> = ({ trades }) => {
                 </div>
               </div>
             </div>
-          );
-        })}
+          ))}
       </div>
     </div>
   );

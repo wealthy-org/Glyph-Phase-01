@@ -233,6 +233,53 @@ export const TRADE_DECISION_DETAILS: Record<string, TradeDecisionDetail> = {
       explorerUrl: "https://sepolia.basescan.org/tx/0x1f8c2b763e20a8b98150247f9b9326eb8f0388cc",
     },
   },
+  "aapl-sep18": {
+    id: "aapl-sep18",
+    tradeNumber: "TRADE #0014",
+    recordLabel: "DECISION RECORD",
+    asset: "AAPL",
+    action: "LONG",
+    leverage: "1×",
+    leverageLabel: "1× SIMULATED LEVERAGE",
+    resultPercent: "+3.2%",
+    isPositive: true,
+    status: "CLOSED",
+    entryPrice: "$224.50",
+    exitPrice: "$231.80",
+    pnlValue: "+$72.69",
+    decisionThesis:
+      "Apple Intelligence upgrade cycle momentum alongside expanding high-margin Services revenue supported sustained valuation expansion.",
+    fundamentalAnalysis: {
+      title: "Fundamental Analysis",
+      description: "Installed base of active devices hit fresh records; Services gross margin expanded above 74%.",
+      score: 82,
+      maxScore: 100,
+    },
+    technicalAnalysis: {
+      title: "Technical Analysis",
+      description: "Ascending triangle breakout above $222 with expanding 20-day volume ratio.",
+      score: 79,
+      maxScore: 100,
+    },
+    catalyst: "Global developer event rollout and holiday supply chain ramp.",
+    riskScore: 38,
+    invalidationLevel: "AAPL closes below $219.",
+    onchainProof: {
+      txHash: "0x9d4a8e217c40b8a98150247f9b9326eb8f0365ee",
+      network: "ROBINHOOD CHAIN TESTNET",
+      explorerUrl: "https://sepolia.basescan.org/tx/0x9d4a8e217c40b8a98150247f9b9326eb8f0365ee",
+    },
+    memory: {
+      outcome: "WIN",
+      thesisResult: "CORRECT",
+      lesson:
+        "Services gross margin durability provided reliable asymmetric upside even during broader semiconductor volatility.",
+      confidenceCalibration: "GOOD",
+      adaptation:
+        "Weight hardware replacement cycle indicators higher when evaluating mega-cap consumer tech leaders.",
+      weightShift: "+2.5% Services Margin / +1.8% Ecosystem Lock-in",
+    },
+  },
 };
 
 export function getTradeDetail(id: string): TradeDecisionDetail {

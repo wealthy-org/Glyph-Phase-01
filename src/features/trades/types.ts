@@ -14,6 +14,8 @@ export interface Trade {
   isPositive: boolean;
   thesis: ThesisStatus;
   proofUrl: string;
+  positionSize?: string;
+  notional?: string;
 }
 
 export interface TradeSummaryStats {
@@ -45,6 +47,8 @@ export interface TradeDecisionDetail {
   status: "CLOSED" | "OPEN";
   entryPrice: string;
   exitPrice: string;
+  positionSize?: string;
+  notional?: string;
   pnlValue: string;
   decisionThesis: string;
   fundamentalAnalysis: AnalysisScoreData;
