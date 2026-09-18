@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "prisma:reset": "prisma generate && prisma db push && prisma db seed",
-    "db:seed": "npx tsx prisma/seed.ts"
+    "db:seed": "npx tsx prisma/seed.ts",
+    "test:analysis": "npx tsx scripts/preview-risk-analysis.ts"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"

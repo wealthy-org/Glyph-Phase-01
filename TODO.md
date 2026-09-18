@@ -162,9 +162,9 @@ Jalankan skenario demo end-to-end ini (§34) minimal 1x penuh:
 
 - [x] Glyph "lahir" → identitas onchain terdaftar → wallet dibuat
 - [x] Treasury simulasi terisi $1.000
-- [ ] Glyph menganalisis 1 aset (misal NVDA)
-- [ ] Thesis fundamental + teknikal terbentuk
-- [ ] Risk engine menyetujui posisi (misal 2x leverage simulasi)
+- [x] Glyph menganalisis 1 aset (misal NVDA)
+- [x] Thesis fundamental + teknikal terbentuk
+- [x] Risk engine menyetujui posisi (misal 2x leverage simulasi)
 - [ ] Trade dibuat
 - [ ] Hash keputusan berhasil dicommit onchain
 - [ ] Tombol "Verify Onchain" berfungsi, tx hash valid di block explorer

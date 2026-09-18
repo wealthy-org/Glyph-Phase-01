@@ -16,7 +16,7 @@ export const GLYPH_IDENTITY_DATA: IdentityData = {
     epoch: "September 2026",
     block: "Block 120,766,742",
   },
-  primaryWallet: "0xd1dB02Ee39f33f5EC0780A7f75572c0c04345Ed7",
+  primaryWallet: "0x5cFc46E3e541531E2194185183971dCd9Eaaa384",
   registrationTx: "0xa547e955ec33ca107054a74d1c6bb51aad2ce3ddbb7c7e40c13df197e2a6ff18",
   registrationNetwork: "ROBINHOOD CHAIN TESTNET",
   explorerBaseUrl: "https://explorer.testnet.chain.robinhood.com/tx/",
