@@ -1,15 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { GridBackground } from "@/components/ui/GridBackground";
-import { Copy, Check, ExternalLink, ShieldCheck, ArrowRight, AlertTriangle } from "lucide-react";
+import { AlertTriangle, ArrowRight, Check, Copy, ExternalLink, ShieldCheck } from "lucide-react";
+import Link from "next/link";
+import React, { useState } from "react";
 import {
-  LandingTreasuryData,
-  LandingPositionItem,
-  LandingLatestDecision,
   LandingAgentMeta,
+  LandingLatestDecision,
+  LandingPositionItem,
+  LandingTreasuryData,
 } from "../types";
 
 interface LiveStateProps {
@@ -47,8 +47,8 @@ export const LiveState: React.FC<LiveStateProps> = ({
     treasury.pnlDollar > 0
       ? "text-[#6fe39a]"
       : treasury.pnlDollar < 0
-      ? "text-[#c47a7a]"
-      : "text-[#85858a]";
+        ? "text-[#c47a7a]"
+        : "text-[#85858a]";
 
   const primaryPosition = openPositions[0];
   const positionBadgeText = primaryPosition

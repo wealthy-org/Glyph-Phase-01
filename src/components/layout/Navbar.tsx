@@ -1,14 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { GlyphMark } from "@/components/glyph/GlyphMark";
 import { StatusIndicator } from "@/components/ui/StatusIndicator";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Menu, X } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 interface NavItem {
   label: string;
@@ -22,10 +21,15 @@ const NAV_ITEMS: NavItem[] = [
   { label: "ABOUT", href: "/about" },
 ];
 
-export const Navbar: React.FC = () => {
+interface NavbarProps {
+  agentId?: string;
+}
+
+export const Navbar: React.FC<NavbarProps> = ({ agentId: propAgentId }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  const agentId = propAgentId || process.env.NEXT_PUBLIC_GLYPH_AGENT_ID || "3";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -103,7 +107,7 @@ export const Navbar: React.FC = () => {
             className="inline-flex items-center gap-2 px-3 py-1 bg-transparent border border-[#1a1a1a] hover:border-[#2b2b2b] text-[#85858a] hover:text-[#f3f3f4] text-[10px] font-mono tracking-wider transition-colors"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-[#6fe39a] shadow-[0_0_0_3px_rgba(111,227,154,0.18)] animate-livepulse" />
-            <span>VERIFIED AGENT · ID #1</span>
+            <span>VERIFIED AGENT · ID #{agentId}</span>
           </Link>
           <StatusIndicator network="TESTNET" status="LIVE" />
         </div>

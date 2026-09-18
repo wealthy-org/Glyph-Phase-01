@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function LifePage() {
-  const events = await getLifeEvents("1");
+  const events = await getLifeEvents();
 
   return (
     <div className="flex-1 flex flex-col bg-[#000000] text-[#f3f3f4] relative selection:bg-[#1c1c1c] selection:text-[#f3f3f4]">

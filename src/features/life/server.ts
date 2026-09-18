@@ -59,13 +59,14 @@ function calculateAgentDay(eventDate: Date, birthDate: Date): number {
  * Retrieves all economic events for the specified agent from the database,
  * ordered chronologically descending (newest first).
  */
-export async function getLifeEvents(agentIdentifier = "1"): Promise<LifeEvent[]> {
+export async function getLifeEvents(agentIdentifier?: string): Promise<LifeEvent[]> {
   try {
-    const agent = await prisma.agent.findFirst({
-      where: { agentId: agentIdentifier },
-    });
+    const targetAgentId = agentIdentifier || process.env.GLYPH_AGENT_ID;
+    const agent = targetAgentId
+      ? await prisma.agent.findFirst({ where: { agentId: targetAgentId } })
+      : await prisma.agent.findFirst();
 
-    const birthDate = agent ? new Date(agent.createdAt) : new Date("2026-09-17T00:00:00.000Z");
+    const birthDate = agent ? new Date(agent.createdAt) : new Date();
 
     const events = await prisma.economicEvent.findMany({
       where: agent ? { agentId: agent.id } : undefined,
@@ -78,7 +79,7 @@ export async function getLifeEvents(agentIdentifier = "1"): Promise<LifeEvent[]>
 
     return events.map((evt) => {
       const d = new Date(evt.timestamp);
-      const day = calculateAgentDay(d, birthDate);
+      const day = evt.day ?? calculateAgentDay(d, birthDate);
       const date = d.toLocaleDateString("en-US", {
         month: "short",
         day: "2-digit",

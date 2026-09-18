@@ -42,13 +42,14 @@ function calculateAgentDay(eventDate: Date, birthDate: Date): number {
  * Aggregates all authoritative data required for the public Homepage observation terminal.
  * Gracefully handles newly initialized, empty, or partial database states.
  */
-export async function getLandingPageData(agentIdentifier = "1"): Promise<LandingPageData> {
+export async function getLandingPageData(agentIdentifier?: string): Promise<LandingPageData> {
   const now = new Date();
 
   // 1. Fetch Agent record
-  const agent = await prisma.agent.findFirst({
-    where: { agentId: agentIdentifier },
-  });
+  const targetAgentId = agentIdentifier || process.env.GLYPH_AGENT_ID;
+  const agent = targetAgentId
+    ? await prisma.agent.findFirst({ where: { agentId: targetAgentId } })
+    : await prisma.agent.findFirst();
 
   const birthDate = agent ? new Date(agent.createdAt) : now;
   const diffMs = Math.max(0, now.getTime() - birthDate.getTime());
@@ -165,7 +166,7 @@ export async function getLandingPageData(agentIdentifier = "1"): Promise<Landing
 
   const recentEvents: LandingEconomicEvent[] = eventRecords.map((evt) => {
     const d = new Date(evt.timestamp);
-    const day = calculateAgentDay(d, birthDate);
+    const day = evt.day ?? calculateAgentDay(d, birthDate);
     const date = d.toLocaleDateString("en-US", {
       month: "short",
       day: "2-digit",

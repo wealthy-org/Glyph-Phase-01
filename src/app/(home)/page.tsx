@@ -9,7 +9,7 @@ import { getLandingPageData } from "@/features/landing/server";
 export const revalidate = 0; // Dynamic server render for live observation terminal
 
 export default async function Home() {
-  const data = await getLandingPageData("1");
+  const data = await getLandingPageData();
 
   return (
     <div className="flex-1 flex flex-col bg-[#000000] text-[#f3f3f4]">

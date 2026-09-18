@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ShieldCheck } from "lucide-react";
+import Link from "next/link";
+import React, { useEffect, useRef } from "react";
 
 export const Hero: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -125,7 +124,7 @@ export const Hero: React.FC = () => {
             const falloff = 1 - dist / waveRadius;
             // Harmonic ripple wave radiating outward from cursor
             const ripple = Math.sin(dist * 0.048 - t * 0.075) * falloff * mouse.intensity;
-            
+
             offset = ripple * 7;
             alpha = Math.min(1, 0.045 + falloff * 0.42 * mouse.intensity + Math.max(0, ripple) * 0.2);
             size = Math.min(3.2, 0.95 + falloff * 1.8 * mouse.intensity + Math.max(0, ripple) * 0.6);
