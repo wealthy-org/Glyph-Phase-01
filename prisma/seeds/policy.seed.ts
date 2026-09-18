@@ -11,7 +11,7 @@ export async function seedPolicy(prisma: PrismaClient, agentId: string) {
       maxDailyLossPercent: 5,
       maxOpenPositions: 3,
       minConfidence: 60,
-      allowedAssets: ["NVDA", "BTC", "ETH", "SOL", "MSFT"],
+      allowedAssets: ["NVDA"],
       simulatedFeePercent: 0.1,
     },
     create: {
@@ -21,7 +21,7 @@ export async function seedPolicy(prisma: PrismaClient, agentId: string) {
       maxDailyLossPercent: 5,
       maxOpenPositions: 3,
       minConfidence: 60,
-      allowedAssets: ["NVDA", "BTC", "ETH", "SOL", "MSFT"],
+      allowedAssets: ["NVDA"],
       simulatedFeePercent: 0.1,
     },
   });

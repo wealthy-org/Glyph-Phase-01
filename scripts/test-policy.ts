@@ -66,7 +66,7 @@ async function runPolicyTests() {
   console.log("▶ [SCENARIO 3] AI proposes trade when agent already has 3 open positions...");
   const res3 = validateTradeProposal(
     {
-      asset: "ETH",
+      asset: "NVDA",
       action: "LONG",
       conviction: 75,
       positionSizePercent: 5,
@@ -87,7 +87,7 @@ async function runPolicyTests() {
   console.log("▶ [SCENARIO 4] AI proposes trade when daily loss reached 6.2% (threshold: 5%)...");
   const res4 = validateTradeProposal(
     {
-      asset: "SOL",
+      asset: "NVDA",
       action: "SHORT",
       conviction: 80,
       positionSizePercent: 5,
@@ -147,14 +147,18 @@ async function runPolicyTests() {
   // -------------------------------------------------------------------------
   console.log("▶ [SCENARIO 7] Testing DB-connected evaluation (evaluateAgentTradeProposal)...");
   // Clean up any test positions/trades for hermetic test
-  const agent = await prisma.agent.findFirst({ where: { agentId: "1" } });
+  const targetAgentId = process.env.GLYPH_AGENT_ID || "3";
+  const agent = await prisma.agent.findFirst({
+    where: { OR: [{ agentId: targetAgentId }, { agentId: "1" }] },
+  });
   if (agent) {
     await prisma.position.deleteMany({ where: { agentId: agent.id } });
     await prisma.trade.deleteMany({ where: { agentId: agent.id } });
   }
 
-  const dbEval = await evaluateAgentTradeProposal("1", {
-    asset: "MSFT",
+  const activeAgentId = agent?.agentId || targetAgentId;
+  const dbEval = await evaluateAgentTradeProposal(activeAgentId, {
+    asset: "NVDA",
     action: "LONG",
     conviction: 72,
     positionSizePercent: 8,

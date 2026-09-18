@@ -15,7 +15,7 @@ import { clampLeverage } from "./simulation-math";
  * Hardcoded Whitelist of Allowed Assets (BRIEF §3.8, §10).
  * MUST NOT be stored solely in a database table that could be dynamically manipulated.
  */
-export const ALLOWED_ASSETS = ["NVDA", "BTC", "ETH", "SOL", "MSFT"] as const;
+export const ALLOWED_ASSETS = ["NVDA"] as const;
 export type AllowedAsset = (typeof ALLOWED_ASSETS)[number];
 
 /**

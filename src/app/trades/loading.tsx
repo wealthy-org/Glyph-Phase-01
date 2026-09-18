@@ -36,7 +36,7 @@ export default function TradesLoading() {
           {/* Filters Row Skeleton */}
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#171717] pb-4">
             <div className="flex items-center gap-2">
-              {["ALL", "NVDA", "ETH", "BTC", "SOL"].map((t, idx) => (
+              {["ALL", "NVDA"].map((t, idx) => (
                 <Skeleton key={idx} className="h-7 w-16 bg-[#080808] border border-[#171717]" />
               ))}
             </div>

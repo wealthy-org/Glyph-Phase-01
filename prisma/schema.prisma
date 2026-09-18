@@ -152,7 +152,7 @@ model AgentPolicy {
   maxDailyLossPercent Decimal  @default(5) @db.Decimal(5, 2)
   maxOpenPositions    Int      @default(3)
   minConfidence       Int      @default(60) // 0-100
-  allowedAssets       String[] // e.g. ["NVDA", "BTC", "ETH", "SOL", "MSFT"]
+  allowedAssets       String[] // e.g. ["NVDA"]
   simulatedFeePercent Decimal  @default(0.1) @db.Decimal(5, 4) // §3.10 point 1
 
   updatedAt DateTime @updatedAt

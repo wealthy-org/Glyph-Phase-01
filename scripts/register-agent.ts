@@ -194,7 +194,7 @@ async function main() {
       maxDailyLossPercent: 5,
       maxOpenPositions: 3,
       minConfidence: 60,
-      allowedAssets: ["NVDA", "BTC", "ETH", "SOL", "MSFT"],
+      allowedAssets: ["NVDA"],
       simulatedFeePercent: 0.1,
     },
   });
