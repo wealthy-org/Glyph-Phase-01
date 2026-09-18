@@ -145,7 +145,7 @@ Urutan ini disusun berdasarkan prioritas P0 → P8 dari brief, karena tiap tahap
 
 - [ ] Tambahkan motion/animasi halus (transisi, loading state)
 - [ ] Buat 1 entitas visual Glyph yang mudah dikenali (bukan mascot robot generik)
-- [ ] Tambahkan proper loading & error state di semua halaman
+- [x] Tambahkan proper loading & error state di semua halaman
 - [ ] Setup observability ringan: tabel `agent_runs` (run_id, started_at, completed_at, market_snapshot, model, prompt_version, decision, policy_result, trade_id, transaction_hash, error)
 - [ ] Pastikan setiap run agent (gagal ataupun sukses) tercatat, tidak ada yang diam-diam dibuang
 - [ ] Tulis dokumentasi singkat internal (setup, env var, cara re-deploy kontrak)
