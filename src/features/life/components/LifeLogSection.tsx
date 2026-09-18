@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { LifeEvent, LifeCategory } from "../types";
-import { LIFE_CATEGORIES, GLYPH_LIFE_EVENTS } from "../data";
+import { LIFE_CATEGORIES } from "../data";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { LifeLogTimeline } from "./LifeLogTimeline";
@@ -12,7 +12,7 @@ interface LifeLogSectionProps {
 }
 
 export const LifeLogSection: React.FC<LifeLogSectionProps> = ({ initialEvents }) => {
-  const events = initialEvents && initialEvents.length > 0 ? initialEvents : GLYPH_LIFE_EVENTS;
+  const events = initialEvents ?? [];
   const [selectedCategory, setSelectedCategory] = useState<LifeCategory>("ALL EVENTS");
   const [sortOrder, setSortOrder] = useState<"desc" | "asc">("desc");
 

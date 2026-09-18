@@ -7,12 +7,9 @@
 import { prisma } from "@/lib/prisma";
 import { getExplorerTxUrl } from "@/lib/onchain/registry";
 import { Trade, TradeSummaryStats, TradeDecisionDetail } from "./types";
-import { GLYPH_TRADES_DATA, TRADE_SUMMARY_DATA } from "./data";
-import { getTradeDetail } from "./detail-data";
 
 /**
- * Fetches real trade execution history and computes dynamic summary metrics.
- * Seamlessly falls back to GLYPH_TRADES_DATA if database is empty.
+ * Fetches real trade execution history and computes dynamic summary metrics directly from DB.
  */
 export async function fetchLiveTradesData(): Promise<{
   trades: Trade[];
@@ -141,11 +138,11 @@ export async function fetchLiveTradesData(): Promise<{
 /**
  * Fetches real trade detail including decision thesis, research snapshot,
  * onchain proof, and persistent trade memory directly from Supabase PostgreSQL.
- * Seamlessly falls back to getTradeDetail if not found in database.
+ * Returns null if trade does not exist in database.
  */
 export async function fetchLiveTradeDetail(
   idOrNumber: string
-): Promise<TradeDecisionDetail> {
+): Promise<TradeDecisionDetail | null> {
   const cleanId = idOrNumber.trim();
 
   try {
@@ -162,7 +159,7 @@ export async function fetchLiveTradeDetail(
     });
 
     if (!trade) {
-      return getTradeDetail(cleanId);
+      return null;
     }
 
     // Fetch memory associated with this trade
@@ -295,6 +292,6 @@ export async function fetchLiveTradeDetail(
     };
   } catch (error) {
     console.error(`[TradeDetail] Error fetching live trade ${cleanId}:`, error);
-    return getTradeDetail(cleanId);
+    return null;
   }
 }

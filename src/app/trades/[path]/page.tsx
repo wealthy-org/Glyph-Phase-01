@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { Navbar } from "@/components/layout/Navbar";
 import { TradeDecisionDetailView } from "@/features/trades";
 import { fetchLiveTradeDetail } from "@/features/trades/queries";
@@ -15,6 +16,12 @@ export async function generateMetadata({
   const { path } = await params;
   const trade = await fetchLiveTradeDetail(path);
 
+  if (!trade) {
+    return {
+      title: "Trade Not Found — Glyph",
+    };
+  }
+
   return {
     title: `${trade.tradeNumber} — ${trade.asset} [${trade.action}] | Glyph Decision Record`,
     description: trade.decisionThesis,
@@ -24,6 +31,10 @@ export async function generateMetadata({
 export default async function TradeDetailPage({ params }: TradeDetailPageProps) {
   const { path } = await params;
   const trade = await fetchLiveTradeDetail(path);
+
+  if (!trade) {
+    notFound();
+  }
 
   return (
     <div className="flex-1 flex flex-col bg-[#000000] text-[#f3f3f4] relative selection:bg-[#202020] selection:text-[#f3f3f4]">

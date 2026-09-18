@@ -69,6 +69,7 @@ export async function seedTrades(prisma: PrismaClient, agentId: string) {
       agentId,
       eventType: {
         in: [
+          EconomicEventType.RESEARCH_STARTED,
           EconomicEventType.DECISION_MADE,
           EconomicEventType.TRADE_OPENED,
           EconomicEventType.TRADE_CLOSED,
@@ -384,24 +385,105 @@ export async function seedTrades(prisma: PrismaClient, agentId: string) {
       });
     }
 
-    // 5. Create Economic Event for the Life Log
+    // 5. Create Synchronized Economic Events for Life Log
+    // 5a. Thesis Formulation Event (Life Log: THESIS category)
+    const thesisTimestamp = new Date(item.createdAt.getTime() - 30 * 60 * 1000);
     await prisma.economicEvent.create({
       data: {
         agentId,
-        eventType:
-          item.status === TradeStatus.OPEN
-            ? EconomicEventType.TRADE_OPENED
-            : EconomicEventType.TRADE_CLOSED,
-        title: item.eventTitle,
-        description: item.thesis.fundamental,
+        eventType: EconomicEventType.RESEARCH_STARTED,
+        title: `Thesis: Long ${item.asset}`,
+        description: `${item.thesis.fundamental} Catalyst: ${item.thesis.catalyst}`,
         day: item.day,
-        result: item.eventResult,
-        tradeId: trade.id,
+        result: `SCORE ${item.fundamentalScore}`,
         decisionId: decision.id,
-        txHash: item.transactionHash,
-        timestamp: item.closedAt || item.createdAt,
+        timestamp: thesisTimestamp,
       },
     });
+
+    // 5b. Decision Committed Event (Life Log: DECISION category)
+    const decisionTimestamp = new Date(item.createdAt.getTime() - 10 * 60 * 1000);
+    await prisma.economicEvent.create({
+      data: {
+        agentId,
+        eventType: EconomicEventType.DECISION_MADE,
+        title: `Decision Committed: Long ${item.asset} (${item.leverage}×)`,
+        description: `Autonomous decision engine committed ${item.leverage}× simulated leverage long on ${item.asset} following algorithmic risk check. Conviction: ${item.conviction}%. Invalidation: ${item.thesis.invalidation}`,
+        day: item.day,
+        result: "APPROVED",
+        decisionId: decision.id,
+        txHash: item.transactionHash,
+        timestamp: decisionTimestamp,
+      },
+    });
+
+    // 5c. Trade Execution Events (Life Log: TRADE category)
+    if (item.status === TradeStatus.OPEN) {
+      await prisma.economicEvent.create({
+        data: {
+          agentId,
+          eventType: EconomicEventType.TRADE_OPENED,
+          title: `Opened LONG ${item.asset} (${item.leverage}× Simulated)`,
+          description: `Active position entered with $${item.positionSize.toFixed(2)} simulated margin at entry price $${item.entryPrice.toFixed(2)}. Target: $238.88, Stop Loss: $214.95.`,
+          day: item.day,
+          result: `ACTIVE ${item.leverage}×`,
+          tradeId: trade.id,
+          decisionId: decision.id,
+          txHash: item.transactionHash,
+          timestamp: item.createdAt,
+        },
+      });
+    } else {
+      // For closed trades, record both the trade opening and trade closing events
+      await prisma.economicEvent.create({
+        data: {
+          agentId,
+          eventType: EconomicEventType.TRADE_OPENED,
+          title: `Opened LONG ${item.asset} (${item.leverage}× Simulated)`,
+          description: `Position initiated with $${item.positionSize.toFixed(2)} simulated margin at entry price $${item.entryPrice.toFixed(2)}.`,
+          day: item.day,
+          result: `${item.leverage}×`,
+          tradeId: trade.id,
+          decisionId: decision.id,
+          txHash: item.transactionHash,
+          timestamp: item.createdAt,
+        },
+      });
+
+      await prisma.economicEvent.create({
+        data: {
+          agentId,
+          eventType: EconomicEventType.TRADE_CLOSED,
+          title: item.eventTitle,
+          description: `Closed simulated ${item.asset} long position at target exit price ($${item.exitPrice?.toFixed(2)}). Realized return ${item.simulatedPnlPercent !== null ? (item.simulatedPnlPercent >= 0 ? "+" : "") + item.simulatedPnlPercent.toFixed(1) + "%" : ""}.`,
+          day: item.day,
+          result: item.eventResult,
+          tradeId: trade.id,
+          decisionId: decision.id,
+          txHash: item.transactionHash,
+          timestamp: item.closedAt!,
+        },
+      });
+
+      // 5d. Memory Recorded Event (Life Log: MEMORY category)
+      if (item.memory) {
+        const memoryTimestamp = new Date(item.closedAt!.getTime() + 5 * 60 * 1000);
+        await prisma.economicEvent.create({
+          data: {
+            agentId,
+            eventType: EconomicEventType.MEMORY_CREATED,
+            title: `Memory Recorded: ${item.asset} Post-Trade Calibration`,
+            description: `${item.memory.lesson}${item.memory.adaptation ? ` Adaptation: ${item.memory.adaptation}` : ""}`,
+            day: item.day,
+            result: `${item.memory.outcome} // ${item.memory.thesisResult}`,
+            tradeId: trade.id,
+            decisionId: decision.id,
+            txHash: item.transactionHash,
+            timestamp: memoryTimestamp,
+          },
+        });
+      }
+    }
 
     console.log(`    ✅ Seeded ${trade.tradeNumber} [${trade.asset} ${trade.action}] — Status: ${trade.status}`);
   }

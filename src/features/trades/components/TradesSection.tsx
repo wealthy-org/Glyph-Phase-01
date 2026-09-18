@@ -2,10 +2,18 @@
 
 import React, { useState } from "react";
 import { Trade, TradeFilter, TradeSummaryStats } from "../types";
-import { TRADE_SUMMARY_DATA, GLYPH_TRADES_DATA } from "../data";
 import { TradeSummary } from "./TradeSummary";
 import { TradeFilters } from "./TradeFilters";
 import { TradeTable } from "./TradeTable";
+
+const DEFAULT_STATS: TradeSummaryStats = {
+  totalExecuted: 0,
+  netPnl: "$0.00",
+  winRatio: "0.0%",
+  loggedRatio: "0 OF 0 LOGGED",
+  network: "TESTNET",
+  networkChain: "ROBINHOOD CHAIN",
+};
 
 interface TradesSectionProps {
   initialTrades?: Trade[];
@@ -13,8 +21,8 @@ interface TradesSectionProps {
 }
 
 export const TradesSection: React.FC<TradesSectionProps> = ({
-  initialTrades = GLYPH_TRADES_DATA,
-  initialStats = TRADE_SUMMARY_DATA,
+  initialTrades = [],
+  initialStats = DEFAULT_STATS,
 }) => {
   const [filter, setFilter] = useState<TradeFilter>("ALL");
 

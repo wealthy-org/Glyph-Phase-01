@@ -6,6 +6,7 @@ import { seedAgent } from "./seeds/agent.seed";
 import { seedTreasury } from "./seeds/treasury.seed";
 import { seedPolicy } from "./seeds/policy.seed";
 import { seedEvents } from "./seeds/events.seed";
+import { seedTrades } from "./seeds/trade.seed";
 import { seedReputation } from "./seeds/reputation.seed";
 
 const connectionString = process.env.DATABASE_URL;
@@ -31,7 +32,10 @@ async function main() {
   // 4. Genesis Economic Events (Life Log)
   await seedEvents(prisma, agent.id);
 
-  // 5. Initial Reputation Metrics
+  // 5. Trades, Decisions, Life Log Events & Persistent Memories
+  await seedTrades(prisma, agent.id);
+
+  // 6. Initial Reputation Metrics
   await seedReputation(prisma, agent.id);
 
   console.log("==================================================");
