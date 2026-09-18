@@ -36,6 +36,7 @@ interface TradeSeedDefinition {
   transactionHash: string;
   createdAt: Date;
   closedAt: Date | null;
+  day: number;
   thesis: {
     fundamental: string;
     technical: string;
@@ -79,6 +80,30 @@ export async function seedTrades(prisma: PrismaClient, agentId: string) {
     },
   });
 
+  // Ensure genesis events have authoritative Day 1 timestamps
+  await prisma.economicEvent.updateMany({
+    where: { agentId, eventType: EconomicEventType.AGENT_BORN },
+    data: { day: 1, timestamp: new Date("2026-09-14T06:00:00Z") },
+  });
+  await prisma.economicEvent.updateMany({
+    where: { agentId, eventType: EconomicEventType.IDENTITY_REGISTERED },
+    data: { day: 1, timestamp: new Date("2026-09-14T06:15:00Z") },
+  });
+  await prisma.economicEvent.updateMany({
+    where: { agentId, eventType: EconomicEventType.WALLET_CREATED },
+    data: { day: 1, timestamp: new Date("2026-09-14T06:30:00Z") },
+  });
+  await prisma.economicEvent.updateMany({
+    where: { agentId, eventType: EconomicEventType.TREASURY_FUNDED },
+    data: { day: 1, timestamp: new Date("2026-09-14T07:00:00Z") },
+  });
+
+  // Ensure agent birth date is Day 1
+  await prisma.agent.updateMany({
+    where: { id: agentId },
+    data: { createdAt: new Date("2026-09-14T06:00:00Z") },
+  });
+
   // Seed Trades definitions with whitelisted US Equities (AAPL, NVDA, MSFT)
   const tradesToSeed: TradeSeedDefinition[] = [
     {
@@ -99,8 +124,9 @@ export async function seedTrades(prisma: PrismaClient, agentId: string) {
       status: TradeStatus.CLOSED,
       decisionHash: "0x3f7a18b9c45012a87d91e64b81023c90df1a5b82c19e48b17a02e64f8103c89b",
       transactionHash: "0x9d4a8e217c40b8a98150247f9b9326eb8f0365ee",
-      createdAt: new Date("2026-09-15T14:30:00Z"),
-      closedAt: new Date("2026-09-16T18:00:00Z"),
+      createdAt: new Date("2026-09-15T10:00:00Z"),
+      closedAt: new Date("2026-09-15T18:00:00Z"),
+      day: 2,
       thesis: {
         fundamental:
           "Apple demonstrates steady services revenue growth (+12% YoY) and strong enterprise buyback cash reserves. Operating margins expand on higher gross margin digital ecosystem subscriptions.",
@@ -143,8 +169,9 @@ export async function seedTrades(prisma: PrismaClient, agentId: string) {
       status: TradeStatus.CLOSED,
       decisionHash: "0x8f3c7e492b10a8b98150247f9b9326eb8f0391acb471829e10283c74910283ea",
       transactionHash: "0x8f3c7e492b10a8b98150247f9b9326eb8f0391ac",
-      createdAt: new Date("2026-09-16T15:00:00Z"),
-      closedAt: new Date("2026-09-17T20:30:00Z"),
+      createdAt: new Date("2026-09-16T10:00:00Z"),
+      closedAt: new Date("2026-09-16T20:30:00Z"),
+      day: 3,
       thesis: {
         fundamental:
           "NVIDIA accelerates data center revenue trajectory with hyperscaler capex guidance upgrades across cloud providers. High net margins of 55%+ reinforce durable competitive moat.",
@@ -187,8 +214,9 @@ export async function seedTrades(prisma: PrismaClient, agentId: string) {
       status: TradeStatus.CLOSED,
       decisionHash: "0x1f8c2b763e20a8b98150247f9b9326eb8f0388cc948192a019283719482910fa",
       transactionHash: "0x1f8c2b763e20a8b98150247f9b9326eb8f0388cc",
-      createdAt: new Date("2026-09-17T14:00:00Z"),
-      closedAt: new Date("2026-09-18T12:00:00Z"),
+      createdAt: new Date("2026-09-17T10:00:00Z"),
+      closedAt: new Date("2026-09-17T18:00:00Z"),
+      day: 4,
       thesis: {
         fundamental:
           "Microsoft Azure commercial cloud revenue demonstrates steady 29% YoY expansion. Enterprise AI copilot seat monetization adds predictable high-margin ARR.",
@@ -233,6 +261,7 @@ export async function seedTrades(prisma: PrismaClient, agentId: string) {
       transactionHash: "0x0cdc6f4b5e21b2bd353b80af2efc2ee56ca492f0f0ad9cab0132009d82eba2a3",
       createdAt: new Date("2026-09-18T15:05:00Z"),
       closedAt: null,
+      day: 5,
       thesis: {
         fundamental:
           "Apple demonstrates solid revenue growth of 6.1% YoY, a healthy profit margin of 26.4%, and an EPS of $6.57. Robust services monetization supports continued fundamental strength.",
@@ -365,7 +394,7 @@ export async function seedTrades(prisma: PrismaClient, agentId: string) {
             : EconomicEventType.TRADE_CLOSED,
         title: item.eventTitle,
         description: item.thesis.fundamental,
-        day: Math.max(1, Math.floor((item.createdAt.getTime() - new Date("2026-09-14").getTime()) / 86400000) + 1),
+        day: item.day,
         result: item.eventResult,
         tradeId: trade.id,
         decisionId: decision.id,
