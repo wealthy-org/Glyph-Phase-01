@@ -27,7 +27,7 @@ export async function fetchLiveTradesData(): Promise<{
       return {
         trades: [],
         stats: {
-          totalExecuted: "0",
+          totalExecuted: 0,
           netPnl: "$0.00",
           winRatio: "0.0%",
           loggedRatio: "0 / 0 ATTESTED",
@@ -121,7 +121,7 @@ export async function fetchLiveTradesData(): Promise<{
     return {
       trades: [],
       stats: {
-        totalExecuted: "0",
+        totalExecuted: 0,
         netPnl: "$0.00",
         winRatio: "0.0%",
         loggedRatio: "0 / 0 ATTESTED",

@@ -58,7 +58,7 @@ export async function getLandingPageData(agentIdentifier?: string): Promise<Land
 
   const agentMeta: LandingAgentMeta = {
     id: agent?.id || "",
-    agentId: agent?.agentId || agentIdentifier,
+    agentId: agent?.agentId || agentIdentifier || process.env.GLYPH_AGENT_ID || "3",
     name: agent?.name || "GLYPH",
     status: agent?.status || "ACTIVE",
     objective: GLYPH_CORE_OBJECTIVE,
