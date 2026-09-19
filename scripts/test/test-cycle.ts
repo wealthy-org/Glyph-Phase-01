@@ -3,8 +3,8 @@
 // Run with: npx tsx scripts/test-cycle.ts
 // ============================================================================
 
-import { runAutonomousGlyphCycle } from "../src/lib/cycle/orchestrator";
-import { prisma } from "../src/lib/prisma";
+import { runAutonomousGlyphCycle } from "../../src/lib/cycle/orchestrator";
+import { prisma } from "../../src/lib/prisma";
 
 async function verifyCyclePipeline() {
   console.log("===============================================================");

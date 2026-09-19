@@ -4,89 +4,67 @@ import { ArrowDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface DecisionLoopSectionProps {
-  eyebrow: string;
-  heading: string;
-  description: string;
   steps: DecisionLoopStepItem[];
   className?: string;
 }
 
 export const DecisionLoopSection: React.FC<DecisionLoopSectionProps> = ({
-  eyebrow,
-  heading,
-  description,
   steps,
   className,
 }) => {
   return (
-    <section className={cn("space-y-8 sm:space-y-10 pt-8 sm:pt-12", className)} aria-label="Process Cycle">
+    <section className={cn("space-y-3", className)} aria-label="Decision Pipeline">
       {/* Section Header */}
-      <div className="space-y-1">
-        <div className="eyebrow">
-          <span>{eyebrow}</span>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2 font-mono text-[10px] sm:text-xs text-[#85858a] tracking-widest uppercase">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#6fe39a]" />
+          <span>DECISION LOOP // PHASE 01</span>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-[#f3f3f4] uppercase">
-          {heading}
-        </h2>
-        <p className="text-sm text-[#85858a] font-light">
-          {description}
-        </p>
+        <span className="font-mono text-[10px] text-[#55555a] uppercase">
+          COGNITIVE PIPELINE
+        </span>
       </div>
 
-      {/* Process Flow Outer Panel */}
-      <div className="border border-[#171717] bg-[#050505] p-6 sm:p-10 md:p-14">
-        <div className="max-w-2xl mx-auto space-y-3">
-          {steps.map((step, idx) => (
-            <React.Fragment key={step.step}>
-              {/* Step Card */}
-              <div
+      {/* Terminal Pipeline Outer Panel */}
+      <div className="border border-[#1b1b1b] bg-[#050505] shadow-xl overflow-hidden divide-y divide-[#1b1b1b]">
+        {steps.map((step, idx) => (
+          <div
+            key={step.step}
+            className="p-3.5 sm:p-4 bg-[#050505] hover:bg-[#070707] transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-3 relative"
+          >
+            {/* Step Identification */}
+            <div className="flex items-center gap-3 shrink-0">
+              <span
                 className={cn(
-                  "border p-4 sm:p-5 flex items-start gap-4 transition-colors",
-                  step.isHighlighted
-                    ? "border-[#6fe39a]/40 bg-[#6fe39a]/5 hover:border-[#6fe39a]"
-                    : "border-[#171717] bg-[#080808] hover:border-[#262626]"
+                  "font-mono text-xs px-2 py-0.5 border rounded-none font-semibold tabular-nums shrink-0",
+                  step.badgeClass
                 )}
               >
-                {/* Step Index Badge */}
-                <span
-                  className={cn(
-                    "font-mono text-xs px-2 py-0.5 border rounded-none shrink-0 font-medium",
-                    step.isHighlighted
-                      ? "border-[#6fe39a]/50 text-[#6fe39a] bg-[#6fe39a]/10"
-                      : "border-[#171717] text-[#85858a] bg-[#0a0a0a]"
-                  )}
-                >
-                  {step.step}
-                </span>
+                {step.step}
+              </span>
 
-                {/* Content */}
-                <div className="space-y-1">
-                  <h3
-                    className={cn(
-                      "font-mono text-xs sm:text-sm font-medium tracking-wider uppercase",
-                      step.isHighlighted ? "text-[#6fe39a]" : "text-[#f3f3f4]"
-                    )}
-                  >
-                    {step.label}
-                  </h3>
-                  <p className="font-mono text-xs text-[#85858a] leading-relaxed">
-                    {step.description}
-                  </p>
-                </div>
-              </div>
+              <h3
+                className={cn(
+                  "font-mono text-xs sm:text-sm font-medium tracking-wider uppercase min-w-[140px]",
+                  step.colorClass
+                )}
+              >
+                {step.label}
+              </h3>
 
-              {/* Downward Connector Arrow */}
               {idx < steps.length - 1 && (
-                <div
-                  className="flex justify-center py-1 text-[#333338]"
-                  aria-hidden="true"
-                >
-                  <ArrowDown size={14} className="text-[#55555a]" />
+                <div className="hidden sm:flex items-center text-[#333338]" aria-hidden="true">
+                  <ArrowDown size={13} className="text-[#44444a]" />
                 </div>
               )}
-            </React.Fragment>
-          ))}
-        </div>
+            </div>
+
+            {/* Step Description */}
+            <p className="font-mono text-xs text-[#85858a] leading-relaxed flex-1 sm:text-right pl-0 sm:pl-4">
+              {step.description}
+            </p>
+          </div>
+        ))}
       </div>
     </section>
   );

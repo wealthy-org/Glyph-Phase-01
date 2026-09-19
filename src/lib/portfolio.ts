@@ -487,7 +487,7 @@ export async function closeSimulatedPosition(
 export async function getActivePositions(
   agentIdentifier = process.env.GLYPH_AGENT_ID || "1"
 ) {
-  const agent = await prisma.agent.findFirst({
+  let agent = await prisma.agent.findFirst({
     where: { agentId: agentIdentifier },
     include: {
       positions: {
@@ -497,6 +497,18 @@ export async function getActivePositions(
       },
     },
   });
+
+  if (!agent) {
+    agent = await prisma.agent.findFirst({
+      include: {
+        positions: {
+          where: { isOpen: true },
+          include: { trade: true },
+          orderBy: { openedAt: "desc" },
+        },
+      },
+    });
+  }
 
   if (!agent) {
     return { positions: [], totalMargin: 0, totalNotional: 0, totalUnrealizedPnl: 0 };

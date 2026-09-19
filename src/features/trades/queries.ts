@@ -71,9 +71,7 @@ export async function fetchLiveTradesData(): Promise<{
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
           })}`
-        : t.status === "OPEN"
-        ? "ACTIVE"
-        : "-";
+        : "—";
 
       const pnlFormatted =
         t.simulatedPnlPercent !== null
@@ -88,18 +86,49 @@ export async function fetchLiveTradesData(): Promise<{
       const levNum = Number(t.leverage ?? 1);
       const notionalNum = marginNum * levNum;
 
+      const timeStr =
+        t.createdAt.toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+          timeZone: "UTC",
+        }) + " UTC";
+
+      const pnlDollar =
+        pnlNum !== 0
+          ? `${pnlNum >= 0 ? "+$" : "-$"}${Math.abs(pnlNum).toFixed(2)}`
+          : pnlPct !== 0
+          ? `${pnlPct >= 0 ? "+$" : "-$"}${Math.abs(pnlPct).toFixed(2)}`
+          : "$0.00";
+
+      const pnlPercent = `${pnlPct >= 0 ? "+" : ""}${pnlPct.toFixed(1)}%`;
+
+      const refNumber = t.tradeNumber.includes("GLYPH-")
+        ? `#TRD-${t.tradeNumber.replace("GLYPH-", "")}`
+        : `#${t.tradeNumber}`;
+
       return {
         id: t.tradeNumber,
+        tradeNumber: t.tradeNumber,
+        dbId: t.id,
         date: dateStr,
+        time: timeStr,
+        timestamp: t.createdAt.toISOString(),
         asset: t.asset,
         action: t.action as "LONG" | "SHORT",
+        status: t.status as "OPEN" | "CLOSED" | "LIQUIDATED",
         entry: entryFormatted,
         exit: exitFormatted,
+        size: `${Number(t.leverage).toFixed(0)}×`,
         leverage: `${Number(t.leverage).toFixed(0)}×`,
-        pnl: pnlFormatted,
+        pnl: pnlDollar !== "$0.00" ? pnlDollar : pnlFormatted,
+        pnlDollar,
+        pnlPercent,
+        pnlNumber: pnlNum !== 0 ? pnlNum : pnlPct,
         isPositive,
         thesis: isPositive ? "VALIDATED" : "INVALIDATED",
         proofUrl,
+        refNumber,
         positionSize: marginNum > 0 ? `$${marginNum.toFixed(2)}` : "-",
         notional: notionalNum > 0 ? `$${notionalNum.toFixed(2)}` : "-",
       };

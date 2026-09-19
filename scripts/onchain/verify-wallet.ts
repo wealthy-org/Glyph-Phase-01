@@ -1,7 +1,7 @@
 import "dotenv/config";
-import "../src/lib/dns-fix";
+import "../../src/lib/dns-fix";
 import { createPublicClient, http, parseAbi, defineChain } from "viem";
-import { prisma } from "../src/lib/prisma";
+import { prisma } from "../../src/lib/prisma";
 
 const robinhoodTestnet = defineChain({
   id: 46630,

@@ -63,18 +63,9 @@ export const LiveState: React.FC<LiveStateProps> = ({
       <GridBackground glowColor="emerald" intensity="medium" gridSize={36} />
 
       <div className="relative z-10 max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-12 space-y-12">
-        {/* Section Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
-          <div className="space-y-3">
-            <span className="eyebrow">INTERFACE // LIVE</span>
-            <h2 className="text-3xl sm:text-5xl font-light tracking-tight text-[#f3f3f4] leading-[0.98]">
-              Every decision,<br />
-              fully legible.
-            </h2>
-          </div>
-
-          {/* Active Being Telemetry Indicator */}
-          <div className="flex items-center gap-3 font-mono text-[11px] border border-[#1a1a1a] bg-[#050505] px-3.5 py-1.5 self-start sm:self-auto">
+        {/* Active Being Telemetry Indicator */}
+        <div className="flex items-center justify-end">
+          <div className="flex items-center gap-3 font-mono text-[11px] border border-[#1a1a1a] bg-[#050505] px-3.5 py-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-[#6fe39a] shadow-[0_0_0_3px_rgba(111,227,154,0.18)] animate-livepulse" />
             <span className="text-[#6fe39a] tracking-wider font-medium uppercase">
               BEING {agent.status}

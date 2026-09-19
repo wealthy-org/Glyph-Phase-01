@@ -10,15 +10,15 @@ import {
   calculatePnL,
   calculateTransactionFee,
   isPositionLiquidated,
-} from "../src/lib/simulation-math";
+} from "../../src/lib/simulation-math";
 import {
   openSimulatedPosition,
   updatePositionsMarketPrices,
   closeSimulatedPosition,
   getActivePositions,
-} from "../src/lib/portfolio";
-import { getTreasurySummary } from "../src/lib/treasury";
-import { prisma } from "../src/lib/prisma";
+} from "../../src/lib/portfolio";
+import { getTreasurySummary } from "../../src/lib/treasury";
+import { prisma } from "../../src/lib/prisma";
 
 async function runTests() {
   console.log("===============================================================");

@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
 import { AboutSection } from "@/features/about";
 
-export const metadata = {
-  title: "About Glyph — Editorial Specification",
+export const metadata: Metadata = {
+  title: "Glyph Specification — Protocol & System Architecture",
   description:
-    "Glyph is an autonomous digital being designed to maintain an observable economic life. Review its core philosophy, decision loops, and Phase 01 testnet architecture.",
+    "System specification and operational architecture for Glyph (Economic Being #001). Autonomous decision loops, deterministic risk bounds, and Phase 01 simulated capital.",
 };
 
 export default function AboutPage() {
@@ -14,8 +14,8 @@ export default function AboutPage() {
       {/* Global Navigation */}
       <Navbar />
 
-      {/* Main Content Area */}
-      <main className="flex-1 w-full max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-12 py-16 sm:py-24 relative z-10">
+      {/* Main Protocol Specification Content Area */}
+      <main className="flex-1 w-full max-w-[1120px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 relative z-10">
         <AboutSection />
       </main>
     </div>

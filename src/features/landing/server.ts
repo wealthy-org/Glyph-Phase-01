@@ -47,9 +47,13 @@ export async function getLandingPageData(agentIdentifier?: string): Promise<Land
 
   // 1. Fetch Agent record
   const targetAgentId = agentIdentifier || process.env.GLYPH_AGENT_ID;
-  const agent = targetAgentId
+  let agent = targetAgentId
     ? await prisma.agent.findFirst({ where: { agentId: targetAgentId } })
     : await prisma.agent.findFirst();
+
+  if (!agent) {
+    agent = await prisma.agent.findFirst();
+  }
 
   const birthDate = agent ? new Date(agent.createdAt) : now;
   const diffMs = Math.max(0, now.getTime() - birthDate.getTime());

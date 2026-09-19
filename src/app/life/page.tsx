@@ -18,7 +18,7 @@ export default async function LifePage() {
       <Navbar />
 
       {/* Main Centered Content Column */}
-      <main className="flex-1 w-full max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-12 py-16 sm:py-24 relative z-10">
+      <main className="flex-1 w-full max-w-[1280px] mx-auto px-4 sm:px-8 lg:px-12 py-8 sm:py-12 relative z-10">
         <LifeLogSection initialEvents={events} />
       </main>
     </div>

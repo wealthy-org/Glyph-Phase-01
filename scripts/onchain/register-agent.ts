@@ -1,5 +1,5 @@
 import "dotenv/config";
-import "../src/lib/dns-fix";
+import "../../src/lib/dns-fix";
 import {
   createPublicClient,
   createWalletClient,
@@ -9,7 +9,7 @@ import {
   decodeEventLog,
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { prisma } from "../src/lib/prisma";
+import { prisma } from "../../src/lib/prisma";
 
 // Definisi Robinhood Chain Testnet
 const robinhoodTestnet = defineChain({

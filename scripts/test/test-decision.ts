@@ -3,10 +3,10 @@
 // Run with: npx tsx scripts/test-decision.ts
 // ============================================================================
 
-import { executeGlyphDecisionCycle } from "../src/lib/decision/engine";
-import { GLYPH_DECISION_PROMPT_VERSION } from "../src/lib/decision/prompt";
-import { createResearchSnapshot } from "../src/lib/research";
-import { prisma } from "../src/lib/prisma";
+import { executeGlyphDecisionCycle } from "../../src/lib/decision/engine";
+import { GLYPH_DECISION_PROMPT_VERSION } from "../../src/lib/decision/prompt";
+import { createResearchSnapshot } from "../../src/lib/research";
+import { prisma } from "../../src/lib/prisma";
 
 async function runDecisionTests() {
   console.log("===============================================================");

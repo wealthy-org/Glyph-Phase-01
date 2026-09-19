@@ -1,4 +1,4 @@
-import { PrismaClient, EconomicEventType } from "../../src/generated/prisma/client";
+import { EconomicEventType, PrismaClient } from "../../src/generated/prisma/client";
 
 export async function seedEvents(prisma: PrismaClient, agentId: string) {
   console.log("  ↳ [4/5] Seeding Genesis Economic Events (Life Log)...");
@@ -35,10 +35,10 @@ export async function seedEvents(prisma: PrismaClient, agentId: string) {
       eventType: EconomicEventType.IDENTITY_REGISTERED,
       title: "ERC-8004 Identity Registered",
       description:
-        "Cryptographic identifier anchored onchain to autonomous agent registry with Agent ID #3.",
+        "Cryptographic identifier for the autonomous agent registry. A real transaction reference is included only when configured.",
       day: 1,
       result: "ERC-8004",
-      txHash: "0x7d3e13cd572c06b9bc0d25948f6f2e57da4967fc67bc290766b3656f5d4facb2",
+      txHash: process.env.GLYPH_IDENTITY_TX_HASH || null,
       timestamp: new Date("2026-09-14T06:15:00Z"),
     },
     {
@@ -46,10 +46,10 @@ export async function seedEvents(prisma: PrismaClient, agentId: string) {
       eventType: EconomicEventType.WALLET_CREATED,
       title: "Smart Account Wallet Created",
       description:
-        "Autonomous Safe smart account deployed on Robinhood Chain Testnet: 0x58f446633eFc1c2141B9a974F72992b5B07F8F8d.",
+        "Autonomous Safe smart account reference for Robinhood Chain Testnet. A real transaction reference is included only when configured.",
       day: 1,
       result: "SAFE-EVM",
-      txHash: "0xd9e9afc3f5550156dd7339b339d7d6ac6a4382c9bd519c61ea73fb638dc8637e",
+      txHash: process.env.GLYPH_WALLET_TX_HASH || null,
       timestamp: new Date("2026-09-14T06:30:00Z"),
     },
     {

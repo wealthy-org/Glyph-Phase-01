@@ -6,11 +6,11 @@
 import {
   openSimulatedPosition,
   closeSimulatedPosition,
-} from "../src/lib/portfolio";
-import { getRecentMemories } from "../src/lib/memory";
-import { createResearchSnapshot } from "../src/lib/research";
-import { executeGlyphDecisionCycle } from "../src/lib/decision/engine";
-import { prisma } from "../src/lib/prisma";
+} from "../../src/lib/portfolio";
+import { getRecentMemories } from "../../src/lib/memory";
+import { createResearchSnapshot } from "../../src/lib/research";
+import { executeGlyphDecisionCycle } from "../../src/lib/decision/engine";
+import { prisma } from "../../src/lib/prisma";
 
 async function runMemoryTests() {
   console.log("===============================================================");

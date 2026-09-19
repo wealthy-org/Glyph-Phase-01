@@ -1,5 +1,5 @@
 import "dotenv/config";
-import "../src/lib/dns-fix";
+import "../../src/lib/dns-fix";
 import {
   createPublicClient,
   createWalletClient,
@@ -8,7 +8,7 @@ import {
   defineChain,
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { prisma } from "../src/lib/prisma";
+import { prisma } from "../../src/lib/prisma";
 
 const NEW_WALLET_ADDRESS = "0x5cFc46E3e541531E2194185183971dCd9Eaaa384" as `0x${string}`;
 

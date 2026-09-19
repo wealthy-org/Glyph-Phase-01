@@ -1,6 +1,6 @@
 import "dotenv/config";
-import { runAutonomousGlyphCycle } from "../src/lib/cycle/orchestrator";
-import { prisma } from "../src/lib/prisma";
+import { runAutonomousGlyphCycle } from "../../src/lib/cycle/orchestrator";
+import { prisma } from "../../src/lib/prisma";
 
 async function main() {
   const targetAsset = process.argv[2] || "AAPL";

@@ -3,14 +3,14 @@
 // Run with: npx tsx scripts/test-research.ts
 // ============================================================================
 
-import { AlphaVantageProvider } from "../src/lib/market/alpha-vantage";
+import { AlphaVantageProvider } from "../../src/lib/market/alpha-vantage";
 import {
   analyzeTechnicalLayer,
   analyzeFundamentalLayer,
   executeAssetResearch,
   createResearchSnapshot,
-} from "../src/lib/research";
-import { prisma } from "../src/lib/prisma";
+} from "../../src/lib/research";
+import { prisma } from "../../src/lib/prisma";
 
 async function runResearchTests() {
   console.log("===============================================================");

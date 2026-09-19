@@ -1,19 +1,31 @@
 export type TradeAction = "LONG" | "SHORT";
 export type ThesisStatus = "VALIDATED" | "INVALIDATED";
 export type TradeFilter = "ALL" | "VALIDATED" | "INVALIDATED";
+export type TradeLedgerFilter = "ALL" | "OPEN" | "CLOSED" | "PROFIT" | "LOSS";
+export type TradeStatus = "OPEN" | "CLOSED" | "LIQUIDATED";
 
 export interface Trade {
   id: string;
+  tradeNumber?: string;
+  dbId?: string;
   date: string;
+  time?: string;
+  timestamp?: string;
   asset: string;
   action: TradeAction;
+  status?: TradeStatus;
   entry: string;
   exit: string;
+  size?: string;
   leverage: string;
   pnl: string;
+  pnlDollar?: string;
+  pnlPercent?: string;
+  pnlNumber?: number;
   isPositive: boolean;
   thesis: ThesisStatus;
   proofUrl: string;
+  refNumber?: string;
   positionSize?: string;
   notional?: string;
 }

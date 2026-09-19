@@ -1,8 +1,8 @@
 import "dotenv/config";
-import { prisma } from "../src/lib/prisma";
-import { GLYPH_SYSTEM_PROMPT, buildDecisionUserPrompt } from "../src/lib/decision/prompt";
-import { GlyphDecisionSchema, GlyphDecisionOutput } from "../src/lib/decision/schema";
-import { SynthesizedResearch } from "../src/types/market";
+import { prisma } from "../../src/lib/prisma";
+import { GLYPH_SYSTEM_PROMPT, buildDecisionUserPrompt } from "../../src/lib/decision/prompt";
+import { GlyphDecisionSchema, GlyphDecisionOutput } from "../../src/lib/decision/schema";
+import { SynthesizedResearch } from "../../src/types/market";
 
 function cleanJsonString(raw: string): string {
   let cleaned = raw.trim();

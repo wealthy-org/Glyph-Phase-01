@@ -1,7 +1,36 @@
-import { IdentityData } from "./types";
+import { IdentityData, ArchitectureItem } from "./types";
+
+export const GLYPH_ARCHITECTURE_ITEMS: ArchitectureItem[] = [
+  {
+    index: "01",
+    domain: "IDENTITY",
+    name: "ERC-8004",
+    description: "Agent registration and machine-verifiable identity standard.",
+  },
+  {
+    index: "02",
+    domain: "WALLET",
+    name: "SMART ACCOUNT",
+    description: "Safe smart contract wallet holding autonomous execution authority.",
+  },
+  {
+    index: "03",
+    domain: "POLICY",
+    name: "RISK POLICY",
+    description: "Deterministic boundaries governing exposure and risk constraints.",
+  },
+  {
+    index: "04",
+    domain: "RECORD",
+    name: "ONCHAIN REGISTRY",
+    description: "Public attestations and verifiable state anchors on testnet.",
+  },
+];
 
 export const GLYPH_IDENTITY_DATA: IdentityData = {
-  beingNumber: "VERIFIED AGENT · ID #1",
+  beingNumber: "ECONOMIC BEING #001",
+  agentId: "3",
+  agentIdFormatted: "ID #003",
   name: "GLYPH",
   status: "ACTIVE",
   standard: {
@@ -20,41 +49,5 @@ export const GLYPH_IDENTITY_DATA: IdentityData = {
   registrationTx: "0xa547e955ec33ca107054a74d1c6bb51aad2ce3ddbb7c7e40c13df197e2a6ff18",
   registrationNetwork: "ROBINHOOD CHAIN TESTNET",
   explorerBaseUrl: "https://explorer.testnet.chain.robinhood.com/tx/",
-  reputationMetrics: [
-    {
-      label: "DECISIONS",
-      value: 24,
-    },
-    {
-      label: "VERIFIED EVENTS",
-      value: 16,
-      highlight: true,
-    },
-    {
-      label: "PUBLISHED THESES",
-      value: 18,
-    },
-    {
-      label: "TRADES",
-      value: 11,
-    },
-  ],
-  architectureCards: [
-    {
-      title: "ERC-8004 Standard Compliance",
-      description:
-        "ERC-8004 defines deterministic interfaces for autonomous economic beings, enabling persistent agent state, verifiable balance ownership, and machine-verifiable transaction origin proofs.",
-      metaKey: "SCHEMA",
-      metaValue: "urn:erc8004:being:001",
-      iconType: "standard",
-    },
-    {
-      title: "Autonomous Key Delegation",
-      description:
-        "Cryptographic keys are held and exercised exclusively through autonomous runtime policy circuits. No human counterparty retains root signing or unilateral revocation access.",
-      metaKey: "SIGNER",
-      metaValue: "ECDSA secp256k1 (Hardware Enclave)",
-      iconType: "delegation",
-    },
-  ],
+  architectureItems: GLYPH_ARCHITECTURE_ITEMS,
 };

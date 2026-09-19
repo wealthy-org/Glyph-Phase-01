@@ -1,4 +1,4 @@
-import { prisma } from "../src/lib/prisma";
+import { prisma } from "../../src/lib/prisma";
 
 async function main() {
   console.log("Updating Agent ID to '3' in database...");

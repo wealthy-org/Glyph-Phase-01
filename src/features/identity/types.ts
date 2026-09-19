@@ -13,22 +13,17 @@ export interface IdentityGenesis {
   block: string;
 }
 
-export interface ReputationMetricItem {
-  label: string;
-  value: number | string;
-  highlight?: boolean;
-}
-
-export interface ArchitectureCardItem {
-  title: string;
+export interface ArchitectureItem {
+  index: string;
+  domain: string;
+  name: string;
   description: string;
-  metaKey: string;
-  metaValue: string;
-  iconType: "standard" | "delegation";
 }
 
 export interface IdentityData {
   beingNumber: string;
+  agentId: string;
+  agentIdFormatted: string;
   name: string;
   status: string;
   standard: IdentityStandard;
@@ -38,6 +33,5 @@ export interface IdentityData {
   registrationTx: string;
   registrationNetwork: string;
   explorerBaseUrl: string;
-  reputationMetrics: ReputationMetricItem[];
-  architectureCards: ArchitectureCardItem[];
+  architectureItems?: ArchitectureItem[];
 }

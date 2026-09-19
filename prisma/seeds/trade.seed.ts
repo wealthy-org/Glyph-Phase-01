@@ -5,15 +5,15 @@
 // ============================================================================
 
 import {
-  PrismaClient,
+  ConfidenceCalibration,
   DecisionAction,
+  EconomicEventType,
+  MemoryOutcome,
   PolicyResult,
   PositionSide,
-  TradeStatus,
-  MemoryOutcome,
+  PrismaClient,
   ThesisResult,
-  ConfidenceCalibration,
-  EconomicEventType,
+  TradeStatus,
 } from "../../src/generated/prisma/client";
 
 interface TradeSeedDefinition {
@@ -32,8 +32,8 @@ interface TradeSeedDefinition {
   simulatedPnlPercent: number | null;
   fees: number;
   status: TradeStatus;
-  decisionHash: string;
-  transactionHash: string;
+  decisionHash: string | null;
+  transactionHash: string | null;
   createdAt: Date;
   closedAt: Date | null;
   day: number;
@@ -80,6 +80,7 @@ export async function seedTrades(prisma: PrismaClient, agentId: string) {
       },
     },
   });
+  await prisma.researchSnapshot.deleteMany({});
 
   // Ensure genesis events have authoritative Day 1 timestamps
   await prisma.economicEvent.updateMany({
@@ -123,8 +124,8 @@ export async function seedTrades(prisma: PrismaClient, agentId: string) {
       simulatedPnlPercent: 3.25,
       fees: 0.05,
       status: TradeStatus.CLOSED,
-      decisionHash: "0x3f7a18b9c45012a87d91e64b81023c90df1a5b82c19e48b17a02e64f8103c89b",
-      transactionHash: "0x9d4a8e217c40b8a98150247f9b9326eb8f0365ee",
+      decisionHash: null,
+      transactionHash: null,
       createdAt: new Date("2026-09-15T10:00:00Z"),
       closedAt: new Date("2026-09-15T18:00:00Z"),
       day: 2,
@@ -168,8 +169,8 @@ export async function seedTrades(prisma: PrismaClient, agentId: string) {
       simulatedPnlPercent: 8.41,
       fees: 0.12,
       status: TradeStatus.CLOSED,
-      decisionHash: "0x8f3c7e492b10a8b98150247f9b9326eb8f0391acb471829e10283c74910283ea",
-      transactionHash: "0x8f3c7e492b10a8b98150247f9b9326eb8f0391ac",
+      decisionHash: null,
+      transactionHash: null,
       createdAt: new Date("2026-09-16T10:00:00Z"),
       closedAt: new Date("2026-09-16T20:30:00Z"),
       day: 3,
@@ -202,19 +203,19 @@ export async function seedTrades(prisma: PrismaClient, agentId: string) {
       asset: "MSFT",
       action: PositionSide.LONG,
       entryPrice: 418.2,
-      exitPrice: 425.8,
+      exitPrice: 411.5,
       positionSize: 50.0,
       leverage: 1,
       conviction: 72,
       fundamentalScore: 80,
       technicalScore: 74,
       riskScore: 50,
-      simulatedPnl: 0.91,
-      simulatedPnlPercent: 1.82,
+      simulatedPnl: -0.8011,
+      simulatedPnlPercent: -1.6021,
       fees: 0.05,
       status: TradeStatus.CLOSED,
-      decisionHash: "0x1f8c2b763e20a8b98150247f9b9326eb8f0388cc948192a019283719482910fa",
-      transactionHash: "0x1f8c2b763e20a8b98150247f9b9326eb8f0388cc",
+      decisionHash: null,
+      transactionHash: null,
       createdAt: new Date("2026-09-17T10:00:00Z"),
       closedAt: new Date("2026-09-17T18:00:00Z"),
       day: 4,
@@ -231,16 +232,16 @@ export async function seedTrades(prisma: PrismaClient, agentId: string) {
           "Breakdown below the $410.00 critical horizontal support shelf.",
       },
       memory: {
-        outcome: MemoryOutcome.WIN,
-        thesisResult: ThesisResult.CORRECT,
+        outcome: MemoryOutcome.LOSS,
+        thesisResult: ThesisResult.INCORRECT,
         lesson:
-          "Conservative 1x position on cloud resilience locked in steady positive equity accretion.",
-        confidenceCalibration: ConfidenceCalibration.GOOD,
-        adaptation: "Keep cloud fundamentals as foundational anchor in equity selection.",
-        weightShift: "Balanced risk score calibration.",
+          "Cloud resilience remained intact, but the technical reclaim failed before the thesis could mature.",
+        confidenceCalibration: ConfidenceCalibration.OVER_CONFIDENT,
+        adaptation: "Require a confirmed reclaim before sizing mean-reversion entries.",
+        weightShift: "Reduced short-horizon technical confidence by 3%.",
       },
-      eventTitle: "Closed LONG MSFT (+1.8%)",
-      eventResult: "+$0.91",
+      eventTitle: "Closed LONG MSFT (-1.6%)",
+      eventResult: "-$0.80",
     },
     {
       tradeNumber: "GLYPH-0004",
@@ -258,8 +259,8 @@ export async function seedTrades(prisma: PrismaClient, agentId: string) {
       simulatedPnlPercent: null,
       fees: 0.12,
       status: TradeStatus.OPEN,
-      decisionHash: "0x1cfa2918b7b9697631c6337966733ebc15d5cdc16f711fc85114a30bdd34f9f4",
-      transactionHash: "0x0cdc6f4b5e21b2bd353b80af2efc2ee56ca492f0f0ad9cab0132009d82eba2a3",
+      decisionHash: null,
+      transactionHash: null,
       createdAt: new Date("2026-09-18T15:05:00Z"),
       closedAt: null,
       day: 5,
@@ -282,9 +283,33 @@ export async function seedTrades(prisma: PrismaClient, agentId: string) {
   ];
 
   let realizedTotalPnl = 0;
+  let realizedFees = 0;
   let activeOpenMargin = 0;
+  let activeOpenFees = 0;
 
   for (const item of tradesToSeed) {
+    await prisma.marketAsset.upsert({
+      where: { symbol: item.asset },
+      update: { name: item.asset, assetType: "EQUITY", isActive: true },
+      create: { symbol: item.asset, name: item.asset, assetType: "EQUITY", isActive: true },
+    });
+
+    const researchSnapshot = await prisma.researchSnapshot.create({
+      data: {
+        asset: item.asset,
+        marketData: {
+          price: item.exitPrice ?? 234.1,
+          currency: "USD-SIM",
+          capturedAt: item.createdAt.toISOString(),
+        },
+        fundamentalData: { score: item.fundamentalScore, source: "GLYPH DEMO SNAPSHOT" },
+        technicalData: { score: item.technicalScore, riskScore: item.riskScore },
+        newsData: { sentiment: item.memory?.outcome === MemoryOutcome.LOSS ? "NEGATIVE" : "POSITIVE" },
+        sourceMetadata: { provider: "GLYPH DEMO", simulated: true },
+        createdAt: new Date(item.createdAt.getTime() - 45 * 60 * 1000),
+      },
+    });
+
     // 1. Create Decision Record
     const decision = await prisma.decision.create({
       data: {
@@ -299,6 +324,7 @@ export async function seedTrades(prisma: PrismaClient, agentId: string) {
         leverage: item.leverage,
         thesis: item.thesis,
         policyResult: PolicyResult.APPROVED,
+        researchSnapshotId: researchSnapshot.id,
         promptVersion: "GLYPH_DECISION_PROMPT_V1",
         decisionHash: item.decisionHash,
         transactionHash: item.transactionHash,
@@ -322,6 +348,7 @@ export async function seedTrades(prisma: PrismaClient, agentId: string) {
         technicalScore: item.technicalScore,
         riskScore: item.riskScore,
         thesis: item.thesis,
+        researchSnapshotId: researchSnapshot.id,
         simulatedPnl: item.simulatedPnl,
         simulatedPnlPercent: item.simulatedPnlPercent,
         fees: item.fees,
@@ -359,11 +386,21 @@ export async function seedTrades(prisma: PrismaClient, agentId: string) {
       });
 
       realizedTotalPnl += item.simulatedPnl || 0;
+      realizedFees += item.fees;
     }
 
     // 4. Create Active Position if Trade is OPEN
     if (item.status === TradeStatus.OPEN) {
+      const currentPrice = 234.1;
+      const notionalSize = item.positionSize * item.leverage;
+      const unrealizedPnl = Number(
+        (notionalSize * ((currentPrice - item.entryPrice) / item.entryPrice)).toFixed(4)
+      );
+      const unrealizedPnlPercent = Number(
+        ((unrealizedPnl / item.positionSize) * 100).toFixed(4)
+      );
       activeOpenMargin += item.positionSize;
+      activeOpenFees += item.fees;
 
       await prisma.position.create({
         data: {
@@ -372,11 +409,11 @@ export async function seedTrades(prisma: PrismaClient, agentId: string) {
           asset: trade.asset,
           side: trade.action,
           entryPrice: trade.entryPrice,
-          currentPrice: trade.entryPrice,
+          currentPrice,
           positionSize: trade.positionSize,
           leverage: trade.leverage,
-          unrealizedPnl: 0,
-          unrealizedPnlPercent: 0,
+          unrealizedPnl,
+          unrealizedPnlPercent,
           stopLoss: 214.95,
           targetPrice: 238.88,
           isOpen: true,
@@ -412,7 +449,7 @@ export async function seedTrades(prisma: PrismaClient, agentId: string) {
         day: item.day,
         result: "APPROVED",
         decisionId: decision.id,
-        txHash: item.transactionHash,
+        txHash: null,
         timestamp: decisionTimestamp,
       },
     });
@@ -429,7 +466,7 @@ export async function seedTrades(prisma: PrismaClient, agentId: string) {
           result: `ACTIVE ${item.leverage}×`,
           tradeId: trade.id,
           decisionId: decision.id,
-          txHash: item.transactionHash,
+          txHash: null,
           timestamp: item.createdAt,
         },
       });
@@ -445,7 +482,7 @@ export async function seedTrades(prisma: PrismaClient, agentId: string) {
           result: `${item.leverage}×`,
           tradeId: trade.id,
           decisionId: decision.id,
-          txHash: item.transactionHash,
+          txHash: null,
           timestamp: item.createdAt,
         },
       });
@@ -460,8 +497,25 @@ export async function seedTrades(prisma: PrismaClient, agentId: string) {
           result: item.eventResult,
           tradeId: trade.id,
           decisionId: decision.id,
-          txHash: item.transactionHash,
+          txHash: null,
           timestamp: item.closedAt!,
+        },
+      });
+
+      await prisma.economicEvent.create({
+        data: {
+          agentId,
+          eventType:
+            (item.simulatedPnl ?? 0) >= 0
+              ? EconomicEventType.PROFIT_RECORDED
+              : EconomicEventType.LOSS_RECORDED,
+          title: (item.simulatedPnl ?? 0) >= 0 ? "Profit Recorded" : "Loss Recorded",
+          description: `Paper trade settlement recorded ${(item.simulatedPnl ?? 0) >= 0 ? "a gain" : "a loss"} of $${Math.abs(item.simulatedPnl ?? 0).toFixed(2)} before simulated fees.`,
+          day: item.day,
+          result: `${(item.simulatedPnl ?? 0) >= 0 ? "+" : "-"}$${Math.abs(item.simulatedPnl ?? 0).toFixed(2)}`,
+          tradeId: trade.id,
+          decisionId: decision.id,
+          timestamp: new Date(item.closedAt!.getTime() + 60 * 1000),
         },
       });
 
@@ -478,7 +532,7 @@ export async function seedTrades(prisma: PrismaClient, agentId: string) {
             result: `${item.memory.outcome} // ${item.memory.thesisResult}`,
             tradeId: trade.id,
             decisionId: decision.id,
-            txHash: item.transactionHash,
+            txHash: null,
             timestamp: memoryTimestamp,
           },
         });
@@ -492,7 +546,8 @@ export async function seedTrades(prisma: PrismaClient, agentId: string) {
   // Initial capital = $1000.00
   // Cash balance = Initial ($1000) + Realized PnL ($12.63) - Open Margin ($60.18)
   const initialCapital = 1000;
-  const cashBalance = initialCapital + realizedTotalPnl - activeOpenMargin;
+  const cashBalance =
+    initialCapital + realizedTotalPnl - realizedFees - activeOpenMargin - activeOpenFees;
 
   await prisma.agentTreasury.updateMany({
     where: { agentId },

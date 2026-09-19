@@ -1,62 +1,52 @@
 import React from "react";
-import { ArchitectureCardItem } from "../types";
-import { ShieldCheck, KeyRound } from "lucide-react";
+import { ArchitectureItem } from "../types";
+import { GLYPH_ARCHITECTURE_ITEMS } from "../data";
 import { cn } from "@/lib/utils";
 
 interface RegistryArchitectureProps {
-  cards: ArchitectureCardItem[];
+  items?: ArchitectureItem[];
   className?: string;
 }
 
 export const RegistryArchitecture: React.FC<RegistryArchitectureProps> = ({
-  cards,
+  items = GLYPH_ARCHITECTURE_ITEMS,
   className,
 }) => {
   return (
-    <section className={cn("space-y-6", className)} aria-label="Registry Architecture">
-      {/* Numbered Section Header */}
-      <div className="space-y-1">
-        <div className="eyebrow">
-          // 02 · ARCHITECTURE
+    <section className={cn("space-y-3", className)} aria-label="Registry Architecture">
+      {/* Eyebrow & Title */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2 font-mono text-[10px] sm:text-xs text-[#85858a] tracking-widest uppercase">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#6fe39a]" />
+          <span>REGISTRY ARCHITECTURE</span>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-[#f3f3f4] uppercase">
-          REGISTRY ARCHITECTURE
-        </h2>
-        <p className="text-sm text-[#85858a] font-light">
-          Cryptographic foundation of autonomous persistence.
-        </p>
+        <span className="font-mono text-[10px] text-[#55555a] uppercase">
+          CORE SPECIFICATION
+        </span>
       </div>
 
-      {/* 2-column Architecture Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-        {cards.map((card) => {
-          const Icon = card.iconType === "delegation" ? KeyRound : ShieldCheck;
-
-          return (
+      {/* 4-Block Bordered Terminal Grid / Table */}
+      <div className="border border-[#1b1b1b] bg-[#050505] shadow-lg">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-[#1b1b1b]">
+          {items.map((item) => (
             <div
-              key={card.title}
-              className="border border-[#171717] bg-[#050505] p-6 sm:p-7 flex flex-col justify-between space-y-6 hover:border-[#262626] transition-colors"
+              key={item.index}
+              className="p-4 sm:p-5 space-y-2 bg-[#050505] hover:bg-[#070707] transition-colors"
             >
-              <div className="space-y-3">
-                <div className="flex items-center gap-2.5">
-                  <Icon size={16} className="text-[#6fe39a] shrink-0" />
-                  <h3 className="text-base sm:text-lg font-light text-[#f3f3f4] tracking-tight">
-                    {card.title}
-                  </h3>
-                </div>
-                <p className="text-xs sm:text-sm text-[#85858a] font-light leading-relaxed">
-                  {card.description}
-                </p>
+              <div className="font-mono text-[10px] text-[#6fe39a] tracking-widest uppercase">
+                {item.index} // {item.domain}
               </div>
 
-              {/* Technical Metadata Footer */}
-              <div className="pt-4 border-t border-[#171717] font-mono text-[11px] text-[#55555a] tracking-wider uppercase">
-                <span className="text-[#85858a]">{card.metaKey}:</span>{" "}
-                <span className="text-[#f3f3f4]">{card.metaValue}</span>
+              <div className="font-mono text-sm sm:text-base font-normal text-[#f3f3f4] tracking-tight">
+                {item.name}
               </div>
+
+              <p className="font-mono text-[11px] text-[#85858a] leading-relaxed line-clamp-2">
+                {item.description}
+              </p>
             </div>
-          );
-        })}
+          ))}
+        </div>
       </div>
     </section>
   );

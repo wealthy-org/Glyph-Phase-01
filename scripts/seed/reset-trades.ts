@@ -3,7 +3,7 @@
 // Run with: npx tsx scripts/reset-trades.ts
 // ============================================================================
 
-import { prisma } from "../src/lib/prisma";
+import { prisma } from "../../src/lib/prisma";
 
 async function resetTradesAndDecisions() {
   console.log("===============================================================");

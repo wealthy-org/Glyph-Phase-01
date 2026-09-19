@@ -6,15 +6,15 @@
 import {
   calculateDecisionHash,
   canonicalJsonStringify,
-} from "../src/lib/onchain/hash";
+} from "../../src/lib/onchain/hash";
 import {
   commitDecisionOnchain,
   getExplorerTxUrl,
   robinhoodTestnet,
-} from "../src/lib/onchain/registry";
-import { executeGlyphDecisionCycle } from "../src/lib/decision/engine";
-import { createResearchSnapshot } from "../src/lib/research";
-import { prisma } from "../src/lib/prisma";
+} from "../../src/lib/onchain/registry";
+import { executeGlyphDecisionCycle } from "../../src/lib/decision/engine";
+import { createResearchSnapshot } from "../../src/lib/research";
+import { prisma } from "../../src/lib/prisma";
 
 async function runOnchainTests() {
   console.log("===============================================================");

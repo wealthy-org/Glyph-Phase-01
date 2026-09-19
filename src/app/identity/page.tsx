@@ -2,24 +2,24 @@ import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
 import { IdentitySection } from "@/features/identity";
 import { GLYPH_IDENTITY_DATA } from "@/features/identity/data";
+import { IdentityData } from "@/features/identity/types";
 import { prisma } from "@/lib/prisma";
 
-export const revalidate = 0; // Dynamic server render
+export const revalidate = 0; // Dynamic server render for live registry
 
 export const metadata: Metadata = {
-  title: "Glyph Identity — ERC-8004 Verified Agent #1",
+  title: "Glyph Identity — ERC-8004 Public Registry",
   description:
-    "The official public on-chain identity of Glyph (Agent #1). Verifiable ERC-8004 cryptographic identity on Robinhood Chain Testnet.",
+    "Official public on-chain identity registry record for Glyph (Economic Being #001). Machine-verifiable ERC-8004 cryptographic identity on Robinhood Chain Testnet.",
 };
 
 export default async function IdentityPage() {
-  let identityData = GLYPH_IDENTITY_DATA;
+  let identityData: IdentityData = GLYPH_IDENTITY_DATA;
 
   try {
     const agent = await prisma.agent.findFirst({
       include: {
         wallet: true,
-        reputationMetrics: true,
         economicEvents: {
           where: { eventType: "IDENTITY_REGISTERED" },
           take: 1,
@@ -29,56 +29,41 @@ export default async function IdentityPage() {
 
     if (agent) {
       const regEvent = agent.economicEvents[0];
-
-      // Query real dynamic counts from database
-      const [decisionsCount, verifiedEventsCount, tradesCount, closedTrades] = await Promise.all([
-        prisma.decision.count({ where: { agentId: agent.id } }),
-        prisma.economicEvent.count({ where: { agentId: agent.id } }),
-        prisma.trade.count({ where: { agentId: agent.id } }),
-        prisma.trade.findMany({
-          where: { agentId: agent.id, status: "CLOSED" },
-          select: { simulatedPnl: true },
-        }),
-      ]);
-
-      const winningTrades = closedTrades.filter(
-        (t) => t.simulatedPnl && Number(t.simulatedPnl) > 0
-      ).length;
-
-      const winRate =
-        closedTrades.length > 0
-          ? Math.round((winningTrades / closedTrades.length) * 100)
-          : Number(agent.reputationMetrics?.winRate ?? 0);
+      const paddedId = String(agent.agentId || "3").padStart(3, "0");
+      const epochDisplay = agent.createdAt
+        ? agent.createdAt.toLocaleDateString("en-US", {
+            month: "long",
+            year: "numeric",
+          })
+        : GLYPH_IDENTITY_DATA.genesis.epoch;
 
       identityData = {
         ...GLYPH_IDENTITY_DATA,
-        beingNumber: `VERIFIED AGENT · ID #${agent.agentId}`,
-        name: agent.name,
-        status: agent.status,
+        beingNumber: "ECONOMIC BEING #001",
+        agentId: agent.agentId,
+        agentIdFormatted: `ID #${paddedId}`,
+        name: agent.name || "GLYPH",
+        status: agent.status || "ACTIVE",
+        standard: {
+          standard: "ERC-8004",
+          subtext: "Trustless Agents Specification",
+        },
+        network: {
+          name: agent.wallet?.network || GLYPH_IDENTITY_DATA.network.name,
+          chainId: agent.wallet?.chainId || GLYPH_IDENTITY_DATA.network.chainId,
+        },
+        genesis: {
+          epoch: epochDisplay,
+          block: GLYPH_IDENTITY_DATA.genesis.block,
+        },
         primaryWallet:
           agent.wallet?.walletAddress ||
           process.env.NEXT_PUBLIC_GLYPH_WALLET_ADDRESS ||
           GLYPH_IDENTITY_DATA.primaryWallet,
-        registrationTx: regEvent?.txHash || GLYPH_IDENTITY_DATA.registrationTx,
-        reputationMetrics: [
-          {
-            label: "DECISIONS",
-            value: decisionsCount,
-          },
-          {
-            label: "VERIFIED EVENTS",
-            value: verifiedEventsCount,
-            highlight: true,
-          },
-          {
-            label: "WIN RATE",
-            value: `${winRate}%`,
-          },
-          {
-            label: "TRADES",
-            value: tradesCount,
-          },
-        ],
+        registrationTx:
+          regEvent?.txHash ||
+          process.env.NEXT_PUBLIC_IDENTITY_REGISTRATION_TX ||
+          GLYPH_IDENTITY_DATA.registrationTx,
       };
     }
   } catch (error) {
@@ -90,8 +75,8 @@ export default async function IdentityPage() {
       {/* Global Navigation */}
       <Navbar />
 
-      {/* Main Content Area */}
-      <main className="flex-1 w-full max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-12 py-16 sm:py-24 relative z-10">
+      {/* Main Identity Registry Content Area */}
+      <main className="flex-1 w-full max-w-[1120px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 relative z-10">
         <IdentitySection data={identityData} />
       </main>
     </div>

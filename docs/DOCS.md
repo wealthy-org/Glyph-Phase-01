@@ -220,8 +220,8 @@ Full schema is in `prisma/schema.prisma`. Key tables:
 ### Reset Database
 
 ```bash
-# Full reset: regenerate + push schema + seed
-npm run prisma:reset
+# Full development reset: force-reset schema + seed demo data
+npm run db:reset
 
 # Or manually:
 npx prisma db push --force-reset

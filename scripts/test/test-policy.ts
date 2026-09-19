@@ -8,8 +8,8 @@ import {
   ALLOWED_ASSETS,
   validateTradeProposal,
   evaluateAgentTradeProposal,
-} from "../src/lib/policy";
-import { prisma } from "../src/lib/prisma";
+} from "../../src/lib/policy";
+import { prisma } from "../../src/lib/prisma";
 
 async function runPolicyTests() {
   console.log("===============================================================");

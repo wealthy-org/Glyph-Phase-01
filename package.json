@@ -7,14 +7,15 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "prisma:reset": "prisma generate && prisma db push && prisma db seed",
+    "prisma:reset": "prisma generate && prisma db push --force-reset && prisma db seed",
+    "db:reset": "npm run prisma:reset",
     "db:seed": "npx tsx prisma/seed.ts",
-    "seed:trades": "npx tsx scripts/seed-trades.ts",
-    "reset:trades": "npx tsx scripts/reset-trades.ts",
-    "test:analysis": "npx tsx scripts/preview-risk-analysis.ts",
-    "test:decision": "npx tsx scripts/test-decision.ts",
-    "test:cycle": "npx tsx scripts/test-cycle.ts",
-    "test:research": "npx tsx scripts/test-research.ts"
+    "seed:trades": "npx tsx scripts/seed/seed-trades.ts",
+    "reset:trades": "npx tsx scripts/seed/reset-trades.ts",
+    "test:analysis": "npx tsx scripts/test/preview-risk-analysis.ts",
+    "test:decision": "npx tsx scripts/test/test-decision.ts",
+    "test:cycle": "npx tsx scripts/test/test-cycle.ts",
+    "test:research": "npx tsx scripts/test/test-research.ts"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"

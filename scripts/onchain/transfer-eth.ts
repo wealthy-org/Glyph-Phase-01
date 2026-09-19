@@ -1,5 +1,5 @@
 import "dotenv/config";
-import "../src/lib/dns-fix";
+import "../../src/lib/dns-fix";
 import {
   createPublicClient,
   createWalletClient,

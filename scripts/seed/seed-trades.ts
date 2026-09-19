@@ -3,8 +3,8 @@
 // Run with: npx tsx scripts/seed-trades.ts
 // ============================================================================
 
-import { prisma } from "../src/lib/prisma";
-import { seedTrades } from "../prisma/seeds/trade.seed";
+import { seedTrades } from "../../prisma/seeds/trade.seed";
+import { prisma } from "../../src/lib/prisma";
 
 async function main() {
   console.log("===============================================================");

@@ -1,6 +1,6 @@
 import { createPublicClient, http, decodeEventLog } from "viem";
-import { robinhoodTestnet, DECISION_REGISTRY_ABI } from "../src/lib/onchain/registry";
-import { prisma } from "../src/lib/prisma";
+import { robinhoodTestnet, DECISION_REGISTRY_ABI } from "../../src/lib/onchain/registry";
+import { prisma } from "../../src/lib/prisma";
 
 async function verifyTradeOnchain() {
   console.log("===============================================================");
