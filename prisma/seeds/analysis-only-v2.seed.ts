@@ -6,6 +6,7 @@ import {
 } from "../../src/generated/prisma/client";
 import { seedAgent } from "./agent.seed";
 import { seedPolicy } from "./policy.seed";
+import { seedTreasury } from "./treasury.seed";
 
 const SEED_VERSION = "v2";
 const SCENARIO = "analysis-only";
@@ -71,23 +72,28 @@ export async function seedAnalysisOnlyV2(prisma: PrismaClient) {
     const configuredAgentId = process.env.GLYPH_AGENT_ID || "1";
     let agent = await prisma.agent.findFirst({
         where: { agentId: configuredAgentId },
-        include: { policy: true, wallet: true },
+        include: { policy: true, wallet: true, treasury: true },
     });
 
     if (!agent) {
         const seededAgent = await seedAgent(prisma);
         await seedPolicy(prisma, seededAgent.agent.id);
+        await seedTreasury(prisma, seededAgent.agent.id);
         agent = await prisma.agent.findUniqueOrThrow({
             where: { id: seededAgent.agent.id },
-            include: { policy: true, wallet: true },
+            include: { policy: true, wallet: true, treasury: true },
         });
+    }
+
+    if (!agent.treasury) {
+        await seedTreasury(prisma, agent.id);
     }
 
     if (!agent.policy) {
         await seedPolicy(prisma, agent.id);
         agent = await prisma.agent.findUniqueOrThrow({
             where: { id: agent.id },
-            include: { policy: true, wallet: true },
+            include: { policy: true, wallet: true, treasury: true },
         });
     }
 
@@ -251,7 +257,7 @@ export async function seedAnalysisOnlyV2(prisma: PrismaClient) {
                         agentId: agent.id,
                         eventType: EconomicEventType.RESEARCH_STARTED,
                         title: "[ANALYSIS] MARKET ANALYSIS",
-                        description: `${analysis.assetName} (${analysis.symbol}) analysis completed. Glyph's view: ${analysis.glyphsView} Decision: ${analysis.decision}. Metadata: ${JSON.stringify(metadata)}.`,
+                        description: `${analysis.assetName} (${analysis.symbol}) analysis completed. Glyph's view: ${analysis.glyphsView} Decision: ${analysis.decision}.`,
                         day: 1,
                         result: "74",
                         decisionId: decision.id,

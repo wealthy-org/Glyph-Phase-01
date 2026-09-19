@@ -12,7 +12,7 @@ export interface TreasurySummary {
   pnlPercent: number; // Total return percentage
 }
 
-export const DEFAULT_INITIAL_CAPITAL = 1000.0;
+export const DEFAULT_INITIAL_CAPITAL = 0.0;
 export const DEFAULT_CURRENCY = "USD-SIM";
 
 /**
@@ -45,6 +45,21 @@ export async function getTreasurySummary(
           },
         },
       });
+    }
+
+    if (agent && !agent.treasury) {
+      // Auto-initialize treasury record in database if missing
+      const newTreasury = await prisma.agentTreasury.upsert({
+        where: { agentId: agent.id },
+        update: {},
+        create: {
+          agentId: agent.id,
+          initialCapital: DEFAULT_INITIAL_CAPITAL,
+          currentBalance: DEFAULT_INITIAL_CAPITAL,
+          currency: DEFAULT_CURRENCY,
+        },
+      });
+      agent.treasury = newTreasury;
     }
 
     if (!agent || !agent.treasury) {

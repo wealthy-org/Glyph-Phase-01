@@ -1,19 +1,19 @@
 import { PrismaClient } from "../../src/generated/prisma/client";
 
 export async function seedTreasury(prisma: PrismaClient, agentId: string) {
-  console.log("  ↳ [2/5] Seeding Agent Treasury ($1,000 USD-SIM)...");
+  console.log("  ↳ [2/5] Seeding Agent Treasury ($0 USD-SIM)...");
 
   const treasury = await prisma.agentTreasury.upsert({
     where: { agentId },
     update: {
-      initialCapital: 1000,
-      currentBalance: 1000,
+      initialCapital: 0,
+      currentBalance: 0,
       currency: "USD-SIM",
     },
     create: {
       agentId,
-      initialCapital: 1000,
-      currentBalance: 1000,
+      initialCapital: 0,
+      currentBalance: 0,
       currency: "USD-SIM",
     },
   });
