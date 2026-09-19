@@ -1,7 +1,6 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { EconomicActivity } from "@/features/landing/components/EconomicActivity";
 import { Hero } from "@/features/landing/components/Hero";
-import { LiveState } from "@/features/landing/components/LiveState";
 import { Reputation } from "@/features/landing/components/Reputation";
 import { getLandingPageData } from "@/features/landing/server";
 
@@ -49,16 +48,7 @@ export default async function Home() {
           recentEvents={data.recentEvents}
         />
 
-        {/* Section 2: Live State / Simulated Treasury */}
-        <LiveState
-          treasury={data.treasury}
-          openPositions={data.openPositions}
-          latestDecision={data.latestDecision}
-          agent={data.agent}
-          cognitiveCycleCount={data.cognitiveCycleCount}
-        />
-
-        {/* Section 3: Economic Activity */}
+        {/* Section 2: Economic Activity */}
         <EconomicActivity
           recentEvents={data.recentEvents}
           latestMemory={data.latestMemory}
@@ -66,7 +56,7 @@ export default async function Home() {
           agent={data.agent}
         />
 
-        {/* Section 4: Reputation */}
+        {/* Section 3: Reputation */}
         <Reputation reputation={data.reputation} />
       </main>
     </div>
