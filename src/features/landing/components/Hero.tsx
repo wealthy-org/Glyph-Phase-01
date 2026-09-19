@@ -230,7 +230,7 @@ const AnalysisStreamViewer: React.FC<AnalysisStreamViewerProps> = React.memo(({
       setIsTyping(true);
       timer = setTimeout(() => {
         setCharIdx((prev) => Math.min(activeStageText.length, prev + 2));
-      }, 16);
+      }, 20);
     } else {
       setIsTyping(false);
       if (!hasFinishedRef.current) {
@@ -476,7 +476,7 @@ export const Hero: React.FC<HeroProps> = ({
     if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
     setStagePhase("PAUSED");
 
-    // 800ms pause after typing completes before advancing to next stage
+    // 2.5 seconds (2500ms) pause after typing completes before advancing to next stage
     pauseTimerRef.current = setTimeout(() => {
       setCurrentStageIdx((prevIdx) => {
         if (prevIdx < 4) {
@@ -488,7 +488,7 @@ export const Hero: React.FC<HeroProps> = ({
           return 4;
         }
       });
-    }, 800);
+    }, 2500);
   }, []);
 
   const currentStage = STAGES[currentStageIdx];
