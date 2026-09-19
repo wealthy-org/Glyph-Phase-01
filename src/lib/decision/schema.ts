@@ -16,7 +16,7 @@ export const ThesisSchema = z.object({
 
 export const GlyphDecisionSchema = z.object({
   asset: z.string().toUpperCase(),
-  action: z.enum(["LONG", "SHORT", "NO_TRADE"]),
+  action: z.enum(["OPEN_LONG", "OPEN_SHORT", "HOLD", "CLOSE", "NO_TRADE"]),
   conviction: z.number().int().min(0).max(100),
   time_horizon: z.string().default("1d_to_14d"),
   fundamental_score: z.number().int().min(0).max(100),

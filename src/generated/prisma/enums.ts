@@ -10,8 +10,10 @@
 */
 
 export const DecisionAction = {
-  LONG: 'LONG',
-  SHORT: 'SHORT',
+  OPEN_LONG: 'OPEN_LONG',
+  OPEN_SHORT: 'OPEN_SHORT',
+  HOLD: 'HOLD',
+  CLOSE: 'CLOSE',
   NO_TRADE: 'NO_TRADE'
 } as const
 

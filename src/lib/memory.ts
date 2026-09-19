@@ -4,6 +4,7 @@
 // Manages persistent trade outcomes, lesson synthesis, and historical reflections.
 // ============================================================================
 
+import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 
 export type MemoryOutcome = "WIN" | "LOSS" | "BREAKEVEN";
@@ -126,7 +127,8 @@ export function synthesizeLesson(
  * Creates and persists a memory record when a trade is closed (§15).
  * Also records an EconomicEvent for the Life Log (§19).
  */
-export async function createTradeMemory(
+export async function createTradeMemoryInTransaction(
+  tx: Prisma.TransactionClient,
   params: CreateMemoryParams
 ): Promise<TradeMemoryRecord> {
   const outcome = classifyOutcome(params.pnlPercent);
@@ -145,48 +147,50 @@ export async function createTradeMemory(
     params.reason
   );
 
-  return await prisma.$transaction(async (tx) => {
-    // 1. Create Memory record in memories table (§15, §18)
-    const memory = await tx.memory.create({
-      data: {
-        agentId: params.agentId,
-        tradeId: params.tradeId,
-        outcome,
-        pnlPercent: params.pnlPercent,
-        thesisResult,
-        lesson,
-        confidenceCalibration: calibration,
-        adaptation,
-        weightShift,
-      },
-    });
-
-    // 2. Emit EconomicEvent for Life Log (§19)
-    await tx.economicEvent.create({
-      data: {
-        agentId: params.agentId,
-        eventType: "MEMORY_CREATED",
-        title: `Memory Formed: ${params.asset} ${outcome}`,
-        description: `Reflected on trade: ${lesson} [Calibration: ${calibration}]`,
-        tradeId: params.tradeId,
-        result: `${outcome} (${calibration})`,
-      },
-    });
-
-    return {
-      id: memory.id,
-      tradeId: memory.tradeId,
-      asset: params.asset,
-      outcome: memory.outcome as MemoryOutcome,
-      pnlPercent: Number(memory.pnlPercent ?? params.pnlPercent),
-      thesisResult: memory.thesisResult as ThesisResult,
-      lesson: memory.lesson,
-      confidenceCalibration: memory.confidenceCalibration as ConfidenceCalibration,
-      adaptation: memory.adaptation,
-      weightShift: memory.weightShift,
-      createdAt: memory.createdAt,
-    };
+  const memory = await tx.memory.create({
+    data: {
+      agentId: params.agentId,
+      tradeId: params.tradeId,
+      outcome,
+      pnlPercent: params.pnlPercent,
+      thesisResult,
+      lesson,
+      confidenceCalibration: calibration,
+      adaptation,
+      weightShift,
+    },
   });
+
+  await tx.economicEvent.create({
+    data: {
+      agentId: params.agentId,
+      eventType: "MEMORY_CREATED",
+      title: `Memory Formed: ${params.asset} ${outcome}`,
+      description: `Reflected on trade: ${lesson} [Calibration: ${calibration}]`,
+      tradeId: params.tradeId,
+      result: `${outcome} (${calibration})`,
+    },
+  });
+
+  return {
+    id: memory.id,
+    tradeId: memory.tradeId,
+    asset: params.asset,
+    outcome: memory.outcome as MemoryOutcome,
+    pnlPercent: Number(memory.pnlPercent ?? params.pnlPercent),
+    thesisResult: memory.thesisResult as ThesisResult,
+    lesson: memory.lesson,
+    confidenceCalibration: memory.confidenceCalibration as ConfidenceCalibration,
+    adaptation: memory.adaptation,
+    weightShift: memory.weightShift,
+    createdAt: memory.createdAt,
+  };
+}
+
+export async function createTradeMemory(
+  params: CreateMemoryParams
+): Promise<TradeMemoryRecord> {
+  return prisma.$transaction((tx) => createTradeMemoryInTransaction(tx, params));
 }
 
 /**

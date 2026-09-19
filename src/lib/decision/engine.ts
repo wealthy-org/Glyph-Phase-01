@@ -5,24 +5,24 @@
 // and Policy Engine execution.
 // ============================================================================
 
+import { getRecentMemories } from "@/lib/memory";
+import { commitDecisionOnchain } from "@/lib/onchain/registry";
+import { evaluateAgentTradeProposal } from "@/lib/policy";
+import { closeSimulatedPosition, openSimulatedPosition } from "@/lib/portfolio";
 import { prisma } from "@/lib/prisma";
-import { GlyphDecisionSchema, GlyphDecisionOutput } from "./schema";
+import { getTreasurySummary } from "@/lib/treasury";
+import { SynthesizedResearch } from "@/types/market";
 import {
   GLYPH_DECISION_PROMPT_VERSION,
   GLYPH_SYSTEM_PROMPT,
   buildDecisionUserPrompt,
 } from "./prompt";
-import { evaluateAgentTradeProposal } from "@/lib/policy";
-import { openSimulatedPosition } from "@/lib/portfolio";
-import { getTreasurySummary } from "@/lib/treasury";
-import { commitDecisionOnchain } from "@/lib/onchain/registry";
-import { getRecentMemories } from "@/lib/memory";
-import { SynthesizedResearch } from "@/types/market";
+import { GlyphDecisionOutput, GlyphDecisionSchema } from "./schema";
 
 export interface DecisionRunResult {
   decisionId: string;
   asset: string;
-  action: "LONG" | "SHORT" | "NO_TRADE";
+  action: "OPEN_LONG" | "OPEN_SHORT" | "HOLD" | "CLOSE" | "NO_TRADE";
   conviction: number;
   policyResult: "APPROVED" | "REJECTED";
   policyRejectReason: string | null;
@@ -164,7 +164,8 @@ async function callLlmWithRetry(
  */
 export async function executeGlyphDecisionCycle(
   researchSnapshotId: string,
-  agentIdentifier = process.env.GLYPH_AGENT_ID || "1"
+  agentIdentifier = process.env.GLYPH_AGENT_ID || "1",
+  existingAgentRunId?: string
 ): Promise<DecisionRunResult> {
   const runStart = new Date();
 
@@ -200,12 +201,55 @@ export async function executeGlyphDecisionCycle(
 
   // Fetch recent memories strictly for this asset to avoid cross-asset bias
   const recentMemories = await getRecentMemories(agentIdentifier, 3, snapshot.asset);
+  const currentPosition = await prisma.position.findFirst({
+    where: {
+      agentId: agent.id,
+      asset: snapshot.asset,
+      isOpen: true,
+    },
+    include: { trade: true },
+    orderBy: { openedAt: "desc" },
+  });
+  const previousDecisions = await prisma.decision.findMany({
+    where: { agentId: agent.id, asset: snapshot.asset },
+    orderBy: { createdAt: "desc" },
+    take: 3,
+  });
+  const recentEvents = await prisma.economicEvent.findMany({
+    where: { agentId: agent.id },
+    orderBy: { timestamp: "desc" },
+    take: 5,
+  });
   const userPrompt = buildDecisionUserPrompt(
     researchPayload,
     {
       cash: treasurySummary.currentBalance,
       equity: treasurySummary.totalEquity,
     },
+    currentPosition
+      ? {
+        asset: currentPosition.asset,
+        side: currentPosition.side,
+        entryPrice: Number(currentPosition.entryPrice),
+        currentPrice: Number(currentPosition.currentPrice),
+        unrealizedPnl: Number(currentPosition.unrealizedPnl),
+        unrealizedPnlPercent: Number(currentPosition.unrealizedPnlPercent),
+        openedAt: currentPosition.openedAt.toISOString(),
+      }
+      : null,
+    previousDecisions.map((previous) => ({
+      action: previous.action,
+      policyResult: previous.policyResult,
+      conviction: previous.conviction,
+      thesis: JSON.stringify(previous.thesis),
+      createdAt: previous.createdAt.toISOString(),
+    })),
+    recentEvents.map((event) => ({
+      eventType: event.eventType,
+      title: event.title,
+      result: event.result,
+      timestamp: event.timestamp.toISOString(),
+    })),
     recentMemories
   );
 
@@ -251,13 +295,16 @@ export async function executeGlyphDecisionCycle(
 
   // 6. Trade Creation Gate (Brief §3.0B & §83 TODO):
   // "Trade baru dibuat di tabel trades HANYA JIKA policy_result = 'APPROVED' dan action != 'NO_TRADE'"
-  if (policyResult.approved && decision.action !== "NO_TRADE") {
+  if (
+    policyResult.approved &&
+    (decision.action === "OPEN_LONG" || decision.action === "OPEN_SHORT")
+  ) {
     const entryPrice = researchPayload.marketData.quote.price;
 
     const openResult = await openSimulatedPosition({
       agentId: agent.agentId,
       asset: decision.asset,
-      side: decision.action,
+      side: decision.action === "OPEN_LONG" ? "LONG" : "SHORT",
       entryPrice,
       proposedPositionPercent: policyResult.clampedPositionPercent,
       proposedLeverage: policyResult.clampedLeverage,
@@ -279,6 +326,15 @@ export async function executeGlyphDecisionCycle(
       where: { id: decisionRecord.id },
       data: { tradeId },
     });
+  } else if (policyResult.approved && decision.action === "CLOSE" && currentPosition) {
+    const closeResult = await closeSimulatedPosition(
+      currentPosition.id,
+      researchPayload.marketData.quote.price,
+      "MANUAL"
+    );
+
+    tradeId = closeResult.tradeId;
+    tradeNumber = currentPosition.trade.tradeNumber;
   }
 
   // 7. Commit Decision Hash Onchain (Brief §12, §3.5)
@@ -286,7 +342,8 @@ export async function executeGlyphDecisionCycle(
   try {
     onchainResult = await commitDecisionOnchain(decisionRecord.id);
   } catch (err) {
-    console.warn(`[DecisionEngine] Onchain commit warning:`, err);
+    console.error(`[DecisionEngine] Onchain commit failed:`, err);
+    throw err;
   }
 
   // 8. Record Economic Event for Life Log & User Observability (§19)
@@ -302,7 +359,7 @@ export async function executeGlyphDecisionCycle(
     const day = Math.max(1, Math.floor((eventUtc - birthUtc) / (24 * 60 * 60 * 1000)) + 1);
 
     const eventDesc = policyResult.approved
-      ? `Policy APPROVED. Position: ${policyResult.clampedPositionPercent}%, Leverage: ${policyResult.clampedLeverage}x. Thesis: ${decision.thesis.catalyst}`
+      ? `Policy APPROVED. Action: ${decision.action}. Thesis: ${decision.thesis.catalyst}`
       : `Policy REJECTED: ${policyResult.rejectReason}. Thesis: ${decision.thesis.catalyst}`;
 
     await prisma.economicEvent.create({
@@ -323,20 +380,34 @@ export async function executeGlyphDecisionCycle(
   }
 
   // 9. Observability Trace (Brief §25, §3.7)
-  const agentRun = await prisma.agentRun.create({
-    data: {
-      agentId: agent.id,
-      startedAt: runStart,
-      completedAt: new Date(),
-      model: process.env.OPENROUTER_MODEL || "openai/gpt-4o-mini",
-      promptVersion: GLYPH_DECISION_PROMPT_VERSION,
-      marketSnapshot: snapshot.marketData as any,
-      decision: decision as any,
-      policyResult: policyResult.policyResult,
-      tradeId,
-      transactionHash: onchainResult?.transactionHash,
-    },
-  });
+  const agentRun = existingAgentRunId
+    ? await prisma.agentRun.update({
+      where: { id: existingAgentRunId },
+      data: {
+        completedAt: new Date(),
+        model: process.env.OPENROUTER_MODEL || "openai/gpt-4o-mini",
+        promptVersion: GLYPH_DECISION_PROMPT_VERSION,
+        marketSnapshot: snapshot.marketData as any,
+        decision: decision as any,
+        policyResult: policyResult.policyResult,
+        tradeId,
+        transactionHash: onchainResult?.transactionHash,
+      },
+    })
+    : await prisma.agentRun.create({
+      data: {
+        agentId: agent.id,
+        startedAt: runStart,
+        completedAt: new Date(),
+        model: process.env.OPENROUTER_MODEL || "openai/gpt-4o-mini",
+        promptVersion: GLYPH_DECISION_PROMPT_VERSION,
+        marketSnapshot: snapshot.marketData as any,
+        decision: decision as any,
+        policyResult: policyResult.policyResult,
+        tradeId,
+        transactionHash: onchainResult?.transactionHash,
+      },
+    });
 
   return {
     decisionId: decisionRecord.id,

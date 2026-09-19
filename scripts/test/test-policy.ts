@@ -4,10 +4,10 @@
 // ============================================================================
 
 import {
-  GLYPH_POLICY,
   ALLOWED_ASSETS,
-  validateTradeProposal,
   evaluateAgentTradeProposal,
+  GLYPH_POLICY,
+  validateTradeProposal,
 } from "../../src/lib/policy";
 import { prisma } from "../../src/lib/prisma";
 
@@ -30,7 +30,7 @@ async function runPolicyTests() {
   console.log("▶ [SCENARIO 1] AI proposes non-whitelisted asset ('DOGE')...");
   const res1 = validateTradeProposal({
     asset: "DOGE",
-    action: "LONG",
+    action: "OPEN_LONG",
     conviction: 85,
     positionSizePercent: 5,
     leverage: 2,
@@ -48,14 +48,14 @@ async function runPolicyTests() {
   console.log("▶ [SCENARIO 1B] AI proposes newly whitelisted assets ('MSFT', 'AAPL')...");
   const resMsft = validateTradeProposal({
     asset: "MSFT",
-    action: "LONG",
+    action: "OPEN_LONG",
     conviction: 75,
     positionSizePercent: 8,
     leverage: 2,
   });
   const resAapl = validateTradeProposal({
     asset: "AAPL",
-    action: "LONG",
+    action: "OPEN_LONG",
     conviction: 72,
     positionSizePercent: 8,
     leverage: 1.5,
@@ -71,7 +71,7 @@ async function runPolicyTests() {
   console.log("▶ [SCENARIO 2] AI proposes valid asset ('NVDA') but low conviction (54%)...");
   const res2 = validateTradeProposal({
     asset: "NVDA",
-    action: "LONG",
+    action: "OPEN_LONG",
     conviction: 54, // Below 60%
     positionSizePercent: 5,
     leverage: 2,
@@ -90,7 +90,7 @@ async function runPolicyTests() {
   const res3 = validateTradeProposal(
     {
       asset: "NVDA",
-      action: "LONG",
+      action: "OPEN_LONG",
       conviction: 75,
       positionSizePercent: 5,
       leverage: 1,
@@ -111,7 +111,7 @@ async function runPolicyTests() {
   const res4 = validateTradeProposal(
     {
       asset: "NVDA",
-      action: "SHORT",
+      action: "OPEN_SHORT",
       conviction: 80,
       positionSizePercent: 5,
       leverage: 2,
@@ -148,7 +148,7 @@ async function runPolicyTests() {
   console.log("▶ [SCENARIO 6] AI proposes NVDA LONG with excessive leverage (5x) and size (20%)...");
   const res6 = validateTradeProposal({
     asset: "NVDA",
-    action: "LONG",
+    action: "OPEN_LONG",
     conviction: 78,
     positionSizePercent: 20, // AI asks 20%
     leverage: 5, // AI asks 5x
@@ -182,7 +182,7 @@ async function runPolicyTests() {
   const activeAgentId = agent?.agentId || targetAgentId;
   const dbEval = await evaluateAgentTradeProposal(activeAgentId, {
     asset: "NVDA",
-    action: "LONG",
+    action: "OPEN_LONG",
     conviction: 72,
     positionSizePercent: 8,
     leverage: 2,

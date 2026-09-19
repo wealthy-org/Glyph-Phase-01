@@ -26,8 +26,10 @@ datasource db {
 
 /// Decision action proposed by Glyph Brain (§7, §3.0B)
 enum DecisionAction {
-  LONG
-  SHORT
+  OPEN_LONG
+  OPEN_SHORT
+  HOLD
+  CLOSE
   NO_TRADE
 }
 
@@ -219,7 +221,7 @@ model Decision {
 
   // What the Glyph Brain proposed (§7 structured JSON)
   asset               String // e.g. "NVDA"
-  action              DecisionAction // LONG | SHORT | NO_TRADE
+  action              DecisionAction // OPEN_LONG | OPEN_SHORT | HOLD | CLOSE | NO_TRADE
   conviction          Int // 0-100
   timeHorizon         String? // e.g. "1d_to_14d"
   fundamentalScore    Int? // 0-100
@@ -242,7 +244,7 @@ model Decision {
   // Prompt versioning (§26, §3.0D)
   promptVersion String @default("V1") // e.g. "GLYPH_DECISION_PROMPT_V1"
 
-  // Link to resulting trade — nullable (§3.0B)
+  // Link to resulting trade — nullable. HOLD has no trade execution.
   tradeId String? @unique
   trade   Trade?  @relation(fields: [tradeId], references: [id], onDelete: SetNull)
 
@@ -261,7 +263,7 @@ model Decision {
 // --------------------------------------------------------------------------
 // 7. TRADE (Brief §11, §13, §3.0B — table: trades)
 //
-//    Only created when Decision has policy_result=APPROVED and action≠NO_TRADE.
+//    Only created when Decision has policy_result=APPROVED and action opens a position.
 //    Each trade has a unique trade_number (e.g. "GLYPH-0012").
 // --------------------------------------------------------------------------
 
@@ -463,6 +465,8 @@ model AgentRun {
   agentId String
   agent   Agent  @relation(fields: [agentId], references: [id], onDelete: Cascade)
 
+  cycleKey String? @unique
+
   startedAt   DateTime  @default(now())
   completedAt DateTime?
 
@@ -492,16 +496,16 @@ model AgentRun {
 // --------------------------------------------------------------------------
 
 model AgentTreasury {
-  id             String   @id @default(uuid())
-  agentId        String   @unique
-  agent          Agent    @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  id      String @id @default(uuid())
+  agentId String @unique
+  agent   Agent  @relation(fields: [agentId], references: [id], onDelete: Cascade)
 
-  initialCapital Decimal  @default(1000) @db.Decimal(18, 4) // Initial seed capital ($1,000 USD-SIM)
-  currentBalance Decimal  @default(1000) @db.Decimal(18, 4) // Available unallocated cash
-  currency       String   @default("USD-SIM")
+  initialCapital Decimal @default(1000) @db.Decimal(18, 4) // Initial seed capital ($1,000 USD-SIM)
+  currentBalance Decimal @default(1000) @db.Decimal(18, 4) // Available unallocated cash
+  currency       String  @default("USD-SIM")
 
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("agent_treasuries")
 }

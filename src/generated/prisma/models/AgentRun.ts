@@ -27,6 +27,7 @@ export type AggregateAgentRun = {
 export type AgentRunMinAggregateOutputType = {
   id: string | null
   agentId: string | null
+  cycleKey: string | null
   startedAt: Date | null
   completedAt: Date | null
   model: string | null
@@ -41,6 +42,7 @@ export type AgentRunMinAggregateOutputType = {
 export type AgentRunMaxAggregateOutputType = {
   id: string | null
   agentId: string | null
+  cycleKey: string | null
   startedAt: Date | null
   completedAt: Date | null
   model: string | null
@@ -55,6 +57,7 @@ export type AgentRunMaxAggregateOutputType = {
 export type AgentRunCountAggregateOutputType = {
   id: number
   agentId: number
+  cycleKey: number
   startedAt: number
   completedAt: number
   marketSnapshot: number
@@ -73,6 +76,7 @@ export type AgentRunCountAggregateOutputType = {
 export type AgentRunMinAggregateInputType = {
   id?: true
   agentId?: true
+  cycleKey?: true
   startedAt?: true
   completedAt?: true
   model?: true
@@ -87,6 +91,7 @@ export type AgentRunMinAggregateInputType = {
 export type AgentRunMaxAggregateInputType = {
   id?: true
   agentId?: true
+  cycleKey?: true
   startedAt?: true
   completedAt?: true
   model?: true
@@ -101,6 +106,7 @@ export type AgentRunMaxAggregateInputType = {
 export type AgentRunCountAggregateInputType = {
   id?: true
   agentId?: true
+  cycleKey?: true
   startedAt?: true
   completedAt?: true
   marketSnapshot?: true
@@ -190,6 +196,7 @@ export type AgentRunGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
 export type AgentRunGroupByOutputType = {
   id: string
   agentId: string
+  cycleKey: string | null
   startedAt: Date
   completedAt: Date | null
   marketSnapshot: runtime.JsonValue | null
@@ -227,6 +234,7 @@ export type AgentRunWhereInput = {
   NOT?: Prisma.AgentRunWhereInput | Prisma.AgentRunWhereInput[]
   id?: Prisma.StringFilter<"AgentRun"> | string
   agentId?: Prisma.StringFilter<"AgentRun"> | string
+  cycleKey?: Prisma.StringNullableFilter<"AgentRun"> | string | null
   startedAt?: Prisma.DateTimeFilter<"AgentRun"> | Date | string
   completedAt?: Prisma.DateTimeNullableFilter<"AgentRun"> | Date | string | null
   marketSnapshot?: Prisma.JsonNullableFilter<"AgentRun">
@@ -244,6 +252,7 @@ export type AgentRunWhereInput = {
 export type AgentRunOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   agentId?: Prisma.SortOrder
+  cycleKey?: Prisma.SortOrderInput | Prisma.SortOrder
   startedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   marketSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -260,6 +269,7 @@ export type AgentRunOrderByWithRelationInput = {
 
 export type AgentRunWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  cycleKey?: string
   AND?: Prisma.AgentRunWhereInput | Prisma.AgentRunWhereInput[]
   OR?: Prisma.AgentRunWhereInput[]
   NOT?: Prisma.AgentRunWhereInput | Prisma.AgentRunWhereInput[]
@@ -276,11 +286,12 @@ export type AgentRunWhereUniqueInput = Prisma.AtLeast<{
   error?: Prisma.StringNullableFilter<"AgentRun"> | string | null
   errorCode?: Prisma.StringNullableFilter<"AgentRun"> | string | null
   agent?: Prisma.XOR<Prisma.AgentScalarRelationFilter, Prisma.AgentWhereInput>
-}, "id">
+}, "id" | "cycleKey">
 
 export type AgentRunOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   agentId?: Prisma.SortOrder
+  cycleKey?: Prisma.SortOrderInput | Prisma.SortOrder
   startedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   marketSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -303,6 +314,7 @@ export type AgentRunScalarWhereWithAggregatesInput = {
   NOT?: Prisma.AgentRunScalarWhereWithAggregatesInput | Prisma.AgentRunScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"AgentRun"> | string
   agentId?: Prisma.StringWithAggregatesFilter<"AgentRun"> | string
+  cycleKey?: Prisma.StringNullableWithAggregatesFilter<"AgentRun"> | string | null
   startedAt?: Prisma.DateTimeWithAggregatesFilter<"AgentRun"> | Date | string
   completedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"AgentRun"> | Date | string | null
   marketSnapshot?: Prisma.JsonNullableWithAggregatesFilter<"AgentRun">
@@ -318,6 +330,7 @@ export type AgentRunScalarWhereWithAggregatesInput = {
 
 export type AgentRunCreateInput = {
   id?: string
+  cycleKey?: string | null
   startedAt?: Date | string
   completedAt?: Date | string | null
   marketSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -335,6 +348,7 @@ export type AgentRunCreateInput = {
 export type AgentRunUncheckedCreateInput = {
   id?: string
   agentId: string
+  cycleKey?: string | null
   startedAt?: Date | string
   completedAt?: Date | string | null
   marketSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -350,6 +364,7 @@ export type AgentRunUncheckedCreateInput = {
 
 export type AgentRunUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  cycleKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   marketSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -367,6 +382,7 @@ export type AgentRunUpdateInput = {
 export type AgentRunUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   agentId?: Prisma.StringFieldUpdateOperationsInput | string
+  cycleKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   marketSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -383,6 +399,7 @@ export type AgentRunUncheckedUpdateInput = {
 export type AgentRunCreateManyInput = {
   id?: string
   agentId: string
+  cycleKey?: string | null
   startedAt?: Date | string
   completedAt?: Date | string | null
   marketSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -398,6 +415,7 @@ export type AgentRunCreateManyInput = {
 
 export type AgentRunUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  cycleKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   marketSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -414,6 +432,7 @@ export type AgentRunUpdateManyMutationInput = {
 export type AgentRunUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   agentId?: Prisma.StringFieldUpdateOperationsInput | string
+  cycleKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   marketSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -440,6 +459,7 @@ export type AgentRunOrderByRelationAggregateInput = {
 export type AgentRunCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   agentId?: Prisma.SortOrder
+  cycleKey?: Prisma.SortOrder
   startedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
   marketSnapshot?: Prisma.SortOrder
@@ -456,6 +476,7 @@ export type AgentRunCountOrderByAggregateInput = {
 export type AgentRunMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   agentId?: Prisma.SortOrder
+  cycleKey?: Prisma.SortOrder
   startedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
   model?: Prisma.SortOrder
@@ -470,6 +491,7 @@ export type AgentRunMaxOrderByAggregateInput = {
 export type AgentRunMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   agentId?: Prisma.SortOrder
+  cycleKey?: Prisma.SortOrder
   startedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
   model?: Prisma.SortOrder
@@ -525,6 +547,7 @@ export type AgentRunUncheckedUpdateManyWithoutAgentNestedInput = {
 
 export type AgentRunCreateWithoutAgentInput = {
   id?: string
+  cycleKey?: string | null
   startedAt?: Date | string
   completedAt?: Date | string | null
   marketSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -540,6 +563,7 @@ export type AgentRunCreateWithoutAgentInput = {
 
 export type AgentRunUncheckedCreateWithoutAgentInput = {
   id?: string
+  cycleKey?: string | null
   startedAt?: Date | string
   completedAt?: Date | string | null
   marketSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -585,6 +609,7 @@ export type AgentRunScalarWhereInput = {
   NOT?: Prisma.AgentRunScalarWhereInput | Prisma.AgentRunScalarWhereInput[]
   id?: Prisma.StringFilter<"AgentRun"> | string
   agentId?: Prisma.StringFilter<"AgentRun"> | string
+  cycleKey?: Prisma.StringNullableFilter<"AgentRun"> | string | null
   startedAt?: Prisma.DateTimeFilter<"AgentRun"> | Date | string
   completedAt?: Prisma.DateTimeNullableFilter<"AgentRun"> | Date | string | null
   marketSnapshot?: Prisma.JsonNullableFilter<"AgentRun">
@@ -600,6 +625,7 @@ export type AgentRunScalarWhereInput = {
 
 export type AgentRunCreateManyAgentInput = {
   id?: string
+  cycleKey?: string | null
   startedAt?: Date | string
   completedAt?: Date | string | null
   marketSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -615,6 +641,7 @@ export type AgentRunCreateManyAgentInput = {
 
 export type AgentRunUpdateWithoutAgentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  cycleKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   marketSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -630,6 +657,7 @@ export type AgentRunUpdateWithoutAgentInput = {
 
 export type AgentRunUncheckedUpdateWithoutAgentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  cycleKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   marketSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -645,6 +673,7 @@ export type AgentRunUncheckedUpdateWithoutAgentInput = {
 
 export type AgentRunUncheckedUpdateManyWithoutAgentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  cycleKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   marketSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -663,6 +692,7 @@ export type AgentRunUncheckedUpdateManyWithoutAgentInput = {
 export type AgentRunSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   agentId?: boolean
+  cycleKey?: boolean
   startedAt?: boolean
   completedAt?: boolean
   marketSnapshot?: boolean
@@ -680,6 +710,7 @@ export type AgentRunSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
 export type AgentRunSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   agentId?: boolean
+  cycleKey?: boolean
   startedAt?: boolean
   completedAt?: boolean
   marketSnapshot?: boolean
@@ -697,6 +728,7 @@ export type AgentRunSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
 export type AgentRunSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   agentId?: boolean
+  cycleKey?: boolean
   startedAt?: boolean
   completedAt?: boolean
   marketSnapshot?: boolean
@@ -714,6 +746,7 @@ export type AgentRunSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
 export type AgentRunSelectScalar = {
   id?: boolean
   agentId?: boolean
+  cycleKey?: boolean
   startedAt?: boolean
   completedAt?: boolean
   marketSnapshot?: boolean
@@ -727,7 +760,7 @@ export type AgentRunSelectScalar = {
   errorCode?: boolean
 }
 
-export type AgentRunOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "agentId" | "startedAt" | "completedAt" | "marketSnapshot" | "model" | "promptVersion" | "decision" | "policyResult" | "tradeId" | "transactionHash" | "error" | "errorCode", ExtArgs["result"]["agentRun"]>
+export type AgentRunOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "agentId" | "cycleKey" | "startedAt" | "completedAt" | "marketSnapshot" | "model" | "promptVersion" | "decision" | "policyResult" | "tradeId" | "transactionHash" | "error" | "errorCode", ExtArgs["result"]["agentRun"]>
 export type AgentRunInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   agent?: boolean | Prisma.AgentDefaultArgs<ExtArgs>
 }
@@ -746,6 +779,7 @@ export type $AgentRunPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     agentId: string
+    cycleKey: string | null
     startedAt: Date
     completedAt: Date | null
     marketSnapshot: runtime.JsonValue | null
@@ -1183,6 +1217,7 @@ export interface Prisma__AgentRunClient<T, Null = never, ExtArgs extends runtime
 export interface AgentRunFieldRefs {
   readonly id: Prisma.FieldRef<"AgentRun", 'String'>
   readonly agentId: Prisma.FieldRef<"AgentRun", 'String'>
+  readonly cycleKey: Prisma.FieldRef<"AgentRun", 'String'>
   readonly startedAt: Prisma.FieldRef<"AgentRun", 'DateTime'>
   readonly completedAt: Prisma.FieldRef<"AgentRun", 'DateTime'>
   readonly marketSnapshot: Prisma.FieldRef<"AgentRun", 'Json'>

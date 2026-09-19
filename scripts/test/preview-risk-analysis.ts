@@ -1,7 +1,7 @@
 import "dotenv/config";
-import { prisma } from "../../src/lib/prisma";
 import { GLYPH_SYSTEM_PROMPT, buildDecisionUserPrompt } from "../../src/lib/decision/prompt";
-import { GlyphDecisionSchema, GlyphDecisionOutput } from "../../src/lib/decision/schema";
+import { GlyphDecisionOutput, GlyphDecisionSchema } from "../../src/lib/decision/schema";
+import { prisma } from "../../src/lib/prisma";
 import { SynthesizedResearch } from "../../src/types/market";
 
 function cleanJsonString(raw: string): string {
@@ -44,6 +44,7 @@ async function runPreview() {
   const userPrompt = buildDecisionUserPrompt(
     researchPayload,
     { cash: 1000, equity: 1000 },
+    null,
     []
   );
 

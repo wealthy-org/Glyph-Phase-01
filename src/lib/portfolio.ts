@@ -5,18 +5,18 @@
 // ============================================================================
 
 import { prisma } from "@/lib/prisma";
+import { createTradeMemoryInTransaction } from "./memory";
 import {
-  clampLeverage,
-  calculatePositionMarginAndNotional,
   calculateLiquidationPrice,
   calculatePnL,
+  calculatePositionMarginAndNotional,
   calculateTransactionFee,
+  clampLeverage,
+  DEFAULT_FEE_PERCENT,
   isPositionLiquidated,
   PositionSide,
-  DEFAULT_FEE_PERCENT,
 } from "./simulation-math";
 import { getTreasurySummary } from "./treasury";
-import { createTradeMemory } from "./memory";
 
 export interface OpenPositionInput {
   agentId?: string;
@@ -445,6 +445,17 @@ export async function closeSimulatedPosition(
       },
     });
 
+    await createTradeMemoryInTransaction(tx, {
+      tradeId: position.tradeId,
+      agentId: agent.id,
+      asset: position.asset,
+      side: position.side,
+      pnlPercent: realizedPnlPercent,
+      conviction: position.trade.conviction,
+      thesis: position.trade.thesis,
+      reason,
+    });
+
     return {
       tradeId: position.tradeId,
       positionId: position.id,
@@ -461,22 +472,6 @@ export async function closeSimulatedPosition(
       newBalance: Number(updatedTreasury.currentBalance),
     };
   });
-
-  // Automatically form persistent memory of this trade (§15)
-  try {
-    await createTradeMemory({
-      tradeId: position.tradeId,
-      agentId: agent.id,
-      asset: position.asset,
-      side: position.side,
-      pnlPercent: realizedPnlPercent,
-      conviction: position.trade.conviction,
-      thesis: position.trade.thesis,
-      reason,
-    });
-  } catch (err) {
-    console.warn(`[Portfolio] Memory creation notice:`, err);
-  }
 
   return txResult;
 }

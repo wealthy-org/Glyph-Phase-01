@@ -298,6 +298,7 @@ export type EconomicEventScalarFieldEnum = (typeof EconomicEventScalarFieldEnum)
 export const AgentRunScalarFieldEnum = {
   id: 'id',
   agentId: 'agentId',
+  cycleKey: 'cycleKey',
   startedAt: 'startedAt',
   completedAt: 'completedAt',
   marketSnapshot: 'marketSnapshot',

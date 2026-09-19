@@ -5,8 +5,8 @@
 
 import { executeGlyphDecisionCycle } from "../../src/lib/decision/engine";
 import { GLYPH_DECISION_PROMPT_VERSION } from "../../src/lib/decision/prompt";
-import { createResearchSnapshot } from "../../src/lib/research";
 import { prisma } from "../../src/lib/prisma";
+import { createResearchSnapshot } from "../../src/lib/research";
 
 async function runDecisionTests() {
   console.log("===============================================================");
@@ -26,7 +26,23 @@ async function runDecisionTests() {
     orderBy: { createdAt: "desc" },
   });
 
-  if (existingSnapshot) {
+  const existingMarketData = existingSnapshot?.marketData as {
+    quote?: { price?: number };
+  } | null;
+  const existingTechnicalData = existingSnapshot?.technicalData as {
+    technicalScore?: number;
+  } | null;
+  const existingFundamentalData = existingSnapshot?.fundamentalData as {
+    fundamentalScore?: number;
+  } | null;
+  const canReuseSnapshot = Boolean(
+    existingSnapshot &&
+    typeof existingMarketData?.quote?.price === "number" &&
+    typeof existingTechnicalData?.technicalScore === "number" &&
+    typeof existingFundamentalData?.fundamentalScore === "number"
+  );
+
+  if (existingSnapshot && canReuseSnapshot) {
     snapshotId = existingSnapshot.id;
     research = {
       asset: existingSnapshot.asset,
@@ -36,6 +52,9 @@ async function runDecisionTests() {
     };
     console.log(`  - Using existing snapshot from test research: ${snapshotId}`);
   } else {
+    if (existingSnapshot) {
+      console.log(`  - Existing snapshot ${existingSnapshot.id} is incompatible; creating a fresh research snapshot.`);
+    }
     const created = await createResearchSnapshot("NVDA");
     snapshotId = created.snapshotId;
     research = created.research;
@@ -84,7 +103,10 @@ async function runDecisionTests() {
   console.log(`     ↳ Action: ${dbDecision.action}, Policy: ${dbDecision.policyResult}`);
 
   // Check Trade table condition (Brief §3.0B)
-  if (result.policyResult === "APPROVED" && result.action !== "NO_TRADE") {
+  if (
+    result.policyResult === "APPROVED" &&
+    (result.action === "OPEN_LONG" || result.action === "OPEN_SHORT")
+  ) {
     if (!result.tradeId) {
       throw new Error("Failed: Trade ID must be populated when decision is APPROVED and action != NO_TRADE.");
     }
@@ -100,8 +122,28 @@ async function runDecisionTests() {
     console.log(`     ↳ Allocated Margin: $${dbTrade.positionSize}`);
     console.log(`     ↳ Leverage: ${dbTrade.leverage}x`);
     console.log(`     ↳ Status: ${dbTrade.status}`);
+  } else if (result.policyResult === "APPROVED" && result.action === "CLOSE") {
+    if (!result.tradeId) {
+      throw new Error("Failed: CLOSE decision must reference the closed trade.");
+    }
+    const dbTrade = await prisma.trade.findUnique({
+      where: { id: result.tradeId },
+    });
+    if (!dbTrade || dbTrade.status !== "CLOSED" || dbTrade.exitPrice === null) {
+      throw new Error("Failed: CLOSE decision did not persist a closed trade with an exit price.");
+    }
+    const memory = await prisma.memory.findFirst({
+      where: { tradeId: result.tradeId },
+    });
+    if (!memory) {
+      throw new Error("Failed: CLOSE decision did not create trade memory.");
+    }
+    console.log(`  ✅ Closed Trade Verified: ${dbTrade.tradeNumber}`);
+    console.log(`     ↳ Exit Price: $${dbTrade.exitPrice}`);
+    console.log(`     ↳ Realized PnL: $${dbTrade.simulatedPnl}`);
+    console.log(`     ↳ Memory: ${memory.outcome}`);
   } else {
-    console.log(`  ℹ️  No trade created (as expected for ${result.policyResult} / ${result.action}).`);
+    console.log(`  ℹ️  No trade execution (as expected for ${result.policyResult} / ${result.action}).`);
   }
 
   // Check Observability Trace (agent_runs table)
@@ -121,8 +163,13 @@ async function runDecisionTests() {
   console.log(`\n💰 [TREASURY AUDIT]`);
   console.log(`  - Treasury Balance Before: $${balanceBefore.toFixed(2)} USD-SIM`);
   console.log(`  - Treasury Balance After:  $${balanceAfter.toFixed(2)} USD-SIM`);
-  if (result.policyResult === "APPROVED" && result.action !== "NO_TRADE") {
+  if (
+    result.policyResult === "APPROVED" &&
+    (result.action === "OPEN_LONG" || result.action === "OPEN_SHORT")
+  ) {
     console.log(`  - Deduction (Margin + Fee): -$${(balanceBefore - balanceAfter).toFixed(2)} USD-SIM (Confirmed Reduced!)`);
+  } else if (result.policyResult === "APPROVED" && result.action === "CLOSE") {
+    console.log(`  - Released realized position capital: +$${(balanceAfter - balanceBefore).toFixed(2)} USD-SIM`);
   } else {
     console.log(`  - Deduction: $0.00 (Proposal not approved for execution, capital 100% preserved)`);
   }

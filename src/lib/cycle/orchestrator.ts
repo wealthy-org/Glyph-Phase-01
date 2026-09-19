@@ -13,23 +13,25 @@
 // 7. Record observability trace in agent_runs table
 // ============================================================================
 
-import { prisma } from "@/lib/prisma";
+import { DecisionRunResult, executeGlyphDecisionCycle } from "@/lib/decision/engine";
+import { AlphaVantageProvider } from "@/lib/market/alpha-vantage";
 import { ALLOWED_ASSETS } from "@/lib/policy";
 import {
-  updatePositionsMarketPrices,
   getActivePositions,
+  updatePositionsMarketPrices,
 } from "@/lib/portfolio";
+import { prisma } from "@/lib/prisma";
 import { createResearchSnapshot } from "@/lib/research";
-import { executeGlyphDecisionCycle, DecisionRunResult } from "@/lib/decision/engine";
-import { AlphaVantageProvider } from "@/lib/market/alpha-vantage";
 
 export interface CycleOptions {
   agentIdentifier?: string; // Default: "1"
   targetAsset?: string;      // Whitelisted asset, default: "NVDA"
+  cycleKey?: string;
 }
 
 export interface CycleSummary {
   success: boolean;
+  cycleKey: string;
   timestamp: string;
   agentId: string;
   targetAsset: string;
@@ -58,6 +60,11 @@ export async function runAutonomousGlyphCycle(
   if (!agent) {
     throw new Error(`Agent #${agentIdentifier} not found in database.`);
   }
+
+  const cycleKey = options.cycleKey || `${agentIdentifier}:${new Date().toISOString().slice(0, 10)}`;
+  const claimedRun = await prisma.agentRun.create({
+    data: { agentId: agent.id, cycleKey, startedAt: new Date() },
+  });
 
   // Determine target asset for research & decision
   let selectedAsset = (options.targetAsset || "NVDA").toUpperCase();
@@ -127,7 +134,7 @@ export async function runAutonomousGlyphCycle(
     // STEP 3: Execute Reasoning, Policy Gate, Paper Trade, & On-Chain Proof
     // -------------------------------------------------------------------------
     console.log(`\n▶ [STEP 3] Running Glyph Brain reasoning & policy gate...`);
-    const decisionResult = await executeGlyphDecisionCycle(snapshotId, agentIdentifier);
+    const decisionResult = await executeGlyphDecisionCycle(snapshotId, agentIdentifier, claimedRun.id);
 
     console.log(`  ✅ Decision reached:`);
     console.log(`     ↳ Action: ${decisionResult.action}`);
@@ -155,6 +162,7 @@ export async function runAutonomousGlyphCycle(
 
     return {
       success: true,
+      cycleKey,
       timestamp: new Date().toISOString(),
       agentId: agentIdentifier,
       targetAsset: selectedAsset,
@@ -169,11 +177,11 @@ export async function runAutonomousGlyphCycle(
 
     // Record failure in agent_runs table so no run is silently dropped (Brief §25)
     try {
-      await prisma.agentRun.create({
+      await prisma.agentRun.update({
+        where: { id: claimedRun.id },
         data: {
-          agentId: agent.id,
-          startedAt: new Date(startTime),
           completedAt: new Date(),
+          cycleKey: null,
           error: error.message || String(error),
           errorCode: error.code || "CYCLE_EXECUTION_FAILURE",
         },

@@ -5,19 +5,19 @@
 // Acts as a pure aggregator — delegates calculations to authoritative services.
 // ============================================================================
 
+import { getExplorerTxUrl } from "@/lib/onchain/registry";
+import { getActivePositions } from "@/lib/portfolio";
 import { prisma } from "@/lib/prisma";
 import { getTreasurySummary } from "@/lib/treasury";
-import { getActivePositions } from "@/lib/portfolio";
-import { getExplorerTxUrl } from "@/lib/onchain/registry";
 import {
-  LandingPageData,
-  LandingTreasuryData,
-  LandingPositionItem,
-  LandingLatestDecision,
-  LandingEconomicEvent,
-  LandingMemoryItem,
-  LandingReputationData,
   LandingAgentMeta,
+  LandingEconomicEvent,
+  LandingLatestDecision,
+  LandingMemoryItem,
+  LandingPageData,
+  LandingPositionItem,
+  LandingReputationData,
+  LandingTreasuryData,
 } from "./types";
 
 export const GLYPH_CORE_OBJECTIVE = "Grow economic capital while preserving survival.";
@@ -79,9 +79,9 @@ export async function getLandingPageData(agentIdentifier?: string): Promise<Land
   // Fetch closed trades for realized PnL and win-rate calculations
   const closedTrades = agent
     ? await prisma.trade.findMany({
-        where: { agentId: agent.id, status: { in: ["CLOSED", "LIQUIDATED"] } },
-        select: { simulatedPnl: true },
-      })
+      where: { agentId: agent.id, status: { in: ["CLOSED", "LIQUIDATED"] } },
+      select: { simulatedPnl: true },
+    })
     : [];
 
   const cumulativeRealizedPnl = closedTrades.reduce(
@@ -120,10 +120,10 @@ export async function getLandingPageData(agentIdentifier?: string): Promise<Land
   // 3. Authoritative Latest Decision (May or may NOT have resulted in a trade)
   const latestDecisionRecord = agent
     ? await prisma.decision.findFirst({
-        where: { agentId: agent.id },
-        orderBy: { createdAt: "desc" },
-        include: { trade: true },
-      })
+      where: { agentId: agent.id },
+      orderBy: { createdAt: "desc" },
+      include: { trade: true },
+    })
     : null;
 
   let latestDecision: LandingLatestDecision | null = null;
@@ -137,7 +137,12 @@ export async function getLandingPageData(agentIdentifier?: string): Promise<Land
     latestDecision = {
       id: latestDecisionRecord.id,
       asset: latestDecisionRecord.asset,
-      action: latestDecisionRecord.action as "LONG" | "SHORT" | "NO_TRADE",
+      action: latestDecisionRecord.action as
+        | "OPEN_LONG"
+        | "OPEN_SHORT"
+        | "HOLD"
+        | "CLOSE"
+        | "NO_TRADE",
       conviction: latestDecisionRecord.conviction,
       fundamentalScore: latestDecisionRecord.fundamentalScore,
       technicalScore: latestDecisionRecord.technicalScore,
@@ -163,10 +168,10 @@ export async function getLandingPageData(agentIdentifier?: string): Promise<Land
   // 4. Authoritative Recent Economic Events (6 entries for homepage)
   const eventRecords = agent
     ? await prisma.economicEvent.findMany({
-        where: { agentId: agent.id },
-        orderBy: { timestamp: "desc" },
-        take: 6,
-      })
+      where: { agentId: agent.id },
+      orderBy: { timestamp: "desc" },
+      take: 6,
+    })
     : [];
 
   const recentEvents: LandingEconomicEvent[] = eventRecords.map((evt) => {
@@ -203,10 +208,10 @@ export async function getLandingPageData(agentIdentifier?: string): Promise<Land
   // 5. Authoritative Memories & Adaptive Feedback
   const memoryRecords = agent
     ? await prisma.memory.findMany({
-        where: { agentId: agent.id },
-        orderBy: { createdAt: "desc" },
-        take: 4,
-      })
+      where: { agentId: agent.id },
+      orderBy: { createdAt: "desc" },
+      take: 4,
+    })
     : [];
 
   const memories: LandingMemoryItem[] = memoryRecords.map((m) => ({
@@ -230,12 +235,12 @@ export async function getLandingPageData(agentIdentifier?: string): Promise<Land
     agent ? prisma.trade.count({ where: { agentId: agent.id } }) : 0,
     agent
       ? prisma.decision.count({
-          where: {
-            agentId: agent.id,
-            transactionHash: { not: null },
-            NOT: { transactionHash: { endsWith: "000000000000" } },
-          },
-        })
+        where: {
+          agentId: agent.id,
+          transactionHash: { not: null },
+          NOT: { transactionHash: { endsWith: "000000000000" } },
+        },
+      })
       : 0,
   ]);
 

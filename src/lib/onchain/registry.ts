@@ -5,15 +5,15 @@
 // ============================================================================
 
 import "@/lib/dns-fix";
+import { prisma } from "@/lib/prisma";
 import {
   createPublicClient,
   createWalletClient,
-  http,
   defineChain,
   Hex,
+  http,
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { prisma } from "@/lib/prisma";
 import { calculateDecisionHash, CanonicalDecisionPayload } from "./hash";
 
 export const robinhoodTestnet = defineChain({
@@ -24,7 +24,7 @@ export const robinhoodTestnet = defineChain({
     default: {
       http: [
         process.env.NEXT_PUBLIC_RPC_URL ||
-          "https://rpc.testnet.chain.robinhood.com",
+        "https://rpc.testnet.chain.robinhood.com",
       ],
     },
   },
@@ -163,8 +163,7 @@ export async function commitDecisionOnchain(
       console.error(
         `[OnchainRegistry] Live broadcast failed: ${error?.message || error}`
       );
-      transactionHash = "";
-      blockNumber = 0;
+      throw error;
     }
   } else {
     transactionHash = "";

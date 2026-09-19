@@ -6,10 +6,10 @@
 // Protected by: Authorization: Bearer <CRON_SECRET>
 // ============================================================================
 
-import { NextRequest, NextResponse } from "next/server";
-import crypto from "crypto";
 import { runAutonomousGlyphCycle } from "@/lib/cycle/orchestrator";
 import { prisma } from "@/lib/prisma";
+import crypto from "crypto";
+import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -81,6 +81,7 @@ export async function POST(req: NextRequest) {
     // 2. Concurrency Lock: Check if a cycle is already currently running (§3.8)
     const activeRun = await prisma.agentRun.findFirst({
       where: {
+        agentId: agentIdentifier,
         startedAt: { gt: new Date(Date.now() - 3 * 60 * 1000) }, // started within last 3 minutes
         completedAt: null,
       },
@@ -134,6 +135,7 @@ export async function POST(req: NextRequest) {
         message: "Autonomous cycle executed successfully.",
         data: {
           timestamp: cycleSummary.timestamp,
+          cycleKey: cycleSummary.cycleKey,
           agentId: cycleSummary.agentId,
           targetAsset: cycleSummary.targetAsset,
           positionsAudited: cycleSummary.positionsChecked,
@@ -159,6 +161,15 @@ export async function POST(req: NextRequest) {
     );
   } catch (error: any) {
     console.error("[CronAPI] Failed to execute autonomous cycle:", error);
+    if (error?.code === "P2002") {
+      return NextResponse.json(
+        {
+          status: "ALREADY_PROCESSED",
+          message: "A successful decision cycle already exists for this daily cycle key.",
+        },
+        { status: 409 }
+      );
+    }
     return NextResponse.json(
       {
         status: "ERROR",

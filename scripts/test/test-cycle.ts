@@ -20,9 +20,11 @@ async function verifyCyclePipeline() {
   // TEST 1: Direct Orchestrator Run (Autonomous Pipeline Execution)
   // -------------------------------------------------------------------------
   console.log("▶ [TEST 1] Running Autonomous Cycle Orchestrator directly...");
+  const testCycleKey = `integration-test:${Date.now()}`;
   const cycleResult = await runAutonomousGlyphCycle({
     targetAsset: "NVDA",
     agentIdentifier: process.env.GLYPH_AGENT_ID || "1",
+    cycleKey: testCycleKey,
   });
 
   if (!cycleResult.success) {
@@ -71,6 +73,21 @@ async function verifyCyclePipeline() {
     console.log(`     ↳ Explorer: ${cycleResult.decisionResult.explorerUrl}`);
   } else {
     console.log(`  ℹ️  No on-chain transaction generated (simulation mode or skipped).`);
+  }
+
+  console.log("\n▶ [TEST 1 IDEMPOTENCY] Replaying the same cycle key...");
+  try {
+    await runAutonomousGlyphCycle({
+      targetAsset: "NVDA",
+      agentIdentifier: process.env.GLYPH_AGENT_ID || "1",
+      cycleKey: testCycleKey,
+    });
+    throw new Error("Idempotency failed: duplicate cycle key was accepted.");
+  } catch (error: any) {
+    if (error?.code !== "P2002") {
+      throw error;
+    }
+    console.log("  ✅ Duplicate cycle key rejected before market research/AI execution.");
   }
 
   // -------------------------------------------------------------------------

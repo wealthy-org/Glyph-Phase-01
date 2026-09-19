@@ -35,7 +35,7 @@ export interface LandingPositionItem {
 export interface LandingLatestDecision {
   id: string;
   asset: string;
-  action: "LONG" | "SHORT" | "NO_TRADE";
+  action: "OPEN_LONG" | "OPEN_SHORT" | "HOLD" | "CLOSE" | "NO_TRADE";
   conviction: number;
   fundamentalScore: number | null;
   technicalScore: number | null;

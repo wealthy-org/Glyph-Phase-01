@@ -3,18 +3,16 @@
 // Run with: npx tsx scripts/test-onchain.ts
 // ============================================================================
 
+import { executeGlyphDecisionCycle } from "../../src/lib/decision/engine";
 import {
-  calculateDecisionHash,
-  canonicalJsonStringify,
+  calculateDecisionHash
 } from "../../src/lib/onchain/hash";
 import {
-  commitDecisionOnchain,
   getExplorerTxUrl,
-  robinhoodTestnet,
+  robinhoodTestnet
 } from "../../src/lib/onchain/registry";
-import { executeGlyphDecisionCycle } from "../../src/lib/decision/engine";
-import { createResearchSnapshot } from "../../src/lib/research";
 import { prisma } from "../../src/lib/prisma";
+import { createResearchSnapshot } from "../../src/lib/research";
 
 async function runOnchainTests() {
   console.log("===============================================================");
@@ -34,7 +32,7 @@ async function runOnchainTests() {
     decisionId: "dec-001",
     agentId: "1",
     asset: "NVDA",
-    action: "LONG" as const,
+    action: "OPEN_LONG" as const,
     conviction: 82,
     thesis: {
       fundamental: "Strong GPU data center revenue momentum.",
@@ -57,7 +55,7 @@ async function runOnchainTests() {
     policyResult: "APPROVED" as const,
     promptVersion: "V1",
     agentId: "1",
-    action: "LONG" as const,
+    action: "OPEN_LONG" as const,
     thesis: {
       invalidation: "Breakdown below $110 support level.",
       risk: "Macro drag or sudden valuation multiple compression.",

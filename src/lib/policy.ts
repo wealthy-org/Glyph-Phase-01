@@ -33,10 +33,15 @@ export const GLYPH_POLICY = {
 
 export interface TradeProposal {
   asset: string;
-  action: "LONG" | "SHORT" | "NO_TRADE";
+  action: "OPEN_LONG" | "OPEN_SHORT" | "HOLD" | "CLOSE" | "NO_TRADE";
   conviction: number; // 0-100
   positionSizePercent?: number; // Proposed % of equity
   leverage?: number; // Proposed leverage multiplier
+}
+
+export interface ActivePositionState {
+  asset: string;
+  side: "LONG" | "SHORT";
 }
 
 export interface PolicyValidationResult {
@@ -54,14 +59,54 @@ export interface PolicyValidationResult {
 export function validateTradeProposal(
   proposal: TradeProposal,
   currentOpenPositionsCount: number = 0,
-  dailyLossPercent: number = 0
+  dailyLossPercent: number = 0,
+  currentPosition: ActivePositionState | null = null
 ): PolicyValidationResult {
-  // 1. Check for NO_TRADE action
   if (proposal.action === "NO_TRADE") {
     return {
       approved: false,
       policyResult: "REJECTED",
       rejectReason: "Action is NO_TRADE. Proposal does not warrant execution.",
+      clampedLeverage: 1,
+      clampedPositionPercent: 0,
+    };
+  }
+
+  if (proposal.action === "HOLD" || proposal.action === "CLOSE") {
+    if (!currentPosition) {
+      return {
+        approved: false,
+        policyResult: "REJECTED",
+        rejectReason: `${proposal.action} requires an active position for ${proposal.asset}.`,
+        clampedLeverage: 1,
+        clampedPositionPercent: 0,
+      };
+    }
+
+    if (currentPosition.asset.toUpperCase() !== proposal.asset.toUpperCase()) {
+      return {
+        approved: false,
+        policyResult: "REJECTED",
+        rejectReason: `Active position is ${currentPosition.asset}, not ${proposal.asset}.`,
+        clampedLeverage: 1,
+        clampedPositionPercent: 0,
+      };
+    }
+
+    return {
+      approved: true,
+      policyResult: "APPROVED",
+      rejectReason: null,
+      clampedLeverage: 1,
+      clampedPositionPercent: 0,
+    };
+  }
+
+  if (currentPosition) {
+    return {
+      approved: false,
+      policyResult: "REJECTED",
+      rejectReason: `Cannot ${proposal.action} ${proposal.asset} while ${currentPosition.side} position is open. Close it first.`,
       clampedLeverage: 1,
       clampedPositionPercent: 0,
     };
@@ -185,9 +230,15 @@ export async function evaluateAgentTradeProposal(
   const dailyLossPercent =
     initialCapital > 0 ? (totalLossDollar / initialCapital) * 100 : 0;
 
+  const currentPosition = await prisma.position.findFirst({
+    where: { agentId: agent.id, asset: proposal.asset, isOpen: true },
+    select: { asset: true, side: true },
+  });
+
   return validateTradeProposal(
     proposal,
     currentOpenPositionsCount,
-    dailyLossPercent
+    dailyLossPercent,
+    currentPosition
   );
 }

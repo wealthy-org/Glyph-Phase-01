@@ -315,7 +315,7 @@ export async function seedTrades(prisma: PrismaClient, agentId: string) {
       data: {
         agentId,
         asset: item.asset,
-        action: item.action === PositionSide.LONG ? DecisionAction.LONG : DecisionAction.SHORT,
+        action: item.action === PositionSide.LONG ? DecisionAction.OPEN_LONG : DecisionAction.OPEN_SHORT,
         conviction: item.conviction,
         fundamentalScore: item.fundamentalScore,
         technicalScore: item.technicalScore,
@@ -365,6 +365,53 @@ export async function seedTrades(prisma: PrismaClient, agentId: string) {
       where: { id: decision.id },
       data: { tradeId: trade.id },
     });
+
+    const holdAt = new Date(item.createdAt.getTime() + 2 * 60 * 60 * 1000);
+    await prisma.decision.create({
+      data: {
+        agentId,
+        asset: item.asset,
+        action: DecisionAction.HOLD,
+        conviction: item.conviction,
+        fundamentalScore: item.fundamentalScore,
+        technicalScore: item.technicalScore,
+        riskScore: item.riskScore,
+        positionSizePercent: 0,
+        leverage: item.leverage,
+        thesis: {
+          ...item.thesis,
+          catalyst: `Holding ${item.asset} while the original thesis is monitored.`,
+        },
+        policyResult: PolicyResult.APPROVED,
+        researchSnapshotId: researchSnapshot.id,
+        promptVersion: "GLYPH_DECISION_PROMPT_V2_LIFECYCLE",
+        createdAt: holdAt,
+      },
+    });
+
+    if (item.status === TradeStatus.CLOSED) {
+      await prisma.decision.create({
+        data: {
+          agentId,
+          asset: item.asset,
+          action: DecisionAction.CLOSE,
+          conviction: item.conviction,
+          fundamentalScore: item.fundamentalScore,
+          technicalScore: item.technicalScore,
+          riskScore: item.riskScore,
+          positionSizePercent: 0,
+          leverage: item.leverage,
+          thesis: {
+            ...item.thesis,
+            catalyst: `Closed ${item.asset} after evaluating the current risk and reward.`,
+          },
+          policyResult: PolicyResult.APPROVED,
+          researchSnapshotId: researchSnapshot.id,
+          promptVersion: "GLYPH_DECISION_PROMPT_V2_LIFECYCLE",
+          createdAt: item.closedAt ?? holdAt,
+        },
+      });
+    }
 
     // 3. Create Memory if Trade was closed
     const mem = item.memory;

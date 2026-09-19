@@ -4,7 +4,7 @@
 // Deterministic canonical serialization and keccak256 hash generation.
 // ============================================================================
 
-import { keccak256, toHex, Hex } from "viem";
+import { Hex, keccak256, toHex } from "viem";
 
 /**
  * Recursively sorts all keys in an object to produce a canonical deterministic JSON string.
@@ -29,7 +29,7 @@ export interface CanonicalDecisionPayload {
   decisionId: string;
   agentId: string;
   asset: string;
-  action: "LONG" | "SHORT" | "NO_TRADE";
+  action: "OPEN_LONG" | "OPEN_SHORT" | "HOLD" | "CLOSE" | "NO_TRADE";
   conviction: number;
   fundamentalScore?: number | null;
   technicalScore?: number | null;
