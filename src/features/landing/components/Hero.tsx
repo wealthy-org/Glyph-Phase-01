@@ -230,7 +230,7 @@ const AnalysisStreamViewer: React.FC<AnalysisStreamViewerProps> = React.memo(({
       setIsTyping(true);
       timer = setTimeout(() => {
         setCharIdx((prev) => Math.min(activeStageText.length, prev + 1));
-      }, 36);
+      }, 35);
     } else {
       setIsTyping(false);
       if (!hasFinishedRef.current) {
