@@ -10,6 +10,7 @@
     "prisma:reset": "prisma generate && prisma db push --force-reset && prisma db seed",
     "db:reset": "npm run prisma:reset",
     "db:seed": "npx tsx prisma/seed.ts",
+    "seed:v2": "npx tsx scripts/seed/seed-v2.ts",
     "seed:trades": "npx tsx scripts/seed/seed-trades.ts",
     "reset:trades": "npx tsx scripts/seed/reset-trades.ts",
     "test:analysis": "npx tsx scripts/test/preview-risk-analysis.ts",

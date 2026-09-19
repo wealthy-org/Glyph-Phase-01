@@ -1,12 +1,12 @@
 "use client";
 
+import { Skeleton } from "@/components/ui/skeleton";
+import { HeaderMetricsData } from "@/lib/header-stats";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { cn } from "@/lib/utils";
-import { HeaderMetricsData } from "@/lib/header-stats";
-import { Skeleton } from "@/components/ui/skeleton";
 
 interface NavItem {
   label: string;
@@ -30,6 +30,10 @@ export interface NavbarProps {
 // In-memory module cache across client-side page transitions
 let globalHeaderCache: HeaderMetricsData | null = null;
 let activeFetchPromise: Promise<HeaderMetricsData | null> | null = null;
+
+function formatAgentId(agentId: string | number | undefined): string {
+  return String(agentId || "1").padStart(3, "0");
+}
 
 async function fetchHeaderStats(): Promise<HeaderMetricsData | null> {
   if (activeFetchPromise) return activeFetchPromise;
@@ -63,22 +67,12 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [currentHash, setCurrentHash] = useState<string>("");
   const [utcTime, setUtcTime] = useState<string>("");
 
-  const defaultAgentId = propAgentId || process.env.NEXT_PUBLIC_GLYPH_AGENT_ID || "001";
-
   // Check if caller supplied valid non-mocked data
   const hasValidInitial = Boolean(
     initialMetrics &&
-      typeof initialMetrics.treasuryEquity === "number" &&
-      typeof initialMetrics.pnlPercent === "number"
+    typeof initialMetrics.treasuryEquity === "number" &&
+    typeof initialMetrics.pnlPercent === "number"
   );
-
-  // If valid initial metrics passed, populate global cache
-  if (hasValidInitial && initialMetrics) {
-    globalHeaderCache = {
-      ...(globalHeaderCache || {}),
-      ...initialMetrics,
-    } as HeaderMetricsData;
-  }
 
   // Use initialMetrics if valid, else use global memory cache if present, else null (loading)
   const initialData: HeaderMetricsData | null = hasValidInitial
@@ -88,6 +82,15 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [metrics, setMetrics] = useState<HeaderMetricsData | null>(initialData);
   const [loading, setLoading] = useState<boolean>(!initialData);
   const [hasError, setHasError] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (hasValidInitial && initialMetrics) {
+      globalHeaderCache = {
+        ...(globalHeaderCache || {}),
+        ...initialMetrics,
+      } as HeaderMetricsData;
+    }
+  }, [hasValidInitial, initialMetrics]);
 
   // Track hash on client for hash-based navigation (e.g. #current-thesis)
   useEffect(() => {
@@ -167,16 +170,16 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const formattedTreasury = metrics
     ? new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      }).format(metrics.treasuryEquity)
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(metrics.treasuryEquity)
     : "";
 
-  const formattedAgentId = metrics?.agentId
-    ? metrics.agentId.toString().padStart(3, "0")
-    : defaultAgentId;
+  const formattedAgentId = formatAgentId(
+    metrics?.agentId || propAgentId || process.env.NEXT_PUBLIC_GLYPH_AGENT_ID
+  );
 
   const wins = metrics?.winningTradesCount ?? 0;
   const losses = metrics?.losingTradesCount ?? 0;
@@ -184,8 +187,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   const winRateNumber =
     totalEvaluated > 0
       ? (metrics?.winRatePercent !== null && metrics?.winRatePercent !== undefined
-          ? metrics.winRatePercent
-          : (wins / totalEvaluated) * 100)
+        ? metrics.winRatePercent
+        : (wins / totalEvaluated) * 100)
       : 0.0;
   const formattedWinRate = `${winRateNumber.toFixed(1)}% · ${wins}W / ${losses}L`;
 

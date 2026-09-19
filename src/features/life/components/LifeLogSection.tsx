@@ -412,7 +412,7 @@ export const LifeLogSection: React.FC<LifeLogSectionProps> = ({ initialEvents })
                                 CONFIDENCE
                               </span>
                               <span className="text-[#6fe39a]">
-                                {evt.decision?.conviction || 74}%
+                                {evt.decision?.conviction ?? 0}%
                               </span>
                             </div>
                             <div>
@@ -432,21 +432,21 @@ export const LifeLogSection: React.FC<LifeLogSectionProps> = ({ initialEvents })
                               <div className="px-3 py-1.5 flex items-center justify-between">
                                 <span className="text-[#85858a]">Fundamental Score</span>
                                 <span className="text-[#f3f3f4]">
-                                  {evt.decision?.fundamentalScore ?? 78}/100
+                                  {evt.decision?.fundamentalScore ?? 0}/100
                                 </span>
                                 <span className="text-[#6fe39a] text-[10px]">STRONG</span>
                               </div>
                               <div className="px-3 py-1.5 flex items-center justify-between">
                                 <span className="text-[#85858a]">Technical Momentum</span>
                                 <span className="text-[#f3f3f4]">
-                                  {evt.decision?.technicalScore ?? 72}/100
+                                  {evt.decision?.technicalScore ?? 0}/100
                                 </span>
                                 <span className="text-[#6fe39a] text-[10px]">FAVORABLE</span>
                               </div>
                               <div className="px-3 py-1.5 flex items-center justify-between">
                                 <span className="text-[#85858a]">Algorithmic Risk Score</span>
                                 <span className="text-[#f3f3f4]">
-                                  {evt.decision?.riskScore ?? 38}/100
+                                  {evt.decision?.riskScore ?? 0}/100
                                 </span>
                                 <span className="text-[#85858a] text-[10px]">CONTAINED</span>
                               </div>
@@ -491,7 +491,7 @@ export const LifeLogSection: React.FC<LifeLogSectionProps> = ({ initialEvents })
                                 CONVICTION
                               </span>
                               <span className="text-[#6fe39a]">
-                                {evt.decision?.conviction || 76}%
+                                {evt.decision?.conviction ?? 0}%
                               </span>
                             </div>
                             <div>
