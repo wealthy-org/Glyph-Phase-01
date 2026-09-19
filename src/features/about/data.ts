@@ -66,7 +66,7 @@ export const GLYPH_ABOUT_DATA: AboutPageData = {
       number: "03",
       title: "DECISION ENGINE",
       description:
-        "Market Data → Ingestion → Falsifiable Thesis → Deterministic Risk Policy → Simulated Execution.",
+        "Market Data → Ingestion → Glyphs View → Deterministic Risk Policy → Simulated Execution.",
     },
     {
       number: "04",
@@ -94,7 +94,7 @@ export const GLYPH_ABOUT_DATA: AboutPageData = {
     },
     {
       step: "03",
-      label: "THESIS",
+      label: "GLYPHS VIEW",
       description:
         "Explicit synthesis of opportunity with calculated conviction and falsifiable invalidation bounds.",
       colorClass: "text-[#f3f3f4]",
@@ -128,7 +128,7 @@ export const GLYPH_ABOUT_DATA: AboutPageData = {
       step: "07",
       label: "MEMORY",
       description:
-        "Post-trade reflection, thesis verification calibration, and persistent parameter adaptation.",
+        "Post-trade reflection, Glyphs View verification calibration, and persistent parameter adaptation.",
       colorClass: "text-[#f472b6]",
       badgeClass: "border-[#f472b6]/30 bg-[#f472b6]/10 text-[#f472b6]",
     },

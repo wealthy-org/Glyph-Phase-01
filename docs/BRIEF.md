@@ -54,7 +54,7 @@ Phase 01 is **paper trading / simulated execution**. Do NOT use real user funds.
 
 The website should feel like a **live observation terminal for a digital being**, not a generic crypto landing page.
 
-Primary user actions: Observe Glyph. Read its current objective. Inspect its latest decision. Read the fundamental and technical thesis. Inspect simulated portfolio and PnL. Verify the onchain decision record. Explore Glyph's economic history. Follow how Glyph learns from previous decisions.
+Primary user actions: Observe Glyph. Read its current objective. Inspect its latest decision. Read the fundamental and technical thesis. Inspect simulated portfolio and PnL. Verify the onchain decision record. Explore Glyphs economic history. Follow how Glyph learns from previous decisions.
 
 Primary CTA: **WATCH GLYPH LIVE**
 Secondary actions: **READ THESIS**, **VERIFY ONCHAIN**
@@ -292,7 +292,7 @@ PHASE 04: Multiple Economic Beings, User Created Beings, Agent Economy, Agent To
 
 ## 33. Developer Priority (P0-P8)
 
-P0 Foundation (Next.js, Supabase, TS, wallet connection [= Glyph's own smart account, lihat catatan penting di Bagian 3], EVM testnet connection) → P1 Identity (ERC-8004, agent wallet, profile) → P2 Economic simulation (treasury, portfolio, positions, PnL, leverage sim) → P3 Research engine → P4 Decision engine (structured output, Zod, policy engine, history) → P5 Onchain proof (hash, record, tx hash, explorer) → P6 Memory (result, lesson, history, prompt versioning) → P7 Public experience (homepage, live state, trade detail, Life Log, identity, reputation) → P8 Polish (motion, entity animation, loading/error states, observability, docs).
+P0 Foundation (Next.js, Supabase, TS, wallet connection [= Glyphs own smart account, lihat catatan penting di Bagian 3], EVM testnet connection) → P1 Identity (ERC-8004, agent wallet, profile) → P2 Economic simulation (treasury, portfolio, positions, PnL, leverage sim) → P3 Research engine → P4 Decision engine (structured output, Zod, policy engine, history) → P5 Onchain proof (hash, record, tx hash, explorer) → P6 Memory (result, lesson, history, prompt versioning) → P7 Public experience (homepage, live state, trade detail, Life Log, identity, reputation) → P8 Polish (motion, entity animation, loading/error states, observability, docs).
 
 ## 34. First Milestone
 

@@ -34,7 +34,7 @@ The actual product is the **economic life of Glyph**.
 
 The user should be able to observe:
 
-> What Glyph knows → what Glyph researched → what Glyph decided → why Glyph decided it → what happened afterward → how Glyph's economic state changed.
+> What Glyph knows → what Glyph researched → what Glyph decided → why Glyph decided it → what happened afterward → how Glyphs economic state changed.
 
 ---
 
@@ -62,7 +62,7 @@ REPUTATION
 
 The MVP does NOT need to be a profitable autonomous trader.
 
-The objective is to make Glyph's economic existence:
+The objective is to make Glyphs economic existence:
 
 1. visible
 2. persistent
@@ -302,7 +302,7 @@ The wallet belongs to Glyph, not the user.
 
 The user can observe the wallet.
 
-The user should not need to manually operate Glyph's wallet for normal Phase 01 behavior.
+The user should not need to manually operate Glyphs wallet for normal Phase 01 behavior.
 
 ## Wallet UI
 
@@ -481,7 +481,7 @@ interface AIProvider {
 
 # 13. OPENROUTER
 
-OpenRouter is required for Glyph's AI analysis layer in Phase 01.
+OpenRouter is required for Glyphs AI analysis layer in Phase 01.
 
 The API key must only exist on the server.
 
@@ -596,7 +596,7 @@ MEMORY UPDATE
 
 A decision should not disappear after execution.
 
-It must remain part of Glyph's permanent history.
+It must remain part of Glyphs permanent history.
 
 ---
 
@@ -664,7 +664,7 @@ Glyph needs persistent memory.
 
 Memory should not simply be a chat history.
 
-Memory represents important information that contributes to Glyph's future behavior.
+Memory represents important information that contributes to Glyphs future behavior.
 
 ## Memory categories
 
@@ -944,7 +944,7 @@ Suggested layout:
 
 # 29. ACTIVITY FEED
 
-Activity provides a chronological view of Glyph's life.
+Activity provides a chronological view of Glyphs life.
 
 Example:
 
@@ -1781,7 +1781,7 @@ Glyph should ultimately be understandable through this model:
 
 The central object is **Glyph**, not the chatbot.
 
-The central experience is **observing Glyph's economic life**, not chatting with an AI.
+The central experience is **observing Glyphs economic life**, not chatting with an AI.
 
 ---
 

@@ -5,7 +5,7 @@ import { fetchLiveTradesData } from "@/features/trades/queries";
 export const metadata = {
   title: "Glyph Trades — Public Execution Record",
   description:
-    "Every simulated trade made by Glyph. All positions are logged, verified, and linked to explicit thesis formulations.",
+    "Every simulated trade made by Glyph. All positions are logged, verified, and linked to explicit Glyphs View formulations.",
 };
 
 // Ensure page reflects live trade executions from Supabase

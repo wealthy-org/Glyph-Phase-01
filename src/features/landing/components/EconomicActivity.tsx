@@ -1,12 +1,12 @@
 "use client";
 
-import React from "react";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
+import React from "react";
 import {
+  LandingAgentMeta,
   LandingEconomicEvent,
   LandingMemoryItem,
-  LandingAgentMeta,
 } from "../types";
 
 interface EconomicActivityProps {
@@ -16,7 +16,7 @@ interface EconomicActivityProps {
   agent: LandingAgentMeta;
 }
 
-export const EconomicActivity: React.FC<EconomicActivityProps> = ({
+const EconomicActivityComponent: React.FC<EconomicActivityProps> = ({
   latestMemory,
   adaptiveLearnings,
   agent,
@@ -33,11 +33,15 @@ export const EconomicActivity: React.FC<EconomicActivityProps> = ({
     latestMemory?.thesisResult === "CORRECT"
       ? "text-[#6fe39a]"
       : latestMemory?.thesisResult === "INCORRECT"
-      ? "text-[#c47a7a]"
-      : "text-[#fbbf24]";
+        ? "text-[#c47a7a]"
+        : "text-[#fbbf24]";
 
   return (
-    <section id="economic-activity" className="w-full py-12 sm:py-16 border-b border-[#171717] bg-[#000000]">
+    <section
+      id="economic-activity"
+      className="w-full py-12 sm:py-16 border-b border-[#171717] bg-[#000000]"
+      style={{ contentVisibility: "auto", containIntrinsicSize: "800px" }}
+    >
       <div className="max-w-[1280px] mx-auto px-4 sm:px-8 lg:px-12 space-y-10">
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#171717] pb-6">
@@ -110,7 +114,7 @@ export const EconomicActivity: React.FC<EconomicActivityProps> = ({
                   <div className="pt-3 grid grid-cols-1 sm:grid-cols-2 gap-3 font-mono text-xs border-t border-[#141414]">
                     <div className="space-y-0.5">
                       <span className="text-[10px] text-[#55555a] uppercase tracking-wider block">
-                        THESIS VERDICT
+                        GLYPHS VIEW VERDICT
                       </span>
                       <span className={cn("font-medium", verdictColor)}>
                         {latestMemory.thesisResult}
@@ -211,3 +215,5 @@ export const EconomicActivity: React.FC<EconomicActivityProps> = ({
     </section>
   );
 };
+
+export const EconomicActivity = React.memo(EconomicActivityComponent);

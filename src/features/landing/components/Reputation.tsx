@@ -7,7 +7,7 @@ interface ReputationProps {
   reputation: LandingReputationData;
 }
 
-export const Reputation: React.FC<ReputationProps> = ({ reputation }) => {
+const ReputationComponent: React.FC<ReputationProps> = ({ reputation }) => {
   const winRateDisplay =
     reputation.winRate !== null ? `${reputation.winRate.toFixed(1)}%` : "0.0%";
 
@@ -25,6 +25,7 @@ export const Reputation: React.FC<ReputationProps> = ({ reputation }) => {
     <section
       id="reputation"
       className="relative w-full py-12 sm:py-16 bg-[#000000] overflow-hidden border-b border-[#171717]"
+      style={{ contentVisibility: "auto", containIntrinsicSize: "800px" }}
     >
       {/* Subtle modern technical grid background */}
       <GridBackground glowColor="neutral" intensity="subtle" gridSize={36} />
@@ -220,3 +221,5 @@ export const Reputation: React.FC<ReputationProps> = ({ reputation }) => {
     </section>
   );
 };
+
+export const Reputation = React.memo(ReputationComponent);

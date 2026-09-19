@@ -1,12 +1,12 @@
-import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
 import { LifeLogSection, getLifeEvents } from "@/features/life";
+import type { Metadata } from "next";
 
 export const revalidate = 0; // Dynamic server render for live life log
 
 export const metadata: Metadata = {
   title: "Glyph Life Log — Economic Being #001",
-  description: "A chronological record of Glyph's economic existence.",
+  description: "A chronological record of Glyphs economic existence.",
 };
 
 export default async function LifePage() {

@@ -8,11 +8,11 @@
 
 import { prisma } from "@/lib/prisma";
 import {
-  LifeEvent,
-  EventCategory,
   DecisionDetail,
-  TradeDetail,
+  EventCategory,
+  LifeEvent,
   MemoryDetail,
+  TradeDetail,
 } from "./types";
 
 function mapEventTypeToCategory(eventType: string): EventCategory {
@@ -189,7 +189,7 @@ export async function getLifeEvents(agentIdentifier?: string): Promise<LifeEvent
             linkedDecision?.policyResult === "APPROVED";
           status = isApproved ? "APPROVED" : "REJECTED";
           statusTone = isApproved ? "positive" : "negative";
-          actionLabel = "VIEW THESIS →";
+          actionLabel = "GLYPHS VIEW →";
           const conviction = linkedDecision?.conviction || 74;
           shortMeta = `Risk policy ${status.toLowerCase()} · Conviction ${conviction}%`;
           break;
@@ -237,8 +237,8 @@ export async function getLifeEvents(agentIdentifier?: string): Promise<LifeEvent
           shortMeta = linkedMemory?.adaptation
             ? `Adaptation: ${linkedMemory.adaptation}`
             : linkedMemory?.lesson
-            ? `Lesson: ${linkedMemory.lesson}`
-            : "Post-trade calibration and weight adjustments committed";
+              ? `Lesson: ${linkedMemory.lesson}`
+              : "Post-trade calibration and weight adjustments committed";
           break;
         }
         case "TREASURY_FUNDED": {

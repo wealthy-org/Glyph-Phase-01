@@ -101,7 +101,7 @@ export const TradeTable: React.FC<TradeTableProps> = ({ trades }) => {
                   Net Return
                 </TableHead>
                 <TableHead className="font-sans text-xs font-semibold text-[#8e8e96] py-3.5 px-5">
-                  Thesis Status
+                  Glyph&apos;s View
                 </TableHead>
                 <TableHead className="font-sans text-xs font-semibold text-[#8e8e96] py-3.5 px-5 text-right">
                   Verification

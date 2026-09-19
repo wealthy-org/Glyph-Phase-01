@@ -9,7 +9,7 @@ interface GridBackgroundProps {
   lineOpacity?: number;
 }
 
-export const GridBackground: React.FC<GridBackgroundProps> = ({
+const GridBackgroundComponent: React.FC<GridBackgroundProps> = ({
   className,
   gridSize = 36,
   glowColor = "neutral",
@@ -25,9 +25,10 @@ export const GridBackground: React.FC<GridBackgroundProps> = ({
   return (
     <div
       className={cn(
-        "absolute inset-0 pointer-events-none overflow-hidden select-none",
+        "absolute inset-0 pointer-events-none overflow-hidden select-none transform-gpu",
         className
       )}
+      style={{ contain: "strict" }}
       aria-hidden="true"
     >
       {/* Precision modern technical grid lines */}
@@ -70,3 +71,5 @@ export const GridBackground: React.FC<GridBackgroundProps> = ({
     </div>
   );
 };
+
+export const GridBackground = React.memo(GridBackgroundComponent);

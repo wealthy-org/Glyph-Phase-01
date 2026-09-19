@@ -111,7 +111,7 @@ All env vars are defined in `.env`. Full reference available in `BRIEF.md §3.1`
 
 | Variable | Example | Description |
 |---|---|---|
-| `NEXT_PUBLIC_GLYPH_WALLET_ADDRESS` | `0x9abc...` | Glyph's Safe smart account address, displayed on the Identity page. This is a **public** address, not a private key. |
+| `NEXT_PUBLIC_GLYPH_WALLET_ADDRESS` | `0x9abc...` | Glyphs Safe smart account address, displayed on the Identity page. This is a **public** address, not a private key. |
 
 ---
 

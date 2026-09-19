@@ -1,20 +1,20 @@
 "use client";
 
-import React from "react";
-import Link from "next/link";
-import { Trade } from "../types";
-import { TableRow, TableCell } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { TableCell, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import {
-  ArrowUpRight,
   ArrowDownRight,
+  ArrowUpRight,
   CheckCircle2,
-  XCircle,
-  ExternalLink,
   ChevronRight,
+  ExternalLink,
+  XCircle,
 } from "lucide-react";
+import Link from "next/link";
+import React from "react";
+import { Trade } from "../types";
 
 interface TradeRowProps {
   trade: Trade;
@@ -190,7 +190,7 @@ export const TradeRow: React.FC<TradeRowProps> = ({ trade }) => {
               variant="ghost"
               size="xs"
               className="h-7 px-2 bg-transparent hover:bg-[#16161e] text-[#71717a] hover:text-[#f4f4f5] border border-transparent hover:border-[#282834] rounded-md transition-all cursor-pointer"
-              title="View Trade Thesis Details"
+              title="Glyphs View Details"
             >
               <ChevronRight size={14} />
             </Button>

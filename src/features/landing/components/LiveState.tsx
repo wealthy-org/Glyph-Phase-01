@@ -521,7 +521,7 @@ export const LiveState: React.FC<LiveStateProps> = ({
                 <span className="text-[#6fe39a] font-medium block mb-1">
                   PROOF OF DECISION INTEGRITY
                 </span>
-                The payload contains the exact fundamental score ({latestDecision.fundamentalScore ?? "N/A"}), technical score ({latestDecision.technicalScore ?? "N/A"}), risk score ({latestDecision.riskScore ?? "N/A"}), and timestamp. Modifying any thesis reasoning after execution causes cryptographic invalidation.
+                The payload contains the exact fundamental score ({latestDecision.fundamentalScore ?? "N/A"}), technical score ({latestDecision.technicalScore ?? "N/A"}), risk score ({latestDecision.riskScore ?? "N/A"}), and timestamp. Modifying any reasoning in Glyphs View after execution causes cryptographic invalidation.
               </div>
             </div>
 

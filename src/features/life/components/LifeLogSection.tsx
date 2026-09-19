@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
-import { LifeEvent, StreamFilterCategory } from "../types";
 import { cn } from "@/lib/utils";
-import { Search, X, ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
+import { ChevronDown, ChevronUp, ExternalLink, Search, X } from "lucide-react";
 import Link from "next/link";
+import React, { useMemo, useState } from "react";
+import { LifeEvent, StreamFilterCategory } from "../types";
 
 const STREAM_FILTERS: StreamFilterCategory[] = [
   "ALL",
@@ -277,8 +277,8 @@ export const LifeLogSection: React.FC<LifeLogSectionProps> = ({ initialEvents })
                 evt.statusTone === "positive"
                   ? "text-[#6fe39a]"
                   : evt.statusTone === "negative"
-                  ? "text-[#c47a7a]"
-                  : "text-[#a1a1aa]";
+                    ? "text-[#c47a7a]"
+                    : "text-[#a1a1aa]";
 
               return (
                 <div
@@ -453,10 +453,10 @@ export const LifeLogSection: React.FC<LifeLogSectionProps> = ({ initialEvents })
                             </div>
                           </div>
 
-                          {/* Thesis Description */}
+                          {/* Glyphs View Description */}
                           <div className="space-y-1 pt-1">
                             <span className="text-[10px] text-[#55555a] tracking-wider uppercase block">
-                              RESEARCH THESIS
+                              GLYPHS VIEW
                             </span>
                             <p className="font-sans text-xs text-[#a1a1aa] leading-relaxed bg-[#060606] p-3 border border-[#171717]">
                               {evt.description}
@@ -512,11 +512,11 @@ export const LifeLogSection: React.FC<LifeLogSectionProps> = ({ initialEvents })
                             </div>
                           </div>
 
-                          {/* Thesis Structured Components */}
+                          {/* Glyphs View Structured Components */}
                           {evt.decision?.thesis && (
                             <div className="space-y-2 pt-1">
                               <span className="text-[10px] text-[#55555a] tracking-wider uppercase block">
-                                STRUCTURED THESIS BREAKDOWN
+                                STRUCTURED GLYPHS VIEW BREAKDOWN
                               </span>
                               <div className="space-y-2 text-xs font-sans">
                                 {evt.decision.thesis.catalyst && (
@@ -596,8 +596,8 @@ export const LifeLogSection: React.FC<LifeLogSectionProps> = ({ initialEvents })
                                 {evt.trade?.exitPrice
                                   ? `$${evt.trade.exitPrice.toFixed(2)}`
                                   : evt.trade?.targetPrice
-                                  ? `$${evt.trade.targetPrice.toFixed(2)}`
-                                  : "ACTIVE"}
+                                    ? `$${evt.trade.targetPrice.toFixed(2)}`
+                                    : "ACTIVE"}
                               </span>
                             </div>
                             <div>
@@ -644,7 +644,7 @@ export const LifeLogSection: React.FC<LifeLogSectionProps> = ({ initialEvents })
                           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 py-2 border-b border-[#171717]/60 text-[11px]">
                             <div>
                               <span className="text-[#55555a] block text-[10px] uppercase">
-                                THESIS ACCURACY
+                                GLYPHS VIEW ACCURACY
                               </span>
                               <span className="text-[#f3f3f4]">
                                 {evt.memory?.thesisResult || "CORRECT"}

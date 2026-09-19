@@ -16,9 +16,9 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { label: "OVERVIEW", href: "/" },
+  { label: "IDENTITY", href: "/identity" },
   { label: "TRADES", href: "/trades" },
   { label: "LIFE LOG", href: "/life" },
-  { label: "IDENTITY", href: "/identity" },
   { label: "ABOUT", href: "/about" },
 ];
 
@@ -194,7 +194,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <header
-      className="sticky top-0 z-50 w-full bg-[#000000]/95 backdrop-blur-xl border-b border-[#171717] select-none"
+      className="sticky top-0 z-50 w-full bg-[#000000] border-b border-[#171717] select-none transform-gpu"
       role="banner"
     >
       {/* ========================================================================= */}

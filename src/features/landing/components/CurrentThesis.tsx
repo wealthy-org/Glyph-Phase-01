@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { GridBackground } from "@/components/ui/GridBackground";
-import { ArrowUpRight, ShieldAlert, CheckCircle2, AlertTriangle } from "lucide-react";
 import { motion } from "framer-motion";
+import { AlertTriangle, ArrowUpRight, CheckCircle2, ShieldAlert } from "lucide-react";
+import Link from "next/link";
+import React, { useState } from "react";
 import { LandingLatestDecision } from "../types";
 
 interface CurrentThesisProps {
@@ -20,12 +20,12 @@ export const CurrentThesis: React.FC<CurrentThesisProps> = ({ latestDecision }) 
       <section id="current-thesis" className="relative w-full py-16 sm:py-24 border-b border-[#171717] bg-[#000000] overflow-hidden">
         <GridBackground glowColor="emerald" intensity="medium" gridSize={36} />
         <div className="relative z-10 max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-12 space-y-6">
-          <span className="eyebrow">THESIS // CONVERGENCE</span>
+          <span className="eyebrow">GLYPHS VIEW // CONVERGENCE</span>
           <h2 className="text-3xl sm:text-5xl font-light tracking-tight text-[#f3f3f4]">
-            No thesis recorded.
+            No Glyphs View recorded.
           </h2>
           <p className="font-mono text-xs text-[#85858a]">
-            Glyph has not published an autonomous research thesis in the current epoch.
+            Glyph has not published an autonomous research view in the current epoch.
           </p>
         </div>
       </section>
@@ -58,9 +58,9 @@ export const CurrentThesis: React.FC<CurrentThesisProps> = ({ latestDecision }) 
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
           <div className="space-y-3">
-            <span className="eyebrow">THESIS // CONVERGENCE</span>
+            <span className="eyebrow">GLYPHS VIEW // CONVERGENCE</span>
             <h2 className="text-3xl sm:text-5xl font-light tracking-tight text-[#f3f3f4] leading-[0.98]">
-              Autonomous thesis,<br />
+              Autonomous Glyphs View,<br />
               unambiguous boundary.
             </h2>
           </div>
@@ -128,14 +128,14 @@ export const CurrentThesis: React.FC<CurrentThesisProps> = ({ latestDecision }) 
               </div>
             </div>
 
-            {/* Read Full Thesis CTA */}
+            {/* Read Full Glyphs View CTA */}
             <div>
               <Button
                 variant="outline"
                 onClick={() => setModalOpen(true)}
                 className="h-10 px-5 border border-[#262626] bg-transparent hover:bg-[#0c0c0c] text-[#f3f3f4] hover:border-[#444448] font-sans text-sm font-normal normal-case tracking-normal transition-colors rounded-[3px] flex items-center gap-2 cursor-pointer"
               >
-                <span>Read full thesis memorandum</span>
+                <span>Read full Glyphs View memorandum</span>
                 <ArrowUpRight size={14} />
               </Button>
             </div>
@@ -291,7 +291,7 @@ export const CurrentThesis: React.FC<CurrentThesisProps> = ({ latestDecision }) 
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <div className="font-mono text-xs text-[#6fe39a] uppercase tracking-wider">
-                  THESIS MEMORANDUM // #{latestDecision.id.slice(0, 8)}
+                  GLYPHS VIEW MEMORANDUM // #{latestDecision.id.slice(0, 8)}
                 </div>
                 <button
                   type="button"
@@ -307,21 +307,21 @@ export const CurrentThesis: React.FC<CurrentThesisProps> = ({ latestDecision }) 
             <div className="space-y-4 text-sm text-[#85858a] leading-relaxed font-light">
               <div className="p-3 bg-[#030303] border border-[#171717] space-y-1.5">
                 <div className="font-mono text-xs text-[#6fe39a] uppercase flex items-center justify-between">
-                  <span>FUNDAMENTAL THESIS</span>
+                  <span>FUNDAMENTAL VIEW</span>
                   <span className="text-[#f3f3f4]">{fundamentalScore} / 100</span>
                 </div>
                 <p className="text-xs text-[#f0f0f2] font-light">
-                  {thesis.fundamental || "No fundamental thesis notes logged."}
+                  {thesis.fundamental || "No fundamental view notes logged."}
                 </p>
               </div>
 
               <div className="p-3 bg-[#030303] border border-[#171717] space-y-1.5">
                 <div className="font-mono text-xs text-[#6fe39a] uppercase flex items-center justify-between">
-                  <span>TECHNICAL THESIS</span>
+                  <span>TECHNICAL VIEW</span>
                   <span className="text-[#f3f3f4]">{technicalScore} / 100</span>
                 </div>
                 <p className="text-xs text-[#f0f0f2] font-light">
-                  {thesis.technical || "No technical thesis notes logged."}
+                  {thesis.technical || "No technical view notes logged."}
                 </p>
               </div>
 
