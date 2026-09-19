@@ -188,7 +188,6 @@ interface AnalysisStreamViewerProps {
   viewThesisHref: string;
   elapsedStr: string;
   reasoningStatus: "ACTIVE" | "COUNTDOWN" | "COUNTDOWN_ZERO" | "RECORDED";
-  reasoningElapsedStr: string;
   isDecisionRevealed: boolean;
   onTypingFinished?: () => void;
   alreadyCompleted?: boolean;
@@ -205,7 +204,6 @@ const AnalysisStreamViewer: React.FC<AnalysisStreamViewerProps> = React.memo(({
   viewThesisHref,
   elapsedStr,
   reasoningStatus,
-  reasoningElapsedStr,
   isDecisionRevealed,
   onTypingFinished,
   alreadyCompleted = false,
@@ -345,13 +343,15 @@ const AnalysisStreamViewer: React.FC<AnalysisStreamViewerProps> = React.memo(({
         </div>
         <div
           className={cn(
-            "uppercase tabular-nums",
+            "uppercase tracking-wider font-mono",
             !isDecisionRevealed
               ? "text-[#6fe39a] font-medium"
-              : "text-[#55555e]"
+              : "text-[#85858a]"
           )}
         >
-          {reasoningElapsedStr}
+          {!isDecisionRevealed
+            ? `STAGE ${activeTabIdx + 1} OF ${totalTabs}`
+            : "5/5 STAGES COMPLETE"}
         </div>
       </div>
     </div>
@@ -423,7 +423,6 @@ export const Hero: React.FC<HeroProps> = ({
 
   const [currentStageIdx, setCurrentStageIdx] = useState<number>(0);
   const [stagePhase, setStagePhase] = useState<StagePhase>("TYPING");
-  const [reasoningElapsedSec, setReasoningElapsedSec] = useState<number>(0);
   const [isDecisionRevealed, setIsDecisionRevealed] = useState<boolean>(false);
   const [selectedTab, setSelectedTab] = useState<AnalysisTab | null>(null);
   const [completedTabs, setCompletedTabs] = useState<Set<AnalysisTab>>(() => new Set());
@@ -449,16 +448,11 @@ export const Hero: React.FC<HeroProps> = ({
 
   // Timers refs
   const pauseTimerRef = React.useRef<NodeJS.Timeout | null>(null);
-  const reasoningTimerRef = React.useRef<NodeJS.Timeout | null>(null);
 
   const clearAllTimers = useCallback(() => {
     if (pauseTimerRef.current) {
       clearTimeout(pauseTimerRef.current);
       pauseTimerRef.current = null;
-    }
-    if (reasoningTimerRef.current) {
-      clearInterval(reasoningTimerRef.current);
-      reasoningTimerRef.current = null;
     }
   }, []);
 
@@ -470,29 +464,6 @@ export const Hero: React.FC<HeroProps> = ({
   }, [clearAllTimers]);
 
   const isDecisionFinal = completedTabs.has("glyph-view") || isDecisionRevealed;
-
-  // Stopwatch timer (00:00 -> 00:01 -> 00:02... freezes when decision is recorded)
-  useEffect(() => {
-    if (isDecisionFinal) {
-      if (reasoningTimerRef.current) {
-        clearInterval(reasoningTimerRef.current);
-        reasoningTimerRef.current = null;
-      }
-      return;
-    }
-
-    reasoningTimerRef.current = setInterval(() => {
-      setReasoningElapsedSec((prev) => prev + 1);
-    }, 1000);
-
-    return () => {
-      if (reasoningTimerRef.current) {
-        clearInterval(reasoningTimerRef.current);
-      }
-    };
-  }, [isDecisionFinal]);
-
-  const reasoningElapsedStr = `00:${reasoningElapsedSec.toString().padStart(2, "0")}`;
 
   // Event handler called strictly when typing has 100% completed for a tab
   const handleTypingFinished = useCallback((tabId: AnalysisTab) => {
@@ -809,7 +780,6 @@ export const Hero: React.FC<HeroProps> = ({
               viewThesisHref={viewThesisHref}
               elapsedStr={elapsedStr}
               reasoningStatus={reasoningStatus}
-              reasoningElapsedStr={reasoningElapsedStr}
               isDecisionRevealed={isDecisionFinal}
               onTypingFinished={() => handleTypingFinished(activeTab)}
               alreadyCompleted={completedTabs.has(activeTab)}
