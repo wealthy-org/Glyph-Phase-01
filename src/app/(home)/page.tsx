@@ -47,6 +47,7 @@ export default async function Home() {
           openPosition={data.openPositions[0] || null}
           latestDecision={data.latestDecision}
           latestAnalysis={data.latestAnalysis}
+          latestActivity={data.latestActivity}
           cycleCount={data.cognitiveCycleCount}
           recentEvents={data.recentEvents}
         />

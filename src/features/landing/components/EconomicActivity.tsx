@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import React from "react";
+import { EventTimeline } from "./EventTimeline";
 import {
   LandingAgentMeta,
   LandingEconomicEvent,
@@ -17,6 +18,7 @@ interface EconomicActivityProps {
 }
 
 const EconomicActivityComponent: React.FC<EconomicActivityProps> = ({
+  recentEvents = [],
   latestMemory,
   adaptiveLearnings,
   agent,
@@ -211,6 +213,26 @@ const EconomicActivityComponent: React.FC<EconomicActivityProps> = ({
             )}
           </div>
         </div>
+
+        {/* 3. AUTONOMOUS ACTIVITY STREAM (Database Source of Truth) */}
+        {recentEvents && recentEvents.length > 0 && (
+          <div className="space-y-4 pt-4 border-t border-[#171717]">
+            <div className="flex items-center justify-between border-b border-[#171717] pb-3">
+              <span className="font-mono text-xs text-[#85858a] tracking-wider uppercase">
+                AUTONOMOUS ACTIVITY STREAM
+              </span>
+              <Link
+                href="/life"
+                className="font-mono text-[10px] text-[#6fe39a] hover:underline uppercase"
+              >
+                VIEW FULL OBSERVATION TIMELINE →
+              </Link>
+            </div>
+            <div className="border border-[#1b1b1b] bg-[#050505] p-5 sm:p-7 shadow-xl">
+              <EventTimeline events={recentEvents} />
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

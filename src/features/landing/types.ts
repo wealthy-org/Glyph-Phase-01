@@ -79,6 +79,16 @@ export interface LandingAnalysisState {
   createdAt: string;
 }
 
+export interface LandingLatestActivity {
+  id: string;
+  cycleId: string;
+  activityType: "ANALYSIS" | "TRADE";
+  status: string;
+  asset: string;
+  title: string;
+  timestamp: string;
+}
+
 export interface LandingEconomicEvent {
   id: string;
   day: number;
@@ -132,6 +142,7 @@ export interface LandingPageData {
   openPositions: LandingPositionItem[];
   latestDecision: LandingLatestDecision | null;
   latestAnalysis: LandingAnalysisState | null;
+  latestActivity: LandingLatestActivity | null;
   recentEvents: LandingEconomicEvent[];
   latestMemory: LandingMemoryItem | null;
   adaptiveLearnings: LandingMemoryItem[];

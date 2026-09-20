@@ -27,12 +27,14 @@ export type AggregateResearchSnapshot = {
 export type ResearchSnapshotMinAggregateOutputType = {
   id: string | null
   asset: string | null
+  cycleId: string | null
   createdAt: Date | null
 }
 
 export type ResearchSnapshotMaxAggregateOutputType = {
   id: string | null
   asset: string | null
+  cycleId: string | null
   createdAt: Date | null
 }
 
@@ -44,6 +46,7 @@ export type ResearchSnapshotCountAggregateOutputType = {
   technicalData: number
   newsData: number
   sourceMetadata: number
+  cycleId: number
   createdAt: number
   _all: number
 }
@@ -52,12 +55,14 @@ export type ResearchSnapshotCountAggregateOutputType = {
 export type ResearchSnapshotMinAggregateInputType = {
   id?: true
   asset?: true
+  cycleId?: true
   createdAt?: true
 }
 
 export type ResearchSnapshotMaxAggregateInputType = {
   id?: true
   asset?: true
+  cycleId?: true
   createdAt?: true
 }
 
@@ -69,6 +74,7 @@ export type ResearchSnapshotCountAggregateInputType = {
   technicalData?: true
   newsData?: true
   sourceMetadata?: true
+  cycleId?: true
   createdAt?: true
   _all?: true
 }
@@ -153,6 +159,7 @@ export type ResearchSnapshotGroupByOutputType = {
   technicalData: runtime.JsonValue | null
   newsData: runtime.JsonValue | null
   sourceMetadata: runtime.JsonValue | null
+  cycleId: string | null
   createdAt: Date
   _count: ResearchSnapshotCountAggregateOutputType | null
   _min: ResearchSnapshotMinAggregateOutputType | null
@@ -185,6 +192,7 @@ export type ResearchSnapshotWhereInput = {
   technicalData?: Prisma.JsonNullableFilter<"ResearchSnapshot">
   newsData?: Prisma.JsonNullableFilter<"ResearchSnapshot">
   sourceMetadata?: Prisma.JsonNullableFilter<"ResearchSnapshot">
+  cycleId?: Prisma.StringNullableFilter<"ResearchSnapshot"> | string | null
   createdAt?: Prisma.DateTimeFilter<"ResearchSnapshot"> | Date | string
   decisions?: Prisma.DecisionListRelationFilter
 }
@@ -197,6 +205,7 @@ export type ResearchSnapshotOrderByWithRelationInput = {
   technicalData?: Prisma.SortOrderInput | Prisma.SortOrder
   newsData?: Prisma.SortOrderInput | Prisma.SortOrder
   sourceMetadata?: Prisma.SortOrderInput | Prisma.SortOrder
+  cycleId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   decisions?: Prisma.DecisionOrderByRelationAggregateInput
 }
@@ -212,6 +221,7 @@ export type ResearchSnapshotWhereUniqueInput = Prisma.AtLeast<{
   technicalData?: Prisma.JsonNullableFilter<"ResearchSnapshot">
   newsData?: Prisma.JsonNullableFilter<"ResearchSnapshot">
   sourceMetadata?: Prisma.JsonNullableFilter<"ResearchSnapshot">
+  cycleId?: Prisma.StringNullableFilter<"ResearchSnapshot"> | string | null
   createdAt?: Prisma.DateTimeFilter<"ResearchSnapshot"> | Date | string
   decisions?: Prisma.DecisionListRelationFilter
 }, "id">
@@ -224,6 +234,7 @@ export type ResearchSnapshotOrderByWithAggregationInput = {
   technicalData?: Prisma.SortOrderInput | Prisma.SortOrder
   newsData?: Prisma.SortOrderInput | Prisma.SortOrder
   sourceMetadata?: Prisma.SortOrderInput | Prisma.SortOrder
+  cycleId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.ResearchSnapshotCountOrderByAggregateInput
   _max?: Prisma.ResearchSnapshotMaxOrderByAggregateInput
@@ -241,6 +252,7 @@ export type ResearchSnapshotScalarWhereWithAggregatesInput = {
   technicalData?: Prisma.JsonNullableWithAggregatesFilter<"ResearchSnapshot">
   newsData?: Prisma.JsonNullableWithAggregatesFilter<"ResearchSnapshot">
   sourceMetadata?: Prisma.JsonNullableWithAggregatesFilter<"ResearchSnapshot">
+  cycleId?: Prisma.StringNullableWithAggregatesFilter<"ResearchSnapshot"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ResearchSnapshot"> | Date | string
 }
 
@@ -252,6 +264,7 @@ export type ResearchSnapshotCreateInput = {
   technicalData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   newsData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   sourceMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  cycleId?: string | null
   createdAt?: Date | string
   decisions?: Prisma.DecisionCreateNestedManyWithoutResearchSnapshotInput
 }
@@ -264,6 +277,7 @@ export type ResearchSnapshotUncheckedCreateInput = {
   technicalData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   newsData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   sourceMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  cycleId?: string | null
   createdAt?: Date | string
   decisions?: Prisma.DecisionUncheckedCreateNestedManyWithoutResearchSnapshotInput
 }
@@ -276,6 +290,7 @@ export type ResearchSnapshotUpdateInput = {
   technicalData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   newsData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   sourceMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   decisions?: Prisma.DecisionUpdateManyWithoutResearchSnapshotNestedInput
 }
@@ -288,6 +303,7 @@ export type ResearchSnapshotUncheckedUpdateInput = {
   technicalData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   newsData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   sourceMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   decisions?: Prisma.DecisionUncheckedUpdateManyWithoutResearchSnapshotNestedInput
 }
@@ -300,6 +316,7 @@ export type ResearchSnapshotCreateManyInput = {
   technicalData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   newsData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   sourceMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  cycleId?: string | null
   createdAt?: Date | string
 }
 
@@ -311,6 +328,7 @@ export type ResearchSnapshotUpdateManyMutationInput = {
   technicalData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   newsData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   sourceMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -322,6 +340,7 @@ export type ResearchSnapshotUncheckedUpdateManyInput = {
   technicalData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   newsData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   sourceMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -333,18 +352,21 @@ export type ResearchSnapshotCountOrderByAggregateInput = {
   technicalData?: Prisma.SortOrder
   newsData?: Prisma.SortOrder
   sourceMetadata?: Prisma.SortOrder
+  cycleId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type ResearchSnapshotMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   asset?: Prisma.SortOrder
+  cycleId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type ResearchSnapshotMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   asset?: Prisma.SortOrder
+  cycleId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -377,6 +399,7 @@ export type ResearchSnapshotCreateWithoutDecisionsInput = {
   technicalData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   newsData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   sourceMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  cycleId?: string | null
   createdAt?: Date | string
 }
 
@@ -388,6 +411,7 @@ export type ResearchSnapshotUncheckedCreateWithoutDecisionsInput = {
   technicalData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   newsData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   sourceMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  cycleId?: string | null
   createdAt?: Date | string
 }
 
@@ -415,6 +439,7 @@ export type ResearchSnapshotUpdateWithoutDecisionsInput = {
   technicalData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   newsData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   sourceMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -426,6 +451,7 @@ export type ResearchSnapshotUncheckedUpdateWithoutDecisionsInput = {
   technicalData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   newsData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   sourceMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -468,6 +494,7 @@ export type ResearchSnapshotSelect<ExtArgs extends runtime.Types.Extensions.Inte
   technicalData?: boolean
   newsData?: boolean
   sourceMetadata?: boolean
+  cycleId?: boolean
   createdAt?: boolean
   decisions?: boolean | Prisma.ResearchSnapshot$decisionsArgs<ExtArgs>
   _count?: boolean | Prisma.ResearchSnapshotCountOutputTypeDefaultArgs<ExtArgs>
@@ -481,6 +508,7 @@ export type ResearchSnapshotSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   technicalData?: boolean
   newsData?: boolean
   sourceMetadata?: boolean
+  cycleId?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["researchSnapshot"]>
 
@@ -492,6 +520,7 @@ export type ResearchSnapshotSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   technicalData?: boolean
   newsData?: boolean
   sourceMetadata?: boolean
+  cycleId?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["researchSnapshot"]>
 
@@ -503,10 +532,11 @@ export type ResearchSnapshotSelectScalar = {
   technicalData?: boolean
   newsData?: boolean
   sourceMetadata?: boolean
+  cycleId?: boolean
   createdAt?: boolean
 }
 
-export type ResearchSnapshotOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "asset" | "marketData" | "fundamentalData" | "technicalData" | "newsData" | "sourceMetadata" | "createdAt", ExtArgs["result"]["researchSnapshot"]>
+export type ResearchSnapshotOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "asset" | "marketData" | "fundamentalData" | "technicalData" | "newsData" | "sourceMetadata" | "cycleId" | "createdAt", ExtArgs["result"]["researchSnapshot"]>
 export type ResearchSnapshotInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   decisions?: boolean | Prisma.ResearchSnapshot$decisionsArgs<ExtArgs>
   _count?: boolean | Prisma.ResearchSnapshotCountOutputTypeDefaultArgs<ExtArgs>
@@ -527,6 +557,7 @@ export type $ResearchSnapshotPayload<ExtArgs extends runtime.Types.Extensions.In
     technicalData: runtime.JsonValue | null
     newsData: runtime.JsonValue | null
     sourceMetadata: runtime.JsonValue | null
+    cycleId: string | null
     createdAt: Date
   }, ExtArgs["result"]["researchSnapshot"]>
   composites: {}
@@ -959,6 +990,7 @@ export interface ResearchSnapshotFieldRefs {
   readonly technicalData: Prisma.FieldRef<"ResearchSnapshot", 'Json'>
   readonly newsData: Prisma.FieldRef<"ResearchSnapshot", 'Json'>
   readonly sourceMetadata: Prisma.FieldRef<"ResearchSnapshot", 'Json'>
+  readonly cycleId: Prisma.FieldRef<"ResearchSnapshot", 'String'>
   readonly createdAt: Prisma.FieldRef<"ResearchSnapshot", 'DateTime'>
 }
     

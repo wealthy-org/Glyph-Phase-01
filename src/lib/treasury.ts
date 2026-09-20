@@ -88,9 +88,9 @@ export async function getTreasurySummary(
       unrealizedPnl += Number(pos.unrealizedPnl);
     }
 
-    const totalEquity = currentBalance + allocatedMargin + unrealizedPnl;
-    const pnlDollar = totalEquity - initialCapital;
-    const pnlPercent = initialCapital > 0 ? (pnlDollar / initialCapital) * 100 : 0;
+    const totalEquity = Number((currentBalance + allocatedMargin + unrealizedPnl).toFixed(4));
+    const pnlDollar = Number((totalEquity - initialCapital).toFixed(4));
+    const pnlPercent = initialCapital > 0 ? Number(((pnlDollar / initialCapital) * 100).toFixed(4)) : 0;
 
     return {
       agentId: agent.agentId,

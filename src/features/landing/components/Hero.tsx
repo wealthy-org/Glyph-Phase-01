@@ -7,6 +7,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   LandingAnalysisState,
   LandingEconomicEvent,
+  LandingLatestActivity,
   LandingLatestDecision,
   LandingPositionItem,
 } from "../types";
@@ -15,6 +16,7 @@ interface HeroProps {
   openPosition?: LandingPositionItem | null;
   latestDecision?: LandingLatestDecision | null;
   latestAnalysis?: LandingAnalysisState | null;
+  latestActivity?: LandingLatestActivity | null;
   cycleCount?: number;
   recentEvents?: LandingEconomicEvent[];
 }
@@ -417,6 +419,7 @@ export const Hero: React.FC<HeroProps> = ({
   openPosition = null,
   latestDecision: initialLatestDecision = null,
   latestAnalysis: initialLatestAnalysis = null,
+  latestActivity: initialLatestActivity = null,
   cycleCount = 6,
   recentEvents = [],
 }) => {
@@ -433,9 +436,11 @@ export const Hero: React.FC<HeroProps> = ({
   const [mounted, setMounted] = useState<boolean>(false);
   const [liveLatestDecision, setLiveLatestDecision] = useState<LandingLatestDecision | null>(initialLatestDecision);
   const [liveLatestAnalysis, setLiveLatestAnalysis] = useState<LandingAnalysisState | null>(initialLatestAnalysis);
+  const [liveLatestActivity, setLiveLatestActivity] = useState<LandingLatestActivity | null>(initialLatestActivity);
 
   const latestDecision = liveLatestDecision;
   const latestAnalysis = liveLatestAnalysis;
+  const latestActivity = liveLatestActivity;
 
   // Autonomous timestamps
   const [cycleStartTime, setCycleStartTime] = useState<number>(() => Date.now());
@@ -456,10 +461,12 @@ export const Hero: React.FC<HeroProps> = ({
         const payload = await response.json() as {
           latestDecision: LandingLatestDecision | null;
           latestAnalysis: LandingAnalysisState | null;
+          latestActivity: LandingLatestActivity | null;
         };
         if (active) {
           setLiveLatestDecision(payload.latestDecision);
           setLiveLatestAnalysis(payload.latestAnalysis);
+          setLiveLatestActivity(payload.latestActivity);
         }
       } catch {
         // Keep the last authoritative snapshot visible while polling retries.
@@ -595,14 +602,17 @@ export const Hero: React.FC<HeroProps> = ({
   // 2. OPERATION & STOCK IDENTITY (Memoized)
   const hasActivePosition = Boolean(openPosition);
   const hasActiveDecision = Boolean(latestDecision);
-  const isStandbyMode = !hasActivePosition && !hasActiveDecision && isDecisionRevealed;
-  const rawAsset = openPosition?.asset || latestDecision?.asset || "STANDBY";
+  const hasLatestActivity = Boolean(latestActivity?.asset);
+  const isStandbyMode = !hasLatestActivity && !hasActivePosition && !hasActiveDecision && !latestAnalysis;
+  const rawAsset = latestActivity?.asset || latestAnalysis?.asset || latestDecision?.asset || openPosition?.asset || "STANDBY";
   const asset = rawAsset.toUpperCase();
-  const positionSubtitle = hasActivePosition
-    ? `${openPosition!.side} POSITION · ${openPosition!.leverage}× SIM`
-    : hasActiveDecision
-      ? "STANDBY // NO UNREALIZED RISK EXPOSURE"
-      : "STANDBY // AWAITING FIRST COGNITIVE CYCLE";
+  const positionSubtitle = latestActivity
+    ? `${latestActivity.activityType} · ${latestActivity.status}`
+    : hasActivePosition
+      ? `${openPosition!.side} POSITION · ${openPosition!.leverage}× SIM`
+      : hasActiveDecision
+        ? "STANDBY // NO UNREALIZED RISK EXPOSURE"
+        : "STANDBY // AWAITING FIRST COGNITIVE CYCLE";
 
   // 3. INTERACTIVE TAB STATE (Follows Glyph's current stage)
   const rawThesis = latestDecision?.thesis;
@@ -693,7 +703,9 @@ export const Hero: React.FC<HeroProps> = ({
   const targetFormatted = isDecisionRevealed
     ? latestDecision
       ? `${latestDecision.asset} · ${latestDecision.action === "OPEN_LONG" ? "LONG" : latestDecision.action === "OPEN_SHORT" ? "SHORT" : latestDecision.action === "NO_TRADE" ? "NO_TRADE" : latestDecision.action === "CLOSE" ? "CLOSE" : "HOLD"}`
-      : "STANDBY"
+      : latestActivity
+        ? "ANALYZING"
+        : "STANDBY"
     : "ANALYZING...";
 
   const targetColor = isDecisionRevealed ? "text-[#f3f3f4]" : "text-[#85858a]";

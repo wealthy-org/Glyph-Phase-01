@@ -7,7 +7,7 @@
 // ============================================================================
 
 import { runAutonomousGlyphCycle } from "@/lib/cycle/orchestrator";
-import { AlphaVantageProvider } from "@/lib/market/alpha-vantage";
+import { TwelveDataProvider } from "@/lib/market/twelve-data";
 import { prisma } from "@/lib/prisma";
 import crypto from "crypto";
 import { NextRequest, NextResponse } from "next/server";
@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
 
   try {
     // Optional request body configuration
-    let body: { asset?: string; agentId?: string; force?: boolean } = {};
+    let body: { asset?: string; agentId?: string; force?: boolean; skipIfClosed?: boolean } = {};
     try {
       body = await req.json();
     } catch {
@@ -123,20 +123,20 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // 4. Real-time Market Open Check via Alpha Vantage API (§Market Status)
+    // 4. Market Open Check via the configured Twelve Data provider (§Market Status)
     const bypassMarket = Boolean(body.force);
-    const marketProvider = new AlphaVantageProvider();
+    const marketProvider = new TwelveDataProvider();
     const marketStatus = await marketProvider.getMarketStatus("United States");
 
-    if (!marketStatus.isOpen && !bypassMarket) {
+    if (body.skipIfClosed && !marketStatus.isOpen && !bypassMarket) {
       return NextResponse.json(
         {
           status: "MARKET_CLOSED",
-          message: `US Stock Market is currently ${marketStatus.status.toUpperCase()} (${marketStatus.primaryExchanges}, Regular Hours: ${marketStatus.localOpen} - ${marketStatus.localClose}). Trade decision skipped to conserve quota.`,
+          message: `US Stock Market is currently ${marketStatus.status.toUpperCase()} (${marketStatus.primaryExchanges}, Regular Hours: ${marketStatus.localOpen} - ${marketStatus.localClose}). Cycle skipped as requested.`,
           data: {
             marketStatus,
             checkedAt: marketStatus.checkedAt,
-            hint: "Use { force: true } in request body to bypass market hours for manual testing.",
+            hint: "Remove skipIfClosed or use { force: true } to run full cycle.",
           },
         },
         { status: 200 }
@@ -150,7 +150,7 @@ export async function POST(req: NextRequest) {
       bypassMarketHours: bypassMarket,
     });
 
-    // 3. Return structured response
+    // 6. Return structured response
     return NextResponse.json(
       {
         status: "SUCCESS",
@@ -158,10 +158,12 @@ export async function POST(req: NextRequest) {
         data: {
           timestamp: cycleSummary.timestamp,
           cycleKey: cycleSummary.cycleKey,
+          cycleId: cycleSummary.cycleId,
           agentId: cycleSummary.agentId,
           targetAsset: cycleSummary.targetAsset,
           positionsAudited: cycleSummary.positionsChecked,
           liquidations: cycleSummary.liquidatedCount,
+          marketClosed: cycleSummary.marketClosed,
           decision: {
             id: cycleSummary.decisionResult.decisionId,
             action: cycleSummary.decisionResult.action,

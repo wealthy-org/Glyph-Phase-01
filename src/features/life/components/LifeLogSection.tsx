@@ -242,7 +242,7 @@ export const LifeLogSection: React.FC<LifeLogSectionProps> = ({ initialEvents })
         {/* TABLE HEADER LEGEND STRIP                                              */}
         {/* ======================================================================= */}
         <div className="hidden md:grid grid-cols-12 gap-4 px-6 py-2 bg-[#080808] border-b border-[#171717] font-mono text-[10px] text-[#55555a] tracking-wider uppercase select-none">
-          <div className="col-span-3">TIMESTAMP / EVENT</div>
+          <div className="col-span-3">DATE / TIME / EVENT</div>
           <div className="col-span-2">REF / STATUS</div>
           <div className="col-span-5">ACTIVITY SUMMARY</div>
           <div className="col-span-2 text-right">ACTION / PROOF</div>
@@ -294,9 +294,14 @@ export const LifeLogSection: React.FC<LifeLogSectionProps> = ({ initialEvents })
                   <div className="p-4 sm:px-6 sm:py-3.5 flex flex-col md:grid md:grid-cols-12 md:gap-4 md:items-center gap-2">
                     {/* Column 1: Timestamp & Semantic Color Event Badge */}
                     <div className="md:col-span-3 flex items-center gap-2 min-w-0">
-                      <span className="font-mono text-[11px] text-[#85858a] tabular-nums shrink-0">
-                        {evt.time}
-                      </span>
+                      <div className="flex flex-col items-start shrink-0">
+                        <span className="font-mono text-[11px] text-[#55555a] tabular-nums leading-tight">
+                          {evt.date}
+                        </span>
+                        <span className="font-mono text-[11px] text-[#85858a] tabular-nums leading-tight">
+                          {evt.time}
+                        </span>
+                      </div>
                       <div className="flex items-center gap-1.5 shrink-0">
                         <span
                           className={cn("w-1.5 h-1.5 rounded-full shrink-0", eventColor.dot)}
@@ -367,8 +372,8 @@ export const LifeLogSection: React.FC<LifeLogSectionProps> = ({ initialEvents })
                             evt.result.startsWith("+")
                               ? "text-[#6fe39a]"
                               : evt.result.startsWith("-")
-                              ? "text-[#e06c75]"
-                              : "text-[#f3f3f4]"
+                                ? "text-[#e06c75]"
+                                : "text-[#f3f3f4]"
                           )}
                         >
                           {evt.result}
@@ -414,7 +419,7 @@ export const LifeLogSection: React.FC<LifeLogSectionProps> = ({ initialEvents })
                                 ASSET
                               </span>
                               <span className="text-[#f3f3f4] font-medium">
-                                {evt.decision?.asset || "AAPL"}
+                                {evt.analysis?.asset || "N/A"}
                               </span>
                             </div>
                             <div>
@@ -423,49 +428,49 @@ export const LifeLogSection: React.FC<LifeLogSectionProps> = ({ initialEvents })
                               </span>
                               <span className="text-[#f3f3f4]">QUANT / FUNDAMENTAL</span>
                             </div>
-                            <div>
+                            <div className="col-span-2 sm:col-span-1">
                               <span className="text-[#55555a] block text-[10px] uppercase">
-                                CONFIDENCE
+                                SNAPSHOT
                               </span>
-                              <span className="text-[#6fe39a]">
-                                {evt.decision?.conviction ?? 0}%
+                              <span className="text-[#6fe39a] break-all">
+                                {evt.analysis?.snapshotId || "N/A"}
                               </span>
                             </div>
                             <div>
                               <span className="text-[#55555a] block text-[10px] uppercase">
                                 VERDICT
                               </span>
-                              <span className="text-[#f3f3f4]">COMPLETED</span>
+                              <span className={evt.analysis?.status === "FAILED" ? "text-[#c47a7a]" : "text-[#f3f3f4]"}>
+                                {evt.analysis?.status || evt.status}
+                              </span>
                             </div>
                           </div>
 
-                          {/* Signals Table */}
-                          <div className="space-y-1.5 pt-1">
-                            <span className="text-[10px] text-[#55555a] tracking-wider uppercase block">
-                              SIGNALS EVALUATED
-                            </span>
-                            <div className="divide-y divide-[#171717] border border-[#171717] bg-[#070707] text-[11px]">
-                              <div className="px-3 py-1.5 flex items-center justify-between">
-                                <span className="text-[#85858a]">Fundamental Score</span>
-                                <span className="text-[#f3f3f4]">
-                                  {evt.decision?.fundamentalScore ?? 0}/100
-                                </span>
-                                <span className="text-[#6fe39a] text-[10px]">STRONG</span>
-                              </div>
-                              <div className="px-3 py-1.5 flex items-center justify-between">
-                                <span className="text-[#85858a]">Technical Momentum</span>
-                                <span className="text-[#f3f3f4]">
-                                  {evt.decision?.technicalScore ?? 0}/100
-                                </span>
-                                <span className="text-[#6fe39a] text-[10px]">FAVORABLE</span>
-                              </div>
-                              <div className="px-3 py-1.5 flex items-center justify-between">
-                                <span className="text-[#85858a]">Algorithmic Risk Score</span>
-                                <span className="text-[#f3f3f4]">
-                                  {evt.decision?.riskScore ?? 0}/100
-                                </span>
-                                <span className="text-[#85858a] text-[10px]">CONTAINED</span>
-                              </div>
+                          <div className="space-y-3 pt-1">
+                            <span className="text-[10px] text-[#55555a] tracking-wider uppercase block">FUNDAMENTAL</span>
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 border border-[#171717] bg-[#070707] p-3 text-[11px]">
+                              <div><span className="text-[#85858a] block">Score</span><span>{evt.analysis?.fundamentalScore != null ? `${evt.analysis.fundamentalScore}/100` : "N/A"}</span></div>
+                              <div><span className="text-[#85858a] block">Classification</span><span>{evt.analysis?.classification || "N/A"}</span></div>
+                              <div><span className="text-[#85858a] block">EPS</span><span>{evt.analysis?.earningsPerShare != null ? evt.analysis.earningsPerShare.toFixed(2) : "N/A"}</span></div>
+                              <div><span className="text-[#85858a] block">Profit Margin</span><span>{evt.analysis?.profitMarginPercent != null ? `${evt.analysis.profitMarginPercent.toFixed(2)}%` : "N/A"}</span></div>
+                            </div>
+
+                            <span className="text-[10px] text-[#55555a] tracking-wider uppercase block">TECHNICAL</span>
+                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 border border-[#171717] bg-[#070707] p-3 text-[11px]">
+                              <div><span className="text-[#85858a] block">Price</span><span>{evt.analysis?.price != null ? `$${evt.analysis.price.toFixed(2)}` : "N/A"}</span></div>
+                              <div><span className="text-[#85858a] block">Trend</span><span>{evt.analysis?.trend || "N/A"}</span></div>
+                              <div><span className="text-[#85858a] block">SMA 20 / 50</span><span>{evt.analysis?.sma20 != null && evt.analysis.sma50 != null ? `$${evt.analysis.sma20.toFixed(2)} / $${evt.analysis.sma50.toFixed(2)}` : "N/A"}</span></div>
+                              <div><span className="text-[#85858a] block">Support / Resistance</span><span>{evt.analysis?.support != null && evt.analysis.resistance != null ? `$${evt.analysis.support.toFixed(2)} / $${evt.analysis.resistance.toFixed(2)}` : "N/A"}</span></div>
+                              <div><span className="text-[#85858a] block">RSI / Volatility</span><span>{evt.analysis?.rsi14 != null && evt.analysis.volatilityPercent != null ? `${evt.analysis.rsi14.toFixed(2)} / ${evt.analysis.volatilityPercent.toFixed(2)}%` : "N/A"}</span></div>
+                              <div><span className="text-[#85858a] block">Score / Volume</span><span>{evt.analysis?.technicalScore != null && evt.analysis.volumeRatio != null ? `${evt.analysis.technicalScore}/100 · ${evt.analysis.volumeRatio.toFixed(2)}x` : "N/A"}</span></div>
+                            </div>
+
+                            <span className="text-[10px] text-[#55555a] tracking-wider uppercase block">RISK</span>
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 border border-[#171717] bg-[#070707] p-3 text-[11px]">
+                              <div><span className="text-[#85858a] block">Regime</span><span>{evt.analysis?.regime?.toUpperCase() || "N/A"}</span></div>
+                              <div><span className="text-[#85858a] block">Risk Level</span><span>{evt.analysis?.riskLevel?.toUpperCase() || "N/A"}</span></div>
+                              <div className="col-span-2"><span className="text-[#85858a] block">Decision Signal</span><span>{evt.analysis?.decisionSignal || "N/A"}</span></div>
+                              <div className="col-span-2 sm:col-span-4"><span className="text-[#85858a] block">Risk Details</span><span>{evt.analysis?.riskDetails || "N/A"}</span></div>
                             </div>
                           </div>
 
@@ -475,7 +480,9 @@ export const LifeLogSection: React.FC<LifeLogSectionProps> = ({ initialEvents })
                               GLYPHS VIEW
                             </span>
                             <p className="font-sans text-xs text-[#a1a1aa] leading-relaxed bg-[#060606] p-3 border border-[#171717]">
-                              {evt.description}
+                              {evt.analysis
+                                ? `Glyph analyzed ${evt.analysis.asset}${evt.analysis.price != null ? ` at $${evt.analysis.price.toFixed(2)}` : ""}. Fundamental score: ${evt.analysis.fundamentalScore != null ? `${evt.analysis.fundamentalScore}/100` : "N/A"}. Technical score: ${evt.analysis.technicalScore != null ? `${evt.analysis.technicalScore}/100` : "N/A"}. Risk level: ${evt.analysis.riskLevel?.toUpperCase() || "N/A"}. Signal: ${evt.analysis.decisionSignal || "N/A"}.`
+                                : evt.description}
                             </p>
                           </div>
                         </div>
@@ -593,7 +600,7 @@ export const LifeLogSection: React.FC<LifeLogSectionProps> = ({ initialEvents })
                                 POSITION
                               </span>
                               <span className="text-[#f3f3f4] font-medium">
-                                {evt.trade?.asset || "AAPL"} · {evt.trade?.action || "LONG"} {evt.trade?.leverage || 2}×
+                                {evt.trade?.asset || "N/A"} · {evt.trade?.action || "N/A"} {evt.trade?.leverage != null ? `${evt.trade.leverage}×` : ""}
                               </span>
                             </div>
                             <div>
@@ -601,7 +608,7 @@ export const LifeLogSection: React.FC<LifeLogSectionProps> = ({ initialEvents })
                                 ENTRY PRICE
                               </span>
                               <span className="text-[#f3f3f4]">
-                                {evt.trade?.entryPrice ? `$${evt.trade.entryPrice.toFixed(2)}` : "—"}
+                                {evt.trade?.entryPrice != null ? `$${evt.trade.entryPrice.toFixed(2)}` : "N/A"}
                               </span>
                             </div>
                             <div>
@@ -609,11 +616,11 @@ export const LifeLogSection: React.FC<LifeLogSectionProps> = ({ initialEvents })
                                 EXIT / TARGET
                               </span>
                               <span className="text-[#f3f3f4]">
-                                {evt.trade?.exitPrice
+                                {evt.trade?.exitPrice != null
                                   ? `$${evt.trade.exitPrice.toFixed(2)}`
-                                  : evt.trade?.targetPrice
+                                  : evt.trade?.targetPrice != null
                                     ? `$${evt.trade.targetPrice.toFixed(2)}`
-                                    : "ACTIVE"}
+                                    : evt.status === "CONFIRMED" ? "OPEN" : "N/A"}
                               </span>
                             </div>
                             <div>
@@ -621,9 +628,16 @@ export const LifeLogSection: React.FC<LifeLogSectionProps> = ({ initialEvents })
                                 PNL REALIZED
                               </span>
                               <span className={statusColor}>
-                                {evt.result || (evt.trade?.simulatedPnlPercent ? `${evt.trade.simulatedPnlPercent.toFixed(2)}%` : "0.00")}
+                                {evt.result || (evt.trade?.simulatedPnlPercent != null ? `${evt.trade.simulatedPnlPercent.toFixed(2)}%` : "N/A")}
                               </span>
                             </div>
+                          </div>
+
+                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 py-2 border-b border-[#171717]/60 text-[11px]">
+                            <div><span className="text-[#55555a] block text-[10px] uppercase">STATUS</span><span className={statusColor}>{evt.status}</span></div>
+                            <div><span className="text-[#55555a] block text-[10px] uppercase">TRADE ID</span><span className="break-all">{evt.tradeId || "N/A"}</span></div>
+                            <div><span className="text-[#55555a] block text-[10px] uppercase">QUANTITY</span><span>{evt.trade?.quantity != null ? evt.trade.quantity.toFixed(8) : "N/A"}</span></div>
+                            <div><span className="text-[#55555a] block text-[10px] uppercase">EXECUTED AMOUNT</span><span>{evt.trade?.positionSize != null ? `$${evt.trade.positionSize.toFixed(4)}` : "N/A"}</span></div>
                           </div>
 
                           <p className="font-sans text-xs text-[#a1a1aa] leading-relaxed bg-[#060606] p-3 border border-[#171717]">

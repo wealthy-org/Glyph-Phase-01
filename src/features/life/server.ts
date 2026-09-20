@@ -8,6 +8,7 @@
 
 import { prisma } from "@/lib/prisma";
 import {
+  AnalysisDetail,
   DecisionDetail,
   EventCategory,
   LifeEvent,
@@ -78,7 +79,7 @@ export async function getLifeEvents(agentIdentifier?: string): Promise<LifeEvent
 
     const birthDate = agent ? new Date(agent.createdAt) : new Date();
 
-    const [events, allDecisions, allTrades, allMemories] = await Promise.all([
+    const [events, allDecisions, allTrades, allMemories, allSnapshots] = await Promise.all([
       prisma.economicEvent.findMany({
         where: agent ? { agentId: agent.id } : undefined,
         orderBy: { timestamp: "desc" },
@@ -95,6 +96,10 @@ export async function getLifeEvents(agentIdentifier?: string): Promise<LifeEvent
         where: agent ? { agentId: agent.id } : undefined,
         orderBy: { createdAt: "desc" },
       }),
+      prisma.researchSnapshot.findMany({
+        where: { cycleId: { not: null } },
+        orderBy: { createdAt: "desc" },
+      }),
     ]);
 
     if (!events || events.length === 0) {
@@ -103,6 +108,11 @@ export async function getLifeEvents(agentIdentifier?: string): Promise<LifeEvent
 
     const decisionMap = new Map(allDecisions.map((d) => [d.id, d]));
     const tradeMap = new Map(allTrades.map((t) => [t.id, t]));
+    const snapshotMap = new Map(
+      allSnapshots
+        .filter((snapshot) => snapshot.cycleId)
+        .map((snapshot) => [`${snapshot.cycleId}:${snapshot.asset.toUpperCase()}`, snapshot])
+    );
 
     return events.map((evt) => {
       const d = new Date(evt.timestamp);
@@ -123,6 +133,70 @@ export async function getLifeEvents(agentIdentifier?: string): Promise<LifeEvent
 
       const linkedDecision = evt.decisionId ? decisionMap.get(evt.decisionId) : null;
       const linkedTrade = evt.tradeId ? tradeMap.get(evt.tradeId) : null;
+      const analysisAssetMatch = evt.eventType === "RESEARCH_STARTED"
+        ? evt.title.match(/^([A-Z0-9._-]+) Market Analysis /i)
+        : null;
+      const analysisAsset = analysisAssetMatch?.[1]?.toUpperCase() || null;
+      const linkedSnapshot = evt.cycleId && analysisAsset
+        ? snapshotMap.get(`${evt.cycleId}:${analysisAsset}`)
+        : null;
+
+      let analysisDetail: AnalysisDetail | null = null;
+      if (linkedSnapshot && analysisAsset) {
+        const marketData = linkedSnapshot.marketData as { quote?: { price?: unknown } } | null;
+        const fundamentalData = linkedSnapshot.fundamentalData as {
+          sector?: unknown;
+          earningsPerShare?: unknown;
+          profitMarginPercent?: unknown;
+          fundamentalScore?: unknown;
+        } | null;
+        const technicalData = linkedSnapshot.technicalData as {
+          currentPrice?: unknown;
+          trend?: unknown;
+          sma20?: unknown;
+          sma50?: unknown;
+          rsi14?: unknown;
+          supportLevel?: unknown;
+          resistanceLevel?: unknown;
+          volatilityPercent?: unknown;
+          volumeRatio?: unknown;
+          technicalScore?: unknown;
+        } | null;
+        const sourceMetadata = linkedSnapshot.sourceMetadata as {
+          riskContext?: { regime?: unknown; level?: unknown; details?: unknown } | null;
+        } | null;
+        const quotePrice = marketData?.quote?.price;
+        const riskContext = sourceMetadata?.riskContext;
+        const numeric = (value: unknown): number | null => typeof value === "number" && Number.isFinite(value) ? value : null;
+        const text = (value: unknown): string | null => typeof value === "string" && value.length > 0 ? value : null;
+        const fundamentalScore = numeric(fundamentalData?.fundamentalScore);
+        const technicalScore = numeric(technicalData?.technicalScore);
+        analysisDetail = {
+          asset: analysisAsset,
+          snapshotId: linkedSnapshot.id,
+          status: evt.result === "FAILED" ? "FAILED" : "COMPLETED",
+          classification: text(fundamentalData?.sector),
+          price: numeric(quotePrice) ?? numeric(technicalData?.currentPrice),
+          trend: text(technicalData?.trend),
+          sma20: numeric(technicalData?.sma20),
+          sma50: numeric(technicalData?.sma50),
+          rsi14: numeric(technicalData?.rsi14),
+          support: numeric(technicalData?.supportLevel),
+          resistance: numeric(technicalData?.resistanceLevel),
+          volatilityPercent: numeric(technicalData?.volatilityPercent),
+          volumeRatio: numeric(technicalData?.volumeRatio),
+          fundamentalScore,
+          earningsPerShare: numeric(fundamentalData?.earningsPerShare),
+          profitMarginPercent: numeric(fundamentalData?.profitMarginPercent),
+          technicalScore,
+          regime: text(riskContext?.regime),
+          riskLevel: text(riskContext?.level),
+          riskDetails: text(riskContext?.details),
+          decisionSignal: fundamentalScore !== null && technicalScore !== null
+            ? technicalScore >= 70 && fundamentalScore >= 60 ? "WATCH / QUALIFIED" : "CAUTION"
+            : null,
+        };
+      }
 
       // Find matching memory if this is a memory event
       let linkedMemory = null;
@@ -176,11 +250,12 @@ export async function getLifeEvents(agentIdentifier?: string): Promise<LifeEvent
 
       switch (evt.eventType) {
         case "RESEARCH_STARTED": {
-          status = "COMPLETED";
-          statusTone = "neutral";
+          status = evt.result === "FAILED" ? "FAILED" : "COMPLETED";
+          statusTone = evt.result === "FAILED" ? "negative" : "neutral";
           actionLabel = "VIEW DETAILS →";
-          const score = evt.result ? evt.result.replace("SCORE", "").trim() : "74";
-          shortMeta = `${linkedDecision?.asset || "Market asset"} analysis · 3 signals · Confidence ${score}%`;
+          shortMeta = analysisDetail
+            ? `${analysisDetail.asset} analysis · Fundamental ${analysisDetail.fundamentalScore ?? "N/A"}/100 · Technical ${analysisDetail.technicalScore ?? "N/A"}/100 · Risk ${analysisDetail.riskLevel?.toUpperCase() || "N/A"}`
+            : evt.description || "Market analysis";
           break;
         }
         case "DECISION_MADE": {
@@ -195,11 +270,11 @@ export async function getLifeEvents(agentIdentifier?: string): Promise<LifeEvent
           break;
         }
         case "TRADE_OPENED": {
-          status = "OPENED";
+          status = evt.result === "CONFIRMED" ? "CONFIRMED" : "OPENED";
           statusTone = "positive";
           actionLabel = "VIEW TRADE →";
           if (linkedTrade) {
-            shortMeta = `${linkedTrade.asset} · ${linkedTrade.action} · ${linkedTrade.leverage}× · Entry $${Number(linkedTrade.entryPrice).toFixed(2)}`;
+            shortMeta = `${linkedTrade.asset} · ${linkedTrade.action} · ${linkedTrade.quantity ?? "N/A"} units · Entry $${Number(linkedTrade.entryPrice).toFixed(2)}`;
           } else {
             shortMeta = evt.description || "Active simulated trade entered";
           }
@@ -314,6 +389,7 @@ export async function getLifeEvents(agentIdentifier?: string): Promise<LifeEvent
           asset: linkedTrade.asset,
           action: linkedTrade.action,
           entryPrice: Number(linkedTrade.entryPrice),
+          quantity: linkedTrade.quantity != null ? Number(linkedTrade.quantity) : null,
           exitPrice: linkedTrade.exitPrice ? Number(linkedTrade.exitPrice) : null,
           positionSize: Number(linkedTrade.positionSize),
           leverage: Number(linkedTrade.leverage),
@@ -367,9 +443,11 @@ export async function getLifeEvents(agentIdentifier?: string): Promise<LifeEvent
         result: evt.result || null,
         tradeId: evt.tradeId || linkedTrade?.id || null,
         decisionId: evt.decisionId || linkedDecision?.id || null,
+        cycleId: evt.cycleId || null,
         decision: decisionDetail,
         trade: tradeDetail,
         memory: memoryDetail,
+        analysis: analysisDetail,
       };
     });
   } catch (error) {

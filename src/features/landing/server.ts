@@ -13,6 +13,7 @@ import {
   LandingAgentMeta,
   LandingAnalysisState,
   LandingEconomicEvent,
+  LandingLatestActivity,
   LandingLatestDecision,
   LandingMemoryItem,
   LandingPageData,
@@ -230,6 +231,38 @@ export async function getLandingPageData(agentIdentifier?: string): Promise<Land
     }
     : null;
 
+  const latestActivityRecord = agent
+    ? await prisma.activityLog.findFirst({
+      where: {
+        agentId: agent.id,
+        activityType: { in: ["ANALYSIS", "TRADE"] },
+        asset: { not: null },
+      },
+      orderBy: { timestamp: "desc" },
+      select: {
+        id: true,
+        cycleId: true,
+        activityType: true,
+        status: true,
+        asset: true,
+        title: true,
+        timestamp: true,
+      },
+    })
+    : null;
+
+  const latestActivity: LandingLatestActivity | null = latestActivityRecord?.asset?.trim()
+    ? {
+      id: latestActivityRecord.id,
+      cycleId: latestActivityRecord.cycleId,
+      activityType: latestActivityRecord.activityType as "ANALYSIS" | "TRADE",
+      status: latestActivityRecord.status,
+      asset: latestActivityRecord.asset.trim(),
+      title: latestActivityRecord.title,
+      timestamp: latestActivityRecord.timestamp.toISOString(),
+    }
+    : null;
+
   // 4. Authoritative Recent Economic Events (6 entries for homepage)
   const eventRecords = agent
     ? await prisma.economicEvent.findMany({
@@ -335,6 +368,7 @@ export async function getLandingPageData(agentIdentifier?: string): Promise<Land
     openPositions,
     latestDecision,
     latestAnalysis,
+    latestActivity,
     recentEvents,
     latestMemory,
     adaptiveLearnings,

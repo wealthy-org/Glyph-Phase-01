@@ -14,7 +14,7 @@ const PROMPT_VERSION = "SEED_V2_ANALYSIS_ONLY";
 const CYCLE_KEY = `seed:${SEED_VERSION}:${SCENARIO}`;
 const metadata = { seedVersion: SEED_VERSION, scenario: SCENARIO };
 
-const ALLOWED_ASSETS = ["NVDA", "MSFT", "AAPL", "TSLA"] as const;
+const ALLOWED_ASSETS = ["NVDA", "XENE"] as const;
 // NVDA is intentionally the final analysis in the lifecycle.
 const ANALYSIS_ORDER = ["MSFT", "AAPL", "TSLA", "NVDA"] as const;
 

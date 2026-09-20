@@ -5,6 +5,15 @@
 // and Policy Engine execution.
 // ============================================================================
 
+import {
+  logDecisionActivity,
+  logEconomicPrecheckActivity,
+  logNoTradeActivity,
+  logPolicyActivity,
+  logProofActivity,
+  logTradeActivity,
+} from "@/lib/activity";
+import { evaluateEconomicPreconditions } from "@/lib/economic-precheck";
 import { getRecentMemories } from "@/lib/memory";
 import { commitDecisionOnchain } from "@/lib/onchain/registry";
 import { evaluateAgentTradeProposal } from "@/lib/policy";
@@ -166,7 +175,8 @@ export async function executeGlyphDecisionCycle(
   researchSnapshotId: string,
   agentIdentifier = process.env.GLYPH_AGENT_ID || "1",
   existingAgentRunId?: string,
-  isMarketOpen: boolean = true
+  isMarketOpen: boolean = true,
+  cycleId?: string
 ): Promise<DecisionRunResult> {
   const runStart = new Date();
 
@@ -261,6 +271,33 @@ export async function executeGlyphDecisionCycle(
     snapshot.asset
   );
 
+  // 3.5. Evaluate Economic Preconditions (§Mandatory Economic Safety)
+  const economicPrecheck = await evaluateEconomicPreconditions(
+    agentIdentifier,
+    {
+      asset: decision.asset,
+      action: decision.action,
+      conviction: decision.conviction,
+      positionSizePercent: decision.position_size_percent,
+      leverage: decision.leverage,
+    }
+  );
+
+  // Log ECONOMIC_PRECHECK Activity (§Mandatory Logging)
+  if (cycleId) {
+    await logEconomicPrecheckActivity({
+      cycleId,
+      agentId: agent.id,
+      asset: decision.asset,
+      status: economicPrecheck.capitalSufficient ? "PASSED" : "REJECTED",
+      availableCapital: economicPrecheck.availableCapital,
+      totalEquity: economicPrecheck.totalEquity,
+      activePositionsCount: economicPrecheck.activePositionsCount,
+      requiredMargin: economicPrecheck.positionRequirements?.requiredMargin,
+      reason: economicPrecheck.reason,
+    });
+  }
+
   // 4. Validate through Policy Engine (§10, §3.0C)
   const policyResult = await evaluateAgentTradeProposal(
     agentIdentifier,
@@ -271,13 +308,19 @@ export async function executeGlyphDecisionCycle(
       positionSizePercent: decision.position_size_percent,
       leverage: decision.leverage,
     },
-    { isMarketOpen }
+    {
+      isMarketOpen,
+      availableCapital: economicPrecheck.availableCapital,
+      totalEquity: economicPrecheck.totalEquity,
+      positionRequirements: economicPrecheck.positionRequirements,
+    }
   );
 
   // 5. Store Decision record in database (§3.0B)
   const decisionRecord = await prisma.decision.create({
     data: {
       agentId: agent.id,
+      cycleId: cycleId ?? null,
       asset: decision.asset,
       action: decision.action,
       conviction: decision.conviction,
@@ -295,14 +338,46 @@ export async function executeGlyphDecisionCycle(
     },
   });
 
+  // Log DECISION Activity (§Mandatory Logging)
+  if (cycleId) {
+    await logDecisionActivity({
+      cycleId,
+      agentId: agent.id,
+      asset: decision.asset,
+      decisionId: decisionRecord.id,
+      action: decision.action,
+      thesis: decision.thesis,
+      conviction: decision.conviction,
+      timeHorizon: decision.time_horizon,
+      policyStatus: policyResult.policyResult,
+    });
+  }
+
+  // Log RISK_POLICY Activity (§Mandatory Logging)
+  if (cycleId) {
+    await logPolicyActivity({
+      cycleId,
+      agentId: agent.id,
+      asset: decision.asset,
+      decisionId: decisionRecord.id,
+      decisionAction: decision.action,
+      result: policyResult.policyResult,
+      rejectReason: policyResult.rejectReason,
+      clampedLeverage: policyResult.clampedLeverage,
+      clampedPositionPercent: policyResult.clampedPositionPercent,
+    });
+  }
+
   let tradeId: string | null = null;
   let tradeNumber: string | undefined;
 
-  // 6. Trade Creation Gate (Brief §3.0B & §83 TODO):
-  // "Trade baru dibuat di tabel trades HANYA JIKA policy_result = 'APPROVED' dan action != 'NO_TRADE'"
+  // 6. Trade Creation Gate (Brief §3.0B, §10, & Precondition Audit):
+  // "Trade baru dibuat di tabel trades HANYA JIKA policy_result = 'APPROVED' dan action != 'NO_TRADE' dan available capital > 0"
   if (
     policyResult.approved &&
-    (decision.action === "OPEN_LONG" || decision.action === "OPEN_SHORT")
+    (decision.action === "OPEN_LONG" || decision.action === "OPEN_SHORT") &&
+    economicPrecheck.availableCapital > 0 &&
+    economicPrecheck.positionRequirements?.capitalSufficient
   ) {
     const entryPrice = researchPayload.marketData.quote.price;
 
@@ -314,6 +389,7 @@ export async function executeGlyphDecisionCycle(
       proposedPositionPercent: policyResult.clampedPositionPercent,
       proposedLeverage: policyResult.clampedLeverage,
       decisionId: decisionRecord.id,
+      cycleId,
       scores: {
         conviction: decision.conviction,
         fundamentalScore: decision.fundamental_score,
@@ -331,6 +407,24 @@ export async function executeGlyphDecisionCycle(
       where: { id: decisionRecord.id },
       data: { tradeId },
     });
+
+    // Log TRADE Activity
+    if (cycleId) {
+      await logTradeActivity({
+        cycleId,
+        agentId: agent.id,
+        decisionId: decisionRecord.id,
+        tradeId,
+        tradeNumber,
+        asset: decision.asset,
+        side: decision.action === "OPEN_LONG" ? "LONG" : "SHORT",
+        entryPrice,
+        positionSize: Number(openResult.trade.positionSize),
+        leverage: Number(openResult.trade.leverage),
+        simulatedCapital: Number(openResult.trade.positionSize),
+        fees: Number(openResult.trade.fees),
+      });
+    }
   } else if (policyResult.approved && decision.action === "CLOSE" && currentPosition) {
     const closeResult = await closeSimulatedPosition(
       currentPosition.id,
@@ -340,14 +434,49 @@ export async function executeGlyphDecisionCycle(
 
     tradeId = closeResult.tradeId;
     tradeNumber = currentPosition.trade.tradeNumber;
+  } else {
+    // Decision was NO_TRADE or policy was REJECTED -> Log NO_TRADE Activity (§Mandatory Logging)
+    if (cycleId) {
+      await logNoTradeActivity({
+        cycleId,
+        agentId: agent.id,
+        asset: decision.asset,
+        decisionId: decisionRecord.id,
+        action: decision.action,
+        reason:
+          policyResult.rejectReason ||
+          (decision.action === "NO_TRADE"
+            ? "Glyph Brain decided NO_TRADE due to insufficient risk-adjusted edge."
+            : "Paper trade was not opened per policy engine rules."),
+      });
+    }
   }
 
   // 7. Commit Decision Hash Onchain (Brief §12, §3.5)
   let onchainResult = null;
   try {
     onchainResult = await commitDecisionOnchain(decisionRecord.id);
-  } catch (err) {
+    if (cycleId && onchainResult) {
+      await logProofActivity({
+        cycleId,
+        agentId: agent.id,
+        decisionId: decisionRecord.id,
+        decisionHash: onchainResult.decisionHash,
+        transactionHash: onchainResult.transactionHash,
+        status: "COMMITTED",
+      });
+    }
+  } catch (err: any) {
     console.error(`[DecisionEngine] Onchain commit failed:`, err);
+    if (cycleId) {
+      await logProofActivity({
+        cycleId,
+        agentId: agent.id,
+        decisionId: decisionRecord.id,
+        status: "FAILED",
+        error: err.message || String(err),
+      });
+    }
     throw err;
   }
 
@@ -363,13 +492,16 @@ export async function executeGlyphDecisionCycle(
     );
     const day = Math.max(1, Math.floor((eventUtc - birthUtc) / (24 * 60 * 60 * 1000)) + 1);
 
-    const eventDesc = policyResult.approved
-      ? `Policy APPROVED. Action: ${decision.action}. Thesis: ${decision.thesis.catalyst}`
-      : `Policy REJECTED: ${policyResult.rejectReason}. Thesis: ${decision.thesis.catalyst}`;
+    const eventDesc = policyResult.approved && tradeId
+      ? `Action: ${decision.action} | Policy: APPROVED | Result: TRADE_CREATED (${tradeNumber}) | Thesis: ${decision.thesis.catalyst}`
+      : policyResult.approved && decision.action === "NO_TRADE"
+        ? `Action: NO_TRADE | Policy: APPROVED | Result: NO_TRADE | Thesis: ${decision.thesis.catalyst}`
+        : `Action: ${decision.action} | Policy: ${policyResult.policyResult} | Reason: ${policyResult.rejectReason || "N/A"} | Result: NO_TRADE | Thesis: ${decision.thesis.catalyst}`;
 
     await prisma.economicEvent.create({
       data: {
         agentId: agent.id,
+        cycleId: cycleId ?? null,
         eventType: "DECISION_MADE",
         title: `Evaluated ${decision.asset} — Proposed ${decision.action} (${decision.conviction}%)`,
         description: eventDesc,

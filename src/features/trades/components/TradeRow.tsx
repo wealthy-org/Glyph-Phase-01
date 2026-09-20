@@ -168,22 +168,24 @@ export const TradeRow: React.FC<TradeRowProps> = ({ trade }) => {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-end gap-2">
-          <a
-            href={trade.proofUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block"
-            title="Verify Onchain Transaction Proof"
-          >
-            <Button
-              variant="ghost"
-              size="xs"
-              className="h-7 px-2.5 bg-[#121217] hover:bg-[#1a1a23] text-[#a1a1aa] hover:text-[#6fe39a] border border-[#22222b] hover:border-[#6fe39a]/40 font-sans text-xs font-normal rounded-md transition-all flex items-center gap-1.5 cursor-pointer"
+          {trade.proofUrl && (
+            <a
+              href={trade.proofUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block"
+              title="Verify Onchain Transaction Proof"
             >
-              <span>Verify</span>
-              <ExternalLink size={11} />
-            </Button>
-          </a>
+              <Button
+                variant="ghost"
+                size="xs"
+                className="h-7 px-2.5 bg-[#121217] hover:bg-[#1a1a23] text-[#a1a1aa] hover:text-[#6fe39a] border border-[#22222b] hover:border-[#6fe39a]/40 font-sans text-xs font-normal rounded-md transition-all flex items-center gap-1.5 cursor-pointer"
+              >
+                <span>Verify</span>
+                <ExternalLink size={11} />
+              </Button>
+            </a>
+          )}
 
           <Link href={`/trades/${trade.id}`} className="inline-block">
             <Button

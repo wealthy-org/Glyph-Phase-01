@@ -1,10 +1,12 @@
+import { getActivePositions } from "@/lib/portfolio";
 import { prisma } from "@/lib/prisma";
 import { getTreasurySummary } from "@/lib/treasury";
-import { getActivePositions } from "@/lib/portfolio";
 
 export interface HeaderMetricsData {
   pnlDollar: number;
   pnlPercent: number;
+  treasuryCash: number;
+  treasuryAllocatedMargin: number;
   treasuryEquity: number;
   currency: string;
   positionDisplay: string;
@@ -34,9 +36,9 @@ export async function getHeaderMetrics(agentIdentifier?: string): Promise<Header
       getActivePositions(resolvedAgentId),
       agent
         ? prisma.trade.findMany({
-            where: { agentId: agent.id, status: { in: ["CLOSED", "LIQUIDATED"] } },
-            select: { simulatedPnl: true, simulatedPnlPercent: true },
-          })
+          where: { agentId: agent.id, status: { in: ["CLOSED", "LIQUIDATED"] } },
+          select: { simulatedPnl: true, simulatedPnlPercent: true },
+        })
         : [],
       agent
         ? prisma.decision.count({ where: { agentId: agent.id } })
@@ -68,6 +70,8 @@ export async function getHeaderMetrics(agentIdentifier?: string): Promise<Header
     return {
       pnlDollar: treasury.pnlDollar,
       pnlPercent: treasury.pnlPercent,
+      treasuryCash: treasury.currentBalance,
+      treasuryAllocatedMargin: treasury.allocatedMargin,
       treasuryEquity: treasury.totalEquity,
       currency: treasury.currency,
       positionDisplay,
@@ -86,7 +90,9 @@ export async function getHeaderMetrics(agentIdentifier?: string): Promise<Header
     return {
       pnlDollar: 0,
       pnlPercent: 0,
-      treasuryEquity: 1000,
+      treasuryCash: 0,
+      treasuryAllocatedMargin: 0,
+      treasuryEquity: 0,
       currency: "USD-SIM",
       positionDisplay: "NONE",
       openPositionCount: 0,

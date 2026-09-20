@@ -64,7 +64,8 @@ export const ModelName = {
   ReputationMetrics: 'ReputationMetrics',
   EconomicEvent: 'EconomicEvent',
   AgentRun: 'AgentRun',
-  AgentTreasury: 'AgentTreasury'
+  AgentTreasury: 'AgentTreasury',
+  ActivityLog: 'ActivityLog'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -144,6 +145,7 @@ export const ResearchSnapshotScalarFieldEnum = {
   technicalData: 'technicalData',
   newsData: 'newsData',
   sourceMetadata: 'sourceMetadata',
+  cycleId: 'cycleId',
   createdAt: 'createdAt'
 } as const
 
@@ -170,6 +172,7 @@ export const DecisionScalarFieldEnum = {
   tradeId: 'tradeId',
   decisionHash: 'decisionHash',
   transactionHash: 'transactionHash',
+  cycleId: 'cycleId',
   createdAt: 'createdAt'
 } as const
 
@@ -185,6 +188,7 @@ export const TradeScalarFieldEnum = {
   entryPrice: 'entryPrice',
   exitPrice: 'exitPrice',
   positionSize: 'positionSize',
+  quantity: 'quantity',
   leverage: 'leverage',
   conviction: 'conviction',
   fundamentalScore: 'fundamentalScore',
@@ -198,6 +202,7 @@ export const TradeScalarFieldEnum = {
   decisionHash: 'decisionHash',
   transactionHash: 'transactionHash',
   researchSnapshotId: 'researchSnapshotId',
+  cycleId: 'cycleId',
   createdAt: 'createdAt',
   closedAt: 'closedAt'
 } as const
@@ -214,6 +219,7 @@ export const PositionScalarFieldEnum = {
   entryPrice: 'entryPrice',
   currentPrice: 'currentPrice',
   positionSize: 'positionSize',
+  quantity: 'quantity',
   leverage: 'leverage',
   unrealizedPnl: 'unrealizedPnl',
   unrealizedPnlPercent: 'unrealizedPnlPercent',
@@ -289,6 +295,7 @@ export const EconomicEventScalarFieldEnum = {
   tradeId: 'tradeId',
   decisionId: 'decisionId',
   txHash: 'txHash',
+  cycleId: 'cycleId',
   timestamp: 'timestamp'
 } as const
 
@@ -326,6 +333,26 @@ export const AgentTreasuryScalarFieldEnum = {
 } as const
 
 export type AgentTreasuryScalarFieldEnum = (typeof AgentTreasuryScalarFieldEnum)[keyof typeof AgentTreasuryScalarFieldEnum]
+
+
+export const ActivityLogScalarFieldEnum = {
+  id: 'id',
+  cycleId: 'cycleId',
+  agentId: 'agentId',
+  activityType: 'activityType',
+  asset: 'asset',
+  status: 'status',
+  title: 'title',
+  description: 'description',
+  data: 'data',
+  decisionId: 'decisionId',
+  tradeId: 'tradeId',
+  txHash: 'txHash',
+  error: 'error',
+  timestamp: 'timestamp'
+} as const
+
+export type ActivityLogScalarFieldEnum = (typeof ActivityLogScalarFieldEnum)[keyof typeof ActivityLogScalarFieldEnum]
 
 
 export const SortOrder = {

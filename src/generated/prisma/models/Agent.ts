@@ -208,6 +208,7 @@ export type AgentWhereInput = {
   economicEvents?: Prisma.EconomicEventListRelationFilter
   reputationMetrics?: Prisma.XOR<Prisma.ReputationMetricsNullableScalarRelationFilter, Prisma.ReputationMetricsWhereInput> | null
   agentRuns?: Prisma.AgentRunListRelationFilter
+  activityLogs?: Prisma.ActivityLogListRelationFilter
 }
 
 export type AgentOrderByWithRelationInput = {
@@ -228,6 +229,7 @@ export type AgentOrderByWithRelationInput = {
   economicEvents?: Prisma.EconomicEventOrderByRelationAggregateInput
   reputationMetrics?: Prisma.ReputationMetricsOrderByWithRelationInput
   agentRuns?: Prisma.AgentRunOrderByRelationAggregateInput
+  activityLogs?: Prisma.ActivityLogOrderByRelationAggregateInput
 }
 
 export type AgentWhereUniqueInput = Prisma.AtLeast<{
@@ -251,6 +253,7 @@ export type AgentWhereUniqueInput = Prisma.AtLeast<{
   economicEvents?: Prisma.EconomicEventListRelationFilter
   reputationMetrics?: Prisma.XOR<Prisma.ReputationMetricsNullableScalarRelationFilter, Prisma.ReputationMetricsWhereInput> | null
   agentRuns?: Prisma.AgentRunListRelationFilter
+  activityLogs?: Prisma.ActivityLogListRelationFilter
 }, "id" | "agentId">
 
 export type AgentOrderByWithAggregationInput = {
@@ -297,6 +300,7 @@ export type AgentCreateInput = {
   economicEvents?: Prisma.EconomicEventCreateNestedManyWithoutAgentInput
   reputationMetrics?: Prisma.ReputationMetricsCreateNestedOneWithoutAgentInput
   agentRuns?: Prisma.AgentRunCreateNestedManyWithoutAgentInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutAgentInput
 }
 
 export type AgentUncheckedCreateInput = {
@@ -317,6 +321,7 @@ export type AgentUncheckedCreateInput = {
   economicEvents?: Prisma.EconomicEventUncheckedCreateNestedManyWithoutAgentInput
   reputationMetrics?: Prisma.ReputationMetricsUncheckedCreateNestedOneWithoutAgentInput
   agentRuns?: Prisma.AgentRunUncheckedCreateNestedManyWithoutAgentInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutAgentInput
 }
 
 export type AgentUpdateInput = {
@@ -337,6 +342,7 @@ export type AgentUpdateInput = {
   economicEvents?: Prisma.EconomicEventUpdateManyWithoutAgentNestedInput
   reputationMetrics?: Prisma.ReputationMetricsUpdateOneWithoutAgentNestedInput
   agentRuns?: Prisma.AgentRunUpdateManyWithoutAgentNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutAgentNestedInput
 }
 
 export type AgentUncheckedUpdateInput = {
@@ -357,6 +363,7 @@ export type AgentUncheckedUpdateInput = {
   economicEvents?: Prisma.EconomicEventUncheckedUpdateManyWithoutAgentNestedInput
   reputationMetrics?: Prisma.ReputationMetricsUncheckedUpdateOneWithoutAgentNestedInput
   agentRuns?: Prisma.AgentRunUncheckedUpdateManyWithoutAgentNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutAgentNestedInput
 }
 
 export type AgentCreateManyInput = {
@@ -576,6 +583,20 @@ export type AgentUpdateOneRequiredWithoutTreasuryNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AgentUpdateToOneWithWhereWithoutTreasuryInput, Prisma.AgentUpdateWithoutTreasuryInput>, Prisma.AgentUncheckedUpdateWithoutTreasuryInput>
 }
 
+export type AgentCreateNestedOneWithoutActivityLogsInput = {
+  create?: Prisma.XOR<Prisma.AgentCreateWithoutActivityLogsInput, Prisma.AgentUncheckedCreateWithoutActivityLogsInput>
+  connectOrCreate?: Prisma.AgentCreateOrConnectWithoutActivityLogsInput
+  connect?: Prisma.AgentWhereUniqueInput
+}
+
+export type AgentUpdateOneRequiredWithoutActivityLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.AgentCreateWithoutActivityLogsInput, Prisma.AgentUncheckedCreateWithoutActivityLogsInput>
+  connectOrCreate?: Prisma.AgentCreateOrConnectWithoutActivityLogsInput
+  upsert?: Prisma.AgentUpsertWithoutActivityLogsInput
+  connect?: Prisma.AgentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AgentUpdateToOneWithWhereWithoutActivityLogsInput, Prisma.AgentUpdateWithoutActivityLogsInput>, Prisma.AgentUncheckedUpdateWithoutActivityLogsInput>
+}
+
 export type AgentCreateWithoutWalletInput = {
   id?: string
   agentId: string
@@ -593,6 +614,7 @@ export type AgentCreateWithoutWalletInput = {
   economicEvents?: Prisma.EconomicEventCreateNestedManyWithoutAgentInput
   reputationMetrics?: Prisma.ReputationMetricsCreateNestedOneWithoutAgentInput
   agentRuns?: Prisma.AgentRunCreateNestedManyWithoutAgentInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutAgentInput
 }
 
 export type AgentUncheckedCreateWithoutWalletInput = {
@@ -612,6 +634,7 @@ export type AgentUncheckedCreateWithoutWalletInput = {
   economicEvents?: Prisma.EconomicEventUncheckedCreateNestedManyWithoutAgentInput
   reputationMetrics?: Prisma.ReputationMetricsUncheckedCreateNestedOneWithoutAgentInput
   agentRuns?: Prisma.AgentRunUncheckedCreateNestedManyWithoutAgentInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutAgentInput
 }
 
 export type AgentCreateOrConnectWithoutWalletInput = {
@@ -647,6 +670,7 @@ export type AgentUpdateWithoutWalletInput = {
   economicEvents?: Prisma.EconomicEventUpdateManyWithoutAgentNestedInput
   reputationMetrics?: Prisma.ReputationMetricsUpdateOneWithoutAgentNestedInput
   agentRuns?: Prisma.AgentRunUpdateManyWithoutAgentNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutAgentNestedInput
 }
 
 export type AgentUncheckedUpdateWithoutWalletInput = {
@@ -666,6 +690,7 @@ export type AgentUncheckedUpdateWithoutWalletInput = {
   economicEvents?: Prisma.EconomicEventUncheckedUpdateManyWithoutAgentNestedInput
   reputationMetrics?: Prisma.ReputationMetricsUncheckedUpdateOneWithoutAgentNestedInput
   agentRuns?: Prisma.AgentRunUncheckedUpdateManyWithoutAgentNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutAgentNestedInput
 }
 
 export type AgentCreateWithoutPolicyInput = {
@@ -685,6 +710,7 @@ export type AgentCreateWithoutPolicyInput = {
   economicEvents?: Prisma.EconomicEventCreateNestedManyWithoutAgentInput
   reputationMetrics?: Prisma.ReputationMetricsCreateNestedOneWithoutAgentInput
   agentRuns?: Prisma.AgentRunCreateNestedManyWithoutAgentInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutAgentInput
 }
 
 export type AgentUncheckedCreateWithoutPolicyInput = {
@@ -704,6 +730,7 @@ export type AgentUncheckedCreateWithoutPolicyInput = {
   economicEvents?: Prisma.EconomicEventUncheckedCreateNestedManyWithoutAgentInput
   reputationMetrics?: Prisma.ReputationMetricsUncheckedCreateNestedOneWithoutAgentInput
   agentRuns?: Prisma.AgentRunUncheckedCreateNestedManyWithoutAgentInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutAgentInput
 }
 
 export type AgentCreateOrConnectWithoutPolicyInput = {
@@ -739,6 +766,7 @@ export type AgentUpdateWithoutPolicyInput = {
   economicEvents?: Prisma.EconomicEventUpdateManyWithoutAgentNestedInput
   reputationMetrics?: Prisma.ReputationMetricsUpdateOneWithoutAgentNestedInput
   agentRuns?: Prisma.AgentRunUpdateManyWithoutAgentNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutAgentNestedInput
 }
 
 export type AgentUncheckedUpdateWithoutPolicyInput = {
@@ -758,6 +786,7 @@ export type AgentUncheckedUpdateWithoutPolicyInput = {
   economicEvents?: Prisma.EconomicEventUncheckedUpdateManyWithoutAgentNestedInput
   reputationMetrics?: Prisma.ReputationMetricsUncheckedUpdateOneWithoutAgentNestedInput
   agentRuns?: Prisma.AgentRunUncheckedUpdateManyWithoutAgentNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutAgentNestedInput
 }
 
 export type AgentCreateWithoutDecisionsInput = {
@@ -777,6 +806,7 @@ export type AgentCreateWithoutDecisionsInput = {
   economicEvents?: Prisma.EconomicEventCreateNestedManyWithoutAgentInput
   reputationMetrics?: Prisma.ReputationMetricsCreateNestedOneWithoutAgentInput
   agentRuns?: Prisma.AgentRunCreateNestedManyWithoutAgentInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutAgentInput
 }
 
 export type AgentUncheckedCreateWithoutDecisionsInput = {
@@ -796,6 +826,7 @@ export type AgentUncheckedCreateWithoutDecisionsInput = {
   economicEvents?: Prisma.EconomicEventUncheckedCreateNestedManyWithoutAgentInput
   reputationMetrics?: Prisma.ReputationMetricsUncheckedCreateNestedOneWithoutAgentInput
   agentRuns?: Prisma.AgentRunUncheckedCreateNestedManyWithoutAgentInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutAgentInput
 }
 
 export type AgentCreateOrConnectWithoutDecisionsInput = {
@@ -831,6 +862,7 @@ export type AgentUpdateWithoutDecisionsInput = {
   economicEvents?: Prisma.EconomicEventUpdateManyWithoutAgentNestedInput
   reputationMetrics?: Prisma.ReputationMetricsUpdateOneWithoutAgentNestedInput
   agentRuns?: Prisma.AgentRunUpdateManyWithoutAgentNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutAgentNestedInput
 }
 
 export type AgentUncheckedUpdateWithoutDecisionsInput = {
@@ -850,6 +882,7 @@ export type AgentUncheckedUpdateWithoutDecisionsInput = {
   economicEvents?: Prisma.EconomicEventUncheckedUpdateManyWithoutAgentNestedInput
   reputationMetrics?: Prisma.ReputationMetricsUncheckedUpdateOneWithoutAgentNestedInput
   agentRuns?: Prisma.AgentRunUncheckedUpdateManyWithoutAgentNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutAgentNestedInput
 }
 
 export type AgentCreateWithoutTradesInput = {
@@ -869,6 +902,7 @@ export type AgentCreateWithoutTradesInput = {
   economicEvents?: Prisma.EconomicEventCreateNestedManyWithoutAgentInput
   reputationMetrics?: Prisma.ReputationMetricsCreateNestedOneWithoutAgentInput
   agentRuns?: Prisma.AgentRunCreateNestedManyWithoutAgentInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutAgentInput
 }
 
 export type AgentUncheckedCreateWithoutTradesInput = {
@@ -888,6 +922,7 @@ export type AgentUncheckedCreateWithoutTradesInput = {
   economicEvents?: Prisma.EconomicEventUncheckedCreateNestedManyWithoutAgentInput
   reputationMetrics?: Prisma.ReputationMetricsUncheckedCreateNestedOneWithoutAgentInput
   agentRuns?: Prisma.AgentRunUncheckedCreateNestedManyWithoutAgentInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutAgentInput
 }
 
 export type AgentCreateOrConnectWithoutTradesInput = {
@@ -923,6 +958,7 @@ export type AgentUpdateWithoutTradesInput = {
   economicEvents?: Prisma.EconomicEventUpdateManyWithoutAgentNestedInput
   reputationMetrics?: Prisma.ReputationMetricsUpdateOneWithoutAgentNestedInput
   agentRuns?: Prisma.AgentRunUpdateManyWithoutAgentNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutAgentNestedInput
 }
 
 export type AgentUncheckedUpdateWithoutTradesInput = {
@@ -942,6 +978,7 @@ export type AgentUncheckedUpdateWithoutTradesInput = {
   economicEvents?: Prisma.EconomicEventUncheckedUpdateManyWithoutAgentNestedInput
   reputationMetrics?: Prisma.ReputationMetricsUncheckedUpdateOneWithoutAgentNestedInput
   agentRuns?: Prisma.AgentRunUncheckedUpdateManyWithoutAgentNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutAgentNestedInput
 }
 
 export type AgentCreateWithoutPositionsInput = {
@@ -961,6 +998,7 @@ export type AgentCreateWithoutPositionsInput = {
   economicEvents?: Prisma.EconomicEventCreateNestedManyWithoutAgentInput
   reputationMetrics?: Prisma.ReputationMetricsCreateNestedOneWithoutAgentInput
   agentRuns?: Prisma.AgentRunCreateNestedManyWithoutAgentInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutAgentInput
 }
 
 export type AgentUncheckedCreateWithoutPositionsInput = {
@@ -980,6 +1018,7 @@ export type AgentUncheckedCreateWithoutPositionsInput = {
   economicEvents?: Prisma.EconomicEventUncheckedCreateNestedManyWithoutAgentInput
   reputationMetrics?: Prisma.ReputationMetricsUncheckedCreateNestedOneWithoutAgentInput
   agentRuns?: Prisma.AgentRunUncheckedCreateNestedManyWithoutAgentInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutAgentInput
 }
 
 export type AgentCreateOrConnectWithoutPositionsInput = {
@@ -1015,6 +1054,7 @@ export type AgentUpdateWithoutPositionsInput = {
   economicEvents?: Prisma.EconomicEventUpdateManyWithoutAgentNestedInput
   reputationMetrics?: Prisma.ReputationMetricsUpdateOneWithoutAgentNestedInput
   agentRuns?: Prisma.AgentRunUpdateManyWithoutAgentNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutAgentNestedInput
 }
 
 export type AgentUncheckedUpdateWithoutPositionsInput = {
@@ -1034,6 +1074,7 @@ export type AgentUncheckedUpdateWithoutPositionsInput = {
   economicEvents?: Prisma.EconomicEventUncheckedUpdateManyWithoutAgentNestedInput
   reputationMetrics?: Prisma.ReputationMetricsUncheckedUpdateOneWithoutAgentNestedInput
   agentRuns?: Prisma.AgentRunUncheckedUpdateManyWithoutAgentNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutAgentNestedInput
 }
 
 export type AgentCreateWithoutMemoriesInput = {
@@ -1053,6 +1094,7 @@ export type AgentCreateWithoutMemoriesInput = {
   economicEvents?: Prisma.EconomicEventCreateNestedManyWithoutAgentInput
   reputationMetrics?: Prisma.ReputationMetricsCreateNestedOneWithoutAgentInput
   agentRuns?: Prisma.AgentRunCreateNestedManyWithoutAgentInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutAgentInput
 }
 
 export type AgentUncheckedCreateWithoutMemoriesInput = {
@@ -1072,6 +1114,7 @@ export type AgentUncheckedCreateWithoutMemoriesInput = {
   economicEvents?: Prisma.EconomicEventUncheckedCreateNestedManyWithoutAgentInput
   reputationMetrics?: Prisma.ReputationMetricsUncheckedCreateNestedOneWithoutAgentInput
   agentRuns?: Prisma.AgentRunUncheckedCreateNestedManyWithoutAgentInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutAgentInput
 }
 
 export type AgentCreateOrConnectWithoutMemoriesInput = {
@@ -1107,6 +1150,7 @@ export type AgentUpdateWithoutMemoriesInput = {
   economicEvents?: Prisma.EconomicEventUpdateManyWithoutAgentNestedInput
   reputationMetrics?: Prisma.ReputationMetricsUpdateOneWithoutAgentNestedInput
   agentRuns?: Prisma.AgentRunUpdateManyWithoutAgentNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutAgentNestedInput
 }
 
 export type AgentUncheckedUpdateWithoutMemoriesInput = {
@@ -1126,6 +1170,7 @@ export type AgentUncheckedUpdateWithoutMemoriesInput = {
   economicEvents?: Prisma.EconomicEventUncheckedUpdateManyWithoutAgentNestedInput
   reputationMetrics?: Prisma.ReputationMetricsUncheckedUpdateOneWithoutAgentNestedInput
   agentRuns?: Prisma.AgentRunUncheckedUpdateManyWithoutAgentNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutAgentNestedInput
 }
 
 export type AgentCreateWithoutReputationMetricsInput = {
@@ -1145,6 +1190,7 @@ export type AgentCreateWithoutReputationMetricsInput = {
   memories?: Prisma.MemoryCreateNestedManyWithoutAgentInput
   economicEvents?: Prisma.EconomicEventCreateNestedManyWithoutAgentInput
   agentRuns?: Prisma.AgentRunCreateNestedManyWithoutAgentInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutAgentInput
 }
 
 export type AgentUncheckedCreateWithoutReputationMetricsInput = {
@@ -1164,6 +1210,7 @@ export type AgentUncheckedCreateWithoutReputationMetricsInput = {
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutAgentInput
   economicEvents?: Prisma.EconomicEventUncheckedCreateNestedManyWithoutAgentInput
   agentRuns?: Prisma.AgentRunUncheckedCreateNestedManyWithoutAgentInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutAgentInput
 }
 
 export type AgentCreateOrConnectWithoutReputationMetricsInput = {
@@ -1199,6 +1246,7 @@ export type AgentUpdateWithoutReputationMetricsInput = {
   memories?: Prisma.MemoryUpdateManyWithoutAgentNestedInput
   economicEvents?: Prisma.EconomicEventUpdateManyWithoutAgentNestedInput
   agentRuns?: Prisma.AgentRunUpdateManyWithoutAgentNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutAgentNestedInput
 }
 
 export type AgentUncheckedUpdateWithoutReputationMetricsInput = {
@@ -1218,6 +1266,7 @@ export type AgentUncheckedUpdateWithoutReputationMetricsInput = {
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutAgentNestedInput
   economicEvents?: Prisma.EconomicEventUncheckedUpdateManyWithoutAgentNestedInput
   agentRuns?: Prisma.AgentRunUncheckedUpdateManyWithoutAgentNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutAgentNestedInput
 }
 
 export type AgentCreateWithoutEconomicEventsInput = {
@@ -1237,6 +1286,7 @@ export type AgentCreateWithoutEconomicEventsInput = {
   memories?: Prisma.MemoryCreateNestedManyWithoutAgentInput
   reputationMetrics?: Prisma.ReputationMetricsCreateNestedOneWithoutAgentInput
   agentRuns?: Prisma.AgentRunCreateNestedManyWithoutAgentInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutAgentInput
 }
 
 export type AgentUncheckedCreateWithoutEconomicEventsInput = {
@@ -1256,6 +1306,7 @@ export type AgentUncheckedCreateWithoutEconomicEventsInput = {
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutAgentInput
   reputationMetrics?: Prisma.ReputationMetricsUncheckedCreateNestedOneWithoutAgentInput
   agentRuns?: Prisma.AgentRunUncheckedCreateNestedManyWithoutAgentInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutAgentInput
 }
 
 export type AgentCreateOrConnectWithoutEconomicEventsInput = {
@@ -1291,6 +1342,7 @@ export type AgentUpdateWithoutEconomicEventsInput = {
   memories?: Prisma.MemoryUpdateManyWithoutAgentNestedInput
   reputationMetrics?: Prisma.ReputationMetricsUpdateOneWithoutAgentNestedInput
   agentRuns?: Prisma.AgentRunUpdateManyWithoutAgentNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutAgentNestedInput
 }
 
 export type AgentUncheckedUpdateWithoutEconomicEventsInput = {
@@ -1310,6 +1362,7 @@ export type AgentUncheckedUpdateWithoutEconomicEventsInput = {
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutAgentNestedInput
   reputationMetrics?: Prisma.ReputationMetricsUncheckedUpdateOneWithoutAgentNestedInput
   agentRuns?: Prisma.AgentRunUncheckedUpdateManyWithoutAgentNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutAgentNestedInput
 }
 
 export type AgentCreateWithoutAgentRunsInput = {
@@ -1329,6 +1382,7 @@ export type AgentCreateWithoutAgentRunsInput = {
   memories?: Prisma.MemoryCreateNestedManyWithoutAgentInput
   economicEvents?: Prisma.EconomicEventCreateNestedManyWithoutAgentInput
   reputationMetrics?: Prisma.ReputationMetricsCreateNestedOneWithoutAgentInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutAgentInput
 }
 
 export type AgentUncheckedCreateWithoutAgentRunsInput = {
@@ -1348,6 +1402,7 @@ export type AgentUncheckedCreateWithoutAgentRunsInput = {
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutAgentInput
   economicEvents?: Prisma.EconomicEventUncheckedCreateNestedManyWithoutAgentInput
   reputationMetrics?: Prisma.ReputationMetricsUncheckedCreateNestedOneWithoutAgentInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutAgentInput
 }
 
 export type AgentCreateOrConnectWithoutAgentRunsInput = {
@@ -1383,6 +1438,7 @@ export type AgentUpdateWithoutAgentRunsInput = {
   memories?: Prisma.MemoryUpdateManyWithoutAgentNestedInput
   economicEvents?: Prisma.EconomicEventUpdateManyWithoutAgentNestedInput
   reputationMetrics?: Prisma.ReputationMetricsUpdateOneWithoutAgentNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutAgentNestedInput
 }
 
 export type AgentUncheckedUpdateWithoutAgentRunsInput = {
@@ -1402,6 +1458,7 @@ export type AgentUncheckedUpdateWithoutAgentRunsInput = {
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutAgentNestedInput
   economicEvents?: Prisma.EconomicEventUncheckedUpdateManyWithoutAgentNestedInput
   reputationMetrics?: Prisma.ReputationMetricsUncheckedUpdateOneWithoutAgentNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutAgentNestedInput
 }
 
 export type AgentCreateWithoutTreasuryInput = {
@@ -1421,6 +1478,7 @@ export type AgentCreateWithoutTreasuryInput = {
   economicEvents?: Prisma.EconomicEventCreateNestedManyWithoutAgentInput
   reputationMetrics?: Prisma.ReputationMetricsCreateNestedOneWithoutAgentInput
   agentRuns?: Prisma.AgentRunCreateNestedManyWithoutAgentInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutAgentInput
 }
 
 export type AgentUncheckedCreateWithoutTreasuryInput = {
@@ -1440,6 +1498,7 @@ export type AgentUncheckedCreateWithoutTreasuryInput = {
   economicEvents?: Prisma.EconomicEventUncheckedCreateNestedManyWithoutAgentInput
   reputationMetrics?: Prisma.ReputationMetricsUncheckedCreateNestedOneWithoutAgentInput
   agentRuns?: Prisma.AgentRunUncheckedCreateNestedManyWithoutAgentInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutAgentInput
 }
 
 export type AgentCreateOrConnectWithoutTreasuryInput = {
@@ -1475,6 +1534,7 @@ export type AgentUpdateWithoutTreasuryInput = {
   economicEvents?: Prisma.EconomicEventUpdateManyWithoutAgentNestedInput
   reputationMetrics?: Prisma.ReputationMetricsUpdateOneWithoutAgentNestedInput
   agentRuns?: Prisma.AgentRunUpdateManyWithoutAgentNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutAgentNestedInput
 }
 
 export type AgentUncheckedUpdateWithoutTreasuryInput = {
@@ -1487,6 +1547,103 @@ export type AgentUncheckedUpdateWithoutTreasuryInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   wallet?: Prisma.AgentWalletUncheckedUpdateOneWithoutAgentNestedInput
   policy?: Prisma.AgentPolicyUncheckedUpdateOneWithoutAgentNestedInput
+  decisions?: Prisma.DecisionUncheckedUpdateManyWithoutAgentNestedInput
+  trades?: Prisma.TradeUncheckedUpdateManyWithoutAgentNestedInput
+  positions?: Prisma.PositionUncheckedUpdateManyWithoutAgentNestedInput
+  memories?: Prisma.MemoryUncheckedUpdateManyWithoutAgentNestedInput
+  economicEvents?: Prisma.EconomicEventUncheckedUpdateManyWithoutAgentNestedInput
+  reputationMetrics?: Prisma.ReputationMetricsUncheckedUpdateOneWithoutAgentNestedInput
+  agentRuns?: Prisma.AgentRunUncheckedUpdateManyWithoutAgentNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutAgentNestedInput
+}
+
+export type AgentCreateWithoutActivityLogsInput = {
+  id?: string
+  agentId: string
+  name?: string
+  status?: string
+  metadataUri?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  wallet?: Prisma.AgentWalletCreateNestedOneWithoutAgentInput
+  policy?: Prisma.AgentPolicyCreateNestedOneWithoutAgentInput
+  treasury?: Prisma.AgentTreasuryCreateNestedOneWithoutAgentInput
+  decisions?: Prisma.DecisionCreateNestedManyWithoutAgentInput
+  trades?: Prisma.TradeCreateNestedManyWithoutAgentInput
+  positions?: Prisma.PositionCreateNestedManyWithoutAgentInput
+  memories?: Prisma.MemoryCreateNestedManyWithoutAgentInput
+  economicEvents?: Prisma.EconomicEventCreateNestedManyWithoutAgentInput
+  reputationMetrics?: Prisma.ReputationMetricsCreateNestedOneWithoutAgentInput
+  agentRuns?: Prisma.AgentRunCreateNestedManyWithoutAgentInput
+}
+
+export type AgentUncheckedCreateWithoutActivityLogsInput = {
+  id?: string
+  agentId: string
+  name?: string
+  status?: string
+  metadataUri?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  wallet?: Prisma.AgentWalletUncheckedCreateNestedOneWithoutAgentInput
+  policy?: Prisma.AgentPolicyUncheckedCreateNestedOneWithoutAgentInput
+  treasury?: Prisma.AgentTreasuryUncheckedCreateNestedOneWithoutAgentInput
+  decisions?: Prisma.DecisionUncheckedCreateNestedManyWithoutAgentInput
+  trades?: Prisma.TradeUncheckedCreateNestedManyWithoutAgentInput
+  positions?: Prisma.PositionUncheckedCreateNestedManyWithoutAgentInput
+  memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutAgentInput
+  economicEvents?: Prisma.EconomicEventUncheckedCreateNestedManyWithoutAgentInput
+  reputationMetrics?: Prisma.ReputationMetricsUncheckedCreateNestedOneWithoutAgentInput
+  agentRuns?: Prisma.AgentRunUncheckedCreateNestedManyWithoutAgentInput
+}
+
+export type AgentCreateOrConnectWithoutActivityLogsInput = {
+  where: Prisma.AgentWhereUniqueInput
+  create: Prisma.XOR<Prisma.AgentCreateWithoutActivityLogsInput, Prisma.AgentUncheckedCreateWithoutActivityLogsInput>
+}
+
+export type AgentUpsertWithoutActivityLogsInput = {
+  update: Prisma.XOR<Prisma.AgentUpdateWithoutActivityLogsInput, Prisma.AgentUncheckedUpdateWithoutActivityLogsInput>
+  create: Prisma.XOR<Prisma.AgentCreateWithoutActivityLogsInput, Prisma.AgentUncheckedCreateWithoutActivityLogsInput>
+  where?: Prisma.AgentWhereInput
+}
+
+export type AgentUpdateToOneWithWhereWithoutActivityLogsInput = {
+  where?: Prisma.AgentWhereInput
+  data: Prisma.XOR<Prisma.AgentUpdateWithoutActivityLogsInput, Prisma.AgentUncheckedUpdateWithoutActivityLogsInput>
+}
+
+export type AgentUpdateWithoutActivityLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  agentId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  metadataUri?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.AgentWalletUpdateOneWithoutAgentNestedInput
+  policy?: Prisma.AgentPolicyUpdateOneWithoutAgentNestedInput
+  treasury?: Prisma.AgentTreasuryUpdateOneWithoutAgentNestedInput
+  decisions?: Prisma.DecisionUpdateManyWithoutAgentNestedInput
+  trades?: Prisma.TradeUpdateManyWithoutAgentNestedInput
+  positions?: Prisma.PositionUpdateManyWithoutAgentNestedInput
+  memories?: Prisma.MemoryUpdateManyWithoutAgentNestedInput
+  economicEvents?: Prisma.EconomicEventUpdateManyWithoutAgentNestedInput
+  reputationMetrics?: Prisma.ReputationMetricsUpdateOneWithoutAgentNestedInput
+  agentRuns?: Prisma.AgentRunUpdateManyWithoutAgentNestedInput
+}
+
+export type AgentUncheckedUpdateWithoutActivityLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  agentId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  metadataUri?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.AgentWalletUncheckedUpdateOneWithoutAgentNestedInput
+  policy?: Prisma.AgentPolicyUncheckedUpdateOneWithoutAgentNestedInput
+  treasury?: Prisma.AgentTreasuryUncheckedUpdateOneWithoutAgentNestedInput
   decisions?: Prisma.DecisionUncheckedUpdateManyWithoutAgentNestedInput
   trades?: Prisma.TradeUncheckedUpdateManyWithoutAgentNestedInput
   positions?: Prisma.PositionUncheckedUpdateManyWithoutAgentNestedInput
@@ -1508,6 +1665,7 @@ export type AgentCountOutputType = {
   memories: number
   economicEvents: number
   agentRuns: number
+  activityLogs: number
 }
 
 export type AgentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1517,6 +1675,7 @@ export type AgentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.
   memories?: boolean | AgentCountOutputTypeCountMemoriesArgs
   economicEvents?: boolean | AgentCountOutputTypeCountEconomicEventsArgs
   agentRuns?: boolean | AgentCountOutputTypeCountAgentRunsArgs
+  activityLogs?: boolean | AgentCountOutputTypeCountActivityLogsArgs
 }
 
 /**
@@ -1571,6 +1730,13 @@ export type AgentCountOutputTypeCountAgentRunsArgs<ExtArgs extends runtime.Types
   where?: Prisma.AgentRunWhereInput
 }
 
+/**
+ * AgentCountOutputType without action
+ */
+export type AgentCountOutputTypeCountActivityLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ActivityLogWhereInput
+}
+
 
 export type AgentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1590,6 +1756,7 @@ export type AgentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   economicEvents?: boolean | Prisma.Agent$economicEventsArgs<ExtArgs>
   reputationMetrics?: boolean | Prisma.Agent$reputationMetricsArgs<ExtArgs>
   agentRuns?: boolean | Prisma.Agent$agentRunsArgs<ExtArgs>
+  activityLogs?: boolean | Prisma.Agent$activityLogsArgs<ExtArgs>
   _count?: boolean | Prisma.AgentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["agent"]>
 
@@ -1635,6 +1802,7 @@ export type AgentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   economicEvents?: boolean | Prisma.Agent$economicEventsArgs<ExtArgs>
   reputationMetrics?: boolean | Prisma.Agent$reputationMetricsArgs<ExtArgs>
   agentRuns?: boolean | Prisma.Agent$agentRunsArgs<ExtArgs>
+  activityLogs?: boolean | Prisma.Agent$activityLogsArgs<ExtArgs>
   _count?: boolean | Prisma.AgentCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AgentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1653,6 +1821,7 @@ export type $AgentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     economicEvents: Prisma.$EconomicEventPayload<ExtArgs>[]
     reputationMetrics: Prisma.$ReputationMetricsPayload<ExtArgs> | null
     agentRuns: Prisma.$AgentRunPayload<ExtArgs>[]
+    activityLogs: Prisma.$ActivityLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2066,6 +2235,7 @@ export interface Prisma__AgentClient<T, Null = never, ExtArgs extends runtime.Ty
   economicEvents<T extends Prisma.Agent$economicEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Agent$economicEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EconomicEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reputationMetrics<T extends Prisma.Agent$reputationMetricsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Agent$reputationMetricsArgs<ExtArgs>>): Prisma.Prisma__ReputationMetricsClient<runtime.Types.Result.GetResult<Prisma.$ReputationMetricsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   agentRuns<T extends Prisma.Agent$agentRunsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Agent$agentRunsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AgentRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  activityLogs<T extends Prisma.Agent$activityLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Agent$activityLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ActivityLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2712,6 +2882,30 @@ export type Agent$agentRunsArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.AgentRunScalarFieldEnum | Prisma.AgentRunScalarFieldEnum[]
+}
+
+/**
+ * Agent.activityLogs
+ */
+export type Agent$activityLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ActivityLog
+   */
+  select?: Prisma.ActivityLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ActivityLog
+   */
+  omit?: Prisma.ActivityLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ActivityLogInclude<ExtArgs> | null
+  where?: Prisma.ActivityLogWhereInput
+  orderBy?: Prisma.ActivityLogOrderByWithRelationInput | Prisma.ActivityLogOrderByWithRelationInput[]
+  cursor?: Prisma.ActivityLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ActivityLogScalarFieldEnum | Prisma.ActivityLogScalarFieldEnum[]
 }
 
 /**

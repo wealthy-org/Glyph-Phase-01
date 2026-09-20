@@ -63,6 +63,7 @@ export type DecisionMinAggregateOutputType = {
   tradeId: string | null
   decisionHash: string | null
   transactionHash: string | null
+  cycleId: string | null
   createdAt: Date | null
 }
 
@@ -85,6 +86,7 @@ export type DecisionMaxAggregateOutputType = {
   tradeId: string | null
   decisionHash: string | null
   transactionHash: string | null
+  cycleId: string | null
   createdAt: Date | null
 }
 
@@ -108,6 +110,7 @@ export type DecisionCountAggregateOutputType = {
   tradeId: number
   decisionHash: number
   transactionHash: number
+  cycleId: number
   createdAt: number
   _all: number
 }
@@ -150,6 +153,7 @@ export type DecisionMinAggregateInputType = {
   tradeId?: true
   decisionHash?: true
   transactionHash?: true
+  cycleId?: true
   createdAt?: true
 }
 
@@ -172,6 +176,7 @@ export type DecisionMaxAggregateInputType = {
   tradeId?: true
   decisionHash?: true
   transactionHash?: true
+  cycleId?: true
   createdAt?: true
 }
 
@@ -195,6 +200,7 @@ export type DecisionCountAggregateInputType = {
   tradeId?: true
   decisionHash?: true
   transactionHash?: true
+  cycleId?: true
   createdAt?: true
   _all?: true
 }
@@ -305,6 +311,7 @@ export type DecisionGroupByOutputType = {
   tradeId: string | null
   decisionHash: string | null
   transactionHash: string | null
+  cycleId: string | null
   createdAt: Date
   _count: DecisionCountAggregateOutputType | null
   _avg: DecisionAvgAggregateOutputType | null
@@ -351,6 +358,7 @@ export type DecisionWhereInput = {
   tradeId?: Prisma.StringNullableFilter<"Decision"> | string | null
   decisionHash?: Prisma.StringNullableFilter<"Decision"> | string | null
   transactionHash?: Prisma.StringNullableFilter<"Decision"> | string | null
+  cycleId?: Prisma.StringNullableFilter<"Decision"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Decision"> | Date | string
   agent?: Prisma.XOR<Prisma.AgentScalarRelationFilter, Prisma.AgentWhereInput>
   researchSnapshot?: Prisma.XOR<Prisma.ResearchSnapshotNullableScalarRelationFilter, Prisma.ResearchSnapshotWhereInput> | null
@@ -377,6 +385,7 @@ export type DecisionOrderByWithRelationInput = {
   tradeId?: Prisma.SortOrderInput | Prisma.SortOrder
   decisionHash?: Prisma.SortOrderInput | Prisma.SortOrder
   transactionHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  cycleId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   agent?: Prisma.AgentOrderByWithRelationInput
   researchSnapshot?: Prisma.ResearchSnapshotOrderByWithRelationInput
@@ -406,6 +415,7 @@ export type DecisionWhereUniqueInput = Prisma.AtLeast<{
   promptVersion?: Prisma.StringFilter<"Decision"> | string
   decisionHash?: Prisma.StringNullableFilter<"Decision"> | string | null
   transactionHash?: Prisma.StringNullableFilter<"Decision"> | string | null
+  cycleId?: Prisma.StringNullableFilter<"Decision"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Decision"> | Date | string
   agent?: Prisma.XOR<Prisma.AgentScalarRelationFilter, Prisma.AgentWhereInput>
   researchSnapshot?: Prisma.XOR<Prisma.ResearchSnapshotNullableScalarRelationFilter, Prisma.ResearchSnapshotWhereInput> | null
@@ -432,6 +442,7 @@ export type DecisionOrderByWithAggregationInput = {
   tradeId?: Prisma.SortOrderInput | Prisma.SortOrder
   decisionHash?: Prisma.SortOrderInput | Prisma.SortOrder
   transactionHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  cycleId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.DecisionCountOrderByAggregateInput
   _avg?: Prisma.DecisionAvgOrderByAggregateInput
@@ -463,6 +474,7 @@ export type DecisionScalarWhereWithAggregatesInput = {
   tradeId?: Prisma.StringNullableWithAggregatesFilter<"Decision"> | string | null
   decisionHash?: Prisma.StringNullableWithAggregatesFilter<"Decision"> | string | null
   transactionHash?: Prisma.StringNullableWithAggregatesFilter<"Decision"> | string | null
+  cycleId?: Prisma.StringNullableWithAggregatesFilter<"Decision"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Decision"> | Date | string
 }
 
@@ -483,6 +495,7 @@ export type DecisionCreateInput = {
   promptVersion?: string
   decisionHash?: string | null
   transactionHash?: string | null
+  cycleId?: string | null
   createdAt?: Date | string
   agent: Prisma.AgentCreateNestedOneWithoutDecisionsInput
   researchSnapshot?: Prisma.ResearchSnapshotCreateNestedOneWithoutDecisionsInput
@@ -509,6 +522,7 @@ export type DecisionUncheckedCreateInput = {
   tradeId?: string | null
   decisionHash?: string | null
   transactionHash?: string | null
+  cycleId?: string | null
   createdAt?: Date | string
 }
 
@@ -529,6 +543,7 @@ export type DecisionUpdateInput = {
   promptVersion?: Prisma.StringFieldUpdateOperationsInput | string
   decisionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agent?: Prisma.AgentUpdateOneRequiredWithoutDecisionsNestedInput
   researchSnapshot?: Prisma.ResearchSnapshotUpdateOneWithoutDecisionsNestedInput
@@ -555,6 +570,7 @@ export type DecisionUncheckedUpdateInput = {
   tradeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   decisionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -578,6 +594,7 @@ export type DecisionCreateManyInput = {
   tradeId?: string | null
   decisionHash?: string | null
   transactionHash?: string | null
+  cycleId?: string | null
   createdAt?: Date | string
 }
 
@@ -598,6 +615,7 @@ export type DecisionUpdateManyMutationInput = {
   promptVersion?: Prisma.StringFieldUpdateOperationsInput | string
   decisionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -621,6 +639,7 @@ export type DecisionUncheckedUpdateManyInput = {
   tradeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   decisionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -654,6 +673,7 @@ export type DecisionCountOrderByAggregateInput = {
   tradeId?: Prisma.SortOrder
   decisionHash?: Prisma.SortOrder
   transactionHash?: Prisma.SortOrder
+  cycleId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -685,6 +705,7 @@ export type DecisionMaxOrderByAggregateInput = {
   tradeId?: Prisma.SortOrder
   decisionHash?: Prisma.SortOrder
   transactionHash?: Prisma.SortOrder
+  cycleId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -707,6 +728,7 @@ export type DecisionMinOrderByAggregateInput = {
   tradeId?: Prisma.SortOrder
   decisionHash?: Prisma.SortOrder
   transactionHash?: Prisma.SortOrder
+  cycleId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -881,6 +903,7 @@ export type DecisionCreateWithoutAgentInput = {
   promptVersion?: string
   decisionHash?: string | null
   transactionHash?: string | null
+  cycleId?: string | null
   createdAt?: Date | string
   researchSnapshot?: Prisma.ResearchSnapshotCreateNestedOneWithoutDecisionsInput
   trade?: Prisma.TradeCreateNestedOneWithoutDecisionInput
@@ -905,6 +928,7 @@ export type DecisionUncheckedCreateWithoutAgentInput = {
   tradeId?: string | null
   decisionHash?: string | null
   transactionHash?: string | null
+  cycleId?: string | null
   createdAt?: Date | string
 }
 
@@ -957,6 +981,7 @@ export type DecisionScalarWhereInput = {
   tradeId?: Prisma.StringNullableFilter<"Decision"> | string | null
   decisionHash?: Prisma.StringNullableFilter<"Decision"> | string | null
   transactionHash?: Prisma.StringNullableFilter<"Decision"> | string | null
+  cycleId?: Prisma.StringNullableFilter<"Decision"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Decision"> | Date | string
 }
 
@@ -977,6 +1002,7 @@ export type DecisionCreateWithoutResearchSnapshotInput = {
   promptVersion?: string
   decisionHash?: string | null
   transactionHash?: string | null
+  cycleId?: string | null
   createdAt?: Date | string
   agent: Prisma.AgentCreateNestedOneWithoutDecisionsInput
   trade?: Prisma.TradeCreateNestedOneWithoutDecisionInput
@@ -1001,6 +1027,7 @@ export type DecisionUncheckedCreateWithoutResearchSnapshotInput = {
   tradeId?: string | null
   decisionHash?: string | null
   transactionHash?: string | null
+  cycleId?: string | null
   createdAt?: Date | string
 }
 
@@ -1047,6 +1074,7 @@ export type DecisionCreateWithoutTradeInput = {
   promptVersion?: string
   decisionHash?: string | null
   transactionHash?: string | null
+  cycleId?: string | null
   createdAt?: Date | string
   agent: Prisma.AgentCreateNestedOneWithoutDecisionsInput
   researchSnapshot?: Prisma.ResearchSnapshotCreateNestedOneWithoutDecisionsInput
@@ -1071,6 +1099,7 @@ export type DecisionUncheckedCreateWithoutTradeInput = {
   promptVersion?: string
   decisionHash?: string | null
   transactionHash?: string | null
+  cycleId?: string | null
   createdAt?: Date | string
 }
 
@@ -1107,6 +1136,7 @@ export type DecisionUpdateWithoutTradeInput = {
   promptVersion?: Prisma.StringFieldUpdateOperationsInput | string
   decisionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agent?: Prisma.AgentUpdateOneRequiredWithoutDecisionsNestedInput
   researchSnapshot?: Prisma.ResearchSnapshotUpdateOneWithoutDecisionsNestedInput
@@ -1131,6 +1161,7 @@ export type DecisionUncheckedUpdateWithoutTradeInput = {
   promptVersion?: Prisma.StringFieldUpdateOperationsInput | string
   decisionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -1153,6 +1184,7 @@ export type DecisionCreateManyAgentInput = {
   tradeId?: string | null
   decisionHash?: string | null
   transactionHash?: string | null
+  cycleId?: string | null
   createdAt?: Date | string
 }
 
@@ -1173,6 +1205,7 @@ export type DecisionUpdateWithoutAgentInput = {
   promptVersion?: Prisma.StringFieldUpdateOperationsInput | string
   decisionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   researchSnapshot?: Prisma.ResearchSnapshotUpdateOneWithoutDecisionsNestedInput
   trade?: Prisma.TradeUpdateOneWithoutDecisionNestedInput
@@ -1197,6 +1230,7 @@ export type DecisionUncheckedUpdateWithoutAgentInput = {
   tradeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   decisionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -1219,6 +1253,7 @@ export type DecisionUncheckedUpdateManyWithoutAgentInput = {
   tradeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   decisionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -1241,6 +1276,7 @@ export type DecisionCreateManyResearchSnapshotInput = {
   tradeId?: string | null
   decisionHash?: string | null
   transactionHash?: string | null
+  cycleId?: string | null
   createdAt?: Date | string
 }
 
@@ -1261,6 +1297,7 @@ export type DecisionUpdateWithoutResearchSnapshotInput = {
   promptVersion?: Prisma.StringFieldUpdateOperationsInput | string
   decisionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agent?: Prisma.AgentUpdateOneRequiredWithoutDecisionsNestedInput
   trade?: Prisma.TradeUpdateOneWithoutDecisionNestedInput
@@ -1285,6 +1322,7 @@ export type DecisionUncheckedUpdateWithoutResearchSnapshotInput = {
   tradeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   decisionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -1307,6 +1345,7 @@ export type DecisionUncheckedUpdateManyWithoutResearchSnapshotInput = {
   tradeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   decisionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -1332,6 +1371,7 @@ export type DecisionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   tradeId?: boolean
   decisionHash?: boolean
   transactionHash?: boolean
+  cycleId?: boolean
   createdAt?: boolean
   agent?: boolean | Prisma.AgentDefaultArgs<ExtArgs>
   researchSnapshot?: boolean | Prisma.Decision$researchSnapshotArgs<ExtArgs>
@@ -1358,6 +1398,7 @@ export type DecisionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   tradeId?: boolean
   decisionHash?: boolean
   transactionHash?: boolean
+  cycleId?: boolean
   createdAt?: boolean
   agent?: boolean | Prisma.AgentDefaultArgs<ExtArgs>
   researchSnapshot?: boolean | Prisma.Decision$researchSnapshotArgs<ExtArgs>
@@ -1384,6 +1425,7 @@ export type DecisionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   tradeId?: boolean
   decisionHash?: boolean
   transactionHash?: boolean
+  cycleId?: boolean
   createdAt?: boolean
   agent?: boolean | Prisma.AgentDefaultArgs<ExtArgs>
   researchSnapshot?: boolean | Prisma.Decision$researchSnapshotArgs<ExtArgs>
@@ -1410,10 +1452,11 @@ export type DecisionSelectScalar = {
   tradeId?: boolean
   decisionHash?: boolean
   transactionHash?: boolean
+  cycleId?: boolean
   createdAt?: boolean
 }
 
-export type DecisionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "agentId" | "asset" | "action" | "conviction" | "timeHorizon" | "fundamentalScore" | "technicalScore" | "riskScore" | "positionSizePercent" | "leverage" | "thesis" | "policyResult" | "policyRejectReason" | "researchSnapshotId" | "promptVersion" | "tradeId" | "decisionHash" | "transactionHash" | "createdAt", ExtArgs["result"]["decision"]>
+export type DecisionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "agentId" | "asset" | "action" | "conviction" | "timeHorizon" | "fundamentalScore" | "technicalScore" | "riskScore" | "positionSizePercent" | "leverage" | "thesis" | "policyResult" | "policyRejectReason" | "researchSnapshotId" | "promptVersion" | "tradeId" | "decisionHash" | "transactionHash" | "cycleId" | "createdAt", ExtArgs["result"]["decision"]>
 export type DecisionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   agent?: boolean | Prisma.AgentDefaultArgs<ExtArgs>
   researchSnapshot?: boolean | Prisma.Decision$researchSnapshotArgs<ExtArgs>
@@ -1457,6 +1500,7 @@ export type $DecisionPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     tradeId: string | null
     decisionHash: string | null
     transactionHash: string | null
+    cycleId: string | null
     createdAt: Date
   }, ExtArgs["result"]["decision"]>
   composites: {}
@@ -1903,6 +1947,7 @@ export interface DecisionFieldRefs {
   readonly tradeId: Prisma.FieldRef<"Decision", 'String'>
   readonly decisionHash: Prisma.FieldRef<"Decision", 'String'>
   readonly transactionHash: Prisma.FieldRef<"Decision", 'String'>
+  readonly cycleId: Prisma.FieldRef<"Decision", 'String'>
   readonly createdAt: Prisma.FieldRef<"Decision", 'DateTime'>
 }
     

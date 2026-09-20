@@ -17,6 +17,7 @@ import {
   PositionSide,
 } from "./simulation-math";
 import { getTreasurySummary } from "./treasury";
+import { calculatePositionRequirements } from "./economic-precheck";
 
 export interface OpenPositionInput {
   agentId?: string;
@@ -26,6 +27,7 @@ export interface OpenPositionInput {
   proposedPositionPercent?: number;
   proposedLeverage?: number;
   decisionId?: string;
+  cycleId?: string;
   scores?: {
     conviction?: number;
     fundamentalScore?: number;
@@ -89,34 +91,44 @@ export async function openSimulatedPosition(input: OpenPositionInput) {
     ? Number(agent.policy.simulatedFeePercent)
     : DEFAULT_FEE_PERCENT;
 
-  // 3. Clamp leverage & position size %
-  const effectiveLeverage = clampLeverage(input.proposedLeverage ?? 1.0, maxLeverage);
-  const effectivePercent = Math.min(
-    maxPositionPercent,
-    Math.max(1.0, input.proposedPositionPercent ?? 5.0)
-  );
-
-  // 4. Calculate total equity & margin
-  const treasurySummary = await getTreasurySummary(agentIdentifier);
-  const { margin, notionalSize } = calculatePositionMarginAndNotional(
-    treasurySummary.totalEquity,
-    effectivePercent,
-    effectiveLeverage
-  );
-
-  const openingFee = calculateTransactionFee(notionalSize, feePercent);
-  const totalRequiredCash = margin + openingFee;
   const currentCash = Number(agent.treasury.currentBalance);
 
-  if (currentCash < totalRequiredCash) {
+  // Hard execution guard: Cannot open position with zero or negative cash
+  if (currentCash <= 0) {
     throw new Error(
-      `Insufficient treasury cash balance: Required $${totalRequiredCash.toFixed(
+      `Insufficient treasury cash balance: Available balance is $${currentCash.toFixed(
         2
-      )} ($${margin} margin + $${openingFee} fee), but available balance is only $${currentCash.toFixed(
-        2
-      )}.`
+      )}. Cannot open new position without capital.`
     );
   }
+
+  // 3. Single Source of Truth for Position Requirements
+  const treasurySummary = await getTreasurySummary(agentIdentifier);
+  const reqs = calculatePositionRequirements({
+    totalEquity: treasurySummary.totalEquity,
+    availableCapital: currentCash,
+    proposedPositionPercent: input.proposedPositionPercent,
+    proposedLeverage: input.proposedLeverage,
+    maxPositionPercent,
+    maxLeverage,
+    feePercent,
+  });
+
+  if (!reqs.capitalSufficient || reqs.requiredMargin <= 0) {
+    throw new Error(
+      `Insufficient treasury cash balance: Required $${reqs.totalRequiredCapital.toFixed(
+        2
+      )} ($${reqs.requiredMargin.toFixed(2)} margin + $${reqs.openingFee.toFixed(
+        2
+      )} fee), but available balance is only $${currentCash.toFixed(2)}.`
+    );
+  }
+
+  const margin = reqs.requiredMargin;
+  const notionalSize = reqs.positionValue;
+  const effectiveLeverage = reqs.leverage;
+  const openingFee = reqs.openingFee;
+  const totalRequiredCash = reqs.totalRequiredCapital;
 
   // 5. Calculate liquidation threshold price
   const liquidationPrice = calculateLiquidationPrice(
@@ -160,6 +172,7 @@ export async function openSimulatedPosition(input: OpenPositionInput) {
         thesis: (input.scores?.thesis ?? {}) as any,
         fees: openingFee,
         status: "OPEN",
+        cycleId: input.cycleId,
       },
     });
 
@@ -196,12 +209,14 @@ export async function openSimulatedPosition(input: OpenPositionInput) {
     await tx.economicEvent.create({
       data: {
         agentId: agent.id,
+        cycleId: input.cycleId,
         eventType: "TRADE_OPENED",
         title: `Opened ${input.side} ${input.asset} (${effectiveLeverage}x Simulated)`,
         description: `Committed $${margin.toFixed(2)} margin at $${input.entryPrice.toFixed(
           2
         )} with $${notionalSize.toFixed(2)} notional market exposure.`,
         tradeId: trade.id,
+        decisionId: input.decisionId,
         result: `${effectiveLeverage}x`,
       },
     });

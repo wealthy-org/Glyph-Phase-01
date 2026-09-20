@@ -116,6 +116,7 @@ model Agent {
   economicEvents    EconomicEvent[]
   reputationMetrics ReputationMetrics?
   agentRuns         AgentRun[]
+  activityLogs      ActivityLog[]
 
   @@map("agents")
 }
@@ -195,11 +196,13 @@ model ResearchSnapshot {
   newsData        Json? // recent news items + sentiment
   sourceMetadata  Json? // provider name, timestamp of data pull, etc.
 
+  cycleId   String? // Optional cycle correlation key
   createdAt DateTime @default(now())
 
   // Back-reference
   decisions Decision[]
 
+  @@index([cycleId])
   @@map("research_snapshots")
 }
 
@@ -252,11 +255,15 @@ model Decision {
   decisionHash    String? // keccak256 of canonical decision JSON
   transactionHash String? // Robinhood Chain testnet tx hash
 
+  // Cycle correlation key
+  cycleId String?
+
   createdAt DateTime @default(now())
 
   @@index([agentId])
   @@index([asset])
   @@index([policyResult])
+  @@index([cycleId])
   @@map("decisions")
 }
 
@@ -278,6 +285,7 @@ model Trade {
   entryPrice   Decimal      @db.Decimal(18, 4)
   exitPrice    Decimal?     @db.Decimal(18, 4)
   positionSize Decimal      @db.Decimal(18, 4) // dollar value
+  quantity     Decimal      @default(0) @db.Decimal(24, 12)
   leverage     Decimal      @default(1) @db.Decimal(4, 2) // clamped by policy
 
   // Scores copied from decision at creation time (for fast UI reads)
@@ -301,6 +309,9 @@ model Trade {
   // Research snapshot ref for "What Glyph knew" (§14)
   researchSnapshotId String?
 
+  // Cycle correlation key
+  cycleId String?
+
   createdAt DateTime  @default(now())
   closedAt  DateTime?
 
@@ -311,6 +322,7 @@ model Trade {
   @@index([agentId])
   @@index([asset])
   @@index([status])
+  @@index([cycleId])
   @@map("trades")
 }
 
@@ -332,6 +344,7 @@ model Position {
   entryPrice   Decimal      @db.Decimal(18, 4)
   currentPrice Decimal      @db.Decimal(18, 4)
   positionSize Decimal      @db.Decimal(18, 4) // dollar value
+  quantity     Decimal      @default(0) @db.Decimal(24, 12)
   leverage     Decimal      @default(1) @db.Decimal(4, 2)
 
   unrealizedPnl        Decimal @default(0) @db.Decimal(18, 4)
@@ -446,12 +459,14 @@ model EconomicEvent {
   tradeId    String?
   decisionId String?
   txHash     String?
+  cycleId    String?
 
   timestamp DateTime @default(now())
 
   @@index([agentId])
   @@index([eventType])
   @@index([timestamp])
+  @@index([cycleId])
   @@map("economic_events")
 }
 
@@ -508,4 +523,36 @@ model AgentTreasury {
   updatedAt DateTime @updatedAt
 
   @@map("agent_treasuries")
+}
+
+// --------------------------------------------------------------------------
+// 15. ACTIVITY LOGS — Detailed Lifecycle Auditing (Master Brief §Logging)
+//     Guarantees chronological trace per cycle:
+//     ANALYSIS -> DECISION -> RISK_POLICY -> TRADE/NO_TRADE -> ONCHAIN_PROOF
+// --------------------------------------------------------------------------
+
+model ActivityLog {
+  id      String @id @default(uuid())
+  cycleId String
+  agentId String
+  agent   Agent  @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+  activityType String // "ANALYSIS" | "DECISION" | "RISK_POLICY" | "TRADE" | "NO_TRADE" | "ONCHAIN_PROOF" | "MEMORY"
+  asset        String?
+  status       String // "COMPLETED" | "FAILED" | "APPROVED" | "REJECTED" | "OPENED" | "NO_POSITION" | "COMMITTED"
+  title        String
+  description  String? @db.Text
+  data         Json? // Detailed structured payload for the cycle step
+  decisionId   String?
+  tradeId      String?
+  txHash       String?
+  error        String? @db.Text
+
+  timestamp DateTime @default(now())
+
+  @@index([cycleId])
+  @@index([agentId])
+  @@index([activityType])
+  @@index([timestamp])
+  @@map("activity_logs")
 }

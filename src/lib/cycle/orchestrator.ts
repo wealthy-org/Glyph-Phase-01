@@ -14,7 +14,7 @@
 // ============================================================================
 
 import { DecisionRunResult, executeGlyphDecisionCycle } from "@/lib/decision/engine";
-import { AlphaVantageProvider } from "@/lib/market/alpha-vantage";
+import { TwelveDataProvider } from "@/lib/market/twelve-data";
 import { ALLOWED_ASSETS } from "@/lib/policy";
 import {
   getActivePositions,
@@ -22,6 +22,7 @@ import {
 } from "@/lib/portfolio";
 import { prisma } from "@/lib/prisma";
 import { createResearchSnapshot } from "@/lib/research";
+import { getTreasurySummary } from "@/lib/treasury";
 
 import { MarketStatusResult } from "@/types/market";
 
@@ -35,6 +36,7 @@ export interface CycleOptions {
 export interface CycleSummary {
   success: boolean;
   cycleKey: string;
+  cycleId: string;
   timestamp: string;
   agentId: string;
   targetAsset: string;
@@ -54,7 +56,7 @@ export async function runAutonomousGlyphCycle(
 ): Promise<CycleSummary> {
   const startTime = Date.now();
   const agentIdentifier = options.agentIdentifier || process.env.GLYPH_AGENT_ID || "1";
-  const marketProvider = new AlphaVantageProvider();
+  const marketProvider = new TwelveDataProvider();
 
   // 1. Verify agent existence
   const agent = await prisma.agent.findFirst({
@@ -66,11 +68,6 @@ export async function runAutonomousGlyphCycle(
     throw new Error(`Agent #${agentIdentifier} not found in database.`);
   }
 
-  const cycleKey = options.cycleKey || `${agentIdentifier}:${new Date().toISOString().slice(0, 10)}`;
-  const claimedRun = await prisma.agentRun.create({
-    data: { agentId: agent.id, cycleKey, startedAt: new Date() },
-  });
-
   // Determine target asset for research & decision
   let selectedAsset = (options.targetAsset || "NVDA").toUpperCase();
   if (!(ALLOWED_ASSETS as readonly string[]).includes(selectedAsset)) {
@@ -80,8 +77,18 @@ export async function runAutonomousGlyphCycle(
     selectedAsset = "NVDA";
   }
 
+  const now = new Date();
+  const timestampStr = now.toISOString().replace(/[-:T.]/g, "").slice(0, 14);
+  const cycleKey = options.cycleKey || `cycle_${timestampStr}_${selectedAsset}`;
+  const cycleId = cycleKey;
+
+  const claimedRun = await prisma.agentRun.create({
+    data: { agentId: agent.id, cycleKey, startedAt: new Date() },
+  });
+
   console.log(`\n===============================================================`);
   console.log(`🤖 GLYPH AUTONOMOUS CYCLE STARTING (AGENT #${agentIdentifier})`);
+  console.log(`🔑 Cycle ID: ${cycleId}`);
   console.log(`🎯 Target Asset for Decision: ${selectedAsset}`);
   console.log(`⏰ Timestamp: ${new Date().toISOString()}`);
   console.log(`===============================================================\n`);
@@ -124,8 +131,15 @@ export async function runAutonomousGlyphCycle(
       console.log(`  ℹ️ No active positions currently open.`);
     }
 
+    const treasurySummary = await getTreasurySummary(agentIdentifier);
+    console.log(
+      `  💵 Available Capital: $${treasurySummary.currentBalance.toFixed(
+        2
+      )} USD-SIM | Total Equity: $${treasurySummary.totalEquity.toFixed(2)}`
+    );
+
     // -------------------------------------------------------------------------
-    // STEP 1.5: Verify US Stock Market Status via Alpha Vantage API
+    // STEP 1.5: Verify US Stock Market Status via the configured provider
     // -------------------------------------------------------------------------
     console.log(`\n▶ [STEP 1.5] Verifying US Stock Market real-time open status...`);
     const marketStatus = await marketProvider.getMarketStatus("United States");
@@ -137,77 +151,28 @@ export async function runAutonomousGlyphCycle(
       `  ↳ Market Status: ${marketStatus.status.toUpperCase()} (${marketStatus.primaryExchanges}, Hours: ${marketStatus.localOpen} - ${marketStatus.localClose}) [Source: ${marketStatus.source}]`
     );
 
-    if (!marketStatus.isOpen && !bypassMarket) {
+    const isMarketOpen = marketStatus.isOpen || bypassMarket;
+    if (!isMarketOpen) {
       console.log(
-        `\n⏸️ [Market Status] US Stock Market is CLOSED. Halting research and decision cycle to prevent out-of-session trading.`
+        `  ℹ️ US Stock Market is currently CLOSED. Running decision cycle in STRICT RISK MODE (out-of-session position opening barred by policy).`
       );
-
-      await prisma.agentRun.update({
-        where: { id: claimedRun.id },
-        data: {
-          completedAt: new Date(),
-          model: "N/A (Market Closed)",
-          policyResult: "SKIPPED_MARKET_CLOSED",
-        },
-      });
-
-      const duration = Date.now() - startTime;
-      console.log(`\n===============================================================`);
-      console.log(`⏸️ GLYPH CYCLE PAUSED (MARKET CLOSED) IN ${duration}ms`);
-      console.log(`===============================================================\n`);
-
-      return {
-        success: true,
-        cycleKey,
-        timestamp: new Date().toISOString(),
-        agentId: agentIdentifier,
-        targetAsset: selectedAsset,
-        positionsChecked,
-        liquidatedCount,
-        marketClosed: true,
-        marketStatus,
-        decisionResult: {
-          decisionId: "",
-          asset: selectedAsset,
-          action: "NO_TRADE",
-          conviction: 0,
-          policyResult: "REJECTED",
-          policyRejectReason: `Market is closed (${marketStatus.status})`,
-          tradeId: null,
-          runId: claimedRun.id,
-          decision: {
-            asset: selectedAsset,
-            action: "NO_TRADE",
-            conviction: 0,
-            time_horizon: "1d_to_14d",
-            fundamental_score: 0,
-            technical_score: 0,
-            risk_score: 0,
-            thesis: {
-              fundamental: "Stock market is currently closed.",
-              technical: "Stock market is currently closed.",
-              catalyst: "Awaiting next market opening bell.",
-              risk: "Out-of-session execution halted to conserve API quota and capital.",
-              invalidation: "N/A",
-            },
-            position_size_percent: 0,
-            leverage: 1,
-          },
-        },
-        executionDurationMs: duration,
-      };
     }
 
     // -------------------------------------------------------------------------
     // STEP 2: Execute Fresh Market Research & Save Immutable Snapshot
     // -------------------------------------------------------------------------
     console.log(`\n▶ [STEP 2] Conducting deep market research for ${selectedAsset}...`);
-    const { snapshotId, research } = await createResearchSnapshot(selectedAsset, marketProvider);
+    const { snapshotId, research } = await createResearchSnapshot(
+      selectedAsset,
+      marketProvider,
+      { cycleId, agentId: agent.id }
+    );
     console.log(`  ✅ Research Snapshot created (ID: ${snapshotId})`);
     console.log(`     ↳ Price: $${research.marketData.quote.price}`);
     console.log(`     ↳ Technical Trend: ${research.technicalData.trend}`);
     console.log(`     ↳ Technical Score: ${research.technicalData.technicalScore}/100`);
     console.log(`     ↳ Fundamental Score: ${research.fundamentalData.fundamentalScore}/100`);
+    console.log(`     ↳ Market Regime: ${research.riskContext?.regime?.toUpperCase()}`);
 
     // -------------------------------------------------------------------------
     // STEP 3: Execute Reasoning, Policy Gate, Paper Trade, & On-Chain Proof
@@ -217,7 +182,8 @@ export async function runAutonomousGlyphCycle(
       snapshotId,
       agentIdentifier,
       claimedRun.id,
-      marketStatus.isOpen || bypassMarket
+      isMarketOpen,
+      cycleId
     );
 
     console.log(`  ✅ Decision reached:`);
@@ -247,11 +213,14 @@ export async function runAutonomousGlyphCycle(
     return {
       success: true,
       cycleKey,
+      cycleId,
       timestamp: new Date().toISOString(),
       agentId: agentIdentifier,
       targetAsset: selectedAsset,
       positionsChecked,
       liquidatedCount,
+      marketClosed: !marketStatus.isOpen,
+      marketStatus,
       decisionResult,
       executionDurationMs: duration,
     };

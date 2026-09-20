@@ -3,7 +3,6 @@ import { IdentityData } from "../types";
 import { GLYPH_IDENTITY_DATA } from "../data";
 import { IdentityHeader } from "./IdentityHeader";
 import { IdentityRecordCard } from "./IdentityRecordCard";
-import { IdentityVerification } from "./IdentityVerification";
 import { RegistryArchitecture } from "./RegistryArchitecture";
 import { cn } from "@/lib/utils";
 
@@ -26,9 +25,6 @@ export const IdentitySection: React.FC<IdentitySectionProps> = ({
 
       {/* 2. Main Identity Record Terminal */}
       <IdentityRecordCard data={data} />
-
-      {/* 3. Public Verification Section */}
-      <IdentityVerification data={data} />
 
       {/* 4. Registry Architecture 4-Column Terminal Table */}
       <RegistryArchitecture items={data.architectureItems} />

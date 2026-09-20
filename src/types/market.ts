@@ -105,6 +105,12 @@ export interface FundamentalSummary {
   fundamentalScore: number; // 0-100
 }
 
+export interface RiskContext {
+  regime: "bullish" | "bearish" | "volatile" | "sideways" | "uncertain";
+  level: "low" | "moderate" | "high" | "extreme";
+  details?: string;
+}
+
 export interface SynthesizedResearch {
   asset: string;
   timestamp: string;
@@ -114,6 +120,7 @@ export interface SynthesizedResearch {
   };
   fundamentalData: FundamentalSummary;
   technicalData: TechnicalSummary;
+  riskContext?: RiskContext;
   newsData: NewsItem[];
   sourceMetadata: {
     provider: string;
@@ -121,3 +128,4 @@ export interface SynthesizedResearch {
     isCached: boolean;
   };
 }
+

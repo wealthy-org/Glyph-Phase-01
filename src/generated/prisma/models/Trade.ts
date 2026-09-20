@@ -30,6 +30,7 @@ export type TradeAvgAggregateOutputType = {
   entryPrice: runtime.Decimal | null
   exitPrice: runtime.Decimal | null
   positionSize: runtime.Decimal | null
+  quantity: runtime.Decimal | null
   leverage: runtime.Decimal | null
   conviction: number | null
   fundamentalScore: number | null
@@ -44,6 +45,7 @@ export type TradeSumAggregateOutputType = {
   entryPrice: runtime.Decimal | null
   exitPrice: runtime.Decimal | null
   positionSize: runtime.Decimal | null
+  quantity: runtime.Decimal | null
   leverage: runtime.Decimal | null
   conviction: number | null
   fundamentalScore: number | null
@@ -63,6 +65,7 @@ export type TradeMinAggregateOutputType = {
   entryPrice: runtime.Decimal | null
   exitPrice: runtime.Decimal | null
   positionSize: runtime.Decimal | null
+  quantity: runtime.Decimal | null
   leverage: runtime.Decimal | null
   conviction: number | null
   fundamentalScore: number | null
@@ -75,6 +78,7 @@ export type TradeMinAggregateOutputType = {
   decisionHash: string | null
   transactionHash: string | null
   researchSnapshotId: string | null
+  cycleId: string | null
   createdAt: Date | null
   closedAt: Date | null
 }
@@ -88,6 +92,7 @@ export type TradeMaxAggregateOutputType = {
   entryPrice: runtime.Decimal | null
   exitPrice: runtime.Decimal | null
   positionSize: runtime.Decimal | null
+  quantity: runtime.Decimal | null
   leverage: runtime.Decimal | null
   conviction: number | null
   fundamentalScore: number | null
@@ -100,6 +105,7 @@ export type TradeMaxAggregateOutputType = {
   decisionHash: string | null
   transactionHash: string | null
   researchSnapshotId: string | null
+  cycleId: string | null
   createdAt: Date | null
   closedAt: Date | null
 }
@@ -113,6 +119,7 @@ export type TradeCountAggregateOutputType = {
   entryPrice: number
   exitPrice: number
   positionSize: number
+  quantity: number
   leverage: number
   conviction: number
   fundamentalScore: number
@@ -126,6 +133,7 @@ export type TradeCountAggregateOutputType = {
   decisionHash: number
   transactionHash: number
   researchSnapshotId: number
+  cycleId: number
   createdAt: number
   closedAt: number
   _all: number
@@ -136,6 +144,7 @@ export type TradeAvgAggregateInputType = {
   entryPrice?: true
   exitPrice?: true
   positionSize?: true
+  quantity?: true
   leverage?: true
   conviction?: true
   fundamentalScore?: true
@@ -150,6 +159,7 @@ export type TradeSumAggregateInputType = {
   entryPrice?: true
   exitPrice?: true
   positionSize?: true
+  quantity?: true
   leverage?: true
   conviction?: true
   fundamentalScore?: true
@@ -169,6 +179,7 @@ export type TradeMinAggregateInputType = {
   entryPrice?: true
   exitPrice?: true
   positionSize?: true
+  quantity?: true
   leverage?: true
   conviction?: true
   fundamentalScore?: true
@@ -181,6 +192,7 @@ export type TradeMinAggregateInputType = {
   decisionHash?: true
   transactionHash?: true
   researchSnapshotId?: true
+  cycleId?: true
   createdAt?: true
   closedAt?: true
 }
@@ -194,6 +206,7 @@ export type TradeMaxAggregateInputType = {
   entryPrice?: true
   exitPrice?: true
   positionSize?: true
+  quantity?: true
   leverage?: true
   conviction?: true
   fundamentalScore?: true
@@ -206,6 +219,7 @@ export type TradeMaxAggregateInputType = {
   decisionHash?: true
   transactionHash?: true
   researchSnapshotId?: true
+  cycleId?: true
   createdAt?: true
   closedAt?: true
 }
@@ -219,6 +233,7 @@ export type TradeCountAggregateInputType = {
   entryPrice?: true
   exitPrice?: true
   positionSize?: true
+  quantity?: true
   leverage?: true
   conviction?: true
   fundamentalScore?: true
@@ -232,6 +247,7 @@ export type TradeCountAggregateInputType = {
   decisionHash?: true
   transactionHash?: true
   researchSnapshotId?: true
+  cycleId?: true
   createdAt?: true
   closedAt?: true
   _all?: true
@@ -332,6 +348,7 @@ export type TradeGroupByOutputType = {
   entryPrice: runtime.Decimal
   exitPrice: runtime.Decimal | null
   positionSize: runtime.Decimal
+  quantity: runtime.Decimal
   leverage: runtime.Decimal
   conviction: number | null
   fundamentalScore: number | null
@@ -345,6 +362,7 @@ export type TradeGroupByOutputType = {
   decisionHash: string | null
   transactionHash: string | null
   researchSnapshotId: string | null
+  cycleId: string | null
   createdAt: Date
   closedAt: Date | null
   _count: TradeCountAggregateOutputType | null
@@ -381,6 +399,7 @@ export type TradeWhereInput = {
   entryPrice?: Prisma.DecimalFilter<"Trade"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   exitPrice?: Prisma.DecimalNullableFilter<"Trade"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   positionSize?: Prisma.DecimalFilter<"Trade"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: Prisma.DecimalFilter<"Trade"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: Prisma.DecimalFilter<"Trade"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   conviction?: Prisma.IntNullableFilter<"Trade"> | number | null
   fundamentalScore?: Prisma.IntNullableFilter<"Trade"> | number | null
@@ -394,6 +413,7 @@ export type TradeWhereInput = {
   decisionHash?: Prisma.StringNullableFilter<"Trade"> | string | null
   transactionHash?: Prisma.StringNullableFilter<"Trade"> | string | null
   researchSnapshotId?: Prisma.StringNullableFilter<"Trade"> | string | null
+  cycleId?: Prisma.StringNullableFilter<"Trade"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Trade"> | Date | string
   closedAt?: Prisma.DateTimeNullableFilter<"Trade"> | Date | string | null
   agent?: Prisma.XOR<Prisma.AgentScalarRelationFilter, Prisma.AgentWhereInput>
@@ -410,6 +430,7 @@ export type TradeOrderByWithRelationInput = {
   entryPrice?: Prisma.SortOrder
   exitPrice?: Prisma.SortOrderInput | Prisma.SortOrder
   positionSize?: Prisma.SortOrder
+  quantity?: Prisma.SortOrder
   leverage?: Prisma.SortOrder
   conviction?: Prisma.SortOrderInput | Prisma.SortOrder
   fundamentalScore?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -423,6 +444,7 @@ export type TradeOrderByWithRelationInput = {
   decisionHash?: Prisma.SortOrderInput | Prisma.SortOrder
   transactionHash?: Prisma.SortOrderInput | Prisma.SortOrder
   researchSnapshotId?: Prisma.SortOrderInput | Prisma.SortOrder
+  cycleId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   closedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   agent?: Prisma.AgentOrderByWithRelationInput
@@ -442,6 +464,7 @@ export type TradeWhereUniqueInput = Prisma.AtLeast<{
   entryPrice?: Prisma.DecimalFilter<"Trade"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   exitPrice?: Prisma.DecimalNullableFilter<"Trade"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   positionSize?: Prisma.DecimalFilter<"Trade"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: Prisma.DecimalFilter<"Trade"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: Prisma.DecimalFilter<"Trade"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   conviction?: Prisma.IntNullableFilter<"Trade"> | number | null
   fundamentalScore?: Prisma.IntNullableFilter<"Trade"> | number | null
@@ -455,6 +478,7 @@ export type TradeWhereUniqueInput = Prisma.AtLeast<{
   decisionHash?: Prisma.StringNullableFilter<"Trade"> | string | null
   transactionHash?: Prisma.StringNullableFilter<"Trade"> | string | null
   researchSnapshotId?: Prisma.StringNullableFilter<"Trade"> | string | null
+  cycleId?: Prisma.StringNullableFilter<"Trade"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Trade"> | Date | string
   closedAt?: Prisma.DateTimeNullableFilter<"Trade"> | Date | string | null
   agent?: Prisma.XOR<Prisma.AgentScalarRelationFilter, Prisma.AgentWhereInput>
@@ -471,6 +495,7 @@ export type TradeOrderByWithAggregationInput = {
   entryPrice?: Prisma.SortOrder
   exitPrice?: Prisma.SortOrderInput | Prisma.SortOrder
   positionSize?: Prisma.SortOrder
+  quantity?: Prisma.SortOrder
   leverage?: Prisma.SortOrder
   conviction?: Prisma.SortOrderInput | Prisma.SortOrder
   fundamentalScore?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -484,6 +509,7 @@ export type TradeOrderByWithAggregationInput = {
   decisionHash?: Prisma.SortOrderInput | Prisma.SortOrder
   transactionHash?: Prisma.SortOrderInput | Prisma.SortOrder
   researchSnapshotId?: Prisma.SortOrderInput | Prisma.SortOrder
+  cycleId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   closedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.TradeCountOrderByAggregateInput
@@ -505,6 +531,7 @@ export type TradeScalarWhereWithAggregatesInput = {
   entryPrice?: Prisma.DecimalWithAggregatesFilter<"Trade"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   exitPrice?: Prisma.DecimalNullableWithAggregatesFilter<"Trade"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   positionSize?: Prisma.DecimalWithAggregatesFilter<"Trade"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: Prisma.DecimalWithAggregatesFilter<"Trade"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: Prisma.DecimalWithAggregatesFilter<"Trade"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   conviction?: Prisma.IntNullableWithAggregatesFilter<"Trade"> | number | null
   fundamentalScore?: Prisma.IntNullableWithAggregatesFilter<"Trade"> | number | null
@@ -518,6 +545,7 @@ export type TradeScalarWhereWithAggregatesInput = {
   decisionHash?: Prisma.StringNullableWithAggregatesFilter<"Trade"> | string | null
   transactionHash?: Prisma.StringNullableWithAggregatesFilter<"Trade"> | string | null
   researchSnapshotId?: Prisma.StringNullableWithAggregatesFilter<"Trade"> | string | null
+  cycleId?: Prisma.StringNullableWithAggregatesFilter<"Trade"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Trade"> | Date | string
   closedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Trade"> | Date | string | null
 }
@@ -530,6 +558,7 @@ export type TradeCreateInput = {
   entryPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   exitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   positionSize: runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: runtime.Decimal | runtime.DecimalJsLike | number | string
   conviction?: number | null
   fundamentalScore?: number | null
@@ -543,6 +572,7 @@ export type TradeCreateInput = {
   decisionHash?: string | null
   transactionHash?: string | null
   researchSnapshotId?: string | null
+  cycleId?: string | null
   createdAt?: Date | string
   closedAt?: Date | string | null
   agent: Prisma.AgentCreateNestedOneWithoutTradesInput
@@ -559,6 +589,7 @@ export type TradeUncheckedCreateInput = {
   entryPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   exitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   positionSize: runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: runtime.Decimal | runtime.DecimalJsLike | number | string
   conviction?: number | null
   fundamentalScore?: number | null
@@ -572,6 +603,7 @@ export type TradeUncheckedCreateInput = {
   decisionHash?: string | null
   transactionHash?: string | null
   researchSnapshotId?: string | null
+  cycleId?: string | null
   createdAt?: Date | string
   closedAt?: Date | string | null
   decision?: Prisma.DecisionUncheckedCreateNestedOneWithoutTradeInput
@@ -586,6 +618,7 @@ export type TradeUpdateInput = {
   entryPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   exitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   positionSize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   conviction?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   fundamentalScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -599,6 +632,7 @@ export type TradeUpdateInput = {
   decisionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   researchSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   agent?: Prisma.AgentUpdateOneRequiredWithoutTradesNestedInput
@@ -615,6 +649,7 @@ export type TradeUncheckedUpdateInput = {
   entryPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   exitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   positionSize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   conviction?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   fundamentalScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -628,6 +663,7 @@ export type TradeUncheckedUpdateInput = {
   decisionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   researchSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   decision?: Prisma.DecisionUncheckedUpdateOneWithoutTradeNestedInput
@@ -643,6 +679,7 @@ export type TradeCreateManyInput = {
   entryPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   exitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   positionSize: runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: runtime.Decimal | runtime.DecimalJsLike | number | string
   conviction?: number | null
   fundamentalScore?: number | null
@@ -656,6 +693,7 @@ export type TradeCreateManyInput = {
   decisionHash?: string | null
   transactionHash?: string | null
   researchSnapshotId?: string | null
+  cycleId?: string | null
   createdAt?: Date | string
   closedAt?: Date | string | null
 }
@@ -668,6 +706,7 @@ export type TradeUpdateManyMutationInput = {
   entryPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   exitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   positionSize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   conviction?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   fundamentalScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -681,6 +720,7 @@ export type TradeUpdateManyMutationInput = {
   decisionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   researchSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
@@ -694,6 +734,7 @@ export type TradeUncheckedUpdateManyInput = {
   entryPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   exitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   positionSize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   conviction?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   fundamentalScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -707,6 +748,7 @@ export type TradeUncheckedUpdateManyInput = {
   decisionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   researchSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
@@ -735,6 +777,7 @@ export type TradeCountOrderByAggregateInput = {
   entryPrice?: Prisma.SortOrder
   exitPrice?: Prisma.SortOrder
   positionSize?: Prisma.SortOrder
+  quantity?: Prisma.SortOrder
   leverage?: Prisma.SortOrder
   conviction?: Prisma.SortOrder
   fundamentalScore?: Prisma.SortOrder
@@ -748,6 +791,7 @@ export type TradeCountOrderByAggregateInput = {
   decisionHash?: Prisma.SortOrder
   transactionHash?: Prisma.SortOrder
   researchSnapshotId?: Prisma.SortOrder
+  cycleId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   closedAt?: Prisma.SortOrder
 }
@@ -756,6 +800,7 @@ export type TradeAvgOrderByAggregateInput = {
   entryPrice?: Prisma.SortOrder
   exitPrice?: Prisma.SortOrder
   positionSize?: Prisma.SortOrder
+  quantity?: Prisma.SortOrder
   leverage?: Prisma.SortOrder
   conviction?: Prisma.SortOrder
   fundamentalScore?: Prisma.SortOrder
@@ -775,6 +820,7 @@ export type TradeMaxOrderByAggregateInput = {
   entryPrice?: Prisma.SortOrder
   exitPrice?: Prisma.SortOrder
   positionSize?: Prisma.SortOrder
+  quantity?: Prisma.SortOrder
   leverage?: Prisma.SortOrder
   conviction?: Prisma.SortOrder
   fundamentalScore?: Prisma.SortOrder
@@ -787,6 +833,7 @@ export type TradeMaxOrderByAggregateInput = {
   decisionHash?: Prisma.SortOrder
   transactionHash?: Prisma.SortOrder
   researchSnapshotId?: Prisma.SortOrder
+  cycleId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   closedAt?: Prisma.SortOrder
 }
@@ -800,6 +847,7 @@ export type TradeMinOrderByAggregateInput = {
   entryPrice?: Prisma.SortOrder
   exitPrice?: Prisma.SortOrder
   positionSize?: Prisma.SortOrder
+  quantity?: Prisma.SortOrder
   leverage?: Prisma.SortOrder
   conviction?: Prisma.SortOrder
   fundamentalScore?: Prisma.SortOrder
@@ -812,6 +860,7 @@ export type TradeMinOrderByAggregateInput = {
   decisionHash?: Prisma.SortOrder
   transactionHash?: Prisma.SortOrder
   researchSnapshotId?: Prisma.SortOrder
+  cycleId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   closedAt?: Prisma.SortOrder
 }
@@ -820,6 +869,7 @@ export type TradeSumOrderByAggregateInput = {
   entryPrice?: Prisma.SortOrder
   exitPrice?: Prisma.SortOrder
   positionSize?: Prisma.SortOrder
+  quantity?: Prisma.SortOrder
   leverage?: Prisma.SortOrder
   conviction?: Prisma.SortOrder
   fundamentalScore?: Prisma.SortOrder
@@ -927,6 +977,7 @@ export type TradeCreateWithoutAgentInput = {
   entryPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   exitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   positionSize: runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: runtime.Decimal | runtime.DecimalJsLike | number | string
   conviction?: number | null
   fundamentalScore?: number | null
@@ -940,6 +991,7 @@ export type TradeCreateWithoutAgentInput = {
   decisionHash?: string | null
   transactionHash?: string | null
   researchSnapshotId?: string | null
+  cycleId?: string | null
   createdAt?: Date | string
   closedAt?: Date | string | null
   decision?: Prisma.DecisionCreateNestedOneWithoutTradeInput
@@ -954,6 +1006,7 @@ export type TradeUncheckedCreateWithoutAgentInput = {
   entryPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   exitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   positionSize: runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: runtime.Decimal | runtime.DecimalJsLike | number | string
   conviction?: number | null
   fundamentalScore?: number | null
@@ -967,6 +1020,7 @@ export type TradeUncheckedCreateWithoutAgentInput = {
   decisionHash?: string | null
   transactionHash?: string | null
   researchSnapshotId?: string | null
+  cycleId?: string | null
   createdAt?: Date | string
   closedAt?: Date | string | null
   decision?: Prisma.DecisionUncheckedCreateNestedOneWithoutTradeInput
@@ -1011,6 +1065,7 @@ export type TradeScalarWhereInput = {
   entryPrice?: Prisma.DecimalFilter<"Trade"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   exitPrice?: Prisma.DecimalNullableFilter<"Trade"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   positionSize?: Prisma.DecimalFilter<"Trade"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: Prisma.DecimalFilter<"Trade"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: Prisma.DecimalFilter<"Trade"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   conviction?: Prisma.IntNullableFilter<"Trade"> | number | null
   fundamentalScore?: Prisma.IntNullableFilter<"Trade"> | number | null
@@ -1024,6 +1079,7 @@ export type TradeScalarWhereInput = {
   decisionHash?: Prisma.StringNullableFilter<"Trade"> | string | null
   transactionHash?: Prisma.StringNullableFilter<"Trade"> | string | null
   researchSnapshotId?: Prisma.StringNullableFilter<"Trade"> | string | null
+  cycleId?: Prisma.StringNullableFilter<"Trade"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Trade"> | Date | string
   closedAt?: Prisma.DateTimeNullableFilter<"Trade"> | Date | string | null
 }
@@ -1036,6 +1092,7 @@ export type TradeCreateWithoutDecisionInput = {
   entryPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   exitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   positionSize: runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: runtime.Decimal | runtime.DecimalJsLike | number | string
   conviction?: number | null
   fundamentalScore?: number | null
@@ -1049,6 +1106,7 @@ export type TradeCreateWithoutDecisionInput = {
   decisionHash?: string | null
   transactionHash?: string | null
   researchSnapshotId?: string | null
+  cycleId?: string | null
   createdAt?: Date | string
   closedAt?: Date | string | null
   agent: Prisma.AgentCreateNestedOneWithoutTradesInput
@@ -1064,6 +1122,7 @@ export type TradeUncheckedCreateWithoutDecisionInput = {
   entryPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   exitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   positionSize: runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: runtime.Decimal | runtime.DecimalJsLike | number | string
   conviction?: number | null
   fundamentalScore?: number | null
@@ -1077,6 +1136,7 @@ export type TradeUncheckedCreateWithoutDecisionInput = {
   decisionHash?: string | null
   transactionHash?: string | null
   researchSnapshotId?: string | null
+  cycleId?: string | null
   createdAt?: Date | string
   closedAt?: Date | string | null
   position?: Prisma.PositionUncheckedCreateNestedOneWithoutTradeInput
@@ -1106,6 +1166,7 @@ export type TradeUpdateWithoutDecisionInput = {
   entryPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   exitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   positionSize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   conviction?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   fundamentalScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1119,6 +1180,7 @@ export type TradeUpdateWithoutDecisionInput = {
   decisionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   researchSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   agent?: Prisma.AgentUpdateOneRequiredWithoutTradesNestedInput
@@ -1134,6 +1196,7 @@ export type TradeUncheckedUpdateWithoutDecisionInput = {
   entryPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   exitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   positionSize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   conviction?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   fundamentalScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1147,6 +1210,7 @@ export type TradeUncheckedUpdateWithoutDecisionInput = {
   decisionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   researchSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   position?: Prisma.PositionUncheckedUpdateOneWithoutTradeNestedInput
@@ -1160,6 +1224,7 @@ export type TradeCreateWithoutPositionInput = {
   entryPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   exitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   positionSize: runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: runtime.Decimal | runtime.DecimalJsLike | number | string
   conviction?: number | null
   fundamentalScore?: number | null
@@ -1173,6 +1238,7 @@ export type TradeCreateWithoutPositionInput = {
   decisionHash?: string | null
   transactionHash?: string | null
   researchSnapshotId?: string | null
+  cycleId?: string | null
   createdAt?: Date | string
   closedAt?: Date | string | null
   agent: Prisma.AgentCreateNestedOneWithoutTradesInput
@@ -1188,6 +1254,7 @@ export type TradeUncheckedCreateWithoutPositionInput = {
   entryPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   exitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   positionSize: runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: runtime.Decimal | runtime.DecimalJsLike | number | string
   conviction?: number | null
   fundamentalScore?: number | null
@@ -1201,6 +1268,7 @@ export type TradeUncheckedCreateWithoutPositionInput = {
   decisionHash?: string | null
   transactionHash?: string | null
   researchSnapshotId?: string | null
+  cycleId?: string | null
   createdAt?: Date | string
   closedAt?: Date | string | null
   decision?: Prisma.DecisionUncheckedCreateNestedOneWithoutTradeInput
@@ -1230,6 +1298,7 @@ export type TradeUpdateWithoutPositionInput = {
   entryPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   exitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   positionSize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   conviction?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   fundamentalScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1243,6 +1312,7 @@ export type TradeUpdateWithoutPositionInput = {
   decisionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   researchSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   agent?: Prisma.AgentUpdateOneRequiredWithoutTradesNestedInput
@@ -1258,6 +1328,7 @@ export type TradeUncheckedUpdateWithoutPositionInput = {
   entryPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   exitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   positionSize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   conviction?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   fundamentalScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1271,6 +1342,7 @@ export type TradeUncheckedUpdateWithoutPositionInput = {
   decisionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   researchSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   decision?: Prisma.DecisionUncheckedUpdateOneWithoutTradeNestedInput
@@ -1284,6 +1356,7 @@ export type TradeCreateManyAgentInput = {
   entryPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   exitPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   positionSize: runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: runtime.Decimal | runtime.DecimalJsLike | number | string
   conviction?: number | null
   fundamentalScore?: number | null
@@ -1297,6 +1370,7 @@ export type TradeCreateManyAgentInput = {
   decisionHash?: string | null
   transactionHash?: string | null
   researchSnapshotId?: string | null
+  cycleId?: string | null
   createdAt?: Date | string
   closedAt?: Date | string | null
 }
@@ -1309,6 +1383,7 @@ export type TradeUpdateWithoutAgentInput = {
   entryPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   exitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   positionSize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   conviction?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   fundamentalScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1322,6 +1397,7 @@ export type TradeUpdateWithoutAgentInput = {
   decisionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   researchSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   decision?: Prisma.DecisionUpdateOneWithoutTradeNestedInput
@@ -1336,6 +1412,7 @@ export type TradeUncheckedUpdateWithoutAgentInput = {
   entryPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   exitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   positionSize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   conviction?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   fundamentalScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1349,6 +1426,7 @@ export type TradeUncheckedUpdateWithoutAgentInput = {
   decisionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   researchSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   decision?: Prisma.DecisionUncheckedUpdateOneWithoutTradeNestedInput
@@ -1363,6 +1441,7 @@ export type TradeUncheckedUpdateManyWithoutAgentInput = {
   entryPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   exitPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   positionSize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   conviction?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   fundamentalScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1376,6 +1455,7 @@ export type TradeUncheckedUpdateManyWithoutAgentInput = {
   decisionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   researchSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
@@ -1391,6 +1471,7 @@ export type TradeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   entryPrice?: boolean
   exitPrice?: boolean
   positionSize?: boolean
+  quantity?: boolean
   leverage?: boolean
   conviction?: boolean
   fundamentalScore?: boolean
@@ -1404,6 +1485,7 @@ export type TradeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   decisionHash?: boolean
   transactionHash?: boolean
   researchSnapshotId?: boolean
+  cycleId?: boolean
   createdAt?: boolean
   closedAt?: boolean
   agent?: boolean | Prisma.AgentDefaultArgs<ExtArgs>
@@ -1420,6 +1502,7 @@ export type TradeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   entryPrice?: boolean
   exitPrice?: boolean
   positionSize?: boolean
+  quantity?: boolean
   leverage?: boolean
   conviction?: boolean
   fundamentalScore?: boolean
@@ -1433,6 +1516,7 @@ export type TradeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   decisionHash?: boolean
   transactionHash?: boolean
   researchSnapshotId?: boolean
+  cycleId?: boolean
   createdAt?: boolean
   closedAt?: boolean
   agent?: boolean | Prisma.AgentDefaultArgs<ExtArgs>
@@ -1447,6 +1531,7 @@ export type TradeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   entryPrice?: boolean
   exitPrice?: boolean
   positionSize?: boolean
+  quantity?: boolean
   leverage?: boolean
   conviction?: boolean
   fundamentalScore?: boolean
@@ -1460,6 +1545,7 @@ export type TradeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   decisionHash?: boolean
   transactionHash?: boolean
   researchSnapshotId?: boolean
+  cycleId?: boolean
   createdAt?: boolean
   closedAt?: boolean
   agent?: boolean | Prisma.AgentDefaultArgs<ExtArgs>
@@ -1474,6 +1560,7 @@ export type TradeSelectScalar = {
   entryPrice?: boolean
   exitPrice?: boolean
   positionSize?: boolean
+  quantity?: boolean
   leverage?: boolean
   conviction?: boolean
   fundamentalScore?: boolean
@@ -1487,11 +1574,12 @@ export type TradeSelectScalar = {
   decisionHash?: boolean
   transactionHash?: boolean
   researchSnapshotId?: boolean
+  cycleId?: boolean
   createdAt?: boolean
   closedAt?: boolean
 }
 
-export type TradeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tradeNumber" | "agentId" | "asset" | "action" | "entryPrice" | "exitPrice" | "positionSize" | "leverage" | "conviction" | "fundamentalScore" | "technicalScore" | "riskScore" | "thesis" | "simulatedPnl" | "simulatedPnlPercent" | "fees" | "status" | "decisionHash" | "transactionHash" | "researchSnapshotId" | "createdAt" | "closedAt", ExtArgs["result"]["trade"]>
+export type TradeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tradeNumber" | "agentId" | "asset" | "action" | "entryPrice" | "exitPrice" | "positionSize" | "quantity" | "leverage" | "conviction" | "fundamentalScore" | "technicalScore" | "riskScore" | "thesis" | "simulatedPnl" | "simulatedPnlPercent" | "fees" | "status" | "decisionHash" | "transactionHash" | "researchSnapshotId" | "cycleId" | "createdAt" | "closedAt", ExtArgs["result"]["trade"]>
 export type TradeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   agent?: boolean | Prisma.AgentDefaultArgs<ExtArgs>
   decision?: boolean | Prisma.Trade$decisionArgs<ExtArgs>
@@ -1520,6 +1608,7 @@ export type $TradePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     entryPrice: runtime.Decimal
     exitPrice: runtime.Decimal | null
     positionSize: runtime.Decimal
+    quantity: runtime.Decimal
     leverage: runtime.Decimal
     conviction: number | null
     fundamentalScore: number | null
@@ -1533,6 +1622,7 @@ export type $TradePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     decisionHash: string | null
     transactionHash: string | null
     researchSnapshotId: string | null
+    cycleId: string | null
     createdAt: Date
     closedAt: Date | null
   }, ExtArgs["result"]["trade"]>
@@ -1969,6 +2059,7 @@ export interface TradeFieldRefs {
   readonly entryPrice: Prisma.FieldRef<"Trade", 'Decimal'>
   readonly exitPrice: Prisma.FieldRef<"Trade", 'Decimal'>
   readonly positionSize: Prisma.FieldRef<"Trade", 'Decimal'>
+  readonly quantity: Prisma.FieldRef<"Trade", 'Decimal'>
   readonly leverage: Prisma.FieldRef<"Trade", 'Decimal'>
   readonly conviction: Prisma.FieldRef<"Trade", 'Int'>
   readonly fundamentalScore: Prisma.FieldRef<"Trade", 'Int'>
@@ -1982,6 +2073,7 @@ export interface TradeFieldRefs {
   readonly decisionHash: Prisma.FieldRef<"Trade", 'String'>
   readonly transactionHash: Prisma.FieldRef<"Trade", 'String'>
   readonly researchSnapshotId: Prisma.FieldRef<"Trade", 'String'>
+  readonly cycleId: Prisma.FieldRef<"Trade", 'String'>
   readonly createdAt: Prisma.FieldRef<"Trade", 'DateTime'>
   readonly closedAt: Prisma.FieldRef<"Trade", 'DateTime'>
 }

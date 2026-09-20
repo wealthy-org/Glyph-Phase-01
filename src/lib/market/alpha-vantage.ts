@@ -4,16 +4,16 @@
 // Implements MarketDataProvider with persistent disk caching to preserve the 25 req/day limit.
 // ============================================================================
 
-import fs from "fs";
-import path from "path";
 import {
-  MarketDataProvider,
-  MarketStatusResult,
-  Quote,
   Candle,
   Fundamentals,
+  MarketDataProvider,
+  MarketStatusResult,
   NewsItem,
+  Quote,
 } from "@/types/market";
+import fs from "fs";
+import path from "path";
 
 const CACHE_DIR = path.join(process.cwd(), ".cache", "market");
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours caching (§68 TIPS)
@@ -23,6 +23,8 @@ export class AlphaVantageProvider implements MarketDataProvider {
   private apiKeys: string[] = [];
   private activeKeyIndex = 0;
   private baseUrl = "https://www.alphavantage.co/query";
+  private rateLimitUntil = 0;
+  private rateLimitMessage = "";
 
   constructor(apiKey?: string) {
     const rawKeys = [
@@ -104,6 +106,20 @@ export class AlphaVantageProvider implements MarketDataProvider {
       );
     }
 
+    if (this.rateLimitUntil > Date.now()) {
+      const stale = this.getCachedData<T>(cacheKey);
+      if (stale) {
+        return { data: stale, isCached: true };
+      }
+
+      console.warn(
+        `[AlphaVantage] Rate-limit cooldown active for ${cacheKey}. Skipping live request and using fallback data only.`
+      );
+      throw new Error(
+        `Alpha Vantage is currently rate-limited. Using fallback data for ${cacheKey}.`
+      );
+    }
+
     // 2. Perform live network fetch with automatic key failover
     for (let attempt = 0; attempt < this.apiKeys.length; attempt++) {
       const keyIndex = (this.activeKeyIndex + attempt) % this.apiKeys.length;
@@ -121,6 +137,14 @@ export class AlphaVantageProvider implements MarketDataProvider {
         });
 
         if (!response.ok) {
+          if (response.status === 429) {
+            const reason = "Alpha Vantage rate limit reached for this API key.";
+            this.rateLimitUntil = Date.now() + 60_000;
+            this.rateLimitMessage = reason;
+            console.warn(
+              `[AlphaVantage] Rate limit note on key ending ...${currentKey.slice(-4)}: ${reason}`
+            );
+          }
           throw new Error(`Alpha Vantage HTTP error: ${response.statusText}`);
         }
 
@@ -128,10 +152,11 @@ export class AlphaVantageProvider implements MarketDataProvider {
 
         // Check if Alpha Vantage returned rate-limit notice
         if (json.Note || json.Information) {
+          const note = json.Note || json.Information;
+          this.rateLimitUntil = Date.now() + 60_000;
+          this.rateLimitMessage = note;
           console.warn(
-            `[AlphaVantage] Rate limit note on key ending ...${currentKey.slice(-4)}: ${
-              json.Note || json.Information
-            }`
+            `[AlphaVantage] Rate limit note on key ending ...${currentKey.slice(-4)}: ${note}`
           );
 
           // If another API key is configured, failover immediately!
@@ -204,11 +229,12 @@ export class AlphaVantageProvider implements MarketDataProvider {
         };
       }
     } catch (e) {
-      console.warn(`[AlphaVantage] Falling back to default quote for ${sym}`);
+      throw new Error(
+        `[AlphaVantage] Live quote unavailable for ${sym}: ${e instanceof Error ? e.message : String(e)}`
+      );
     }
 
-    // High-fidelity fallback for NVDA (Primary asset) and others
-    return this.getFallbackQuote(sym);
+    throw new Error(`[AlphaVantage] Live quote payload missing for ${sym}.`);
   }
 
   /**
@@ -243,10 +269,12 @@ export class AlphaVantageProvider implements MarketDataProvider {
         );
       }
     } catch (e) {
-      console.warn(`[AlphaVantage] Falling back to default candles for ${sym}`);
+      throw new Error(
+        `[AlphaVantage] Live candles unavailable for ${sym}: ${e instanceof Error ? e.message : String(e)}`
+      );
     }
 
-    return this.getFallbackCandles(sym);
+    throw new Error(`[AlphaVantage] Live candles payload missing for ${sym}.`);
   }
 
   /**
@@ -284,10 +312,12 @@ export class AlphaVantageProvider implements MarketDataProvider {
         };
       }
     } catch (e) {
-      console.warn(`[AlphaVantage] Falling back to default fundamentals for ${sym}`);
+      throw new Error(
+        `[AlphaVantage] Live fundamentals unavailable for ${sym}: ${e instanceof Error ? e.message : String(e)}`
+      );
     }
 
-    return this.getFallbackFundamentals(sym);
+    throw new Error(`[AlphaVantage] Live fundamentals payload missing for ${sym}.`);
   }
 
   /**
@@ -322,204 +352,12 @@ export class AlphaVantageProvider implements MarketDataProvider {
         });
       }
     } catch (e) {
-      console.warn(`[AlphaVantage] Falling back to default news for ${sym}`);
+      throw new Error(
+        `[AlphaVantage] Live news unavailable for ${sym}: ${e instanceof Error ? e.message : String(e)}`
+      );
     }
 
-    return this.getFallbackNews(sym);
-  }
-
-  // -------------------------------------------------------------------------
-  // High-Fidelity Fallbacks (Guarantees zero system downtime for US equities & tech)
-  // -------------------------------------------------------------------------
-  private getFallbackQuote(symbol: string): Quote {
-    const sym = symbol.toUpperCase();
-    const basePrices: Record<string, number> = {
-      NVDA: 124.5,
-      MSFT: 432.0,
-      AAPL: 228.5,
-      BTC: 64200.0,
-      ETH: 3450.0,
-      SOL: 148.0,
-    };
-    const price = basePrices[sym] || 100.0;
-    return {
-      symbol: sym,
-      price,
-      change: 2.75,
-      changePercent: 2.26,
-      volume: 48291000,
-      high: price * 1.02,
-      low: price * 0.98,
-      timestamp: new Date().toISOString(),
-    };
-  }
-
-  private getFallbackCandles(symbol: string): Candle[] {
-    const sym = symbol.toUpperCase();
-    const quote = this.getFallbackQuote(sym);
-    const candles: Candle[] = [];
-    const basePrice = quote.price;
-
-    for (let i = 30; i >= 0; i--) {
-      const d = new Date();
-      d.setDate(d.getDate() - i);
-      const randomShift = (Math.sin(i / 3) * 0.04 + 0.01) * basePrice;
-      const cPrice = basePrice - randomShift;
-      candles.push({
-        timestamp: d.toISOString().split("T")[0],
-        open: Number((cPrice * 0.995).toFixed(2)),
-        high: Number((cPrice * 1.015).toFixed(2)),
-        low: Number((cPrice * 0.99).toFixed(2)),
-        close: Number(cPrice.toFixed(2)),
-        volume: 35000000 + Math.floor(Math.random() * 10000000),
-      });
-    }
-    return candles;
-  }
-
-  private getFallbackFundamentals(symbol: string): Fundamentals {
-    const sym = symbol.toUpperCase();
-
-    if (sym === "MSFT") {
-      return {
-        symbol: "MSFT",
-        name: "Microsoft Corporation",
-        description:
-          "Microsoft Corporation develops software, services, devices, and cloud computing solutions including Azure AI and commercial productivity suites globally.",
-        sector: "Technology",
-        industry: "Systems Software",
-        marketCap: 3210000000000,
-        peRatio: 35.4,
-        pegRatio: 2.1,
-        eps: 11.86,
-        revenueGrowthTTM: 15.2,
-        profitMargin: 35.8,
-        quarterlyEarningsGrowthYOY: 21.4,
-        analystTargetPrice: 495.0,
-        week52High: 468.35,
-        week52Low: 309.45,
-        dividendYield: 0.72,
-      };
-    }
-
-    if (sym === "AAPL") {
-      return {
-        symbol: "AAPL",
-        name: "Apple Inc.",
-        description:
-          "Apple Inc. designs, manufactures, and markets smartphones, personal computers, tablets, wearables, and accessories, alongside a rapidly growing high-margin services ecosystem.",
-        sector: "Technology",
-        industry: "Consumer Electronics",
-        marketCap: 3450000000000,
-        peRatio: 33.8,
-        pegRatio: 2.3,
-        eps: 6.57,
-        revenueGrowthTTM: 6.1,
-        profitMargin: 26.4,
-        quarterlyEarningsGrowthYOY: 9.8,
-        analystTargetPrice: 255.0,
-        week52High: 237.23,
-        week52Low: 164.08,
-        dividendYield: 0.44,
-      };
-    }
-
-    return {
-      symbol: "NVDA",
-      name: "NVIDIA Corporation",
-      description:
-        "NVIDIA Corporation designs graphics processing units (GPUs) for gaming, data centers, and automotive markets, driving AI compute infrastructure globally.",
-      sector: "Technology",
-      industry: "Semiconductors",
-      marketCap: 3050000000000,
-      peRatio: 48.2,
-      pegRatio: 1.25,
-      eps: 2.58,
-      revenueGrowthTTM: 122.4, // +122.4% revenue growth YoY
-      profitMargin: 55.6, // 55.6% net margin
-      quarterlyEarningsGrowthYOY: 168.0,
-      analystTargetPrice: 145.0,
-      week52High: 140.76,
-      week52Low: 45.11,
-      dividendYield: 0.03,
-    };
-  }
-
-  private getFallbackNews(symbol: string): NewsItem[] {
-    const sym = symbol.toUpperCase();
-
-    if (sym === "MSFT") {
-      return [
-        {
-          title: "Microsoft Cloud & Azure AI Infrastructure Workloads Accelerate Enterprise Billings",
-          url: "https://finance.yahoo.com",
-          source: "MarketWatch",
-          summary:
-            "Commercial cloud growth metrics exceed guidance as Azure AI customers increase annualized spend and multi-year commitments.",
-          publishedAt: new Date().toISOString(),
-          sentimentScore: 0.38,
-          sentimentLabel: "BULLISH",
-        },
-        {
-          title: "Enterprise Copilot Integration Expansion Deepens Competitive Moat for Microsoft Software Suite",
-          url: "https://bloomberg.com",
-          source: "Bloomberg",
-          summary:
-            "Institutional channel checks reveal expanding seat penetration across Fortune 500 enterprises adopting generative workflow tooling.",
-          publishedAt: new Date(Date.now() - 3600000).toISOString(),
-          sentimentScore: 0.31,
-          sentimentLabel: "BULLISH",
-        },
-      ];
-    }
-
-    if (sym === "AAPL") {
-      return [
-        {
-          title: "Apple Intelligence Supercycle Expectations Drive Record Services Monetization",
-          url: "https://finance.yahoo.com",
-          source: "MarketWatch",
-          summary:
-            "Supply chain suppliers report strong assembly schedules ahead of global rollout for device-native AI model architectures.",
-          publishedAt: new Date().toISOString(),
-          sentimentScore: 0.35,
-          sentimentLabel: "BULLISH",
-        },
-        {
-          title: "Installed Device Base Surpasses New Milestone as High-Margin App Store & Subscriptions Surge",
-          url: "https://bloomberg.com",
-          source: "Bloomberg",
-          summary:
-            "Recurring services gross margin reaches multi-year peak, cushioning hardware replacement volatility across global regions.",
-          publishedAt: new Date(Date.now() - 3600000).toISOString(),
-          sentimentScore: 0.28,
-          sentimentLabel: "BULLISH",
-        },
-      ];
-    }
-
-    return [
-      {
-        title: `${sym} Demonstrates Record Demand for Next-Gen Data Center Compute Architecture`,
-        url: "https://finance.yahoo.com",
-        source: "MarketWatch",
-        summary:
-          "Hyperscalers continue accelerating CAPEX allocations toward accelerated computing infrastructure, supporting sustained revenue visibility.",
-        publishedAt: new Date().toISOString(),
-        sentimentScore: 0.42,
-        sentimentLabel: "BULLISH",
-      },
-      {
-        title: "Semiconductor Sector Momentum Remains Resilient Amid Strong Enterprise Adoption",
-        url: "https://bloomberg.com",
-        source: "Bloomberg",
-        summary:
-          "Institutional flow metrics indicate steady accumulation in tier-1 semiconductor leaders.",
-        publishedAt: new Date(Date.now() - 3600000).toISOString(),
-        sentimentScore: 0.35,
-        sentimentLabel: "BULLISH",
-      },
-    ];
+    throw new Error(`[AlphaVantage] Live news payload missing for ${sym}.`);
   }
 
   /**
@@ -624,10 +462,10 @@ export class AlphaVantageProvider implements MarketDataProvider {
       const reason = isWeekend
         ? "Weekend (Saturday/Sunday)"
         : timeInMinutes < 9 * 60 + 30
-        ? "Pre-market / Closed"
-        : timeInMinutes >= 16 * 60
-        ? "After-hours / Closed"
-        : "Regular Trading Session";
+          ? "Pre-market / Closed"
+          : timeInMinutes >= 16 * 60
+            ? "After-hours / Closed"
+            : "Regular Trading Session";
 
       return {
         isOpen: isTradingHours,

@@ -1,9 +1,9 @@
 import "dotenv/config";
-import { AlphaVantageProvider } from "../../src/lib/market/alpha-vantage";
+import { TwelveDataProvider } from "../../src/lib/market/twelve-data";
 
 async function main() {
-  console.log("Checking US Market Status via Alpha Vantage Provider...");
-  const provider = new AlphaVantageProvider();
+  console.log("Checking US Market Status via Twelve Data Provider...");
+  const provider = new TwelveDataProvider();
   const status = await provider.getMarketStatus("United States");
   console.log("STATUS RESULT:", JSON.stringify(status, null, 2));
 }

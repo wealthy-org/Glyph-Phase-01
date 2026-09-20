@@ -10,6 +10,11 @@
 
 import { prisma } from "@/lib/prisma";
 import { clampLeverage } from "./simulation-math";
+import {
+  calculatePositionRequirements,
+  evaluateEconomicPreconditions,
+  PositionRequirements,
+} from "./economic-precheck";
 
 /**
  * Hardcoded Whitelist of Allowed Assets (BRIEF §3.8, §10).
@@ -52,6 +57,12 @@ export interface PolicyValidationResult {
   clampedPositionPercent: number;
 }
 
+export interface EconomicContextInput {
+  availableCapital?: number;
+  totalEquity?: number;
+  positionRequirements?: PositionRequirements | null;
+}
+
 /**
  * Validates a proposed trade against GLYPH_POLICY rules deterministically.
  * Pure validation logic without external database dependencies.
@@ -61,7 +72,8 @@ export function validateTradeProposal(
   currentOpenPositionsCount: number = 0,
   dailyLossPercent: number = 0,
   currentPosition: ActivePositionState | null = null,
-  isMarketOpen: boolean = true
+  isMarketOpen: boolean = true,
+  economicContext?: EconomicContextInput
 ): PolicyValidationResult {
   // 0. Check Market Hours for new entry orders
   if (!isMarketOpen && (proposal.action === "OPEN_LONG" || proposal.action === "OPEN_SHORT")) {
@@ -73,16 +85,22 @@ export function validateTradeProposal(
       clampedPositionPercent: 0,
     };
   }
+
+  // NO_TRADE is a first-class valid decision (Brief §3.0B):
+  // The Glyph Brain deliberately chose not to trade. Policy APPROVES this decision
+  // (acknowledging the brain's autonomous reasoning). NO_TRADE requires NO capital.
+  // The trade gate in engine.ts independently prevents trade creation when action === NO_TRADE.
   if (proposal.action === "NO_TRADE") {
     return {
-      approved: false,
-      policyResult: "REJECTED",
-      rejectReason: "Action is NO_TRADE. Proposal does not warrant execution.",
+      approved: true,
+      policyResult: "APPROVED",
+      rejectReason: null,
       clampedLeverage: 1,
       clampedPositionPercent: 0,
     };
   }
 
+  // HOLD / CLOSE operate on existing positions and do not require new capital
   if (proposal.action === "HOLD" || proposal.action === "CLOSE") {
     if (!currentPosition) {
       return {
@@ -113,6 +131,7 @@ export function validateTradeProposal(
     };
   }
 
+  // Cannot open position if one is already open for this asset
   if (currentPosition) {
     return {
       approved: false,
@@ -174,84 +193,92 @@ export function validateTradeProposal(
     };
   }
 
-  // 6. Clamp Leverage (§3.0C) and Position Size
-  const clampedLeverage = clampLeverage(
-    proposal.leverage ?? 1,
-    GLYPH_POLICY.maxLeverage
-  );
-  const clampedPositionPercent = Math.min(
-    GLYPH_POLICY.maxPositionPercent,
-    Math.max(1, proposal.positionSizePercent ?? 5)
-  );
+  // 6. Mandatory Economic Precondition for New Positions (OPEN_LONG / OPEN_SHORT)
+  const availableCapital = economicContext?.availableCapital ?? 0;
+  const totalEquity = economicContext?.totalEquity ?? availableCapital;
+
+  if (availableCapital <= 0) {
+    return {
+      approved: false,
+      policyResult: "REJECTED",
+      rejectReason: "INSUFFICIENT_TREASURY: Available simulated capital is $0.00. Cannot open new position without capital.",
+      clampedLeverage: 1,
+      clampedPositionPercent: 0,
+    };
+  }
+
+  // Single source of truth for position sizing
+  const positionRequirements =
+    economicContext?.positionRequirements ??
+    calculatePositionRequirements({
+      totalEquity,
+      availableCapital,
+      proposedPositionPercent: proposal.positionSizePercent,
+      proposedLeverage: proposal.leverage,
+    });
+
+  if (!positionRequirements.capitalSufficient) {
+    const reason =
+      positionRequirements.requiredMargin <= 0
+        ? "INSUFFICIENT_TREASURY: Calculated margin is $0.00. Cannot open position with zero margin."
+        : `INSUFFICIENT_TREASURY: Required capital ($${positionRequirements.totalRequiredCapital.toFixed(
+            2
+          )}) exceeds available capital ($${availableCapital.toFixed(2)}).`;
+    return {
+      approved: false,
+      policyResult: "REJECTED",
+      rejectReason: reason,
+      clampedLeverage: 1,
+      clampedPositionPercent: 0,
+    };
+  }
 
   return {
     approved: true,
     policyResult: "APPROVED",
     rejectReason: null,
-    clampedLeverage,
-    clampedPositionPercent,
+    clampedLeverage: positionRequirements.leverage,
+    clampedPositionPercent: positionRequirements.clampedPositionPercent,
   };
 }
 
 /**
- * Evaluates an agent trade proposal by pulling live state (open positions count, 24h loss)
+ * Evaluates an agent trade proposal by pulling live state (treasury, open positions count, 24h loss)
  * directly from the database and running deterministic validation.
  */
 export async function evaluateAgentTradeProposal(
   agentIdentifier: string = "1",
   proposal: TradeProposal,
-  options?: { isMarketOpen?: boolean }
+  options?: {
+    isMarketOpen?: boolean;
+    availableCapital?: number;
+    totalEquity?: number;
+    positionRequirements?: PositionRequirements | null;
+  }
 ): Promise<PolicyValidationResult> {
-  const agent = await prisma.agent.findFirst({
-    where: { agentId: agentIdentifier },
-    include: {
-      treasury: true,
-      positions: {
-        where: { isOpen: true },
-      },
-    },
-  });
+  const precheck = await evaluateEconomicPreconditions(agentIdentifier, proposal);
 
-  if (!agent) {
-    throw new Error(`Agent with agentId ${agentIdentifier} not found.`);
-  }
-
-  const currentOpenPositionsCount = agent.positions.length;
-
-  // Calculate realized losses in the past 24 hours
-  const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-  const recentClosedTrades = await prisma.trade.findMany({
-    where: {
-      agentId: agent.id,
-      status: { in: ["CLOSED", "LIQUIDATED"] },
-      closedAt: { gte: oneDayAgo },
-    },
-  });
-
-  let totalLossDollar = 0;
-  for (const trade of recentClosedTrades) {
-    const pnl = Number(trade.simulatedPnl ?? 0);
-    if (pnl < 0) {
-      totalLossDollar += Math.abs(pnl);
-    }
-  }
-
-  const initialCapital = agent.treasury
-    ? Number(agent.treasury.initialCapital)
-    : 1000;
-  const dailyLossPercent =
-    initialCapital > 0 ? (totalLossDollar / initialCapital) * 100 : 0;
-
-  const currentPosition = await prisma.position.findFirst({
-    where: { agentId: agent.id, asset: proposal.asset, isOpen: true },
-    select: { asset: true, side: true },
-  });
+  const availableCapital =
+    options?.availableCapital !== undefined
+      ? options.availableCapital
+      : precheck.availableCapital;
+  const totalEquity =
+    options?.totalEquity !== undefined ? options.totalEquity : precheck.totalEquity;
+  const positionRequirements =
+    options?.positionRequirements !== undefined
+      ? options.positionRequirements
+      : precheck.positionRequirements;
 
   return validateTradeProposal(
     proposal,
-    currentOpenPositionsCount,
-    dailyLossPercent,
-    currentPosition,
-    options?.isMarketOpen ?? true
+    precheck.activePositionsCount,
+    precheck.dailyLossPercent,
+    precheck.currentPosition,
+    options?.isMarketOpen ?? true,
+    {
+      availableCapital,
+      totalEquity,
+      positionRequirements,
+    }
   );
 }

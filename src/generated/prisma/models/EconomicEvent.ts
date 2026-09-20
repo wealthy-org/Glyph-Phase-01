@@ -45,6 +45,7 @@ export type EconomicEventMinAggregateOutputType = {
   tradeId: string | null
   decisionId: string | null
   txHash: string | null
+  cycleId: string | null
   timestamp: Date | null
 }
 
@@ -59,6 +60,7 @@ export type EconomicEventMaxAggregateOutputType = {
   tradeId: string | null
   decisionId: string | null
   txHash: string | null
+  cycleId: string | null
   timestamp: Date | null
 }
 
@@ -73,6 +75,7 @@ export type EconomicEventCountAggregateOutputType = {
   tradeId: number
   decisionId: number
   txHash: number
+  cycleId: number
   timestamp: number
   _all: number
 }
@@ -97,6 +100,7 @@ export type EconomicEventMinAggregateInputType = {
   tradeId?: true
   decisionId?: true
   txHash?: true
+  cycleId?: true
   timestamp?: true
 }
 
@@ -111,6 +115,7 @@ export type EconomicEventMaxAggregateInputType = {
   tradeId?: true
   decisionId?: true
   txHash?: true
+  cycleId?: true
   timestamp?: true
 }
 
@@ -125,6 +130,7 @@ export type EconomicEventCountAggregateInputType = {
   tradeId?: true
   decisionId?: true
   txHash?: true
+  cycleId?: true
   timestamp?: true
   _all?: true
 }
@@ -226,6 +232,7 @@ export type EconomicEventGroupByOutputType = {
   tradeId: string | null
   decisionId: string | null
   txHash: string | null
+  cycleId: string | null
   timestamp: Date
   _count: EconomicEventCountAggregateOutputType | null
   _avg: EconomicEventAvgAggregateOutputType | null
@@ -263,6 +270,7 @@ export type EconomicEventWhereInput = {
   tradeId?: Prisma.StringNullableFilter<"EconomicEvent"> | string | null
   decisionId?: Prisma.StringNullableFilter<"EconomicEvent"> | string | null
   txHash?: Prisma.StringNullableFilter<"EconomicEvent"> | string | null
+  cycleId?: Prisma.StringNullableFilter<"EconomicEvent"> | string | null
   timestamp?: Prisma.DateTimeFilter<"EconomicEvent"> | Date | string
   agent?: Prisma.XOR<Prisma.AgentScalarRelationFilter, Prisma.AgentWhereInput>
 }
@@ -278,6 +286,7 @@ export type EconomicEventOrderByWithRelationInput = {
   tradeId?: Prisma.SortOrderInput | Prisma.SortOrder
   decisionId?: Prisma.SortOrderInput | Prisma.SortOrder
   txHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  cycleId?: Prisma.SortOrderInput | Prisma.SortOrder
   timestamp?: Prisma.SortOrder
   agent?: Prisma.AgentOrderByWithRelationInput
 }
@@ -296,6 +305,7 @@ export type EconomicEventWhereUniqueInput = Prisma.AtLeast<{
   tradeId?: Prisma.StringNullableFilter<"EconomicEvent"> | string | null
   decisionId?: Prisma.StringNullableFilter<"EconomicEvent"> | string | null
   txHash?: Prisma.StringNullableFilter<"EconomicEvent"> | string | null
+  cycleId?: Prisma.StringNullableFilter<"EconomicEvent"> | string | null
   timestamp?: Prisma.DateTimeFilter<"EconomicEvent"> | Date | string
   agent?: Prisma.XOR<Prisma.AgentScalarRelationFilter, Prisma.AgentWhereInput>
 }, "id">
@@ -311,6 +321,7 @@ export type EconomicEventOrderByWithAggregationInput = {
   tradeId?: Prisma.SortOrderInput | Prisma.SortOrder
   decisionId?: Prisma.SortOrderInput | Prisma.SortOrder
   txHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  cycleId?: Prisma.SortOrderInput | Prisma.SortOrder
   timestamp?: Prisma.SortOrder
   _count?: Prisma.EconomicEventCountOrderByAggregateInput
   _avg?: Prisma.EconomicEventAvgOrderByAggregateInput
@@ -333,6 +344,7 @@ export type EconomicEventScalarWhereWithAggregatesInput = {
   tradeId?: Prisma.StringNullableWithAggregatesFilter<"EconomicEvent"> | string | null
   decisionId?: Prisma.StringNullableWithAggregatesFilter<"EconomicEvent"> | string | null
   txHash?: Prisma.StringNullableWithAggregatesFilter<"EconomicEvent"> | string | null
+  cycleId?: Prisma.StringNullableWithAggregatesFilter<"EconomicEvent"> | string | null
   timestamp?: Prisma.DateTimeWithAggregatesFilter<"EconomicEvent"> | Date | string
 }
 
@@ -346,6 +358,7 @@ export type EconomicEventCreateInput = {
   tradeId?: string | null
   decisionId?: string | null
   txHash?: string | null
+  cycleId?: string | null
   timestamp?: Date | string
   agent: Prisma.AgentCreateNestedOneWithoutEconomicEventsInput
 }
@@ -361,6 +374,7 @@ export type EconomicEventUncheckedCreateInput = {
   tradeId?: string | null
   decisionId?: string | null
   txHash?: string | null
+  cycleId?: string | null
   timestamp?: Date | string
 }
 
@@ -374,6 +388,7 @@ export type EconomicEventUpdateInput = {
   tradeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   decisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agent?: Prisma.AgentUpdateOneRequiredWithoutEconomicEventsNestedInput
 }
@@ -389,6 +404,7 @@ export type EconomicEventUncheckedUpdateInput = {
   tradeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   decisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -403,6 +419,7 @@ export type EconomicEventCreateManyInput = {
   tradeId?: string | null
   decisionId?: string | null
   txHash?: string | null
+  cycleId?: string | null
   timestamp?: Date | string
 }
 
@@ -416,6 +433,7 @@ export type EconomicEventUpdateManyMutationInput = {
   tradeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   decisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -430,6 +448,7 @@ export type EconomicEventUncheckedUpdateManyInput = {
   tradeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   decisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -454,6 +473,7 @@ export type EconomicEventCountOrderByAggregateInput = {
   tradeId?: Prisma.SortOrder
   decisionId?: Prisma.SortOrder
   txHash?: Prisma.SortOrder
+  cycleId?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
 }
 
@@ -472,6 +492,7 @@ export type EconomicEventMaxOrderByAggregateInput = {
   tradeId?: Prisma.SortOrder
   decisionId?: Prisma.SortOrder
   txHash?: Prisma.SortOrder
+  cycleId?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
 }
 
@@ -486,6 +507,7 @@ export type EconomicEventMinOrderByAggregateInput = {
   tradeId?: Prisma.SortOrder
   decisionId?: Prisma.SortOrder
   txHash?: Prisma.SortOrder
+  cycleId?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
 }
 
@@ -549,6 +571,7 @@ export type EconomicEventCreateWithoutAgentInput = {
   tradeId?: string | null
   decisionId?: string | null
   txHash?: string | null
+  cycleId?: string | null
   timestamp?: Date | string
 }
 
@@ -562,6 +585,7 @@ export type EconomicEventUncheckedCreateWithoutAgentInput = {
   tradeId?: string | null
   decisionId?: string | null
   txHash?: string | null
+  cycleId?: string | null
   timestamp?: Date | string
 }
 
@@ -605,6 +629,7 @@ export type EconomicEventScalarWhereInput = {
   tradeId?: Prisma.StringNullableFilter<"EconomicEvent"> | string | null
   decisionId?: Prisma.StringNullableFilter<"EconomicEvent"> | string | null
   txHash?: Prisma.StringNullableFilter<"EconomicEvent"> | string | null
+  cycleId?: Prisma.StringNullableFilter<"EconomicEvent"> | string | null
   timestamp?: Prisma.DateTimeFilter<"EconomicEvent"> | Date | string
 }
 
@@ -618,6 +643,7 @@ export type EconomicEventCreateManyAgentInput = {
   tradeId?: string | null
   decisionId?: string | null
   txHash?: string | null
+  cycleId?: string | null
   timestamp?: Date | string
 }
 
@@ -631,6 +657,7 @@ export type EconomicEventUpdateWithoutAgentInput = {
   tradeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   decisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -644,6 +671,7 @@ export type EconomicEventUncheckedUpdateWithoutAgentInput = {
   tradeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   decisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -657,6 +685,7 @@ export type EconomicEventUncheckedUpdateManyWithoutAgentInput = {
   tradeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   decisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cycleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -673,6 +702,7 @@ export type EconomicEventSelect<ExtArgs extends runtime.Types.Extensions.Interna
   tradeId?: boolean
   decisionId?: boolean
   txHash?: boolean
+  cycleId?: boolean
   timestamp?: boolean
   agent?: boolean | Prisma.AgentDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["economicEvent"]>
@@ -688,6 +718,7 @@ export type EconomicEventSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   tradeId?: boolean
   decisionId?: boolean
   txHash?: boolean
+  cycleId?: boolean
   timestamp?: boolean
   agent?: boolean | Prisma.AgentDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["economicEvent"]>
@@ -703,6 +734,7 @@ export type EconomicEventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   tradeId?: boolean
   decisionId?: boolean
   txHash?: boolean
+  cycleId?: boolean
   timestamp?: boolean
   agent?: boolean | Prisma.AgentDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["economicEvent"]>
@@ -718,10 +750,11 @@ export type EconomicEventSelectScalar = {
   tradeId?: boolean
   decisionId?: boolean
   txHash?: boolean
+  cycleId?: boolean
   timestamp?: boolean
 }
 
-export type EconomicEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "agentId" | "eventType" | "title" | "description" | "day" | "result" | "tradeId" | "decisionId" | "txHash" | "timestamp", ExtArgs["result"]["economicEvent"]>
+export type EconomicEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "agentId" | "eventType" | "title" | "description" | "day" | "result" | "tradeId" | "decisionId" | "txHash" | "cycleId" | "timestamp", ExtArgs["result"]["economicEvent"]>
 export type EconomicEventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   agent?: boolean | Prisma.AgentDefaultArgs<ExtArgs>
 }
@@ -748,6 +781,7 @@ export type $EconomicEventPayload<ExtArgs extends runtime.Types.Extensions.Inter
     tradeId: string | null
     decisionId: string | null
     txHash: string | null
+    cycleId: string | null
     timestamp: Date
   }, ExtArgs["result"]["economicEvent"]>
   composites: {}
@@ -1183,6 +1217,7 @@ export interface EconomicEventFieldRefs {
   readonly tradeId: Prisma.FieldRef<"EconomicEvent", 'String'>
   readonly decisionId: Prisma.FieldRef<"EconomicEvent", 'String'>
   readonly txHash: Prisma.FieldRef<"EconomicEvent", 'String'>
+  readonly cycleId: Prisma.FieldRef<"EconomicEvent", 'String'>
   readonly timestamp: Prisma.FieldRef<"EconomicEvent", 'DateTime'>
 }
     

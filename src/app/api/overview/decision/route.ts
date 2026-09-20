@@ -10,6 +10,7 @@ export async function GET() {
         {
             latestDecision: data.latestDecision,
             latestAnalysis: data.latestAnalysis,
+            latestActivity: data.latestActivity,
         },
         { headers: { "Cache-Control": "no-store" } }
     );

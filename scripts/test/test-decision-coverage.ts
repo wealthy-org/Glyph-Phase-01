@@ -122,7 +122,7 @@ function runDecisionCoverageTests() {
     const cases = [
         { action: "OPEN_LONG" as const, position: null, expectedApproved: true },
         { action: "OPEN_SHORT" as const, position: null, expectedApproved: true },
-        { action: "NO_TRADE" as const, position: null, expectedApproved: false },
+        { action: "NO_TRADE" as const, position: null, expectedApproved: true },
         { action: "HOLD" as const, position: { asset: "NVDA", side: "LONG" as const }, expectedApproved: true },
         { action: "CLOSE" as const, position: { asset: "NVDA", side: "LONG" as const }, expectedApproved: true },
         { action: "HOLD" as const, position: { asset: "NVDA", side: "SHORT" as const }, expectedApproved: true },
@@ -143,12 +143,32 @@ function runDecisionCoverageTests() {
             },
             testCase.position ? 1 : 0,
             0,
-            testCase.position
+            testCase.position,
+            true,
+            { availableCapital: 1000, totalEquity: 1000 }
         );
         assert(result.approved === testCase.expectedApproved, `${testCase.action} policy result was unexpected`);
     }
 
-    console.log("Decision coverage passed: schema, no-position, LONG, SHORT, and all five actions.");
+    // Zero-Capital Economic Precondition Coverage
+    const zeroCapitalActions = ["OPEN_LONG", "OPEN_SHORT"] as const;
+    for (const act of zeroCapitalActions) {
+        const zeroRes = validateTradeProposal(
+            { asset: "NVDA", action: act, conviction: 80, positionSizePercent: 5, leverage: 1 },
+            0,
+            0,
+            null,
+            true,
+            { availableCapital: 0, totalEquity: 0 }
+        );
+        assert(!zeroRes.approved, `${act} with $0 capital should be rejected`);
+        assert(
+            zeroRes.rejectReason?.includes("INSUFFICIENT_TREASURY") === true,
+            `${act} rejection reason should mention INSUFFICIENT_TREASURY`
+        );
+    }
+
+    console.log("Decision coverage passed: schema, no-position, LONG, SHORT, all five actions, and zero-treasury guard.");
 }
 
 try {

@@ -1,14 +1,14 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import React from "react";
 import { TradeDecisionDetail } from "../../types";
 import { BackNavigation } from "./BackNavigation";
-import { TradeHeader } from "./TradeHeader";
-import { WhyITradedSection } from "./WhyITradedSection";
-import { RiskSection } from "./RiskSection";
 import { MemorySection } from "./MemorySection";
 import { OnchainProofSection } from "./OnchainProofSection";
-import { cn } from "@/lib/utils";
+import { RiskSection } from "./RiskSection";
+import { TradeHeader } from "./TradeHeader";
+import { WhyITradedSection } from "./WhyITradedSection";
 
 interface TradeDecisionDetailViewProps {
   trade: TradeDecisionDetail;

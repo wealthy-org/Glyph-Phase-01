@@ -1,17 +1,17 @@
 import "dotenv/config";
-import { AlphaVantageProvider } from "../../src/lib/market/alpha-vantage";
-import { validateTradeProposal } from "../../src/lib/policy";
 import { runAutonomousGlyphCycle } from "../../src/lib/cycle/orchestrator";
+import { TwelveDataProvider } from "../../src/lib/market/twelve-data";
+import { validateTradeProposal } from "../../src/lib/policy";
 import { prisma } from "../../src/lib/prisma";
 
 async function runMarketGatingVerification() {
   console.log("===============================================================");
-  console.log("🛡️ VERIFYING MARKET HOURS GATING VIA ALPHA VANTAGE API");
+  console.log("🛡️ VERIFYING MARKET HOURS GATING VIA TWELVE DATA API");
   console.log("===============================================================\n");
 
-  // 1. Test Alpha Vantage getMarketStatus API
-  console.log("▶ [TEST 1] Querying real-time Market Status from Alpha Vantage API...");
-  const marketProvider = new AlphaVantageProvider();
+  // 1. Test Twelve Data getMarketStatus API
+  console.log("▶ [TEST 1] Querying real-time Market Status from Twelve Data API...");
+  const marketProvider = new TwelveDataProvider();
   const status = await marketProvider.getMarketStatus("United States");
   console.log("  ✅ Live Market Status fetched:");
   console.log(`     ↳ Region           : ${status.region}`);

@@ -53,6 +53,7 @@ export interface TradeDetail {
   asset: string;
   action: string;
   entryPrice: number;
+  quantity: number | null;
   exitPrice?: number | null;
   positionSize: number;
   leverage: number;
@@ -72,6 +73,30 @@ export interface MemoryDetail {
   adaptation?: string | null;
   weightShift?: string | null;
   confidenceCalibration?: string | null;
+}
+
+export interface AnalysisDetail {
+  asset: string;
+  snapshotId: string | null;
+  status: "COMPLETED" | "FAILED";
+  classification: string | null;
+  price: number | null;
+  trend: string | null;
+  sma20: number | null;
+  sma50: number | null;
+  rsi14: number | null;
+  support: number | null;
+  resistance: number | null;
+  volatilityPercent: number | null;
+  volumeRatio: number | null;
+  fundamentalScore: number | null;
+  earningsPerShare: number | null;
+  profitMarginPercent: number | null;
+  technicalScore: number | null;
+  regime: string | null;
+  riskLevel: string | null;
+  riskDetails: string | null;
+  decisionSignal: string | null;
 }
 
 export interface LifeEvent {
@@ -95,7 +120,10 @@ export interface LifeEvent {
   result?: string | null;
   tradeId?: string | null;
   decisionId?: string | null;
+  cycleId?: string | null;
   decision?: DecisionDetail | null;
   trade?: TradeDetail | null;
   memory?: MemoryDetail | null;
+  analysis?: AnalysisDetail | null;
 }
+

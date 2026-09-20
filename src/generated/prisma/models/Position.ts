@@ -30,6 +30,7 @@ export type PositionAvgAggregateOutputType = {
   entryPrice: runtime.Decimal | null
   currentPrice: runtime.Decimal | null
   positionSize: runtime.Decimal | null
+  quantity: runtime.Decimal | null
   leverage: runtime.Decimal | null
   unrealizedPnl: runtime.Decimal | null
   unrealizedPnlPercent: runtime.Decimal | null
@@ -43,6 +44,7 @@ export type PositionSumAggregateOutputType = {
   entryPrice: runtime.Decimal | null
   currentPrice: runtime.Decimal | null
   positionSize: runtime.Decimal | null
+  quantity: runtime.Decimal | null
   leverage: runtime.Decimal | null
   unrealizedPnl: runtime.Decimal | null
   unrealizedPnlPercent: runtime.Decimal | null
@@ -61,6 +63,7 @@ export type PositionMinAggregateOutputType = {
   entryPrice: runtime.Decimal | null
   currentPrice: runtime.Decimal | null
   positionSize: runtime.Decimal | null
+  quantity: runtime.Decimal | null
   leverage: runtime.Decimal | null
   unrealizedPnl: runtime.Decimal | null
   unrealizedPnlPercent: runtime.Decimal | null
@@ -82,6 +85,7 @@ export type PositionMaxAggregateOutputType = {
   entryPrice: runtime.Decimal | null
   currentPrice: runtime.Decimal | null
   positionSize: runtime.Decimal | null
+  quantity: runtime.Decimal | null
   leverage: runtime.Decimal | null
   unrealizedPnl: runtime.Decimal | null
   unrealizedPnlPercent: runtime.Decimal | null
@@ -103,6 +107,7 @@ export type PositionCountAggregateOutputType = {
   entryPrice: number
   currentPrice: number
   positionSize: number
+  quantity: number
   leverage: number
   unrealizedPnl: number
   unrealizedPnlPercent: number
@@ -121,6 +126,7 @@ export type PositionAvgAggregateInputType = {
   entryPrice?: true
   currentPrice?: true
   positionSize?: true
+  quantity?: true
   leverage?: true
   unrealizedPnl?: true
   unrealizedPnlPercent?: true
@@ -134,6 +140,7 @@ export type PositionSumAggregateInputType = {
   entryPrice?: true
   currentPrice?: true
   positionSize?: true
+  quantity?: true
   leverage?: true
   unrealizedPnl?: true
   unrealizedPnlPercent?: true
@@ -152,6 +159,7 @@ export type PositionMinAggregateInputType = {
   entryPrice?: true
   currentPrice?: true
   positionSize?: true
+  quantity?: true
   leverage?: true
   unrealizedPnl?: true
   unrealizedPnlPercent?: true
@@ -173,6 +181,7 @@ export type PositionMaxAggregateInputType = {
   entryPrice?: true
   currentPrice?: true
   positionSize?: true
+  quantity?: true
   leverage?: true
   unrealizedPnl?: true
   unrealizedPnlPercent?: true
@@ -194,6 +203,7 @@ export type PositionCountAggregateInputType = {
   entryPrice?: true
   currentPrice?: true
   positionSize?: true
+  quantity?: true
   leverage?: true
   unrealizedPnl?: true
   unrealizedPnlPercent?: true
@@ -302,6 +312,7 @@ export type PositionGroupByOutputType = {
   entryPrice: runtime.Decimal
   currentPrice: runtime.Decimal
   positionSize: runtime.Decimal
+  quantity: runtime.Decimal
   leverage: runtime.Decimal
   unrealizedPnl: runtime.Decimal
   unrealizedPnlPercent: runtime.Decimal
@@ -346,6 +357,7 @@ export type PositionWhereInput = {
   entryPrice?: Prisma.DecimalFilter<"Position"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   currentPrice?: Prisma.DecimalFilter<"Position"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   positionSize?: Prisma.DecimalFilter<"Position"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: Prisma.DecimalFilter<"Position"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: Prisma.DecimalFilter<"Position"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnl?: Prisma.DecimalFilter<"Position"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnlPercent?: Prisma.DecimalFilter<"Position"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -369,6 +381,7 @@ export type PositionOrderByWithRelationInput = {
   entryPrice?: Prisma.SortOrder
   currentPrice?: Prisma.SortOrder
   positionSize?: Prisma.SortOrder
+  quantity?: Prisma.SortOrder
   leverage?: Prisma.SortOrder
   unrealizedPnl?: Prisma.SortOrder
   unrealizedPnlPercent?: Prisma.SortOrder
@@ -395,6 +408,7 @@ export type PositionWhereUniqueInput = Prisma.AtLeast<{
   entryPrice?: Prisma.DecimalFilter<"Position"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   currentPrice?: Prisma.DecimalFilter<"Position"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   positionSize?: Prisma.DecimalFilter<"Position"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: Prisma.DecimalFilter<"Position"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: Prisma.DecimalFilter<"Position"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnl?: Prisma.DecimalFilter<"Position"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnlPercent?: Prisma.DecimalFilter<"Position"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -418,6 +432,7 @@ export type PositionOrderByWithAggregationInput = {
   entryPrice?: Prisma.SortOrder
   currentPrice?: Prisma.SortOrder
   positionSize?: Prisma.SortOrder
+  quantity?: Prisma.SortOrder
   leverage?: Prisma.SortOrder
   unrealizedPnl?: Prisma.SortOrder
   unrealizedPnlPercent?: Prisma.SortOrder
@@ -447,6 +462,7 @@ export type PositionScalarWhereWithAggregatesInput = {
   entryPrice?: Prisma.DecimalWithAggregatesFilter<"Position"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   currentPrice?: Prisma.DecimalWithAggregatesFilter<"Position"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   positionSize?: Prisma.DecimalWithAggregatesFilter<"Position"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: Prisma.DecimalWithAggregatesFilter<"Position"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: Prisma.DecimalWithAggregatesFilter<"Position"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnl?: Prisma.DecimalWithAggregatesFilter<"Position"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnlPercent?: Prisma.DecimalWithAggregatesFilter<"Position"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -466,6 +482,7 @@ export type PositionCreateInput = {
   entryPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   currentPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   positionSize: runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnl?: runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnlPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -489,6 +506,7 @@ export type PositionUncheckedCreateInput = {
   entryPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   currentPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   positionSize: runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnl?: runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnlPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -508,6 +526,7 @@ export type PositionUpdateInput = {
   entryPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currentPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   positionSize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnl?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnlPercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -531,6 +550,7 @@ export type PositionUncheckedUpdateInput = {
   entryPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currentPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   positionSize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnl?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnlPercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -552,6 +572,7 @@ export type PositionCreateManyInput = {
   entryPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   currentPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   positionSize: runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnl?: runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnlPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -571,6 +592,7 @@ export type PositionUpdateManyMutationInput = {
   entryPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currentPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   positionSize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnl?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnlPercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -592,6 +614,7 @@ export type PositionUncheckedUpdateManyInput = {
   entryPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currentPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   positionSize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnl?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnlPercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -628,6 +651,7 @@ export type PositionCountOrderByAggregateInput = {
   entryPrice?: Prisma.SortOrder
   currentPrice?: Prisma.SortOrder
   positionSize?: Prisma.SortOrder
+  quantity?: Prisma.SortOrder
   leverage?: Prisma.SortOrder
   unrealizedPnl?: Prisma.SortOrder
   unrealizedPnlPercent?: Prisma.SortOrder
@@ -644,6 +668,7 @@ export type PositionAvgOrderByAggregateInput = {
   entryPrice?: Prisma.SortOrder
   currentPrice?: Prisma.SortOrder
   positionSize?: Prisma.SortOrder
+  quantity?: Prisma.SortOrder
   leverage?: Prisma.SortOrder
   unrealizedPnl?: Prisma.SortOrder
   unrealizedPnlPercent?: Prisma.SortOrder
@@ -662,6 +687,7 @@ export type PositionMaxOrderByAggregateInput = {
   entryPrice?: Prisma.SortOrder
   currentPrice?: Prisma.SortOrder
   positionSize?: Prisma.SortOrder
+  quantity?: Prisma.SortOrder
   leverage?: Prisma.SortOrder
   unrealizedPnl?: Prisma.SortOrder
   unrealizedPnlPercent?: Prisma.SortOrder
@@ -683,6 +709,7 @@ export type PositionMinOrderByAggregateInput = {
   entryPrice?: Prisma.SortOrder
   currentPrice?: Prisma.SortOrder
   positionSize?: Prisma.SortOrder
+  quantity?: Prisma.SortOrder
   leverage?: Prisma.SortOrder
   unrealizedPnl?: Prisma.SortOrder
   unrealizedPnlPercent?: Prisma.SortOrder
@@ -699,6 +726,7 @@ export type PositionSumOrderByAggregateInput = {
   entryPrice?: Prisma.SortOrder
   currentPrice?: Prisma.SortOrder
   positionSize?: Prisma.SortOrder
+  quantity?: Prisma.SortOrder
   leverage?: Prisma.SortOrder
   unrealizedPnl?: Prisma.SortOrder
   unrealizedPnlPercent?: Prisma.SortOrder
@@ -789,6 +817,7 @@ export type PositionCreateWithoutAgentInput = {
   entryPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   currentPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   positionSize: runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnl?: runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnlPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -810,6 +839,7 @@ export type PositionUncheckedCreateWithoutAgentInput = {
   entryPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   currentPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   positionSize: runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnl?: runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnlPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -860,6 +890,7 @@ export type PositionScalarWhereInput = {
   entryPrice?: Prisma.DecimalFilter<"Position"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   currentPrice?: Prisma.DecimalFilter<"Position"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   positionSize?: Prisma.DecimalFilter<"Position"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: Prisma.DecimalFilter<"Position"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: Prisma.DecimalFilter<"Position"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnl?: Prisma.DecimalFilter<"Position"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnlPercent?: Prisma.DecimalFilter<"Position"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -879,6 +910,7 @@ export type PositionCreateWithoutTradeInput = {
   entryPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   currentPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   positionSize: runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnl?: runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnlPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -900,6 +932,7 @@ export type PositionUncheckedCreateWithoutTradeInput = {
   entryPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   currentPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   positionSize: runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnl?: runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnlPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -935,6 +968,7 @@ export type PositionUpdateWithoutTradeInput = {
   entryPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currentPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   positionSize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnl?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnlPercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -956,6 +990,7 @@ export type PositionUncheckedUpdateWithoutTradeInput = {
   entryPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currentPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   positionSize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnl?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnlPercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -976,6 +1011,7 @@ export type PositionCreateManyAgentInput = {
   entryPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   currentPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   positionSize: runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnl?: runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnlPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -995,6 +1031,7 @@ export type PositionUpdateWithoutAgentInput = {
   entryPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currentPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   positionSize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnl?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnlPercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1016,6 +1053,7 @@ export type PositionUncheckedUpdateWithoutAgentInput = {
   entryPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currentPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   positionSize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnl?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnlPercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1036,6 +1074,7 @@ export type PositionUncheckedUpdateManyWithoutAgentInput = {
   entryPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currentPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   positionSize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   leverage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnl?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   unrealizedPnlPercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1059,6 +1098,7 @@ export type PositionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   entryPrice?: boolean
   currentPrice?: boolean
   positionSize?: boolean
+  quantity?: boolean
   leverage?: boolean
   unrealizedPnl?: boolean
   unrealizedPnlPercent?: boolean
@@ -1082,6 +1122,7 @@ export type PositionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   entryPrice?: boolean
   currentPrice?: boolean
   positionSize?: boolean
+  quantity?: boolean
   leverage?: boolean
   unrealizedPnl?: boolean
   unrealizedPnlPercent?: boolean
@@ -1105,6 +1146,7 @@ export type PositionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   entryPrice?: boolean
   currentPrice?: boolean
   positionSize?: boolean
+  quantity?: boolean
   leverage?: boolean
   unrealizedPnl?: boolean
   unrealizedPnlPercent?: boolean
@@ -1128,6 +1170,7 @@ export type PositionSelectScalar = {
   entryPrice?: boolean
   currentPrice?: boolean
   positionSize?: boolean
+  quantity?: boolean
   leverage?: boolean
   unrealizedPnl?: boolean
   unrealizedPnlPercent?: boolean
@@ -1140,7 +1183,7 @@ export type PositionSelectScalar = {
   closedAt?: boolean
 }
 
-export type PositionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "agentId" | "tradeId" | "asset" | "side" | "entryPrice" | "currentPrice" | "positionSize" | "leverage" | "unrealizedPnl" | "unrealizedPnlPercent" | "stopLoss" | "liquidationPrice" | "invalidationLevel" | "targetPrice" | "isOpen" | "openedAt" | "closedAt", ExtArgs["result"]["position"]>
+export type PositionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "agentId" | "tradeId" | "asset" | "side" | "entryPrice" | "currentPrice" | "positionSize" | "quantity" | "leverage" | "unrealizedPnl" | "unrealizedPnlPercent" | "stopLoss" | "liquidationPrice" | "invalidationLevel" | "targetPrice" | "isOpen" | "openedAt" | "closedAt", ExtArgs["result"]["position"]>
 export type PositionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   agent?: boolean | Prisma.AgentDefaultArgs<ExtArgs>
   trade?: boolean | Prisma.TradeDefaultArgs<ExtArgs>
@@ -1169,6 +1212,7 @@ export type $PositionPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     entryPrice: runtime.Decimal
     currentPrice: runtime.Decimal
     positionSize: runtime.Decimal
+    quantity: runtime.Decimal
     leverage: runtime.Decimal
     unrealizedPnl: runtime.Decimal
     unrealizedPnlPercent: runtime.Decimal
@@ -1612,6 +1656,7 @@ export interface PositionFieldRefs {
   readonly entryPrice: Prisma.FieldRef<"Position", 'Decimal'>
   readonly currentPrice: Prisma.FieldRef<"Position", 'Decimal'>
   readonly positionSize: Prisma.FieldRef<"Position", 'Decimal'>
+  readonly quantity: Prisma.FieldRef<"Position", 'Decimal'>
   readonly leverage: Prisma.FieldRef<"Position", 'Decimal'>
   readonly unrealizedPnl: Prisma.FieldRef<"Position", 'Decimal'>
   readonly unrealizedPnlPercent: Prisma.FieldRef<"Position", 'Decimal'>

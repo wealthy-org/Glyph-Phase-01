@@ -140,9 +140,11 @@ export const Navbar: React.FC<NavbarProps> = ({
     }
 
     loadStats();
+    const pollInterval = setInterval(loadStats, 5000);
 
     return () => {
       isMounted = false;
+      clearInterval(pollInterval);
     };
   }, [hasValidInitial, propAgentId]);
 
@@ -159,8 +161,8 @@ export const Navbar: React.FC<NavbarProps> = ({
     return pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
   };
 
-  const pnlSign = (metrics?.pnlDollar ?? 0) >= 0 ? "+" : "";
-  const pnlPercentSign = (metrics?.pnlPercent ?? 0) >= 0 ? "+" : "";
+  const pnlSign = (metrics?.pnlDollar ?? 0) > 0 ? "+" : (metrics?.pnlDollar ?? 0) < 0 ? "-" : "";
+  const pnlPercentSign = (metrics?.pnlPercent ?? 0) > 0 ? "+" : "";
   const pnlColorClass =
     (metrics?.pnlPercent ?? 0) > 0
       ? "text-[#6fe39a]"
@@ -168,14 +170,12 @@ export const Navbar: React.FC<NavbarProps> = ({
         ? "text-[#c47a7a]"
         : "text-[#85858a]";
 
-  const formattedTreasury = metrics
-    ? new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(metrics.treasuryEquity)
-    : "";
+  const formatTreasuryValue = (value: number) => new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value);
 
   const formattedAgentId = formatAgentId(
     metrics?.agentId || propAgentId || process.env.NEXT_PUBLIC_GLYPH_AGENT_ID
@@ -348,20 +348,44 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
 
             {/* Metric 2: Treasury */}
-            <div className="py-2 px-3.5 sm:px-5 flex flex-col justify-center shrink-0 min-w-[115px] sm:min-w-[140px]">
-              <span className="font-mono text-[9px] text-[#55555a] tracking-wider uppercase">
-                TREASURY
+            <div className="py-1.5 px-3.5 sm:px-5 flex flex-col justify-center shrink-0">
+              <span className="font-mono text-[9px] text-[#55555a] tracking-[0.18em] uppercase mb-1">
+                TREASURY // CAPITAL STATE
               </span>
-              <div className="mt-0.5 min-h-[18px] sm:min-h-[20px] flex items-center">
-                {isValueLoading ? (
-                  <Skeleton className="h-3.5 sm:h-4 w-20 sm:w-24 my-0.5 rounded-[2px]" />
-                ) : metrics ? (
-                  <span className="font-mono text-xs sm:text-sm font-medium text-[#f3f3f4]">
-                    {formattedTreasury}
-                  </span>
-                ) : (
-                  <span className="font-mono text-xs sm:text-sm text-[#55555a]">—</span>
-                )}
+              <div className="flex items-stretch gap-1.5 font-mono">
+                <div
+                  className="min-w-[104px] px-2 py-1.5 border border-[#244b38] border-l-2 bg-[#07110c] shadow-[inset_0_1px_0_rgba(111,227,154,0.08)]"
+                  title="Cash yang tersedia untuk alokasi trade berikutnya"
+                >
+                  <span className="block text-[8px] tracking-[0.12em] text-[#6fe39a] uppercase">01 // available</span>
+                  {isValueLoading ? (
+                    <Skeleton className="h-3.5 w-20 mt-1 rounded-[2px]" />
+                  ) : metrics ? (
+                    <strong className="block mt-0.5 text-[11px] text-[#d9ffe5] font-medium"><span className="text-[#6fe39a]">$</span>{formatTreasuryValue(metrics.treasuryCash).replace("$", "")}</strong>
+                  ) : <span className="text-[#55555a]">—</span>}
+                </div>
+                <div
+                  className="min-w-[104px] px-2 py-1.5 border border-[#4d3b20] border-l-2 bg-[#120d05] shadow-[inset_0_1px_0_rgba(224,170,90,0.08)]"
+                  title="Cash yang sedang terkunci pada posisi terbuka"
+                >
+                  <span className="block text-[8px] tracking-[0.12em] text-[#e0aa5a] uppercase">02 // committed</span>
+                  {isValueLoading ? (
+                    <Skeleton className="h-3.5 w-20 mt-1 rounded-[2px]" />
+                  ) : metrics ? (
+                    <strong className="block mt-0.5 text-[11px] text-[#ffe7bd] font-medium"><span className="text-[#e0aa5a]">$</span>{formatTreasuryValue(metrics.treasuryAllocatedMargin).replace("$", "")}</strong>
+                  ) : <span className="text-[#55555a]">—</span>}
+                </div>
+                <div
+                  className="min-w-[104px] px-2 py-1.5 border border-[#27455a] border-l-2 bg-[#071018] shadow-[inset_0_1px_0_rgba(112,183,223,0.08)]"
+                  title="Nilai total treasury: cash, margin, dan unrealized PnL"
+                >
+                  <span className="block text-[8px] tracking-[0.12em] text-[#70b7df] uppercase">03 // total nav</span>
+                  {isValueLoading ? (
+                    <Skeleton className="h-3.5 w-20 mt-1 rounded-[2px]" />
+                  ) : metrics ? (
+                    <strong className="block mt-0.5 text-[11px] text-[#d7f1ff] font-medium"><span className="text-[#70b7df]">$</span>{formatTreasuryValue(metrics.treasuryEquity).replace("$", "")}</strong>
+                  ) : <span className="text-[#55555a]">—</span>}
+                </div>
               </div>
             </div>
 

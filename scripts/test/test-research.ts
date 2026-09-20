@@ -3,14 +3,13 @@
 // Run with: npx tsx scripts/test-research.ts
 // ============================================================================
 
-import { AlphaVantageProvider } from "../../src/lib/market/alpha-vantage";
-import {
-  analyzeTechnicalLayer,
-  analyzeFundamentalLayer,
-  executeAssetResearch,
-  createResearchSnapshot,
-} from "../../src/lib/research";
+import { TwelveDataProvider } from "../../src/lib/market/twelve-data";
 import { prisma } from "../../src/lib/prisma";
+import {
+  analyzeFundamentalLayer,
+  analyzeTechnicalLayer,
+  createResearchSnapshot
+} from "../../src/lib/research";
 
 async function runResearchTests() {
   console.log("===============================================================");
@@ -21,10 +20,10 @@ async function runResearchTests() {
   console.log(`Target Asset for Deep Research: ${asset}`);
 
   // -------------------------------------------------------------------------
-  // TEST 1: Alpha Vantage Market Data Provider
+  // TEST 1: Twelve Data Market Data Provider
   // -------------------------------------------------------------------------
-  console.log("▶ [TEST 1] Testing Alpha Vantage Provider & Network Fetch...");
-  const provider = new AlphaVantageProvider();
+  console.log("▶ [TEST 1] Testing Twelve Data Provider & Network Fetch...");
+  const provider = new TwelveDataProvider();
   console.log(`  - Provider Name: ${provider.name}`);
 
   console.log("  - Fetching Market Quote for NVDA...");

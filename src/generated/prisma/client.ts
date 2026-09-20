@@ -111,3 +111,8 @@ export type AgentRun = Prisma.AgentRunModel
  * 
  */
 export type AgentTreasury = Prisma.AgentTreasuryModel
+/**
+ * Model ActivityLog
+ * 
+ */
+export type ActivityLog = Prisma.ActivityLogModel

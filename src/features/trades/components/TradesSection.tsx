@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
-import Link from "next/link";
-import { Trade, TradeLedgerFilter, TradeSummaryStats } from "../types";
-import { Search, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Search, X } from "lucide-react";
+import Link from "next/link";
+import React, { useMemo, useState } from "react";
+import { Trade, TradeLedgerFilter, TradeSummaryStats } from "../types";
 
 const TOOLBAR_FILTERS: { id: TradeLedgerFilter; label: string }[] = [
   { id: "ALL", label: "ALL" },
@@ -39,11 +39,11 @@ export const TradesSection: React.FC<TradesSectionProps> = ({
       } else if (activeFilter === "PROFIT") {
         matchesFilter =
           (t.status === "CLOSED" || t.status === "LIQUIDATED") &&
-          (t.pnlNumber !== undefined ? t.pnlNumber > 0 : t.isPositive);
+          t.pnlNumber !== undefined && t.pnlNumber > 0;
       } else if (activeFilter === "LOSS") {
         matchesFilter =
           (t.status === "CLOSED" || t.status === "LIQUIDATED") &&
-          (t.pnlNumber !== undefined ? t.pnlNumber < 0 : !t.isPositive);
+          t.pnlNumber !== undefined && t.pnlNumber < 0;
       }
 
       if (!matchesFilter) return false;
@@ -155,7 +155,7 @@ export const TradesSection: React.FC<TradesSectionProps> = ({
               <div className="col-span-2">TIME</div>
               <div className="col-span-1">ASSET</div>
               <div className="col-span-1">SIDE</div>
-              <div className="col-span-1">SIZE</div>
+              <div className="col-span-1">VALUE</div>
               <div className="col-span-2">ENTRY</div>
               <div className="col-span-2">EXIT</div>
               <div className="col-span-1">PNL</div>
@@ -191,8 +191,8 @@ export const TradesSection: React.FC<TradesSectionProps> = ({
                   const pnlColor = isProfit
                     ? "text-[#6fe39a]"
                     : isLoss
-                    ? "text-[#c47a7a]"
-                    : "text-[#85858a]";
+                      ? "text-[#c47a7a]"
+                      : "text-[#85858a]";
 
                   const targetId = trade.id || trade.tradeNumber || trade.dbId;
 
@@ -228,7 +228,7 @@ export const TradesSection: React.FC<TradesSectionProps> = ({
 
                       {/* 4. SIZE */}
                       <div className="col-span-1 text-[11px] text-[#a1a1aa] tabular-nums">
-                        {trade.size || trade.leverage || "1×"}
+                        {trade.size || "N/A"}
                       </div>
 
                       {/* 5. ENTRY */}
@@ -247,7 +247,7 @@ export const TradesSection: React.FC<TradesSectionProps> = ({
 
                       {/* 7. PNL */}
                       <div className={cn("col-span-1 font-medium tabular-nums truncate text-[11px]", pnlColor)}>
-                        {isOpen ? "—" : trade.pnlDollar || trade.pnl}
+                        {isOpen ? "N/A" : trade.pnlDollar || trade.pnl}
                       </div>
 
                       {/* 8. STATUS */}

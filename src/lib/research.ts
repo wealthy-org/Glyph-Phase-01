@@ -4,18 +4,20 @@
 // Synthesizes fundamental & technical layers into immutable research snapshots.
 // ============================================================================
 
+import { logAnalysisActivity } from "@/lib/activity";
 import { prisma } from "@/lib/prisma";
 import {
   Candle,
   Fundamentals,
+  FundamentalSummary,
   MarketDataProvider,
   NewsItem,
   Quote,
+  RiskContext,
   SynthesizedResearch,
   TechnicalSummary,
-  FundamentalSummary,
 } from "@/types/market";
-import { AlphaVantageProvider } from "./market/alpha-vantage";
+import { TwelveDataProvider } from "./market/twelve-data";
 
 /**
  * Technical Analysis Layer (§8)
@@ -80,7 +82,7 @@ export function analyzeTechnicalLayer(
   for (let i = 1; i < recentCandles.length; i++) {
     returns.push(
       (recentCandles[i].close - recentCandles[i - 1].close) /
-        recentCandles[i - 1].close
+      recentCandles[i - 1].close
     );
   }
   const meanReturn = returns.reduce((a, b) => a + b, 0) / (returns.length || 1);
@@ -181,7 +183,7 @@ export async function executeAssetResearch(
   symbol: string,
   provider?: MarketDataProvider
 ): Promise<SynthesizedResearch> {
-  const dataProvider = provider || new AlphaVantageProvider();
+  const dataProvider = provider || new TwelveDataProvider();
   const sym = symbol.toUpperCase();
 
   // Run data fetches in parallel
@@ -195,6 +197,33 @@ export async function executeAssetResearch(
   const technicalData = analyzeTechnicalLayer(candles, quote);
   const fundamentalData = analyzeFundamentalLayer(fundamentals, news);
 
+  // Synthesize market regime & risk context (Brief §2)
+  let regime: "bullish" | "bearish" | "volatile" | "sideways" | "uncertain" = "uncertain";
+  if (technicalData.trend === "BULLISH" && technicalData.rsi14 >= 50) {
+    regime = "bullish";
+  } else if (technicalData.trend === "BEARISH" && technicalData.rsi14 < 50) {
+    regime = "bearish";
+  } else if (technicalData.volatilityPercent > 3.0) {
+    regime = "volatile";
+  } else if (technicalData.trend === "NEUTRAL") {
+    regime = "sideways";
+  }
+
+  let level: "low" | "moderate" | "high" | "extreme" = "moderate";
+  if (technicalData.volatilityPercent > 4.5 || technicalData.technicalScore < 30) {
+    level = "high";
+  } else if (technicalData.volatilityPercent > 2.0) {
+    level = "moderate";
+  } else {
+    level = "low";
+  }
+
+  const riskContext: RiskContext = {
+    regime,
+    level,
+    details: `Trend: ${technicalData.trend}, RSI: ${technicalData.rsi14}, Volatility: ${technicalData.volatilityPercent}%`,
+  };
+
   return {
     asset: sym,
     timestamp: new Date().toISOString(),
@@ -204,6 +233,7 @@ export async function executeAssetResearch(
     },
     fundamentalData,
     technicalData,
+    riskContext,
     newsData: news,
     sourceMetadata: {
       provider: dataProvider.name,
@@ -216,26 +246,101 @@ export async function executeAssetResearch(
 /**
  * Stores immutable research snapshot in Prisma database (BRIEF §8, §14).
  * Ensures "What Glyph knew when it made the decision" is never silently overwritten.
+ * Also emits mandatory Analysis Activity Log and Life Log Economic Event.
  */
 export async function createResearchSnapshot(
   symbol: string,
-  provider?: MarketDataProvider
+  provider?: MarketDataProvider,
+  options?: { cycleId?: string; agentId?: string; recordLifeLog?: boolean }
 ) {
-  const research = await executeAssetResearch(symbol, provider);
+  try {
+    const research = await executeAssetResearch(symbol, provider);
 
-  const snapshot = await prisma.researchSnapshot.create({
-    data: {
-      asset: research.asset,
-      marketData: research.marketData as any,
-      fundamentalData: research.fundamentalData as any,
-      technicalData: research.technicalData as any,
-      newsData: research.newsData as any,
-      sourceMetadata: research.sourceMetadata as any,
-    },
-  });
+    const snapshot = await prisma.researchSnapshot.create({
+      data: {
+        asset: research.asset,
+        cycleId: options?.cycleId,
+        marketData: research.marketData as any,
+        fundamentalData: research.fundamentalData as any,
+        technicalData: research.technicalData as any,
+        newsData: research.newsData as any,
+        sourceMetadata: {
+          ...research.sourceMetadata,
+          researchTimestamp: research.timestamp,
+          riskContext: research.riskContext,
+          dataQuality: "PROVIDER_DATA",
+        } as any,
+      },
+    });
 
-  return {
-    snapshotId: snapshot.id,
-    research,
-  };
+    if (options?.cycleId && options?.agentId) {
+      await logAnalysisActivity({
+        cycleId: options.cycleId,
+        agentId: options.agentId,
+        asset: research.asset,
+        status: "COMPLETED",
+        marketDataRef: {
+          price: research.marketData.quote.price,
+          volume: research.marketData.quote.volume,
+          source: research.sourceMetadata.provider,
+        },
+        technical: {
+          trend: research.technicalData.trend,
+          technicalScore: research.technicalData.technicalScore,
+          rsi14: research.technicalData.rsi14,
+        },
+        fundamental: {
+          score: research.fundamentalData.fundamentalScore,
+          sentimentVerdict: research.fundamentalData.sentimentVerdict,
+        },
+        riskContext: {
+          regime: research.riskContext?.regime || "neutral",
+          level: research.riskContext?.level || "moderate",
+        },
+      });
+
+      // Also record EconomicEvent for Life Log stream unless the caller owns cycle-level events.
+      if (options.recordLifeLog !== false) try {
+        const agent = await prisma.agent.findFirst({
+          where: { OR: [{ id: options.agentId }, { agentId: options.agentId }] },
+          select: { id: true, createdAt: true },
+        });
+        if (agent) {
+          const now = new Date();
+          const birthDate = new Date(agent.createdAt);
+          const day = Math.max(1, Math.floor((now.getTime() - birthDate.getTime()) / (24 * 60 * 60 * 1000)) + 1);
+          await prisma.economicEvent.create({
+            data: {
+              agentId: agent.id,
+              cycleId: options.cycleId,
+              eventType: "RESEARCH_STARTED",
+              title: `Market Analysis Completed — ${research.asset}`,
+              description: `Regime: ${research.riskContext?.regime?.toUpperCase()} · Tech: ${research.technicalData.technicalScore}/100 · Fund: ${research.fundamentalData.fundamentalScore}/100`,
+              day,
+              result: `SCORE ${research.technicalData.technicalScore}`,
+            },
+          });
+        }
+      } catch (evtErr) {
+        console.warn("[Research] Failed to record RESEARCH_STARTED event:", evtErr);
+      }
+    }
+
+    return {
+      snapshotId: snapshot.id,
+      research,
+    };
+  } catch (error: any) {
+    if (options?.cycleId && options?.agentId) {
+      await logAnalysisActivity({
+        cycleId: options.cycleId,
+        agentId: options.agentId,
+        asset: symbol,
+        status: "FAILED",
+        error: error.message || String(error),
+      });
+    }
+    throw error;
+  }
 }
+
