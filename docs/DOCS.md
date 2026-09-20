@@ -1,6 +1,7 @@
 # Glyph Phase 01 — Internal Documentation
 
-> This document is intended for developers who will be setting up, maintaining, or re-deploying Glyph Phase 01 components.
+> This document is intended for developers who will be setting up, maintaining, or re-deploying Glyph Phase 01 components.  
+> 📖 **Panduan Operasional & Tooling CLI Mandiri:** Lihat [OPERATIONS_GUIDE.md](file:///c:/Users/ASUS/Desktop/glyph-phase01/docs/OPERATIONS_GUIDE.md) untuk SOP penggantian wallet, audit on-chain, dan testing.
 
 ---
 

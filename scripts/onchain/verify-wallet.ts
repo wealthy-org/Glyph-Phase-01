@@ -46,9 +46,17 @@ async function main() {
   console.log("Agent ID:           #", agentIdBigInt.toString());
   console.log("NFT Identity Owner: ", nftOwner);
   console.log("DB Wallet Address:  ", agent?.wallet?.walletAddress);
-  console.log("On-Chain getAgentWallet:", onchainWallet);
-  console.log("Apakah Cocok:       ", onchainWallet.toLowerCase() === "0x5cfc46e3e541531e2194185183971dcd9eaaa384" ? "TERBUKTI 100% VALID ✅" : "TIDAK COCOK ❌");
-  console.log("Tx Perubahan Wallet: 0xfa06807681e82affd87db248b13816f51bdd152ab98c5b9a8fe0441625803bb3");
+  const expectedWallet = process.env.NEXT_PUBLIC_GLYPH_WALLET_ADDRESS || agent?.wallet?.walletAddress || "";
+  const isMatch = onchainWallet.toLowerCase() === expectedWallet.toLowerCase();
+  console.log("Expected Wallet:    ", expectedWallet);
+  console.log("Apakah Cocok:       ", isMatch ? "TERBUKTI 100% VALID ✅" : "TIDAK COCOK ❌");
+  const walletEvent = await prisma.economicEvent.findFirst({
+    where: { agentId: agent?.id, eventType: "WALLET_CREATED" },
+    orderBy: { timestamp: "desc" },
+  });
+  if (walletEvent?.txHash) {
+    console.log("Tx Binding Wallet:   ", walletEvent.txHash);
+  }
 }
 
 main().catch(console.error).finally(() => prisma.$disconnect());

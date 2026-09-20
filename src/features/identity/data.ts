@@ -29,8 +29,8 @@ export const GLYPH_ARCHITECTURE_ITEMS: ArchitectureItem[] = [
 
 export const GLYPH_IDENTITY_DATA: IdentityData = {
   beingNumber: "ECONOMIC BEING #001",
-  agentId: "3",
-  agentIdFormatted: "ID #003",
+  agentId: "5",
+  agentIdFormatted: "ID #005",
   name: "GLYPH",
   status: "ACTIVE",
   standard: {
@@ -43,10 +43,10 @@ export const GLYPH_IDENTITY_DATA: IdentityData = {
   },
   genesis: {
     epoch: "September 2026",
-    block: "Block 120,766,742",
+    block: "Block 121,888,511",
   },
-  primaryWallet: "0x5cFc46E3e541531E2194185183971dCd9Eaaa384",
-  registrationTx: "0xa547e955ec33ca107054a74d1c6bb51aad2ce3ddbb7c7e40c13df197e2a6ff18",
+  primaryWallet: "0xB635eFd761D352ed8a74166a292c8969AD541c8E",
+  registrationTx: "0x651f3838a424c489bbb1f5792f8c20c2346d8cf542a604ce4853a07381b138da",
   registrationNetwork: "ROBINHOOD CHAIN TESTNET",
   explorerBaseUrl: "https://explorer.testnet.chain.robinhood.com/tx/",
   architectureItems: GLYPH_ARCHITECTURE_ITEMS,

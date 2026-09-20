@@ -427,11 +427,16 @@ export const Hero: React.FC<HeroProps> = ({
   const [selectedTab, setSelectedTab] = useState<AnalysisTab | null>(null);
   const [completedTabs, setCompletedTabs] = useState<Set<AnalysisTab>>(() => new Set());
   const [cycleNum, setCycleNum] = useState<number>(() => cycleCount || 6);
+  const [mounted, setMounted] = useState<boolean>(false);
 
   // Autonomous timestamps
   const [cycleStartTime, setCycleStartTime] = useState<number>(() => Date.now());
   const [lastStageStartTime, setLastStageStartTime] = useState<number>(() => Date.now());
   const [nowSec, setNowSec] = useState<number>(() => Math.floor(Date.now() / 1000));
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Ticking clock only for elapsed display
   useEffect(() => {
@@ -514,6 +519,14 @@ export const Hero: React.FC<HeroProps> = ({
 
   // Cycle & Stage Timestamps
   const { startedTime, lastUpdateTime, elapsedStr } = useMemo(() => {
+    if (!mounted) {
+      return {
+        startedTime: "--:--:-- UTC",
+        lastUpdateTime: "--:--:-- UTC",
+        elapsedStr: "00:00",
+      };
+    }
+
     const started =
       new Date(cycleStartTime).toLocaleTimeString("en-US", {
         hour: "2-digit",
@@ -540,15 +553,19 @@ export const Hero: React.FC<HeroProps> = ({
       .padStart(2, "0")}`;
 
     return { startedTime: started, lastUpdateTime: lastUpdate, elapsedStr: elapsed };
-  }, [cycleStartTime, lastStageStartTime, nowSec]);
+  }, [mounted, cycleStartTime, lastStageStartTime, nowSec]);
 
   // 2. OPERATION & STOCK IDENTITY (Memoized)
   const hasActivePosition = Boolean(openPosition);
-  const rawAsset = openPosition?.asset || latestDecision?.asset || "NVDA";
+  const hasActiveDecision = Boolean(latestDecision);
+  const isStandbyMode = !hasActivePosition && !hasActiveDecision;
+  const rawAsset = openPosition?.asset || latestDecision?.asset || "STANDBY";
   const asset = rawAsset.toUpperCase();
   const positionSubtitle = hasActivePosition
     ? `${openPosition!.side} POSITION · ${openPosition!.leverage}× SIM`
-    : "STANDBY // NO UNREALIZED RISK EXPOSURE";
+    : hasActiveDecision
+      ? "STANDBY // NO UNREALIZED RISK EXPOSURE"
+      : "STANDBY // AWAITING FIRST COGNITIVE CYCLE";
 
   // 3. INTERACTIVE TAB STATE (Follows Glyph's current stage)
   const rawThesis = latestDecision?.thesis;
@@ -557,18 +574,18 @@ export const Hero: React.FC<HeroProps> = ({
     () => ({
       fundamental:
         rawThesis?.fundamental ||
-        "NVIDIA accelerates data center revenue trajectory with hyperscaler capex guidance upgrades across cloud providers. High net margins of 55%+ reinforce durable competitive moat.",
+        "Autonomous valuation engine in standby. Fundamental cash flows, multiples, and revenue acceleration models will synthesize when market intake cycle begins.",
       technical:
         rawThesis?.technical ||
-        "The technical setup remains bullish with price well above the 20-day and 50-day SMAs. Volume surges 1.45x above moving average creating a clean expansion channel.",
+        "Technical chart structure, volume surges, and moving average expansion channels will calculate automatically on cycle execution.",
       risk:
         rawThesis?.risk ||
-        "Elevated volatility around current levels requires controlled exposure under Glyph's predefined risk policy and simulated treasury allocation.",
+        "Zero exposure. Risk limits remain strictly constrained within the autonomous policy boundaries (max 2× leverage, max 10% allocation).",
       market:
         rawThesis?.catalyst ||
-        "Semiconductor sector momentum remains supportive while hyperscaler demand continues to influence forward growth expectations.",
+        "Market sentiment feeds, macro calendars, and catalyst triggers are on standby awaiting scheduled intake.",
       "glyph-view":
-        "NVIDIA maintains strong fundamental momentum and constructive technical structure. Current volatility supports controlled exposure under Glyph's risk policy.",
+        "Glyph is currently in autonomous standby state on Robinhood Chain Testnet. System initialized and awaiting first live cognitive reasoning cycle.",
     }),
     [rawThesis]
   );
@@ -623,7 +640,7 @@ export const Hero: React.FC<HeroProps> = ({
   const targetFormatted = isDecisionRevealed
     ? latestDecision
       ? `${latestDecision.asset} · ${latestDecision.action === "OPEN_LONG" ? "LONG" : latestDecision.action === "OPEN_SHORT" ? "SHORT" : "HOLD"}`
-      : `${asset} · HOLD`
+      : "STANDBY"
     : "ANALYZING...";
 
   const targetColor = isDecisionRevealed ? "text-[#f3f3f4]" : "text-[#85858a]";
@@ -631,29 +648,33 @@ export const Hero: React.FC<HeroProps> = ({
   const convictionFormatted = isDecisionRevealed
     ? latestDecision?.conviction
       ? `${latestDecision.conviction}%`
-      : "84%"
+      : "—"
     : "--";
 
-  const convictionColor = isDecisionRevealed ? "text-[#6fe39a]" : "text-[#55555e]";
+  const convictionColor = isDecisionRevealed && latestDecision?.conviction ? "text-[#6fe39a]" : "text-[#55555e]";
 
-  const fundamentalFormatted = "90";
+  const fundamentalFormatted = latestDecision?.fundamentalScore != null ? `${latestDecision.fundamentalScore}` : "—";
 
-  const technicalFormatted = "80";
+  const technicalFormatted = latestDecision?.technicalScore != null ? `${latestDecision.technicalScore}` : "—";
 
   const riskScoreFormatted = isDecisionRevealed
-    ? `${latestDecision?.riskScore ?? 62}`
+    ? latestDecision?.riskScore != null
+      ? `${latestDecision.riskScore}`
+      : "—"
     : "--";
 
-  const riskScoreColor = isDecisionRevealed ? "text-[#fbbf24]" : "text-[#55555e]";
+  const riskScoreColor = isDecisionRevealed && latestDecision?.riskScore != null ? "text-[#fbbf24]" : "text-[#55555e]";
 
   const policyFormatted = isDecisionRevealed
-    ? latestDecision?.policyResult || "APPROVED"
+    ? latestDecision?.policyResult || "STANDBY"
     : "PENDING";
 
   const policyColor = isDecisionRevealed
     ? policyFormatted === "APPROVED"
       ? "text-[#6fe39a]"
-      : "text-[#c47a7a]"
+      : policyFormatted === "REJECTED"
+        ? "text-[#c47a7a]"
+        : "text-[#85858a]"
     : "text-[#71717a]";
 
   return (
@@ -678,14 +699,22 @@ export const Hero: React.FC<HeroProps> = ({
           {/* 1. TERMINAL HEADER */}
           <div className="px-4 sm:px-6 py-2.5 border-b border-[#1b1b1b]/80 bg-[#080808] flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <span className="w-2 h-2 rounded-full bg-[#6fe39a] shadow-[0_0_0_2px_rgba(111,227,154,0.25)] animate-livepulse shrink-0" />
+              <span className={cn(
+                "w-2 h-2 rounded-full shrink-0",
+                isStandbyMode
+                  ? "bg-[#fbbf24] shadow-[0_0_0_2px_rgba(251,191,36,0.25)] animate-pulse"
+                  : "bg-[#6fe39a] shadow-[0_0_0_2px_rgba(111,227,154,0.25)] animate-livepulse"
+              )} />
               <span className="font-mono text-xs sm:text-[13px] tracking-wider uppercase text-[#f3f3f4] font-medium">
-                AUTONOMOUS OPERATION // LIVE
+                {isStandbyMode ? "AUTONOMOUS AGENT // STANDBY" : "AUTONOMOUS OPERATION // LIVE"}
               </span>
             </div>
             <div className="flex items-center gap-3 font-mono text-xs text-[#85858a]">
-              <span className="text-[#6fe39a] font-medium tracking-wider">
-                CYCLE #{cycleNumber}
+              <span className={cn(
+                "font-medium tracking-wider",
+                isStandbyMode ? "text-[#fbbf24]" : "text-[#6fe39a]"
+              )}>
+                {isStandbyMode ? "STATUS: DORMANT / READY" : `CYCLE #${cycleNumber}`}
               </span>
             </div>
           </div>
@@ -703,137 +732,262 @@ export const Hero: React.FC<HeroProps> = ({
 
             {/* COMPACT CYCLE METADATA ROW */}
             <div className="flex flex-wrap items-center gap-x-6 gap-y-1.5 font-mono text-[11px] sm:text-xs pt-2 border-t border-[#141414]/80">
-              <div>
-                <span className="text-[#55555a]">STARTED </span>
-                <span className="text-[#d4d4d8] tabular-nums">{startedTime}</span>
-              </div>
-              <div>
-                <span className="text-[#55555a]">LAST UPDATE </span>
-                <span className="text-[#d4d4d8] tabular-nums">{lastUpdateTime}</span>
-              </div>
-              <div>
-                <span className="text-[#55555a]">ELAPSED </span>
-                <span className="text-[#6fe39a] tabular-nums font-medium">{elapsedStr}</span>
-              </div>
+              {isStandbyMode ? (
+                <>
+                  <div>
+                    <span className="text-[#55555a]">CYCLE TRIGGER </span>
+                    <span className="text-[#d4d4d8]">CRON SCHEDULED</span>
+                  </div>
+                  <div>
+                    <span className="text-[#55555a]">AGENT UPTIME </span>
+                    <span className="text-[#d4d4d8]">DAY 1</span>
+                  </div>
+                  <div>
+                    <span className="text-[#55555a]">SYSTEM STATUS </span>
+                    <span className="text-[#fbbf24] font-medium">AWAITING INTAKE</span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div>
+                    <span className="text-[#55555a]">STARTED </span>
+                    <span className="text-[#d4d4d8] tabular-nums" suppressHydrationWarning>
+                      {startedTime}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-[#55555a]">LAST UPDATE </span>
+                    <span className="text-[#d4d4d8] tabular-nums" suppressHydrationWarning>
+                      {lastUpdateTime}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-[#55555a]">ELAPSED </span>
+                    <span className="text-[#6fe39a] tabular-nums font-medium" suppressHydrationWarning>
+                      {elapsedStr}
+                    </span>
+                  </div>
+                </>
+              )}
             </div>
           </div>
 
           {/* 3. INTERACTIVE LIVE ANALYSIS CONSOLE WITH GLYPH'S VIEW TAB */}
           <div className="border-t border-[#1b1b1b]/80 bg-[#070707]">
-            {/* CONSOLE HEADER WITH RIGHT-ALIGNED TERMINAL BUTTON TABS */}
+            {/* CONSOLE HEADER */}
             <div className="px-4 sm:px-6 py-2.5 border-b border-[#141414]/80 flex flex-col md:flex-row md:items-center justify-between gap-2.5 bg-[#080808]">
               {/* Left: Console Identity & Mode */}
               <div className="flex flex-wrap items-center gap-2.5 shrink-0">
                 <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#6fe39a] animate-livepulse shrink-0" />
+                  <span className={cn("w-2 h-2 rounded-full shrink-0", isStandbyMode ? "bg-[#fbbf24] animate-pulse" : "bg-[#6fe39a] animate-livepulse")} />
                   <span className="font-mono text-xs sm:text-[13px] tracking-wider uppercase text-[#f3f3f4] font-medium">
-                    {activeTab === "glyph-view"
-                      ? `GLYPH // FORMING VIEW ${asset}`
-                      : `${activeStageConfig.consoleTitle} ${asset}`}
+                    {isStandbyMode
+                      ? "SYSTEM DIAGNOSTICS // READINESS VERIFIED"
+                      : activeTab === "glyph-view"
+                        ? `GLYPH // FORMING VIEW ${asset}`
+                        : `${activeStageConfig.consoleTitle} ${asset}`}
                   </span>
                 </div>
 
                 <div className="font-mono text-[10px] text-[#55555a] flex items-center gap-1 border border-transparent px-1 py-0.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#6fe39a] animate-livepulse" />
-                  <span>AUTO</span>
+                  <span className={cn("w-1.5 h-1.5 rounded-full", isStandbyMode ? "bg-[#fbbf24]" : "bg-[#6fe39a] animate-livepulse")} />
+                  <span>{isStandbyMode ? "STANDBY" : "AUTO"}</span>
                 </div>
               </div>
 
-              {/* Right: Terminal-Style Button Tabs */}
-              <div
-                role="tablist"
-                aria-label="Analysis Stages"
-                className="flex flex-wrap items-center justify-start md:justify-end gap-1.5 font-mono"
-              >
-                {TABS.map((tab) => {
-                  const isActive = activeTab === tab.id;
-                  return (
-                    <button
-                      key={tab.id}
-                      role="tab"
-                      aria-selected={isActive}
-                      onClick={() => handleTabClick(tab.id)}
-                      className={cn(
-                        "text-[10px] sm:text-[11px] tracking-wider uppercase px-2 sm:px-2.5 py-0.5 sm:py-1 border transition-all cursor-pointer font-mono whitespace-nowrap",
-                        isActive
-                          ? "bg-[#0e1713] border-[#6fe39a]/80 text-[#6fe39a] shadow-[0_0_8px_rgba(111,227,154,0.12)] font-medium"
-                          : "bg-[#090909] border-[#202024] text-[#71717a] hover:text-[#e4e4e7] hover:border-[#35353c]"
-                      )}
-                    >
-                      [ {tab.label} ]
-                    </button>
-                  );
-                })}
-              </div>
+              {/* Right: Terminal-Style Button Tabs (only show when live analysis is active) */}
+              {!isStandbyMode && (
+                <div
+                  role="tablist"
+                  aria-label="Analysis Stages"
+                  className="flex flex-wrap items-center justify-start md:justify-end gap-1.5 font-mono"
+                >
+                  {TABS.map((tab) => {
+                    const isActive = activeTab === tab.id;
+                    return (
+                      <button
+                        key={tab.id}
+                        role="tab"
+                        aria-selected={isActive}
+                        onClick={() => handleTabClick(tab.id)}
+                        className={cn(
+                          "text-[10px] sm:text-[11px] tracking-wider uppercase px-2 sm:px-2.5 py-0.5 sm:py-1 border transition-all cursor-pointer font-mono whitespace-nowrap",
+                          isActive
+                            ? "bg-[#0e1713] border-[#6fe39a]/80 text-[#6fe39a] shadow-[0_0_8px_rgba(111,227,154,0.12)] font-medium"
+                            : "bg-[#090909] border-[#202024] text-[#71717a] hover:text-[#e4e4e7] hover:border-[#35353c]"
+                        )}
+                      >
+                        [ {tab.label} ]
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
-            {/* ISOLATED HIGH-PERFORMANCE STREAMING SCREEN (Does not trigger Hero re-renders!) */}
-            <AnalysisStreamViewer
-              key={activeTab}
-              activeStageText={activeStageText}
-              activeTabConfig={activeTabConfig}
-              activeTabIdx={activeTabIdx}
-              totalTabs={TABS.length}
-              activeTab={activeTab}
-              latestDecision={latestDecision}
-              rawThesis={rawThesis}
-              viewThesisHref={viewThesisHref}
-              elapsedStr={elapsedStr}
-              reasoningStatus={reasoningStatus}
-              isDecisionRevealed={isDecisionFinal}
-              onTypingFinished={() => handleTypingFinished(activeTab)}
-              alreadyCompleted={completedTabs.has(activeTab)}
-            />
+            {/* SCREEN: Standby Diagnostics Checklist vs Live Streaming Viewer */}
+            {isStandbyMode ? (
+              <div className="p-4 sm:p-6 font-mono space-y-4 bg-[#050505]">
+                <div className="flex items-center justify-between border-b border-[#141414] pb-2">
+                  <div className="flex items-center gap-2 text-xs text-[#6fe39a]">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#6fe39a]" />
+                    <span>SUBSYSTEM READINESS CHECKLIST</span>
+                  </div>
+                  <span className="text-[10px] text-[#55555a] uppercase font-mono">ALL GATES OPERATIONAL</span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                  <div className="p-3 bg-[#080808] border border-[#141414] space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[#85858a]">[01] ON-CHAIN IDENTITY</span>
+                      <span className="text-[#6fe39a] font-medium">VERIFIED</span>
+                    </div>
+                    <p className="text-[11px] text-[#55555a]">
+                      ERC-8004 Identity registered on Robinhood Chain Testnet.
+                    </p>
+                  </div>
+
+                  <div className="p-3 bg-[#080808] border border-[#141414] space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[#85858a]">[02] PRIMARY WALLET</span>
+                      <span className="text-[#6fe39a] font-medium">ARMED</span>
+                    </div>
+                    <p className="text-[11px] text-[#55555a] truncate">
+                      Autonomous Safe account linked & gas funded.
+                    </p>
+                  </div>
+
+                  <div className="p-3 bg-[#080808] border border-[#141414] space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[#85858a]">[03] RISK POLICY</span>
+                      <span className="text-[#6fe39a] font-medium">ACTIVE</span>
+                    </div>
+                    <p className="text-[11px] text-[#55555a]">
+                      Deterministic constraints: max 2× leverage, 10% max allocation.
+                    </p>
+                  </div>
+
+                  <div className="p-3 bg-[#080808] border border-[#141414] space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[#85858a]">[04] MARKET INTAKE</span>
+                      <span className="text-[#fbbf24] font-medium">STANDBY</span>
+                    </div>
+                    <p className="text-[11px] text-[#55555a]">
+                      Whitelisted universe: NVDA, AAPL, MSFT · Awaiting trigger.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="p-3 bg-[#080808]/60 border border-[#141414] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px]">
+                  <span className="text-[#71717a]">
+                    No reasoning cycles recorded yet. Glyph is in autonomous standby awaiting scheduled cron intake.
+                  </span>
+                  <span className="text-[#85858a] shrink-0 font-medium">
+                    STATUS: READY
+                  </span>
+                </div>
+              </div>
+            ) : (
+              <AnalysisStreamViewer
+                key={activeTab}
+                activeStageText={activeStageText}
+                activeTabConfig={activeTabConfig}
+                activeTabIdx={activeTabIdx}
+                totalTabs={TABS.length}
+                activeTab={activeTab}
+                latestDecision={latestDecision}
+                rawThesis={rawThesis}
+                viewThesisHref={viewThesisHref}
+                elapsedStr={elapsedStr}
+                reasoningStatus={reasoningStatus}
+                isDecisionRevealed={isDecisionFinal}
+                onTypingFinished={() => handleTypingFinished(activeTab)}
+                alreadyCompleted={completedTabs.has(activeTab)}
+              />
+            )}
           </div>
 
+          {/* 4. POSITION + DECISION (BALANCED 2 COLUMNS) */}
           {/* 4. POSITION + DECISION (BALANCED 2 COLUMNS) */}
           <div className="border-t border-[#1b1b1b]/80 grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-[#1b1b1b]/80">
             {/* COLUMN 1: POSITION */}
             <div className="p-4 sm:p-5 space-y-2.5 bg-[#050505]">
-              <div className="font-mono text-[10px] text-[#55555a] uppercase tracking-widest border-b border-[#141414]/80 pb-1.5">
-                POSITION
+              <div className="font-mono text-[10px] text-[#55555a] uppercase tracking-widest border-b border-[#141414]/80 pb-1.5 flex items-center justify-between">
+                <span>POSITION</span>
+                {isStandbyMode && (
+                  <span className="text-[9px] text-[#85858a] tracking-wider uppercase">
+                    NO ACTIVE TRADES
+                  </span>
+                )}
               </div>
               <div className="space-y-1.5 font-mono text-xs sm:text-[13px]">
-                <div className="flex items-center justify-between py-0.5">
-                  <span className="text-[#71717a] uppercase text-[11px]">ENTRY</span>
-                  <OneShotTypewriter
-                    value={entryFormatted}
-                    delay={100}
-                    className="text-[#f3f3f4] font-medium tabular-nums"
-                  />
-                </div>
-                <div className="flex items-center justify-between py-0.5">
-                  <span className="text-[#71717a] uppercase text-[11px]">CURRENT</span>
-                  <OneShotTypewriter
-                    value={currentFormatted}
-                    delay={1100}
-                    className="text-[#f3f3f4] font-medium tabular-nums"
-                  />
-                </div>
-                <div className="flex items-center justify-between py-0.5">
-                  <span className="text-[#71717a] uppercase text-[11px]">SIZE</span>
-                  <OneShotTypewriter
-                    value={sizeFormatted}
-                    delay={2100}
-                    className="text-[#d4d4d8] tabular-nums"
-                  />
-                </div>
-                <div className="flex items-center justify-between py-0.5">
-                  <span className="text-[#71717a] uppercase text-[11px]">NOTIONAL</span>
-                  <OneShotTypewriter
-                    value={notionalFormatted}
-                    delay={3100}
-                    className="text-[#d4d4d8] tabular-nums"
-                  />
-                </div>
-                <div className="flex items-center justify-between py-0.5">
-                  <span className="text-[#71717a] uppercase text-[11px]">UNREALIZED</span>
-                  <OneShotTypewriter
-                    value={unrealizedFormatted}
-                    delay={4100}
-                    className={cn("font-medium tabular-nums", unrealizedColor)}
-                  />
-                </div>
+                {isStandbyMode ? (
+                  <>
+                    <div className="flex items-center justify-between py-0.5">
+                      <span className="text-white/75 uppercase text-[11px]">ENTRY</span>
+                      <span className="text-[#85858a] font-medium">—</span>
+                    </div>
+                    <div className="flex items-center justify-between py-0.5">
+                      <span className="text-white/75 uppercase text-[11px]">CURRENT</span>
+                      <span className="text-[#85858a] font-medium">—</span>
+                    </div>
+                    <div className="flex items-center justify-between py-0.5">
+                      <span className="text-white/75 uppercase text-[11px]">SIZE</span>
+                      <span className="text-[#85858a] font-medium">—</span>
+                    </div>
+                    <div className="flex items-center justify-between py-0.5">
+                      <span className="text-white/75 uppercase text-[11px]">NOTIONAL</span>
+                      <span className="text-[#85858a] font-medium">—</span>
+                    </div>
+                    <div className="flex items-center justify-between py-0.5">
+                      <span className="text-white/75 uppercase text-[11px]">UNREALIZED</span>
+                      <span className="text-[#85858a] font-medium">—</span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-center justify-between py-0.5">
+                      <span className="text-white/75 uppercase text-[11px]">ENTRY</span>
+                      <OneShotTypewriter
+                        value={entryFormatted}
+                        delay={100}
+                        className="text-[#f3f3f4] font-medium tabular-nums"
+                      />
+                    </div>
+                    <div className="flex items-center justify-between py-0.5">
+                      <span className="text-white/75 uppercase text-[11px]">CURRENT</span>
+                      <OneShotTypewriter
+                        value={currentFormatted}
+                        delay={1100}
+                        className="text-[#f3f3f4] font-medium tabular-nums"
+                      />
+                    </div>
+                    <div className="flex items-center justify-between py-0.5">
+                      <span className="text-white/75 uppercase text-[11px]">SIZE</span>
+                      <OneShotTypewriter
+                        value={sizeFormatted}
+                        delay={2100}
+                        className="text-[#d4d4d8] tabular-nums"
+                      />
+                    </div>
+                    <div className="flex items-center justify-between py-0.5">
+                      <span className="text-white/75 uppercase text-[11px]">NOTIONAL</span>
+                      <OneShotTypewriter
+                        value={notionalFormatted}
+                        delay={3100}
+                        className="text-[#d4d4d8] tabular-nums"
+                      />
+                    </div>
+                    <div className="flex items-center justify-between py-0.5">
+                      <span className="text-white/75 uppercase text-[11px]">UNREALIZED</span>
+                      <OneShotTypewriter
+                        value={unrealizedFormatted}
+                        delay={4100}
+                        className={cn("font-medium tabular-nums", unrealizedColor)}
+                      />
+                    </div>
+                  </>
+                )}
               </div>
             </div>
 
@@ -841,100 +995,136 @@ export const Hero: React.FC<HeroProps> = ({
             <div className="p-4 sm:p-5 space-y-2.5 bg-[#050505]">
               <div className="font-mono text-[10px] text-[#55555a] uppercase tracking-widest border-b border-[#141414]/80 pb-1.5 flex items-center justify-between">
                 <span>DECISION</span>
-                {!isDecisionFinal && (
+                {isStandbyMode ? (
+                  <span className="flex items-center gap-1 text-[9px] text-[#85858a]">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#85858a]" />
+                    <span className="tracking-wider">STANDBY</span>
+                  </span>
+                ) : !isDecisionFinal ? (
                   <span className="flex items-center gap-1 text-[9px] text-[#6fe39a]">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#6fe39a] animate-livepulse" />
                     <span className="tracking-wider">COMPUTING</span>
                   </span>
-                )}
+                ) : null}
               </div>
               <div className="space-y-1.5 font-mono text-xs sm:text-[13px]">
-                <div className="flex items-center justify-between py-0.5">
-                  <span className="text-[#71717a] uppercase text-[11px]">TARGET</span>
-                  {isDecisionFinal ? (
-                    <OneShotTypewriter
-                      value={targetFormatted}
-                      speed={20}
-                      className={cn("font-medium truncate", targetColor)}
-                    />
-                  ) : (
-                    <span className="text-[#85858a] font-medium flex items-center gap-1 text-xs sm:text-[13px]">
-                      <span>ANALYZING</span>
-                      <span className="inline-block w-1.5 h-3 bg-[#6fe39a] animate-pulse align-middle" />
-                    </span>
-                  )}
-                </div>
-                <div className="flex items-center justify-between py-0.5">
-                  <span className="text-[#71717a] uppercase text-[11px]">CONVICTION</span>
-                  {isDecisionFinal ? (
-                    <OneShotTypewriter
-                      value={convictionFormatted}
-                      speed={20}
-                      className={cn("font-medium tabular-nums", convictionColor)}
-                    />
-                  ) : (
-                    <span className="text-[#55555e] font-medium text-xs sm:text-[13px]">
-                      --
-                    </span>
-                  )}
-                </div>
-                <div className="flex items-center justify-between py-0.5">
-                  <span className="text-[#71717a] uppercase text-[11px]">FUNDAMENTAL</span>
-                  {completedTabs.has("fundamental") ? (
-                    <OneShotTypewriter
-                      value={fundamentalFormatted}
-                      speed={20}
-                      className="text-[#d4d4d8] tabular-nums font-medium"
-                    />
-                  ) : (
-                    <span className="text-[#55555e] font-medium text-xs sm:text-[13px]">
-                      --
-                    </span>
-                  )}
-                </div>
-                <div className="flex items-center justify-between py-0.5">
-                  <span className="text-[#71717a] uppercase text-[11px]">TECHNICAL</span>
-                  {completedTabs.has("technical") ? (
-                    <OneShotTypewriter
-                      value={technicalFormatted}
-                      speed={20}
-                      className="text-[#d4d4d8] tabular-nums font-medium"
-                    />
-                  ) : (
-                    <span className="text-[#55555e] font-medium text-xs sm:text-[13px]">
-                      --
-                    </span>
-                  )}
-                </div>
-                <div className="flex items-center justify-between py-0.5">
-                  <span className="text-[#71717a] uppercase text-[11px]">RISK SCORE</span>
-                  {completedTabs.has("risk") ? (
-                    <OneShotTypewriter
-                      value={riskScoreFormatted}
-                      speed={20}
-                      className={cn("tabular-nums font-medium", riskScoreColor)}
-                    />
-                  ) : (
-                    <span className="text-[#55555e] font-medium text-xs sm:text-[13px]">
-                      --
-                    </span>
-                  )}
-                </div>
-                <div className="flex items-center justify-between py-0.5">
-                  <span className="text-[#71717a] uppercase text-[11px]">POLICY</span>
-                  {isDecisionFinal ? (
-                    <OneShotTypewriter
-                      value={policyFormatted}
-                      speed={20}
-                      className={cn("uppercase font-medium", policyColor)}
-                    />
-                  ) : (
-                    <span className="text-[#fbbf24] font-medium flex items-center gap-1.5 uppercase text-xs sm:text-[13px]">
-                      <span>PENDING</span>
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#fbbf24] animate-pulse" />
-                    </span>
-                  )}
-                </div>
+                {isStandbyMode ? (
+                  <>
+                    <div className="flex items-center justify-between py-0.5">
+                      <span className="text-white/75 uppercase text-[11px]">TARGET</span>
+                      <span className="font-medium text-[#85858a]">STANDBY</span>
+                    </div>
+                    <div className="flex items-center justify-between py-0.5">
+                      <span className="text-white/75 uppercase text-[11px]">CONVICTION</span>
+                      <span className="text-[#55555e] font-medium">—</span>
+                    </div>
+                    <div className="flex items-center justify-between py-0.5">
+                      <span className="text-white/75 uppercase text-[11px]">FUNDAMENTAL</span>
+                      <span className="text-[#55555e] font-medium">—</span>
+                    </div>
+                    <div className="flex items-center justify-between py-0.5">
+                      <span className="text-white/75 uppercase text-[11px]">TECHNICAL</span>
+                      <span className="text-[#55555e] font-medium">—</span>
+                    </div>
+                    <div className="flex items-center justify-between py-0.5">
+                      <span className="text-white/75 uppercase text-[11px]">RISK SCORE</span>
+                      <span className="text-[#55555e] font-medium">—</span>
+                    </div>
+                    <div className="flex items-center justify-between py-0.5">
+                      <span className="text-white/75 uppercase text-[11px]">POLICY</span>
+                      <span className="text-[#6fe39a] font-medium">ARMED</span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-center justify-between py-0.5">
+                      <span className="text-white/75 uppercase text-[11px]">TARGET</span>
+                      {isDecisionFinal ? (
+                        <OneShotTypewriter
+                          value={targetFormatted}
+                          speed={20}
+                          className={cn("font-medium truncate", targetColor)}
+                        />
+                      ) : (
+                        <span className="text-[#85858a] font-medium flex items-center gap-1 text-xs sm:text-[13px]">
+                          <span>ANALYZING</span>
+                          <span className="inline-block w-1.5 h-3 bg-[#6fe39a] animate-pulse align-middle" />
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center justify-between py-0.5">
+                      <span className="text-white/75 uppercase text-[11px]">CONVICTION</span>
+                      {isDecisionFinal ? (
+                        <OneShotTypewriter
+                          value={convictionFormatted}
+                          speed={20}
+                          className={cn("font-medium tabular-nums", convictionColor)}
+                        />
+                      ) : (
+                        <span className="text-[#55555e] font-medium text-xs sm:text-[13px]">
+                          --
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center justify-between py-0.5">
+                      <span className="text-white/75 uppercase text-[11px]">FUNDAMENTAL</span>
+                      {completedTabs.has("fundamental") ? (
+                        <OneShotTypewriter
+                          value={fundamentalFormatted}
+                          speed={20}
+                          className="text-[#d4d4d8] tabular-nums font-medium"
+                        />
+                      ) : (
+                        <span className="text-[#55555e] font-medium text-xs sm:text-[13px]">
+                          --
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center justify-between py-0.5">
+                      <span className="text-white/75 uppercase text-[11px]">TECHNICAL</span>
+                      {completedTabs.has("technical") ? (
+                        <OneShotTypewriter
+                          value={technicalFormatted}
+                          speed={20}
+                          className="text-[#d4d4d8] tabular-nums font-medium"
+                        />
+                      ) : (
+                        <span className="text-[#55555e] font-medium text-xs sm:text-[13px]">
+                          --
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center justify-between py-0.5">
+                      <span className="text-white/75 uppercase text-[11px]">RISK SCORE</span>
+                      {completedTabs.has("risk") ? (
+                        <OneShotTypewriter
+                          value={riskScoreFormatted}
+                          speed={20}
+                          className={cn("tabular-nums font-medium", riskScoreColor)}
+                        />
+                      ) : (
+                        <span className="text-[#55555e] font-medium text-xs sm:text-[13px]">
+                          --
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center justify-between py-0.5">
+                      <span className="text-white/75 uppercase text-[11px]">POLICY</span>
+                      {isDecisionFinal ? (
+                        <OneShotTypewriter
+                          value={policyFormatted}
+                          speed={20}
+                          className={cn("uppercase font-medium", policyColor)}
+                        />
+                      ) : (
+                        <span className="text-[#fbbf24] font-medium flex items-center gap-1.5 uppercase text-xs sm:text-[13px]">
+                          <span>PENDING</span>
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#fbbf24] animate-pulse" />
+                        </span>
+                      )}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -945,109 +1135,170 @@ export const Hero: React.FC<HeroProps> = ({
               AUTONOMOUS PIPELINE
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-2 font-mono relative">
-              {/* 01 MARKET */}
-              <div className="relative p-2.5 sm:p-3 bg-[#090909] border border-[#171717]/80 space-y-1">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] text-[#66666e] block">01 MARKET</span>
-                  <span className="hidden sm:inline-block text-[#333338] text-[11px]">──</span>
+            {isStandbyMode ? (
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-2 font-mono relative">
+                {/* 01 MARKET */}
+                <div className="relative p-2.5 sm:p-3 bg-[#090909] border border-[#171717]/80 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] text-[#66666e] block">01 MARKET</span>
+                    <span className="hidden sm:inline-block text-[#333338] text-[11px]">──</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs sm:text-[13px]">
+                    <span className="text-[#85858a] font-medium">STANDBY</span>
+                    <span className="text-[#55555e]">○</span>
+                  </div>
                 </div>
-                <div className="flex items-center justify-between text-xs sm:text-[13px]">
-                  <span className={cn("font-medium", currentStage.pipeline.market.color)}>
-                    {currentStage.pipeline.market.status}
-                  </span>
-                  <span className={currentStage.pipeline.market.color}>
-                    {currentStage.pipeline.market.symbol}
-                  </span>
+
+                {/* 02 ANALYSIS */}
+                <div className="relative p-2.5 sm:p-3 bg-[#090909] border border-[#171717]/80 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] text-[#66666e] block">02 ANALYSIS</span>
+                    <span className="hidden sm:inline-block text-[#333338] text-[11px]">──</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs sm:text-[13px]">
+                    <span className="text-[#85858a] font-medium">STANDBY</span>
+                    <span className="text-[#55555e]">○</span>
+                  </div>
+                </div>
+
+                {/* 03 DECISION */}
+                <div className="relative p-2.5 sm:p-3 bg-[#090909] border border-[#171717]/80 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] text-[#66666e] block">03 DECISION</span>
+                    <span className="hidden sm:inline-block text-[#333338] text-[11px]">──</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs sm:text-[13px]">
+                    <span className="text-[#85858a] font-medium">STANDBY</span>
+                    <span className="text-[#55555e]">○</span>
+                  </div>
+                </div>
+
+                {/* 04 RISK */}
+                <div className="relative p-2.5 sm:p-3 bg-[#090909] border border-[#171717]/80 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] text-[#66666e] block">04 RISK</span>
+                    <span className="hidden sm:inline-block text-[#333338] text-[11px]">──</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs sm:text-[13px]">
+                    <span className="text-[#6fe39a] font-medium">ARMED</span>
+                    <span className="text-[#6fe39a]">✓</span>
+                  </div>
+                </div>
+
+                {/* 05 EXECUTION */}
+                <div className="relative p-2.5 sm:p-3 bg-[#090909] border border-[#171717]/80 space-y-1 col-span-2 sm:col-span-1">
+                  <span className="text-[10px] text-[#66666e] block">05 EXECUTION</span>
+                  <div className="flex items-center justify-between text-xs sm:text-[13px]">
+                    <span className="text-[#85858a] font-medium">IDLE</span>
+                    <span className="text-[#55555e]">○</span>
+                  </div>
                 </div>
               </div>
-
-              {/* 02 ANALYSIS */}
-              <div className="relative p-2.5 sm:p-3 bg-[#090909] border border-[#171717]/80 space-y-1">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] text-[#66666e] block">02 ANALYSIS</span>
-                  <span className="hidden sm:inline-block text-[#333338] text-[11px]">──</span>
-                </div>
-                <div className="flex items-center justify-between text-xs sm:text-[13px]">
-                  <span className={cn("font-medium", currentStage.pipeline.analysis.color)}>
-                    {currentStage.pipeline.analysis.status}
-                  </span>
-                  {currentStage.pipeline.analysis.pulse ? (
-                    <span className="inline-block w-2 h-2 rounded-full bg-[#6fe39a] shadow-[0_0_0_2px_rgba(111,227,154,0.3)] animate-livepulse" />
-                  ) : (
-                    <span className={currentStage.pipeline.analysis.color}>
-                      {currentStage.pipeline.analysis.symbol}
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-2 font-mono relative">
+                {/* 01 MARKET */}
+                <div className="relative p-2.5 sm:p-3 bg-[#090909] border border-[#171717]/80 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] text-[#66666e] block">01 MARKET</span>
+                    <span className="hidden sm:inline-block text-[#333338] text-[11px]">──</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs sm:text-[13px]">
+                    <span className={cn("font-medium", currentStage.pipeline.market.color)}>
+                      {currentStage.pipeline.market.status}
                     </span>
-                  )}
-                </div>
-              </div>
-
-              {/* 03 DECISION */}
-              <div className="relative p-2.5 sm:p-3 bg-[#090909] border border-[#171717]/80 space-y-1">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] text-[#66666e] block">03 DECISION</span>
-                  <span className="hidden sm:inline-block text-[#333338] text-[11px]">──</span>
-                </div>
-                <div className="flex items-center justify-between text-xs sm:text-[13px]">
-                  <span className={cn("font-medium", currentStage.pipeline.decision.color)}>
-                    {currentStage.pipeline.decision.status}
-                  </span>
-                  {currentStage.pipeline.decision.pulse ? (
-                    <span className="inline-block w-2 h-2 rounded-full bg-[#fbbf24] shadow-[0_0_0_2px_rgba(251,191,36,0.3)] animate-livepulse" />
-                  ) : (
-                    <span className={currentStage.pipeline.decision.color}>
-                      {currentStage.pipeline.decision.symbol}
+                    <span className={currentStage.pipeline.market.color}>
+                      {currentStage.pipeline.market.symbol}
                     </span>
-                  )}
+                  </div>
                 </div>
-              </div>
 
-              {/* 04 RISK */}
-              <div className="relative p-2.5 sm:p-3 bg-[#090909] border border-[#171717]/80 space-y-1">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] text-[#66666e] block">04 RISK</span>
-                  <span className="hidden sm:inline-block text-[#333338] text-[11px]">──</span>
-                </div>
-                <div className="flex items-center justify-between text-xs sm:text-[13px]">
-                  <span className={cn("font-medium", currentStage.pipeline.risk.color)}>
-                    {currentStage.pipeline.risk.status}
-                  </span>
-                  {currentStage.pipeline.risk.pulse ? (
-                    <span className="inline-block w-2 h-2 rounded-full bg-[#6fe39a] shadow-[0_0_0_2px_rgba(111,227,154,0.3)] animate-livepulse" />
-                  ) : (
-                    <span className={currentStage.pipeline.risk.color}>
-                      {currentStage.pipeline.risk.symbol}
+                {/* 02 ANALYSIS */}
+                <div className="relative p-2.5 sm:p-3 bg-[#090909] border border-[#171717]/80 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] text-[#66666e] block">02 ANALYSIS</span>
+                    <span className="hidden sm:inline-block text-[#333338] text-[11px]">──</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs sm:text-[13px]">
+                    <span className={cn("font-medium", currentStage.pipeline.analysis.color)}>
+                      {currentStage.pipeline.analysis.status}
                     </span>
-                  )}
-                </div>
-              </div>
-
-              {/* 05 EXECUTION */}
-              <div className="relative p-2.5 sm:p-3 bg-[#090909] border border-[#171717]/80 space-y-1 col-span-2 sm:col-span-1">
-                <span className="text-[10px] text-[#66666e] block">05 EXECUTION</span>
-                <div className="flex items-center justify-between text-xs sm:text-[13px]">
-                  {currentStageIdx === 4 && !isDecisionRevealed ? (
-                    <>
-                      <span className="font-medium text-[#fbbf24]">COMMITTING</span>
-                      <span className="inline-block w-2 h-2 rounded-full bg-[#fbbf24] shadow-[0_0_0_2px_rgba(251,191,36,0.3)] animate-livepulse" />
-                    </>
-                  ) : (
-                    <>
-                      <span className={cn("font-medium", currentStage.pipeline.execution.color)}>
-                        {currentStage.pipeline.execution.status}
+                    {currentStage.pipeline.analysis.pulse ? (
+                      <span className="inline-block w-2 h-2 rounded-full bg-[#6fe39a] shadow-[0_0_0_2px_rgba(111,227,154,0.3)] animate-livepulse" />
+                    ) : (
+                      <span className={currentStage.pipeline.analysis.color}>
+                        {currentStage.pipeline.analysis.symbol}
                       </span>
-                      {currentStage.pipeline.execution.pulse ? (
-                        <span className="inline-block w-2 h-2 rounded-full bg-[#6fe39a] shadow-[0_0_0_2px_rgba(111,227,154,0.3)] animate-livepulse" />
-                      ) : (
-                        <span className={currentStage.pipeline.execution.color}>
-                          {currentStage.pipeline.execution.symbol}
+                    )}
+                  </div>
+                </div>
+
+                {/* 03 DECISION */}
+                <div className="relative p-2.5 sm:p-3 bg-[#090909] border border-[#171717]/80 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] text-[#66666e] block">03 DECISION</span>
+                    <span className="hidden sm:inline-block text-[#333338] text-[11px]">──</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs sm:text-[13px]">
+                    <span className={cn("font-medium", currentStage.pipeline.decision.color)}>
+                      {currentStage.pipeline.decision.status}
+                    </span>
+                    {currentStage.pipeline.decision.pulse ? (
+                      <span className="inline-block w-2 h-2 rounded-full bg-[#fbbf24] shadow-[0_0_0_2px_rgba(251,191,36,0.3)] animate-livepulse" />
+                    ) : (
+                      <span className={currentStage.pipeline.decision.color}>
+                        {currentStage.pipeline.decision.symbol}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* 04 RISK */}
+                <div className="relative p-2.5 sm:p-3 bg-[#090909] border border-[#171717]/80 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] text-[#66666e] block">04 RISK</span>
+                    <span className="hidden sm:inline-block text-[#333338] text-[11px]">──</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs sm:text-[13px]">
+                    <span className={cn("font-medium", currentStage.pipeline.risk.color)}>
+                      {currentStage.pipeline.risk.status}
+                    </span>
+                    {currentStage.pipeline.risk.pulse ? (
+                      <span className="inline-block w-2 h-2 rounded-full bg-[#6fe39a] shadow-[0_0_0_2px_rgba(111,227,154,0.3)] animate-livepulse" />
+                    ) : (
+                      <span className={currentStage.pipeline.risk.color}>
+                        {currentStage.pipeline.risk.symbol}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* 05 EXECUTION */}
+                <div className="relative p-2.5 sm:p-3 bg-[#090909] border border-[#171717]/80 space-y-1 col-span-2 sm:col-span-1">
+                  <span className="text-[10px] text-[#66666e] block">05 EXECUTION</span>
+                  <div className="flex items-center justify-between text-xs sm:text-[13px]">
+                    {currentStageIdx === 4 && !isDecisionRevealed ? (
+                      <>
+                        <span className="font-medium text-[#fbbf24]">COMMITTING</span>
+                        <span className="inline-block w-2 h-2 rounded-full bg-[#fbbf24] shadow-[0_0_0_2px_rgba(251,191,36,0.3)] animate-livepulse" />
+                      </>
+                    ) : (
+                      <>
+                        <span className={cn("font-medium", currentStage.pipeline.execution.color)}>
+                          {currentStage.pipeline.execution.status}
                         </span>
-                      )}
-                    </>
-                  )}
+                        {currentStage.pipeline.execution.pulse ? (
+                          <span className="inline-block w-2 h-2 rounded-full bg-[#6fe39a] shadow-[0_0_0_2px_rgba(111,227,154,0.3)] animate-livepulse" />
+                        ) : (
+                          <span className={currentStage.pipeline.execution.color}>
+                            {currentStage.pipeline.execution.symbol}
+                          </span>
+                        )}
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* 6. OPERATION STATUS FOOTER */}
