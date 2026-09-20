@@ -7,6 +7,7 @@
 // ============================================================================
 
 import { runAutonomousGlyphCycle } from "@/lib/cycle/orchestrator";
+import { AlphaVantageProvider } from "@/lib/market/alpha-vantage";
 import { prisma } from "@/lib/prisma";
 import crypto from "crypto";
 import { NextRequest, NextResponse } from "next/server";
@@ -122,10 +123,31 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // 4. Run the Autonomous Cycle
+    // 4. Real-time Market Open Check via Alpha Vantage API (§Market Status)
+    const bypassMarket = Boolean(body.force);
+    const marketProvider = new AlphaVantageProvider();
+    const marketStatus = await marketProvider.getMarketStatus("United States");
+
+    if (!marketStatus.isOpen && !bypassMarket) {
+      return NextResponse.json(
+        {
+          status: "MARKET_CLOSED",
+          message: `US Stock Market is currently ${marketStatus.status.toUpperCase()} (${marketStatus.primaryExchanges}, Regular Hours: ${marketStatus.localOpen} - ${marketStatus.localClose}). Trade decision skipped to conserve quota.`,
+          data: {
+            marketStatus,
+            checkedAt: marketStatus.checkedAt,
+            hint: "Use { force: true } in request body to bypass market hours for manual testing.",
+          },
+        },
+        { status: 200 }
+      );
+    }
+
+    // 5. Run the Autonomous Cycle
     const cycleSummary = await runAutonomousGlyphCycle({
       targetAsset: body.asset,
       agentIdentifier,
+      bypassMarketHours: bypassMarket,
     });
 
     // 3. Return structured response

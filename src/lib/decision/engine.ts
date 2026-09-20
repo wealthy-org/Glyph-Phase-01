@@ -165,7 +165,8 @@ async function callLlmWithRetry(
 export async function executeGlyphDecisionCycle(
   researchSnapshotId: string,
   agentIdentifier = process.env.GLYPH_AGENT_ID || "1",
-  existingAgentRunId?: string
+  existingAgentRunId?: string,
+  isMarketOpen: boolean = true
 ): Promise<DecisionRunResult> {
   const runStart = new Date();
 
@@ -261,13 +262,17 @@ export async function executeGlyphDecisionCycle(
   );
 
   // 4. Validate through Policy Engine (§10, §3.0C)
-  const policyResult = await evaluateAgentTradeProposal(agentIdentifier, {
-    asset: decision.asset,
-    action: decision.action,
-    conviction: decision.conviction,
-    positionSizePercent: decision.position_size_percent,
-    leverage: decision.leverage,
-  });
+  const policyResult = await evaluateAgentTradeProposal(
+    agentIdentifier,
+    {
+      asset: decision.asset,
+      action: decision.action,
+      conviction: decision.conviction,
+      positionSizePercent: decision.position_size_percent,
+      leverage: decision.leverage,
+    },
+    { isMarketOpen }
+  );
 
   // 5. Store Decision record in database (§3.0B)
   const decisionRecord = await prisma.decision.create({

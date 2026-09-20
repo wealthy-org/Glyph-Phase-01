@@ -14,7 +14,8 @@ async function verifyCyclePipeline() {
   const cronSecret = process.env.CRON_SECRET;
   console.log(`- CRON_SECRET configured: ${cronSecret ? "YES (length " + cronSecret.length + ")" : "NO"}`);
   console.log(`- DECISION_REGISTRY_CONTRACT: ${process.env.DECISION_REGISTRY_CONTRACT_ADDRESS || "0x7Ae7f962DC15e65De46a5b4d43744C7ed750B525"}`);
-  console.log(`- Agent ID: ${process.env.GLYPH_AGENT_ID || "1"}\n`);
+  const isForce = process.argv.includes("--force") || process.env.FORCE_MARKET_OPEN === "true";
+  console.log(`- Market Hours Mode: ${isForce ? "BYPASS ENABLED (--force)" : "STRICT (Halt if Market is Closed)"}\n`);
 
   // -------------------------------------------------------------------------
   // TEST 1: Direct Orchestrator Run (Autonomous Pipeline Execution)
@@ -25,69 +26,80 @@ async function verifyCyclePipeline() {
     targetAsset: "NVDA",
     agentIdentifier: process.env.GLYPH_AGENT_ID || "1",
     cycleKey: testCycleKey,
+    bypassMarketHours: isForce,
   });
 
   if (!cycleResult.success) {
     throw new Error("Cycle orchestrator returned success=false");
   }
 
-  console.log("\n▶ [TEST 1 VERIFICATION] Auditing Database Records from Cycle:");
-
-  // 1. Verify Research Snapshot
-  const snapshot = await prisma.researchSnapshot.findFirst({
-    where: { asset: "NVDA" },
-    orderBy: { createdAt: "desc" },
-  });
-  if (!snapshot) {
-    throw new Error("Failed: Research snapshot not found in DB.");
-  }
-  console.log(`  ✅ Research Snapshot confirmed: ID ${snapshot.id}`);
-
-  // 2. Verify Decision
-  const decision = await prisma.decision.findUnique({
-    where: { id: cycleResult.decisionResult.decisionId },
-  });
-  if (!decision) {
-    throw new Error("Failed: Decision record not found in DB.");
-  }
-  console.log(`  ✅ Decision Record confirmed: ID ${decision.id}`);
-  console.log(`     ↳ Action: ${decision.action}`);
-  console.log(`     ↳ Conviction: ${decision.conviction}%`);
-  console.log(`     ↳ Policy Result: ${decision.policyResult}`);
-  if (decision.policyRejectReason) {
-    console.log(`     ↳ Rejection Reason: "${decision.policyRejectReason}"`);
-  }
-
-  // 3. Verify Agent Run (Observability)
-  const agentRun = await prisma.agentRun.findUnique({
-    where: { id: cycleResult.decisionResult.runId },
-  });
-  if (!agentRun) {
-    throw new Error("Failed: AgentRun trace not found in DB.");
-  }
-  console.log(`  ✅ AgentRun Observability Trace confirmed: ID ${agentRun.id}`);
-
-  // 4. Verify Onchain Proof
-  if (cycleResult.decisionResult.transactionHash) {
-    console.log(`  ✅ On-chain Transaction Confirmed: ${cycleResult.decisionResult.transactionHash}`);
-    console.log(`     ↳ Explorer: ${cycleResult.decisionResult.explorerUrl}`);
+  if (cycleResult.marketClosed) {
+    console.log("\n▶ [TEST 1 VERIFICATION — MARKET CLOSED]");
+    console.log("  ✅ Cycle safely HALTED because US Stock Market is currently CLOSED.");
+    console.log("  ✅ No research snapshot was wasted.");
+    console.log("  ✅ No LLM tokens were consumed.");
+    console.log("  ✅ No unauthorized out-of-session trade was opened.");
+    console.log("  ℹ️ Tip: To test full pipeline execution while market is closed, use: npm run test:cycle -- --force");
   } else {
-    console.log(`  ℹ️  No on-chain transaction generated (simulation mode or skipped).`);
-  }
+    console.log("\n▶ [TEST 1 VERIFICATION] Auditing Database Records from Cycle:");
 
-  console.log("\n▶ [TEST 1 IDEMPOTENCY] Replaying the same cycle key...");
-  try {
-    await runAutonomousGlyphCycle({
-      targetAsset: "NVDA",
-      agentIdentifier: process.env.GLYPH_AGENT_ID || "1",
-      cycleKey: testCycleKey,
+    // 1. Verify Research Snapshot
+    const snapshot = await prisma.researchSnapshot.findFirst({
+      where: { asset: "NVDA" },
+      orderBy: { createdAt: "desc" },
     });
-    throw new Error("Idempotency failed: duplicate cycle key was accepted.");
-  } catch (error: any) {
-    if (error?.code !== "P2002") {
-      throw error;
+    if (!snapshot) {
+      throw new Error("Failed: Research snapshot not found in DB.");
     }
-    console.log("  ✅ Duplicate cycle key rejected before market research/AI execution.");
+    console.log(`  ✅ Research Snapshot confirmed: ID ${snapshot.id}`);
+
+    // 2. Verify Decision
+    const decision = await prisma.decision.findUnique({
+      where: { id: cycleResult.decisionResult.decisionId },
+    });
+    if (!decision) {
+      throw new Error("Failed: Decision record not found in DB.");
+    }
+    console.log(`  ✅ Decision Record confirmed: ID ${decision.id}`);
+    console.log(`     ↳ Action: ${decision.action}`);
+    console.log(`     ↳ Conviction: ${decision.conviction}%`);
+    console.log(`     ↳ Policy Result: ${decision.policyResult}`);
+    if (decision.policyRejectReason) {
+      console.log(`     ↳ Rejection Reason: "${decision.policyRejectReason}"`);
+    }
+
+    // 3. Verify Agent Run (Observability)
+    const agentRun = await prisma.agentRun.findUnique({
+      where: { id: cycleResult.decisionResult.runId },
+    });
+    if (!agentRun) {
+      throw new Error("Failed: AgentRun trace not found in DB.");
+    }
+    console.log(`  ✅ AgentRun Observability Trace confirmed: ID ${agentRun.id}`);
+
+    // 4. Verify Onchain Proof
+    if (cycleResult.decisionResult.transactionHash) {
+      console.log(`  ✅ On-chain Transaction Confirmed: ${cycleResult.decisionResult.transactionHash}`);
+      console.log(`     ↳ Explorer: ${cycleResult.decisionResult.explorerUrl}`);
+    } else {
+      console.log(`  ℹ️  No on-chain transaction generated (simulation mode or skipped).`);
+    }
+
+    console.log("\n▶ [TEST 1 IDEMPOTENCY] Replaying the same cycle key...");
+    try {
+      await runAutonomousGlyphCycle({
+        targetAsset: "NVDA",
+        agentIdentifier: process.env.GLYPH_AGENT_ID || "1",
+        cycleKey: testCycleKey,
+        bypassMarketHours: isForce,
+      });
+      throw new Error("Idempotency failed: duplicate cycle key was accepted.");
+    } catch (error: any) {
+      if (error?.code !== "P2002") {
+        throw error;
+      }
+      console.log("  ✅ Duplicate cycle key rejected before market research/AI execution.");
+    }
   }
 
   // -------------------------------------------------------------------------

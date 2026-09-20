@@ -53,6 +53,19 @@ export interface NewsItem {
   sentimentLabel: "BULLISH" | "BEARISH" | "NEUTRAL";
 }
 
+export interface MarketStatusResult {
+  isOpen: boolean;
+  status: "open" | "closed" | "unknown";
+  region: string;
+  primaryExchanges: string;
+  localOpen: string;
+  localClose: string;
+  currentStatus: string;
+  notes?: string;
+  source: "API" | "FALLBACK";
+  checkedAt: string;
+}
+
 /**
  * Standard MarketDataProvider interface required by BRIEF §5.
  * Keeps the application decoupled from any specific market data provider.
@@ -63,6 +76,7 @@ export interface MarketDataProvider {
   getOHLCV(symbol: string, timeframe?: string): Promise<Candle[]>;
   getFundamentals(symbol: string): Promise<Fundamentals>;
   getNews(symbol: string): Promise<NewsItem[]>;
+  getMarketStatus?(region?: string): Promise<MarketStatusResult>;
 }
 
 export interface TechnicalSummary {

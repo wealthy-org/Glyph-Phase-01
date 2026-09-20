@@ -8,6 +8,7 @@ import fs from "fs";
 import path from "path";
 import {
   MarketDataProvider,
+  MarketStatusResult,
   Quote,
   Candle,
   Fundamentals,
@@ -51,12 +52,12 @@ export class AlphaVantageProvider implements MarketDataProvider {
   /**
    * Reads fresh cached payload from disk if valid.
    */
-  private getCachedData<T>(cacheKey: string): T | null {
+  private getCachedData<T>(cacheKey: string, ttlMs: number = CACHE_TTL_MS): T | null {
     try {
       const filePath = path.join(CACHE_DIR, `${cacheKey}.json`);
       if (fs.existsSync(filePath)) {
         const stats = fs.statSync(filePath);
-        const isFresh = Date.now() - stats.mtimeMs < CACHE_TTL_MS;
+        const isFresh = Date.now() - stats.mtimeMs < ttlMs;
         if (isFresh) {
           const content = fs.readFileSync(filePath, "utf-8");
           return JSON.parse(content) as T;
@@ -88,10 +89,11 @@ export class AlphaVantageProvider implements MarketDataProvider {
    */
   private async fetchApi<T>(
     params: Record<string, string>,
-    cacheKey: string
+    cacheKey: string,
+    customTtlMs?: number
   ): Promise<{ data: T; isCached: boolean }> {
     // 1. Check local cache first to protect 25 req/day limit
-    const cached = this.getCachedData<T>(cacheKey);
+    const cached = this.getCachedData<T>(cacheKey, customTtlMs ?? CACHE_TTL_MS);
     if (cached) {
       return { data: cached, isCached: true };
     }
@@ -518,5 +520,140 @@ export class AlphaVantageProvider implements MarketDataProvider {
         sentimentLabel: "BULLISH",
       },
     ];
+  }
+
+  /**
+   * Queries real-time Global Market Open & Close Status from Alpha Vantage API.
+   * Caches response for 5 minutes to avoid exhausting daily quota.
+   * Fallback calculates US Eastern Time hours deterministically if API is rate-limited.
+   */
+  public async getMarketStatus(
+    region: string = "United States"
+  ): Promise<MarketStatusResult> {
+    const MARKET_STATUS_TTL_MS = 5 * 60 * 1000; // 5 minutes cache
+
+    try {
+      const { data } = await this.fetchApi<{
+        endpoint: string;
+        markets?: Array<{
+          market_type: string;
+          region: string;
+          primary_exchanges: string;
+          local_open: string;
+          local_close: string;
+          current_status: string;
+          notes?: string;
+        }>;
+      }>(
+        { function: "MARKET_STATUS" },
+        "market_status",
+        MARKET_STATUS_TTL_MS
+      );
+
+      const target =
+        data.markets?.find(
+          (m) =>
+            m.region.toLowerCase() === region.toLowerCase() &&
+            m.market_type.toLowerCase() === "equity"
+        ) ||
+        data.markets?.find(
+          (m) => m.region.toLowerCase() === region.toLowerCase()
+        );
+
+      if (target) {
+        const isOpen = target.current_status.toLowerCase() === "open";
+        return {
+          isOpen,
+          status: isOpen ? "open" : "closed",
+          region: target.region,
+          primaryExchanges: target.primary_exchanges,
+          localOpen: target.local_open,
+          localClose: target.local_close,
+          currentStatus: target.current_status,
+          notes: target.notes || undefined,
+          source: "API",
+          checkedAt: new Date().toISOString(),
+        };
+      }
+
+      console.warn(
+        `[AlphaVantage] Region '${region}' not found in MARKET_STATUS response. Using fallback.`
+      );
+      return this.calculateUsMarketStatusFallback();
+    } catch (err: any) {
+      console.warn(
+        `[AlphaVantage] Failed to fetch live MARKET_STATUS: ${err.message}. Using fallback.`
+      );
+      return this.calculateUsMarketStatusFallback();
+    }
+  }
+
+  /**
+   * Deterministic fallback calculating regular US Stock Market trading hours
+   * (Monday - Friday 09:30 - 16:00 ET).
+   */
+  private calculateUsMarketStatusFallback(): MarketStatusResult {
+    const now = new Date();
+    try {
+      const formatter = new Intl.DateTimeFormat("en-US", {
+        timeZone: "America/New_York",
+        hour12: false,
+        weekday: "short",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      const parts = formatter.formatToParts(now);
+      const getPart = (type: string) =>
+        parts.find((p) => p.type === type)?.value || "";
+
+      const weekday = getPart("weekday");
+      const hour = parseInt(getPart("hour"), 10);
+      const minute = parseInt(getPart("minute"), 10);
+      const timeInMinutes = hour * 60 + minute;
+
+      const isWeekend = weekday === "Sat" || weekday === "Sun";
+      const isTradingHours =
+        !isWeekend &&
+        timeInMinutes >= 9 * 60 + 30 &&
+        timeInMinutes < 16 * 60;
+
+      const status = isTradingHours ? "open" : "closed";
+      const reason = isWeekend
+        ? "Weekend (Saturday/Sunday)"
+        : timeInMinutes < 9 * 60 + 30
+        ? "Pre-market / Closed"
+        : timeInMinutes >= 16 * 60
+        ? "After-hours / Closed"
+        : "Regular Trading Session";
+
+      return {
+        isOpen: isTradingHours,
+        status,
+        region: "United States",
+        primaryExchanges: "NASDAQ, NYSE, AMEX, BATS",
+        localOpen: "09:30",
+        localClose: "16:00",
+        currentStatus: status,
+        notes: `Fallback calculation (${reason})`,
+        source: "FALLBACK",
+        checkedAt: now.toISOString(),
+      };
+    } catch (e: any) {
+      return {
+        isOpen: false,
+        status: "closed",
+        region: "United States",
+        primaryExchanges: "NASDAQ, NYSE, AMEX, BATS",
+        localOpen: "09:30",
+        localClose: "16:00",
+        currentStatus: "closed",
+        notes: "Emergency fallback default: closed",
+        source: "FALLBACK",
+        checkedAt: now.toISOString(),
+      };
+    }
   }
 }

@@ -60,8 +60,19 @@ export function validateTradeProposal(
   proposal: TradeProposal,
   currentOpenPositionsCount: number = 0,
   dailyLossPercent: number = 0,
-  currentPosition: ActivePositionState | null = null
+  currentPosition: ActivePositionState | null = null,
+  isMarketOpen: boolean = true
 ): PolicyValidationResult {
+  // 0. Check Market Hours for new entry orders
+  if (!isMarketOpen && (proposal.action === "OPEN_LONG" || proposal.action === "OPEN_SHORT")) {
+    return {
+      approved: false,
+      policyResult: "REJECTED",
+      rejectReason: "Market is closed. Cannot open new positions outside regular trading hours.",
+      clampedLeverage: 1,
+      clampedPositionPercent: 0,
+    };
+  }
   if (proposal.action === "NO_TRADE") {
     return {
       approved: false,
@@ -188,7 +199,8 @@ export function validateTradeProposal(
  */
 export async function evaluateAgentTradeProposal(
   agentIdentifier: string = "1",
-  proposal: TradeProposal
+  proposal: TradeProposal,
+  options?: { isMarketOpen?: boolean }
 ): Promise<PolicyValidationResult> {
   const agent = await prisma.agent.findFirst({
     where: { agentId: agentIdentifier },
@@ -239,6 +251,7 @@ export async function evaluateAgentTradeProposal(
     proposal,
     currentOpenPositionsCount,
     dailyLossPercent,
-    currentPosition
+    currentPosition,
+    options?.isMarketOpen ?? true
   );
 }

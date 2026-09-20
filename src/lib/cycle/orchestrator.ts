@@ -23,10 +23,13 @@ import {
 import { prisma } from "@/lib/prisma";
 import { createResearchSnapshot } from "@/lib/research";
 
+import { MarketStatusResult } from "@/types/market";
+
 export interface CycleOptions {
   agentIdentifier?: string; // Default: "1"
   targetAsset?: string;      // Whitelisted asset, default: "NVDA"
   cycleKey?: string;
+  bypassMarketHours?: boolean; // Default: false
 }
 
 export interface CycleSummary {
@@ -37,6 +40,8 @@ export interface CycleSummary {
   targetAsset: string;
   positionsChecked: number;
   liquidatedCount: number;
+  marketClosed?: boolean;
+  marketStatus?: MarketStatusResult;
   decisionResult: DecisionRunResult;
   executionDurationMs: number;
 }
@@ -120,6 +125,80 @@ export async function runAutonomousGlyphCycle(
     }
 
     // -------------------------------------------------------------------------
+    // STEP 1.5: Verify US Stock Market Status via Alpha Vantage API
+    // -------------------------------------------------------------------------
+    console.log(`\n▶ [STEP 1.5] Verifying US Stock Market real-time open status...`);
+    const marketStatus = await marketProvider.getMarketStatus("United States");
+    const bypassMarket = Boolean(
+      options.bypassMarketHours || process.env.FORCE_MARKET_OPEN === "true"
+    );
+
+    console.log(
+      `  ↳ Market Status: ${marketStatus.status.toUpperCase()} (${marketStatus.primaryExchanges}, Hours: ${marketStatus.localOpen} - ${marketStatus.localClose}) [Source: ${marketStatus.source}]`
+    );
+
+    if (!marketStatus.isOpen && !bypassMarket) {
+      console.log(
+        `\n⏸️ [Market Status] US Stock Market is CLOSED. Halting research and decision cycle to prevent out-of-session trading.`
+      );
+
+      await prisma.agentRun.update({
+        where: { id: claimedRun.id },
+        data: {
+          completedAt: new Date(),
+          model: "N/A (Market Closed)",
+          policyResult: "SKIPPED_MARKET_CLOSED",
+        },
+      });
+
+      const duration = Date.now() - startTime;
+      console.log(`\n===============================================================`);
+      console.log(`⏸️ GLYPH CYCLE PAUSED (MARKET CLOSED) IN ${duration}ms`);
+      console.log(`===============================================================\n`);
+
+      return {
+        success: true,
+        cycleKey,
+        timestamp: new Date().toISOString(),
+        agentId: agentIdentifier,
+        targetAsset: selectedAsset,
+        positionsChecked,
+        liquidatedCount,
+        marketClosed: true,
+        marketStatus,
+        decisionResult: {
+          decisionId: "",
+          asset: selectedAsset,
+          action: "NO_TRADE",
+          conviction: 0,
+          policyResult: "REJECTED",
+          policyRejectReason: `Market is closed (${marketStatus.status})`,
+          tradeId: null,
+          runId: claimedRun.id,
+          decision: {
+            asset: selectedAsset,
+            action: "NO_TRADE",
+            conviction: 0,
+            time_horizon: "1d_to_14d",
+            fundamental_score: 0,
+            technical_score: 0,
+            risk_score: 0,
+            thesis: {
+              fundamental: "Stock market is currently closed.",
+              technical: "Stock market is currently closed.",
+              catalyst: "Awaiting next market opening bell.",
+              risk: "Out-of-session execution halted to conserve API quota and capital.",
+              invalidation: "N/A",
+            },
+            position_size_percent: 0,
+            leverage: 1,
+          },
+        },
+        executionDurationMs: duration,
+      };
+    }
+
+    // -------------------------------------------------------------------------
     // STEP 2: Execute Fresh Market Research & Save Immutable Snapshot
     // -------------------------------------------------------------------------
     console.log(`\n▶ [STEP 2] Conducting deep market research for ${selectedAsset}...`);
@@ -134,7 +213,12 @@ export async function runAutonomousGlyphCycle(
     // STEP 3: Execute Reasoning, Policy Gate, Paper Trade, & On-Chain Proof
     // -------------------------------------------------------------------------
     console.log(`\n▶ [STEP 3] Running Glyph Brain reasoning & policy gate...`);
-    const decisionResult = await executeGlyphDecisionCycle(snapshotId, agentIdentifier, claimedRun.id);
+    const decisionResult = await executeGlyphDecisionCycle(
+      snapshotId,
+      agentIdentifier,
+      claimedRun.id,
+      marketStatus.isOpen || bypassMarket
+    );
 
     console.log(`  ✅ Decision reached:`);
     console.log(`     ↳ Action: ${decisionResult.action}`);
