@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
+  LandingAnalysisState,
   LandingEconomicEvent,
   LandingLatestDecision,
   LandingPositionItem,
@@ -13,6 +14,7 @@ import {
 interface HeroProps {
   openPosition?: LandingPositionItem | null;
   latestDecision?: LandingLatestDecision | null;
+  latestAnalysis?: LandingAnalysisState | null;
   cycleCount?: number;
   recentEvents?: LandingEconomicEvent[];
 }
@@ -289,11 +291,11 @@ const AnalysisStreamViewer: React.FC<AnalysisStreamViewerProps> = React.memo(({
             {isDecisionRevealed ? (
               <div className="flex flex-wrap items-center gap-2.5">
                 <span className="text-[#6fe39a] font-medium">
-                  CONVICTION {latestDecision?.conviction ?? 84}%
+                  CONVICTION {latestDecision?.conviction != null ? `${latestDecision.conviction}%` : "--"}
                 </span>
                 <span className="text-[#333338]">·</span>
                 <span className="text-[#d4d4d8]">
-                  DIRECTION {latestDecision?.action === "OPEN_LONG" ? "LONG" : latestDecision?.action === "OPEN_SHORT" ? "SHORT" : "HOLD"}
+                  DIRECTION {latestDecision?.action === "OPEN_LONG" ? "LONG" : latestDecision?.action === "OPEN_SHORT" ? "SHORT" : latestDecision?.action === "NO_TRADE" ? "NO_TRADE" : latestDecision?.action === "CLOSE" ? "CLOSE" : "HOLD"}
                 </span>
                 {rawThesis?.invalidation && (
                   <>
@@ -413,7 +415,8 @@ TechMarquee.displayName = "TechMarquee";
 // ============================================================================
 export const Hero: React.FC<HeroProps> = ({
   openPosition = null,
-  latestDecision = null,
+  latestDecision: initialLatestDecision = null,
+  latestAnalysis: initialLatestAnalysis = null,
   cycleCount = 6,
   recentEvents = [],
 }) => {
@@ -428,6 +431,11 @@ export const Hero: React.FC<HeroProps> = ({
   const [completedTabs, setCompletedTabs] = useState<Set<AnalysisTab>>(() => new Set());
   const [cycleNum, setCycleNum] = useState<number>(() => cycleCount || 6);
   const [mounted, setMounted] = useState<boolean>(false);
+  const [liveLatestDecision, setLiveLatestDecision] = useState<LandingLatestDecision | null>(initialLatestDecision);
+  const [liveLatestAnalysis, setLiveLatestAnalysis] = useState<LandingAnalysisState | null>(initialLatestAnalysis);
+
+  const latestDecision = liveLatestDecision;
+  const latestAnalysis = liveLatestAnalysis;
 
   // Autonomous timestamps
   const [cycleStartTime, setCycleStartTime] = useState<number>(() => Date.now());
@@ -436,6 +444,35 @@ export const Hero: React.FC<HeroProps> = ({
 
   useEffect(() => {
     setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+
+    const loadDecisionTelemetry = async () => {
+      try {
+        const response = await fetch("/api/overview/decision", { cache: "no-store" });
+        if (!response.ok || !active) return;
+        const payload = await response.json() as {
+          latestDecision: LandingLatestDecision | null;
+          latestAnalysis: LandingAnalysisState | null;
+        };
+        if (active) {
+          setLiveLatestDecision(payload.latestDecision);
+          setLiveLatestAnalysis(payload.latestAnalysis);
+        }
+      } catch {
+        // Keep the last authoritative snapshot visible while polling retries.
+      }
+    };
+
+    void loadDecisionTelemetry();
+    const interval = setInterval(loadDecisionTelemetry, 3000);
+
+    return () => {
+      active = false;
+      clearInterval(interval);
+    };
   }, []);
 
   // Ticking clock only for elapsed display
@@ -558,7 +595,7 @@ export const Hero: React.FC<HeroProps> = ({
   // 2. OPERATION & STOCK IDENTITY (Memoized)
   const hasActivePosition = Boolean(openPosition);
   const hasActiveDecision = Boolean(latestDecision);
-  const isStandbyMode = !hasActivePosition && !hasActiveDecision;
+  const isStandbyMode = !hasActivePosition && !hasActiveDecision && isDecisionRevealed;
   const rawAsset = openPosition?.asset || latestDecision?.asset || "STANDBY";
   const asset = rawAsset.toUpperCase();
   const positionSubtitle = hasActivePosition
@@ -570,6 +607,24 @@ export const Hero: React.FC<HeroProps> = ({
   // 3. INTERACTIVE TAB STATE (Follows Glyph's current stage)
   const rawThesis = latestDecision?.thesis;
 
+  const marketContextText = latestAnalysis?.marketContext
+    ? [
+      latestAnalysis.marketContext.price !== null ? `PRICE $${latestAnalysis.marketContext.price.toFixed(2)}` : null,
+      latestAnalysis.marketContext.changePercent !== null ? `CHANGE ${latestAnalysis.marketContext.changePercent.toFixed(2)}%` : null,
+      latestAnalysis.marketContext.volume !== null ? `VOLUME ${latestAnalysis.marketContext.volume.toLocaleString("en-US")}` : null,
+      latestAnalysis.marketContext.trend ? `TREND ${latestAnalysis.marketContext.trend}` : null,
+      latestAnalysis.marketContext.volatilityPercent !== null ? `VOLATILITY ${latestAnalysis.marketContext.volatilityPercent.toFixed(2)}%` : null,
+    ].filter((part): part is string => part !== null).join(" · ") || "ANALYZING"
+    : "ANALYZING";
+
+  const riskContextText = latestAnalysis?.riskContext
+    ? [
+      latestAnalysis.riskContext.regime ? `REGIME ${latestAnalysis.riskContext.regime.toUpperCase()}` : null,
+      latestAnalysis.riskContext.level ? `LEVEL ${latestAnalysis.riskContext.level.toUpperCase()}` : null,
+      latestAnalysis.riskContext.details,
+    ].filter((part): part is string => part !== null).join(" · ") || "ANALYZING"
+    : "ANALYZING";
+
   const tabContents = useMemo<Record<AnalysisTab, string>>(
     () => ({
       fundamental:
@@ -579,15 +634,13 @@ export const Hero: React.FC<HeroProps> = ({
         rawThesis?.technical ||
         "Technical chart structure, volume surges, and moving average expansion channels will calculate automatically on cycle execution.",
       risk:
-        rawThesis?.risk ||
-        "Zero exposure. Risk limits remain strictly constrained within the autonomous policy boundaries (max 2× leverage, max 10% allocation).",
+        latestAnalysis?.riskContext ? riskContextText : "ANALYZING",
       market:
-        rawThesis?.catalyst ||
-        "Market sentiment feeds, macro calendars, and catalyst triggers are on standby awaiting scheduled intake.",
+        latestAnalysis?.marketContext ? marketContextText : "ANALYZING",
       "glyph-view":
         "Glyph is currently in autonomous standby state on Robinhood Chain Testnet. System initialized and awaiting first live cognitive reasoning cycle.",
     }),
-    [rawThesis]
+    [latestAnalysis, marketContextText, rawThesis, riskContextText]
   );
 
   const activeTabIdx = TABS.findIndex((t) => t.id === activeTab);
@@ -639,43 +692,32 @@ export const Hero: React.FC<HeroProps> = ({
   // 5. DECISION CONTEXT (Dynamic Unresolved States During Analysis and Countdown)
   const targetFormatted = isDecisionRevealed
     ? latestDecision
-      ? `${latestDecision.asset} · ${latestDecision.action === "OPEN_LONG" ? "LONG" : latestDecision.action === "OPEN_SHORT" ? "SHORT" : "HOLD"}`
+      ? `${latestDecision.asset} · ${latestDecision.action === "OPEN_LONG" ? "LONG" : latestDecision.action === "OPEN_SHORT" ? "SHORT" : latestDecision.action === "NO_TRADE" ? "NO_TRADE" : latestDecision.action === "CLOSE" ? "CLOSE" : "HOLD"}`
       : "STANDBY"
     : "ANALYZING...";
 
   const targetColor = isDecisionRevealed ? "text-[#f3f3f4]" : "text-[#85858a]";
 
-  const convictionFormatted = isDecisionRevealed
-    ? latestDecision?.conviction
-      ? `${latestDecision.conviction}%`
-      : "—"
+  const convictionFormatted = isDecisionRevealed && latestDecision?.conviction != null
+    ? `${latestDecision.conviction}%`
     : "--";
 
-  const convictionColor = isDecisionRevealed && latestDecision?.conviction ? "text-[#6fe39a]" : "text-[#55555e]";
+  const convictionColor = isDecisionRevealed && latestDecision?.conviction != null ? "text-[#6fe39a]" : "text-[#55555e]";
 
-  const fundamentalFormatted = latestDecision?.fundamentalScore != null ? `${latestDecision.fundamentalScore}` : "—";
-
-  const technicalFormatted = latestDecision?.technicalScore != null ? `${latestDecision.technicalScore}` : "—";
-
-  const riskScoreFormatted = isDecisionRevealed
-    ? latestDecision?.riskScore != null
-      ? `${latestDecision.riskScore}`
-      : "—"
+  const fundamentalFormatted = completedTabs.has("fundamental") && latestAnalysis?.fundamentalScore != null
+    ? `${latestAnalysis.fundamentalScore}`
     : "--";
 
-  const riskScoreColor = isDecisionRevealed && latestDecision?.riskScore != null ? "text-[#fbbf24]" : "text-[#55555e]";
+  const technicalFormatted = completedTabs.has("technical") && latestAnalysis?.technicalScore != null
+    ? `${latestAnalysis.technicalScore}`
+    : "--";
 
-  const policyFormatted = isDecisionRevealed
-    ? latestDecision?.policyResult || "STANDBY"
-    : "PENDING";
+  const riskRegime = latestAnalysis?.riskContext.regime;
+  const riskRegimeFormatted = completedTabs.has("risk") && riskRegime
+    ? riskRegime.toUpperCase()
+    : "--";
 
-  const policyColor = isDecisionRevealed
-    ? policyFormatted === "APPROVED"
-      ? "text-[#6fe39a]"
-      : policyFormatted === "REJECTED"
-        ? "text-[#c47a7a]"
-        : "text-[#85858a]"
-    : "text-[#71717a]";
+  const riskRegimeColor = completedTabs.has("risk") && riskRegime ? "text-[#fbbf24]" : "text-[#55555e]";
 
   return (
     <section className="relative w-full overflow-hidden border-b border-[#171717] bg-[#000000]">
@@ -1027,12 +1069,8 @@ export const Hero: React.FC<HeroProps> = ({
                       <span className="text-[#55555e] font-medium">—</span>
                     </div>
                     <div className="flex items-center justify-between py-0.5">
-                      <span className="text-white/75 uppercase text-[11px]">RISK SCORE</span>
+                      <span className="text-white/75 uppercase text-[11px]">RISK REGIME</span>
                       <span className="text-[#55555e] font-medium">—</span>
-                    </div>
-                    <div className="flex items-center justify-between py-0.5">
-                      <span className="text-white/75 uppercase text-[11px]">POLICY</span>
-                      <span className="text-[#6fe39a] font-medium">ARMED</span>
                     </div>
                   </>
                 ) : (
@@ -1095,31 +1133,16 @@ export const Hero: React.FC<HeroProps> = ({
                       )}
                     </div>
                     <div className="flex items-center justify-between py-0.5">
-                      <span className="text-white/75 uppercase text-[11px]">RISK SCORE</span>
+                      <span className="text-white/75 uppercase text-[11px]">RISK REGIME</span>
                       {completedTabs.has("risk") ? (
                         <OneShotTypewriter
-                          value={riskScoreFormatted}
+                          value={riskRegimeFormatted}
                           speed={20}
-                          className={cn("tabular-nums font-medium", riskScoreColor)}
+                          className={cn("font-medium", riskRegimeColor)}
                         />
                       ) : (
                         <span className="text-[#55555e] font-medium text-xs sm:text-[13px]">
                           --
-                        </span>
-                      )}
-                    </div>
-                    <div className="flex items-center justify-between py-0.5">
-                      <span className="text-white/75 uppercase text-[11px]">POLICY</span>
-                      {isDecisionFinal ? (
-                        <OneShotTypewriter
-                          value={policyFormatted}
-                          speed={20}
-                          className={cn("uppercase font-medium", policyColor)}
-                        />
-                      ) : (
-                        <span className="text-[#fbbf24] font-medium flex items-center gap-1.5 uppercase text-xs sm:text-[13px]">
-                          <span>PENDING</span>
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#fbbf24] animate-pulse" />
                         </span>
                       )}
                     </div>

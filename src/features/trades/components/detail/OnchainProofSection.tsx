@@ -1,16 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Copy, Check, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Check, Copy, ExternalLink } from "lucide-react";
+import React, { useState } from "react";
 
 interface OnchainProofSectionProps {
-  txHash: string;
+  txHash: string | null;
   network: string;
-  explorerUrl: string;
+  explorerUrl: string | null;
   className?: string;
 }
 
@@ -23,12 +23,14 @@ export const OnchainProofSection: React.FC<OnchainProofSectionProps> = ({
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
+    if (!txHash) return;
+
     try {
       await navigator.clipboard.writeText(txHash);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      // Fallback
+      setCopied(false);
     }
   };
 
@@ -57,7 +59,7 @@ export const OnchainProofSection: React.FC<OnchainProofSectionProps> = ({
             TRANSACTION HASH
           </span>
           <div className="font-mono text-xs sm:text-sm text-[#85858a] break-all select-all hover:text-[#f3f3f4] transition-colors leading-relaxed">
-            {txHash}
+            {txHash ?? "N/A"}
           </div>
         </div>
 
@@ -70,45 +72,47 @@ export const OnchainProofSection: React.FC<OnchainProofSectionProps> = ({
             {network}
           </Badge>
 
-          <div className="flex items-center gap-2.5">
-            {/* Copy Button */}
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={handleCopy}
-              className="h-8 px-3 rounded-[3px] border-[#262626] bg-[#000000] hover:bg-[#0c0c0c] hover:text-[#f3f3f4] text-[#85858a] font-sans text-xs font-normal normal-case tracking-normal transition-colors cursor-pointer"
-              title="Copy transaction hash"
-              aria-label={copied ? "Transaction hash copied" : "Copy transaction hash"}
-            >
-              {copied ? (
-                <>
-                  <Check size={12} className="text-[#6fe39a] mr-1.5" />
-                  <span className="text-[#6fe39a]">COPIED</span>
-                </>
-              ) : (
-                <>
-                  <Copy size={12} className="mr-1.5 text-[#55555a]" />
-                  <span>COPY</span>
-                </>
-              )}
-            </Button>
+          {txHash && explorerUrl && (
+            <div className="flex items-center gap-2.5">
+              {/* Copy Button */}
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleCopy}
+                className="h-8 px-3 rounded-[3px] border-[#262626] bg-[#000000] hover:bg-[#0c0c0c] hover:text-[#f3f3f4] text-[#85858a] font-sans text-xs font-normal normal-case tracking-normal transition-colors cursor-pointer"
+                title="Copy transaction hash"
+                aria-label={copied ? "Transaction hash copied" : "Copy transaction hash"}
+              >
+                {copied ? (
+                  <>
+                    <Check size={12} className="text-[#6fe39a] mr-1.5" />
+                    <span className="text-[#6fe39a]">COPIED</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy size={12} className="mr-1.5 text-[#55555a]" />
+                    <span>COPY</span>
+                  </>
+                )}
+              </Button>
 
-            {/* Verify External Link Button */}
-            <a
-              href={explorerUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center h-8 px-3 border border-[#202020] bg-[#000000] hover:bg-[#0c0c0c] text-[#85858a] hover:text-[#f3f3f4] font-mono text-xs tracking-wider uppercase transition-colors group focus:outline-none focus-visible:ring-1 focus-visible:ring-[#6fe39a]"
-              title="Verify transaction on block explorer"
-            >
-              <span>VERIFY</span>
-              <ExternalLink
-                size={12}
-                className="ml-1.5 text-[#55555a] group-hover:text-[#f3f3f4] transition-colors"
-              />
-            </a>
-          </div>
+              {/* Verify External Link Button */}
+              <a
+                href={explorerUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center h-8 px-3 border border-[#202020] bg-[#000000] hover:bg-[#0c0c0c] text-[#85858a] hover:text-[#f3f3f4] font-mono text-xs tracking-wider uppercase transition-colors group focus:outline-none focus-visible:ring-1 focus-visible:ring-[#6fe39a]"
+                title="Verify transaction on block explorer"
+              >
+                <span>VERIFY</span>
+                <ExternalLink
+                  size={12}
+                  className="ml-1.5 text-[#55555a] group-hover:text-[#f3f3f4] transition-colors"
+                />
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </section>

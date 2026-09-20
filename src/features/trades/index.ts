@@ -1,9 +1,8 @@
-export * from "./types";
-export * from "./data";
-export * from "./detail-data";
-export * from "./components/TradeSummary";
+export * from "./components/detail";
 export * from "./components/TradeFilters";
 export * from "./components/TradeRow";
-export * from "./components/TradeTable";
 export * from "./components/TradesSection";
-export * from "./components/detail";
+export * from "./components/TradeSummary";
+export * from "./components/TradeTable";
+export * from "./types";
+

@@ -57,6 +57,28 @@ export interface LandingLatestDecision {
   createdAt: string;
 }
 
+export interface LandingAnalysisState {
+  snapshotId: string;
+  cycleId: string | null;
+  asset: string;
+  fundamentalScore: number | null;
+  technicalScore: number | null;
+  riskScore: number | null;
+  riskContext: {
+    regime: string | null;
+    level: string | null;
+    details: string | null;
+  };
+  marketContext: {
+    price: number | null;
+    changePercent: number | null;
+    volume: number | null;
+    trend: string | null;
+    volatilityPercent: number | null;
+  };
+  createdAt: string;
+}
+
 export interface LandingEconomicEvent {
   id: string;
   day: number;
@@ -109,6 +131,7 @@ export interface LandingPageData {
   treasury: LandingTreasuryData;
   openPositions: LandingPositionItem[];
   latestDecision: LandingLatestDecision | null;
+  latestAnalysis: LandingAnalysisState | null;
   recentEvents: LandingEconomicEvent[];
   latestMemory: LandingMemoryItem | null;
   adaptiveLearnings: LandingMemoryItem[];

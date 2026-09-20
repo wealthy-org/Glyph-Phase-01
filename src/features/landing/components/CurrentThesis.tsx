@@ -32,22 +32,18 @@ export const CurrentThesis: React.FC<CurrentThesisProps> = ({ latestDecision }) 
     );
   }
 
-  const fundamentalScore = latestDecision.fundamentalScore ?? 0;
-  const technicalScore = latestDecision.technicalScore ?? 0;
-  const riskScore = latestDecision.riskScore ?? 0;
+  const fundamentalScore = latestDecision.fundamentalScore;
+  const technicalScore = latestDecision.technicalScore;
+  const riskScore = latestDecision.riskScore;
   const thesis = latestDecision.thesis;
 
-  const coreSynthesis =
-    thesis.fundamental ||
-    thesis.technical ||
-    "Autonomous agent reasoning cycle evaluated macro catalysts and technical indicators.";
+  const coreSynthesis = thesis.fundamental || thesis.technical || "N/A";
 
   const invalidationBoundary =
-    thesis.invalidation ||
-    "Invalidation triggered on key support level breach or adverse sector momentum.";
+    thesis.invalidation || "N/A";
 
   const catalystSummary =
-    thesis.catalyst || "Positive sector momentum and earnings guidance";
+    thesis.catalyst || "N/A";
 
   return (
     <section id="current-thesis" className="relative w-full py-16 sm:py-24 border-b border-[#171717] bg-[#000000] overflow-hidden">
@@ -157,34 +153,22 @@ export const CurrentThesis: React.FC<CurrentThesisProps> = ({ latestDecision }) 
               <div className="space-y-2">
                 <div className="flex justify-between font-mono text-xs">
                   <span className="text-[#85858a]">Fundamental Score</span>
-                  <span className="text-[#f3f3f4]">{fundamentalScore} / 100</span>
+                  <span className="text-[#f3f3f4]">{fundamentalScore != null ? `${fundamentalScore} / 100` : "N/A"}</span>
                 </div>
-                <div className="w-full bg-[#141414] h-1 overflow-hidden">
-                  <motion.div
-                    className="bg-[#f0f0f1] h-full"
-                    initial={{ width: "0%" }}
-                    whileInView={{ width: `${fundamentalScore}%` }}
-                    viewport={{ once: true, amount: 0.4 }}
-                    transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-                  />
-                </div>
+                {fundamentalScore != null && <div className="w-full bg-[#141414] h-1 overflow-hidden">
+                  <motion.div className="bg-[#f0f0f1] h-full" initial={{ width: "0%" }} whileInView={{ width: `${fundamentalScore}%` }} viewport={{ once: true, amount: 0.4 }} transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.1 }} />
+                </div>}
               </div>
 
               {/* Technical */}
               <div className="space-y-2">
                 <div className="flex justify-between font-mono text-xs">
                   <span className="text-[#85858a]">Technical Momentum</span>
-                  <span className="text-[#6fe39a]">{technicalScore} / 100</span>
+                  <span className="text-[#6fe39a]">{technicalScore != null ? `${technicalScore} / 100` : "N/A"}</span>
                 </div>
-                <div className="w-full bg-[#141414] h-1 overflow-hidden">
-                  <motion.div
-                    className="bg-[#6fe39a] h-full shadow-[0_0_8px_rgba(111,227,154,0.3)]"
-                    initial={{ width: "0%" }}
-                    whileInView={{ width: `${technicalScore}%` }}
-                    viewport={{ once: true, amount: 0.4 }}
-                    transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
-                  />
-                </div>
+                {technicalScore != null && <div className="w-full bg-[#141414] h-1 overflow-hidden">
+                  <motion.div className="bg-[#6fe39a] h-full shadow-[0_0_8px_rgba(111,227,154,0.3)]" initial={{ width: "0%" }} whileInView={{ width: `${technicalScore}%` }} viewport={{ once: true, amount: 0.4 }} transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.25 }} />
+                </div>}
               </div>
 
               {/* Catalyst */}
@@ -211,17 +195,11 @@ export const CurrentThesis: React.FC<CurrentThesisProps> = ({ latestDecision }) 
               <div className="space-y-2">
                 <div className="flex justify-between font-mono text-xs">
                   <span className="text-[#85858a]">Risk Coefficient</span>
-                  <span className="text-[#b8a77a]">{riskScore} / 100</span>
+                  <span className="text-[#b8a77a]">{riskScore != null ? `${riskScore} / 100` : "N/A"}</span>
                 </div>
-                <div className="w-full bg-[#141414] h-1 overflow-hidden">
-                  <motion.div
-                    className="bg-[#b8a77a] h-full"
-                    initial={{ width: "0%" }}
-                    whileInView={{ width: `${riskScore}%` }}
-                    viewport={{ once: true, amount: 0.4 }}
-                    transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.55 }}
-                  />
-                </div>
+                {riskScore != null && <div className="w-full bg-[#141414] h-1 overflow-hidden">
+                  <motion.div className="bg-[#b8a77a] h-full" initial={{ width: "0%" }} whileInView={{ width: `${riskScore}%` }} viewport={{ once: true, amount: 0.4 }} transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.55 }} />
+                </div>}
               </div>
             </div>
 
@@ -308,7 +286,7 @@ export const CurrentThesis: React.FC<CurrentThesisProps> = ({ latestDecision }) 
               <div className="p-3 bg-[#030303] border border-[#171717] space-y-1.5">
                 <div className="font-mono text-xs text-[#6fe39a] uppercase flex items-center justify-between">
                   <span>FUNDAMENTAL VIEW</span>
-                  <span className="text-[#f3f3f4]">{fundamentalScore} / 100</span>
+                  <span className="text-[#f3f3f4]">{fundamentalScore != null ? `${fundamentalScore} / 100` : "N/A"}</span>
                 </div>
                 <p className="text-xs text-[#f0f0f2] font-light">
                   {thesis.fundamental || "No fundamental view notes logged."}
@@ -318,7 +296,7 @@ export const CurrentThesis: React.FC<CurrentThesisProps> = ({ latestDecision }) 
               <div className="p-3 bg-[#030303] border border-[#171717] space-y-1.5">
                 <div className="font-mono text-xs text-[#6fe39a] uppercase flex items-center justify-between">
                   <span>TECHNICAL VIEW</span>
-                  <span className="text-[#f3f3f4]">{technicalScore} / 100</span>
+                  <span className="text-[#f3f3f4]">{technicalScore != null ? `${technicalScore} / 100` : "N/A"}</span>
                 </div>
                 <p className="text-xs text-[#f0f0f2] font-light">
                   {thesis.technical || "No technical view notes logged."}
@@ -327,21 +305,6 @@ export const CurrentThesis: React.FC<CurrentThesisProps> = ({ latestDecision }) 
 
               <div className="bg-[#030303] p-3 border border-[#171717] font-mono text-xs space-y-1.5">
                 <div className="text-[#55555a] uppercase">RISK & INVALIDATION CONSTRAINTS:</div>
-                <div className="text-[#f3f3f4]">
-                  • Policy Result:{" "}
-                  <span
-                    className={
-                      latestDecision.policyResult === "APPROVED"
-                        ? "text-[#6fe39a]"
-                        : "text-[#b8a77a]"
-                    }
-                  >
-                    {latestDecision.policyResult}
-                  </span>
-                </div>
-                {latestDecision.policyRejectReason && (
-                  <div className="text-[#b8a77a]">• Reason: {latestDecision.policyRejectReason}</div>
-                )}
                 <div className="text-[#b8a77a]">• Invalidation Level: {invalidationBoundary}</div>
                 {thesis.risk && <div className="text-[#85858a] pt-1">• Risk Analysis: {thesis.risk}</div>}
               </div>

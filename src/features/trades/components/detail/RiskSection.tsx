@@ -1,11 +1,11 @@
-import React from "react";
-import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
-import { InvalidationAlert } from "./InvalidationAlert";
+import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import React from "react";
+import { InvalidationAlert } from "./InvalidationAlert";
 
 interface RiskSectionProps {
-  riskScore: number;
+  riskScore: number | null;
   invalidation: string;
   maxScore?: number;
   className?: string;
@@ -42,14 +42,16 @@ export const RiskSection: React.FC<RiskSectionProps> = ({
             RISK SCORE
           </span>
           <div className="font-mono text-2xl sm:text-3xl font-light text-[#f3f3f4] tracking-tight">
-            {riskScore} <span className="text-base sm:text-lg text-[#55555a]">/ {maxScore}</span>
+            {riskScore === null ? "N/A" : <>{riskScore} <span className="text-base sm:text-lg text-[#55555a]">/ {maxScore}</span></>}
           </div>
-          <Progress
-            value={riskScore}
-            max={maxScore}
-            className="h-[2px] bg-[#171717] mt-2"
-            indicatorClassName="bg-[#b8a77a]"
-          />
+          {riskScore !== null && (
+            <Progress
+              value={riskScore}
+              max={maxScore}
+              className="h-[2px] bg-[#171717] mt-2"
+              indicatorClassName="bg-[#b8a77a]"
+            />
+          )}
         </div>
 
         {/* Right: Invalidation Alert Box */}

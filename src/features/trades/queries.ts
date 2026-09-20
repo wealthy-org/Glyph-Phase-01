@@ -4,9 +4,9 @@
 // directly from Supabase PostgreSQL via Prisma Client (Server Components only).
 // ============================================================================
 
-import { prisma } from "@/lib/prisma";
 import { getExplorerTxUrl } from "@/lib/onchain/registry";
-import { Trade, TradeSummaryStats, TradeDecisionDetail } from "./types";
+import { prisma } from "@/lib/prisma";
+import { Trade, TradeDecisionDetail, TradeSummaryStats } from "./types";
 
 /**
  * Fetches real trade execution history and computes dynamic summary metrics directly from DB.
@@ -25,8 +25,8 @@ export async function fetchLiveTradesData(): Promise<{
         trades: [],
         stats: {
           totalExecuted: 0,
-          netPnl: "$0.00",
-          winRatio: "0.0%",
+          netPnl: "N/A",
+          winRatio: "N/A",
           loggedRatio: "0 / 0 ATTESTED",
           network: "ROBINHOOD",
           networkChain: "TESTNET // 46630",
@@ -40,14 +40,14 @@ export async function fetchLiveTradesData(): Promise<{
     let loggedCount = 0;
 
     const trades: Trade[] = dbTrades.map((t) => {
-      const pnlNum = Number(t.simulatedPnl ?? 0);
-      const pnlPct = Number(t.simulatedPnlPercent ?? 0);
-      const isPositive = pnlPct >= 0;
+      const pnlNum = t.simulatedPnl === null ? undefined : Number(t.simulatedPnl);
+      const pnlPct = t.simulatedPnlPercent === null ? undefined : Number(t.simulatedPnlPercent);
+      const isPositive = pnlPct !== undefined && pnlPct > 0;
 
       if (t.status === "CLOSED" || t.status === "LIQUIDATED") {
-        netPnl += pnlNum;
+        netPnl += pnlNum ?? 0;
         closedCount += 1;
-        if (pnlPct > 0) winCount += 1;
+        if ((pnlPct ?? 0) > 0) winCount += 1;
       }
 
       if (t.transactionHash) {
@@ -66,25 +66,20 @@ export async function fetchLiveTradesData(): Promise<{
         maximumFractionDigits: 2,
       })}`;
 
-      const exitFormatted = t.exitPrice
+      const exitFormatted = t.exitPrice !== null
         ? `$${Number(t.exitPrice).toLocaleString("en-US", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}`
-        : "—";
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}`
+        : "N/A";
 
-      const pnlFormatted =
-        t.simulatedPnlPercent !== null
-          ? `${pnlPct >= 0 ? "+" : ""}${pnlPct.toFixed(1)}%`
-          : "0.0%";
+      const pnlFormatted = pnlPct !== undefined
+        ? `${pnlPct >= 0 ? "+" : ""}${pnlPct.toFixed(1)}%`
+        : "N/A";
 
       const proofUrl = t.transactionHash
         ? getExplorerTxUrl(t.transactionHash)
-        : "https://explorer.testnet.chain.robinhood.com";
-
-      const marginNum = Number(t.positionSize ?? 0);
-      const levNum = Number(t.leverage ?? 1);
-      const notionalNum = marginNum * levNum;
+        : null;
 
       const timeStr =
         t.createdAt.toLocaleTimeString("en-US", {
@@ -94,14 +89,13 @@ export async function fetchLiveTradesData(): Promise<{
           timeZone: "UTC",
         }) + " UTC";
 
-      const pnlDollar =
-        pnlNum !== 0
-          ? `${pnlNum >= 0 ? "+$" : "-$"}${Math.abs(pnlNum).toFixed(2)}`
-          : pnlPct !== 0
-          ? `${pnlPct >= 0 ? "+$" : "-$"}${Math.abs(pnlPct).toFixed(2)}`
-          : "$0.00";
+      const pnlDollar = pnlNum !== undefined
+        ? `${pnlNum >= 0 ? "+$" : "-$"}${Math.abs(pnlNum).toFixed(2)}`
+        : "N/A";
 
-      const pnlPercent = `${pnlPct >= 0 ? "+" : ""}${pnlPct.toFixed(1)}%`;
+      const pnlPercent = pnlPct !== undefined
+        ? `${pnlPct >= 0 ? "+" : ""}${pnlPct.toFixed(1)}%`
+        : "N/A";
 
       const refNumber = t.tradeNumber.includes("GLYPH-")
         ? `#TRD-${t.tradeNumber.replace("GLYPH-", "")}`
@@ -119,24 +113,27 @@ export async function fetchLiveTradesData(): Promise<{
         status: t.status as "OPEN" | "CLOSED" | "LIQUIDATED",
         entry: entryFormatted,
         exit: exitFormatted,
-        size: `${Number(t.leverage).toFixed(0)}×`,
-        leverage: `${Number(t.leverage).toFixed(0)}×`,
-        pnl: pnlDollar !== "$0.00" ? pnlDollar : pnlFormatted,
+        size: t.quantity != null && t.entryPrice != null
+          ? `$${t.quantity.mul(t.entryPrice).toFixed(2)}`
+          : "N/A",
+        leverage: t.leverage != null ? `${Number(t.leverage).toFixed(0)}×` : "N/A",
+        pnl: pnlDollar !== "N/A" ? pnlDollar : pnlFormatted,
         pnlDollar,
         pnlPercent,
-        pnlNumber: pnlNum !== 0 ? pnlNum : pnlPct,
+        pnlNumber: pnlNum,
         isPositive,
-        thesis: isPositive ? "VALIDATED" : "INVALIDATED",
+        thesis: "VALIDATED",
         proofUrl,
         refNumber,
-        positionSize: marginNum > 0 ? `$${marginNum.toFixed(2)}` : "-",
-        notional: notionalNum > 0 ? `$${notionalNum.toFixed(2)}` : "-",
+        positionSize: t.positionSize != null ? `$${t.positionSize.toString()}` : "N/A",
       };
     });
 
     const winRatioStr =
-      closedCount > 0 ? `${((winCount / closedCount) * 100).toFixed(1)}%` : "0.0%";
-    const netPnlStr = `${netPnl >= 0 ? "+$" : "-$"}${Math.abs(netPnl).toFixed(2)}`;
+      closedCount > 0 ? `${((winCount / closedCount) * 100).toFixed(1)}%` : "N/A";
+    const netPnlStr = closedCount > 0
+      ? `${netPnl >= 0 ? "+$" : "-$"}${Math.abs(netPnl).toFixed(2)}`
+      : "N/A";
 
     const stats: TradeSummaryStats = {
       totalExecuted: dbTrades.length,
@@ -150,17 +147,7 @@ export async function fetchLiveTradesData(): Promise<{
     return { trades, stats };
   } catch (error) {
     console.error("[TradesQuery] Failed to fetch live trades:", error);
-    return {
-      trades: [],
-      stats: {
-        totalExecuted: 0,
-        netPnl: "$0.00",
-        winRatio: "0.0%",
-        loggedRatio: "0 / 0 ATTESTED",
-        network: "ROBINHOOD",
-        networkChain: "TESTNET // 46630",
-      },
-    };
+    throw error;
   }
 }
 
@@ -184,6 +171,7 @@ export async function fetchLiveTradeDetail(
       },
       include: {
         decision: true,
+        position: true,
       },
     });
 
@@ -196,85 +184,88 @@ export async function fetchLiveTradeDetail(
       where: { tradeId: trade.id },
     });
 
-    // Extract thesis components
-    const thesisObj = (trade.thesis || trade.decision?.thesis || {}) as Record<
-      string,
-      any
-    >;
-    const decisionThesis =
-      thesisObj.fundamental ||
-      thesisObj.catalyst ||
-      `${trade.asset} ${trade.action} position executed under algorithmic risk policy limits.`;
-
-    const catalyst =
-      thesisObj.catalyst ||
-      "Technical structure breakout and risk-budget alignment.";
-
-    const invalidationLevel =
-      thesisObj.invalidation ||
-      `Price action breaches calibrated stop boundary.`;
+    const researchSnapshot = trade.researchSnapshotId
+      ? await prisma.researchSnapshot.findUnique({
+        where: { id: trade.researchSnapshotId },
+      })
+      : null;
+    const researchFundamentalData = asRecord(researchSnapshot?.fundamentalData);
+    const researchTechnicalData = asRecord(researchSnapshot?.technicalData);
+    const decisionThesis = asRecord(trade.decision?.thesis);
+    const tradeThesis = asRecord(trade.thesis);
+    const thesisObj = Object.keys(decisionThesis).length > 0 ? decisionThesis : tradeThesis;
 
     const fundScore =
-      trade.fundamentalScore ?? trade.decision?.fundamentalScore ?? 75;
+      readNumber(researchFundamentalData.fundamentalScore) ??
+      trade.decision?.fundamentalScore ??
+      trade.fundamentalScore;
     const techScore =
-      trade.technicalScore ?? trade.decision?.technicalScore ?? 80;
-    const riskScore = trade.riskScore ?? trade.decision?.riskScore ?? 50;
+      readNumber(researchTechnicalData.technicalScore) ??
+      trade.decision?.technicalScore ??
+      trade.technicalScore;
+    const riskScore = trade.decision?.riskScore ?? trade.riskScore;
 
-    const pnlNum = Number(trade.simulatedPnl ?? 0);
-    const pnlPct = Number(trade.simulatedPnlPercent ?? 0);
-    const isPositive = pnlPct >= 0;
+    const pnlNum = trade.simulatedPnl === null ? null : Number(trade.simulatedPnl);
+    const pnlPct = trade.simulatedPnlPercent === null ? null : Number(trade.simulatedPnlPercent);
+    const isPositive = pnlPct === null ? null : pnlPct >= 0;
 
     const resultPercent =
-      trade.simulatedPnlPercent !== null
+      pnlPct !== null
         ? `${pnlPct >= 0 ? "+" : ""}${pnlPct.toFixed(1)}%`
-        : "0.0%";
+        : "N/A";
 
     const pnlValue =
-      trade.simulatedPnl !== null
+      pnlNum !== null
         ? `${pnlNum >= 0 ? "+$" : "-$"}${Math.abs(pnlNum).toFixed(2)}`
-        : "$0.00";
+        : "N/A";
 
-    const entryPrice = `$${Number(trade.entryPrice).toLocaleString("en-US", {
+    const position = trade.position;
+    const entryValue = position?.entryPrice ?? trade.entryPrice;
+    const marginValue = position?.positionSize ?? trade.positionSize;
+    const quantityValue = position?.quantity ?? trade.quantity;
+    const leverageValue = position?.leverage ?? trade.leverage;
+    const currentPrice = position?.currentPrice ?? null;
+    const entryPrice = `$${Number(entryValue).toLocaleString("en-US", {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     })}`;
 
-    const exitPrice = trade.exitPrice
+    const exitPrice = trade.exitPrice !== null
       ? `$${Number(trade.exitPrice).toLocaleString("en-US", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        })}`
-      : "ACTIVE";
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}`
+      : trade.status === "OPEN" ? "ACTIVE" : "N/A";
 
-    const txHash =
-      trade.transactionHash ||
-      trade.decision?.transactionHash ||
-      "0x0000000000000000000000000000000000000000";
+    const txHash = trade.transactionHash ?? trade.decision?.transactionHash ?? null;
 
     const explorerUrl = trade.transactionHash
       ? getExplorerTxUrl(trade.transactionHash)
       : trade.decision?.transactionHash
-      ? getExplorerTxUrl(trade.decision.transactionHash)
-      : "https://explorer.testnet.chain.robinhood.com";
+        ? getExplorerTxUrl(trade.decision.transactionHash)
+        : null;
 
     const formattedMemory = memory
       ? {
-          outcome: memory.outcome as "WIN" | "LOSS" | "BREAKEVEN",
-          thesisResult: memory.thesisResult as "CORRECT" | "INCORRECT" | "PARTIAL",
-          lesson: memory.lesson,
-          confidenceCalibration: memory.confidenceCalibration as
-            | "GOOD"
-            | "OVER_CONFIDENT"
-            | "UNDER_CONFIDENT"
-            | "NEUTRAL",
-          adaptation: memory.adaptation || undefined,
-          weightShift: memory.weightShift || undefined,
-        }
+        outcome: memory.outcome as "WIN" | "LOSS" | "BREAKEVEN",
+        thesisResult: memory.thesisResult as "CORRECT" | "INCORRECT" | "PARTIAL",
+        lesson: memory.lesson,
+        confidenceCalibration: memory.confidenceCalibration as
+          | "GOOD"
+          | "OVER_CONFIDENT"
+          | "UNDER_CONFIDENT"
+          | "NEUTRAL",
+        adaptation: memory.adaptation || undefined,
+        weightShift: memory.weightShift || undefined,
+      }
       : undefined;
 
-    const marginNum = Number(trade.positionSize ?? 0);
-    const levNum = Number(trade.leverage ?? 1);
+    const marginNum = Number(marginValue);
+    const levNum = Number(leverageValue);
     const notionalNum = marginNum * levNum;
+    const marketValue = currentPrice !== null
+      ? `$${(Number(quantityValue) * Number(currentPrice)).toFixed(2)}`
+      : "N/A";
 
     return {
       id: trade.tradeNumber,
@@ -282,39 +273,42 @@ export async function fetchLiveTradeDetail(
       recordLabel: "DECISION RECORD",
       asset: trade.asset,
       action: trade.action as "LONG" | "SHORT",
-      leverage: `${Number(trade.leverage).toFixed(0)}×`,
-      leverageLabel: `${Number(trade.leverage).toFixed(0)}× SIMULATED LEVERAGE`,
+      leverage: `${Number(leverageValue).toFixed(0)}×`,
+      leverageLabel: `${Number(leverageValue).toFixed(0)}× LEVERAGE`,
       resultPercent,
       isPositive,
-      status: trade.status === "OPEN" ? "OPEN" : "CLOSED",
+      status: trade.status,
       entryPrice,
       exitPrice,
-      positionSize: marginNum > 0 ? `$${marginNum.toFixed(2)}` : "-",
-      notional: notionalNum > 0 ? `$${notionalNum.toFixed(2)}` : "-",
+      positionSize: `$${marginNum.toFixed(2)}`,
+      notional: `$${notionalNum.toFixed(2)}`,
+      quantity: quantityValue.toString(),
+      currentPrice: currentPrice !== null ? `$${Number(currentPrice).toFixed(2)}` : "N/A",
+      marketValue,
       pnlValue,
-      decisionThesis,
+      decisionThesis:
+        readText(thesisObj.thesis) ??
+        readText(thesisObj.fundamental) ??
+        readText(thesisObj.catalyst) ??
+        "N/A",
       fundamentalAnalysis: {
         title: "Fundamental Analysis",
-        description:
-          thesisObj.fundamental ||
-          "Fundamental valuation, revenue trajectory, and sector catalyst synthesis.",
+        description: readText(thesisObj.fundamental) ?? "N/A",
         score: fundScore,
         maxScore: 100,
       },
       technicalAnalysis: {
         title: "Technical Analysis",
-        description:
-          thesisObj.technical ||
-          "Technical momentum structure, support/resistance, and volatility bounds.",
+        description: readText(thesisObj.technical) ?? "N/A",
         score: techScore,
         maxScore: 100,
       },
-      catalyst,
+      catalyst: readText(thesisObj.catalyst) ?? "N/A",
       riskScore,
-      invalidationLevel,
+      invalidationLevel: readText(thesisObj.invalidation) ?? "N/A",
       onchainProof: {
         txHash,
-        network: "ROBINHOOD CHAIN TESTNET",
+        network: txHash ? "ROBINHOOD CHAIN TESTNET" : "N/A",
         explorerUrl,
       },
       memory: formattedMemory,
@@ -323,4 +317,18 @@ export async function fetchLiveTradeDetail(
     console.error(`[TradeDetail] Error fetching live trade ${cleanId}:`, error);
     return null;
   }
+}
+
+function asRecord(value: unknown): Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value)
+    ? value as Record<string, unknown>
+    : {};
+}
+
+function readText(value: unknown): string | null {
+  return typeof value === "string" && value.trim().length > 0 ? value : null;
+}
+
+function readNumber(value: unknown): number | null {
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
 }

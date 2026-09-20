@@ -19,6 +19,8 @@ export default async function Home() {
   const initialMetrics = {
     pnlDollar: data.treasury.pnlDollar,
     pnlPercent: data.treasury.pnlPercent,
+    treasuryCash: data.treasury.cashBalance,
+    treasuryAllocatedMargin: data.treasury.allocatedMargin,
     treasuryEquity: data.treasury.totalEquity,
     currency: data.treasury.currency,
     positionDisplay,
@@ -44,6 +46,7 @@ export default async function Home() {
         <Hero
           openPosition={data.openPositions[0] || null}
           latestDecision={data.latestDecision}
+          latestAnalysis={data.latestAnalysis}
           cycleCount={data.cognitiveCycleCount}
           recentEvents={data.recentEvents}
         />

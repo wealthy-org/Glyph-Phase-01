@@ -1,10 +1,10 @@
-import React from "react";
-import { TradeDecisionDetail } from "../../types";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { TradeMetric } from "./TradeMetric";
-import { DecisionThesis } from "./DecisionThesis";
 import { cn } from "@/lib/utils";
+import React from "react";
+import { TradeDecisionDetail } from "../../types";
+import { DecisionThesis } from "./DecisionThesis";
+import { TradeMetric } from "./TradeMetric";
 
 interface TradeHeaderProps {
   trade: TradeDecisionDetail;
@@ -71,7 +71,11 @@ export const TradeHeader: React.FC<TradeHeaderProps> = ({ trade, className }) =>
           <div
             className={cn(
               "font-mono text-3xl sm:text-4xl font-light tracking-tight",
-              trade.isPositive ? "text-[#6fe39a]" : "text-[#c47a7a]"
+              trade.isPositive === true
+                ? "text-[#6fe39a]"
+                : trade.isPositive === false
+                  ? "text-[#c47a7a]"
+                  : "text-[#f3f3f4]"
             )}
           >
             {trade.resultPercent}
@@ -85,18 +89,21 @@ export const TradeHeader: React.FC<TradeHeaderProps> = ({ trade, className }) =>
       {/* Divider 1 */}
       <Separator className="bg-[#171717]" />
 
-      {/* Trade Metrics Grid: 6-col desktop, 3-col tablet, 2-col mobile */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5 sm:gap-6">
+      {/* Trade Metrics Grid: columns reduce with available width so labels and values can wrap safely. */}
+      <div className="grid grid-cols-1 min-[360px]:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-6 gap-y-7">
         <TradeMetric label="ENTRY PRICE" value={trade.entryPrice} />
         <TradeMetric label="CAPITAL (MARGIN)" value={trade.positionSize || "-"} />
         <TradeMetric label="NOTIONAL EXP." value={trade.notional || "-"} />
+        <TradeMetric label={`UNITS (${trade.asset})`} value={trade.quantity} />
         <TradeMetric label="EXIT" value={trade.exitPrice} />
+        <TradeMetric label="CURRENT PRICE" value={trade.currentPrice} />
+        <TradeMetric label="MARKET VALUE" value={trade.marketValue} />
         <TradeMetric label="LEVERAGE" value={trade.leverage} />
         <TradeMetric
           label="PNL"
           value={trade.pnlValue}
-          isPositive={trade.isPositive}
-          isNegative={!trade.isPositive}
+          isPositive={trade.isPositive === true}
+          isNegative={trade.isPositive === false}
         />
       </div>
 

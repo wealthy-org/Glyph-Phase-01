@@ -11,6 +11,7 @@ import { prisma } from "@/lib/prisma";
 import { getTreasurySummary } from "@/lib/treasury";
 import {
   LandingAgentMeta,
+  LandingAnalysisState,
   LandingEconomicEvent,
   LandingLatestDecision,
   LandingMemoryItem,
@@ -129,7 +130,13 @@ export async function getLandingPageData(agentIdentifier?: string): Promise<Land
   let latestDecision: LandingLatestDecision | null = null;
 
   if (latestDecisionRecord) {
-    const rawThesis = (latestDecisionRecord.thesis as Record<string, any>) || {};
+    const rawThesis = latestDecisionRecord.thesis as {
+      fundamental?: string;
+      technical?: string;
+      catalyst?: string;
+      risk?: string;
+      invalidation?: string;
+    };
     const hasValidTx =
       Boolean(latestDecisionRecord.transactionHash) &&
       !latestDecisionRecord.transactionHash?.endsWith("000000000000");
@@ -164,6 +171,64 @@ export async function getLandingPageData(agentIdentifier?: string): Promise<Land
       createdAt: latestDecisionRecord.createdAt.toISOString(),
     };
   }
+
+  const latestResearchSnapshot = agent
+    ? await prisma.researchSnapshot.findFirst({
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        asset: true,
+        cycleId: true,
+        marketData: true,
+        fundamentalData: true,
+        technicalData: true,
+        sourceMetadata: true,
+        createdAt: true,
+      },
+    })
+    : null;
+
+  const numeric = (value: unknown): number | null =>
+    typeof value === "number" && Number.isFinite(value) ? value : null;
+  const text = (value: unknown): string | null =>
+    typeof value === "string" && value.trim().length > 0 ? value : null;
+  const marketData = latestResearchSnapshot?.marketData as { quote?: Record<string, unknown> } | null;
+  const fundamentalData = latestResearchSnapshot?.fundamentalData as { fundamentalScore?: unknown } | null;
+  const technicalData = latestResearchSnapshot?.technicalData as {
+    technicalScore?: unknown;
+    trend?: unknown;
+    volatilityPercent?: unknown;
+  } | null;
+  const sourceMetadata = latestResearchSnapshot?.sourceMetadata as {
+    riskContext?: { regime?: unknown; level?: unknown; details?: unknown };
+  } | null;
+  const riskContext = sourceMetadata?.riskContext;
+  const quote = marketData?.quote;
+  const latestAnalysis: LandingAnalysisState | null = latestResearchSnapshot
+    ? {
+      snapshotId: latestResearchSnapshot.id,
+      cycleId: latestResearchSnapshot.cycleId,
+      asset: latestResearchSnapshot.asset,
+      fundamentalScore: numeric(fundamentalData?.fundamentalScore),
+      technicalScore: numeric(technicalData?.technicalScore),
+      riskScore: latestDecisionRecord?.researchSnapshotId === latestResearchSnapshot.id
+        ? latestDecisionRecord.riskScore
+        : null,
+      riskContext: {
+        regime: text(riskContext?.regime),
+        level: text(riskContext?.level),
+        details: text(riskContext?.details),
+      },
+      marketContext: {
+        price: numeric(quote?.price),
+        changePercent: numeric(quote?.changePercent),
+        volume: numeric(quote?.volume),
+        trend: text(technicalData?.trend),
+        volatilityPercent: numeric(technicalData?.volatilityPercent),
+      },
+      createdAt: latestResearchSnapshot.createdAt.toISOString(),
+    }
+    : null;
 
   // 4. Authoritative Recent Economic Events (6 entries for homepage)
   const eventRecords = agent
@@ -269,6 +334,7 @@ export async function getLandingPageData(agentIdentifier?: string): Promise<Land
     treasury: treasuryData,
     openPositions,
     latestDecision,
+    latestAnalysis,
     recentEvents,
     latestMemory,
     adaptiveLearnings,

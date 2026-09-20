@@ -22,9 +22,9 @@ export interface Trade {
   pnlDollar?: string;
   pnlPercent?: string;
   pnlNumber?: number;
-  isPositive: boolean;
+  isPositive: boolean | null;
   thesis: ThesisStatus;
-  proofUrl: string;
+  proofUrl?: string | null;
   refNumber?: string;
   positionSize?: string;
   notional?: string;
@@ -42,7 +42,7 @@ export interface TradeSummaryStats {
 export interface AnalysisScoreData {
   title: string;
   description: string;
-  score: number;
+  score: number | null;
   maxScore?: number;
 }
 
@@ -55,23 +55,26 @@ export interface TradeDecisionDetail {
   leverage: string;
   leverageLabel: string;
   resultPercent: string;
-  isPositive: boolean;
-  status: "CLOSED" | "OPEN";
+  isPositive: boolean | null;
+  status: TradeStatus;
   entryPrice: string;
   exitPrice: string;
   positionSize?: string;
   notional?: string;
+  quantity: string;
+  currentPrice: string;
+  marketValue: string;
   pnlValue: string;
   decisionThesis: string;
   fundamentalAnalysis: AnalysisScoreData;
   technicalAnalysis: AnalysisScoreData;
   catalyst: string;
-  riskScore: number;
+  riskScore: number | null;
   invalidationLevel: string;
   onchainProof: {
-    txHash: string;
+    txHash: string | null;
     network: string;
-    explorerUrl: string;
+    explorerUrl: string | null;
   };
   memory?: {
     outcome: "WIN" | "LOSS" | "BREAKEVEN";
