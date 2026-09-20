@@ -245,7 +245,7 @@ export async function getLifeEvents(agentIdentifier?: string): Promise<LifeEvent
           status = "FUNDED";
           statusTone = "positive";
           actionLabel = null; // No detail button needed
-          shortMeta = `Simulated treasury pool initialized · Balance: $1,000.00 USD-SIM`;
+          shortMeta = evt.description || (evt.result ? `Capital injected: ${evt.result}` : "Treasury funded");
           break;
         }
         case "AGENT_BORN": {

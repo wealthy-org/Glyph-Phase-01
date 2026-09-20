@@ -5,8 +5,9 @@ import { HeaderMetricsData } from "@/lib/header-stats";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { FundTreasuryModal } from "@/components/treasury/FundTreasuryModal";
 
 interface NavItem {
   label: string;
@@ -64,8 +65,10 @@ export const Navbar: React.FC<NavbarProps> = ({
   initialMetrics,
 }) => {
   const pathname = usePathname();
+  const router = useRouter();
   const [currentHash, setCurrentHash] = useState<string>("");
   const [utcTime, setUtcTime] = useState<string>("");
+  const [isFundModalOpen, setIsFundModalOpen] = useState<boolean>(false);
 
   // Check if caller supplied valid non-mocked data
   const hasValidInitial = Boolean(
@@ -348,10 +351,20 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
 
             {/* Metric 2: Treasury */}
-            <div className="py-2 px-3.5 sm:px-5 flex flex-col justify-center shrink-0 min-w-[115px] sm:min-w-[140px]">
-              <span className="font-mono text-[9px] text-[#55555a] tracking-wider uppercase">
-                TREASURY
-              </span>
+            <div className="py-2 px-3.5 sm:px-5 flex flex-col justify-center shrink-0 min-w-[125px] sm:min-w-[155px]">
+              <div className="flex items-center justify-between gap-1.5">
+                <span className="font-mono text-[9px] text-[#55555a] tracking-wider uppercase">
+                  TREASURY
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setIsFundModalOpen(true)}
+                  className="font-mono text-[8.5px] px-1.5 py-0.5 rounded-[2px] bg-[#09150d] border border-[#1b4324] text-[#6fe39a] hover:bg-[#122b1b] hover:border-[#6fe39a] transition-all cursor-pointer flex items-center gap-0.5 tracking-wider font-medium"
+                  title="Inject capital into autonomous treasury pool"
+                >
+                  <span>+ FUND</span>
+                </button>
+              </div>
               <div className="mt-0.5 min-h-[18px] sm:min-h-[20px] flex items-center">
                 {isValueLoading ? (
                   <Skeleton className="h-3.5 sm:h-4 w-20 sm:w-24 my-0.5 rounded-[2px]" />
@@ -446,6 +459,20 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
       </div>
+
+      <FundTreasuryModal
+        isOpen={isFundModalOpen}
+        onClose={() => setIsFundModalOpen(false)}
+        currentBalance={metrics?.treasuryEquity}
+        currency={metrics?.currency}
+        onFundSuccess={async () => {
+          const updated = await fetchHeaderStats();
+          if (updated) {
+            setMetrics(updated);
+          }
+          router.refresh();
+        }}
+      />
     </header>
   );
 };

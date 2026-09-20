@@ -359,6 +359,22 @@ export const LifeLogSection: React.FC<LifeLogSectionProps> = ({ initialEvents })
                         </button>
                       )}
 
+                      {/* Result metric (e.g. +$900.00 or +8.4%) when no action button */}
+                      {!hasAction && evt.result && (
+                        <span
+                          className={cn(
+                            "font-mono text-xs font-semibold tabular-nums",
+                            evt.result.startsWith("+")
+                              ? "text-[#6fe39a]"
+                              : evt.result.startsWith("-")
+                              ? "text-[#e06c75]"
+                              : "text-[#f3f3f4]"
+                          )}
+                        >
+                          {evt.result}
+                        </span>
+                      )}
+
                       {/* Onchain verification icon if available and no action button */}
                       {!hasAction && evt.txHash && (
                         <a

@@ -118,3 +118,139 @@ export async function getTreasurySummary(
     };
   }
 }
+
+export interface FundTreasuryParams {
+  agentId?: string;
+  amount: number;
+  description?: string;
+  txHash?: string | null;
+}
+
+export interface FundTreasuryResult {
+  success: boolean;
+  message: string;
+  treasury: TreasurySummary;
+  event: {
+    id: string;
+    eventType: string;
+    title: string;
+    description: string | null;
+    result: string | null;
+    day: number | null;
+    timestamp: Date;
+    txHash: string | null;
+  };
+}
+
+/**
+ * Funds Glyph's autonomous treasury pool with additional simulated capital.
+ * Increments current cash balance and initial capital baseline, and registers
+ * a verifiable TREASURY_FUNDED economic event in the Life Log.
+ */
+export async function fundTreasury(
+  params: FundTreasuryParams
+): Promise<FundTreasuryResult> {
+  const { amount, description, txHash } = params;
+
+  if (typeof amount !== "number" || isNaN(amount) || amount <= 0) {
+    throw new Error("Funding amount must be a positive number greater than 0");
+  }
+
+  const targetAgentId = params.agentId || process.env.GLYPH_AGENT_ID || "1";
+
+  let agent = await prisma.agent.findFirst({
+    where: { agentId: targetAgentId },
+    include: { treasury: true },
+  });
+
+  if (!agent) {
+    agent = await prisma.agent.findFirst({
+      include: { treasury: true },
+    });
+  }
+
+  if (!agent) {
+    throw new Error(`Agent not found with identifier '${targetAgentId}'`);
+  }
+
+  // Ensure treasury record exists
+  let treasury = agent.treasury;
+  if (!treasury) {
+    treasury = await prisma.agentTreasury.create({
+      data: {
+        agentId: agent.id,
+        initialCapital: DEFAULT_INITIAL_CAPITAL,
+        currentBalance: DEFAULT_INITIAL_CAPITAL,
+        currency: DEFAULT_CURRENCY,
+      },
+    });
+  }
+
+  const prevBalance = Number(treasury.currentBalance);
+  const prevInitialCapital = Number(treasury.initialCapital);
+  const newBalance = prevBalance + amount;
+  const newInitialCapital = prevInitialCapital + amount;
+
+  // 1. Update AgentTreasury in DB
+  const updatedTreasury = await prisma.agentTreasury.update({
+    where: { id: treasury.id },
+    data: {
+      currentBalance: newBalance,
+      initialCapital: newInitialCapital,
+    },
+  });
+
+  // 2. Compute Day Number since Agent Birth
+  const birthDate = agent.createdAt;
+  const now = new Date();
+  const eventUtc = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+  const birthUtc = Date.UTC(
+    birthDate.getUTCFullYear(),
+    birthDate.getUTCMonth(),
+    birthDate.getUTCDate()
+  );
+  const day = Math.max(1, Math.floor((eventUtc - birthUtc) / (24 * 60 * 60 * 1000)) + 1);
+
+  const formattedAmount = amount.toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
+  const eventDescription =
+    description && description.trim().length > 0
+      ? description.trim()
+      : `Additional capital of $${formattedAmount} ${updatedTreasury.currency} injected into autonomous treasury pool.`;
+
+  // 3. Create EconomicEvent in Life Log
+  const event = await prisma.economicEvent.create({
+    data: {
+      agentId: agent.id,
+      eventType: "TREASURY_FUNDED",
+      title: "Treasury Funded",
+      description: eventDescription,
+      day,
+      result: `+$${formattedAmount}`,
+      txHash: txHash ? txHash.trim() : null,
+      timestamp: now,
+    },
+  });
+
+  // 4. Retrieve fresh treasury summary
+  const summary = await getTreasurySummary(agent.agentId);
+
+  return {
+    success: true,
+    message: `Successfully funded treasury with $${formattedAmount} ${updatedTreasury.currency}`,
+    treasury: summary,
+    event: {
+      id: event.id,
+      eventType: event.eventType,
+      title: event.title,
+      description: event.description,
+      result: event.result,
+      day: event.day,
+      timestamp: event.timestamp,
+      txHash: event.txHash,
+    },
+  };
+}
