@@ -173,8 +173,54 @@ export async function getLandingPageData(agentIdentifier?: string): Promise<Land
     };
   }
 
-  const latestResearchSnapshot = agent
+  const activityCandidates = agent
+    ? await prisma.activityLog.findMany({
+      where: {
+        agentId: agent.id,
+        activityType: { in: ["ANALYSIS", "TRADE"] },
+        asset: { not: null },
+      },
+      orderBy: { timestamp: "desc" },
+      take: 20,
+      select: {
+        id: true,
+        cycleId: true,
+        activityType: true,
+        status: true,
+        asset: true,
+        title: true,
+        timestamp: true,
+      },
+    })
+    : [];
+
+  // ActivityLog is authoritative only while its execution still has a
+  // corresponding AgentRun. This prevents genesis resets from reviving
+  // stale activity even when old research snapshots remain in the database.
+  const validActivityRecords = await Promise.all(
+    activityCandidates.map(async (activity) => {
+      if (!activity.cycleId) return null;
+      const run = await prisma.agentRun.findUnique({
+        where: { cycleKey: activity.cycleId },
+        select: { id: true },
+      });
+      return run ? activity : null;
+    })
+  );
+
+  const latestActivityRecord = validActivityRecords.find(
+    (activity): activity is (typeof activityCandidates)[number] => activity !== null
+  ) || null;
+  const latestAnalysisActivity = validActivityRecords.find(
+    (activity) => activity?.activityType === "ANALYSIS"
+  ) || null;
+
+  const latestResearchSnapshot = latestAnalysisActivity
     ? await prisma.researchSnapshot.findFirst({
+      where: {
+        cycleId: latestAnalysisActivity.cycleId,
+        asset: latestAnalysisActivity.asset || undefined,
+      },
       orderBy: { createdAt: "desc" },
       select: {
         id: true,
@@ -229,26 +275,6 @@ export async function getLandingPageData(agentIdentifier?: string): Promise<Land
       },
       createdAt: latestResearchSnapshot.createdAt.toISOString(),
     }
-    : null;
-
-  const latestActivityRecord = agent
-    ? await prisma.activityLog.findFirst({
-      where: {
-        agentId: agent.id,
-        activityType: { in: ["ANALYSIS", "TRADE"] },
-        asset: { not: null },
-      },
-      orderBy: { timestamp: "desc" },
-      select: {
-        id: true,
-        cycleId: true,
-        activityType: true,
-        status: true,
-        asset: true,
-        title: true,
-        timestamp: true,
-      },
-    })
     : null;
 
   const latestActivity: LandingLatestActivity | null = latestActivityRecord?.asset?.trim()

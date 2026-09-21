@@ -420,7 +420,7 @@ export const Hero: React.FC<HeroProps> = ({
   latestDecision: initialLatestDecision = null,
   latestAnalysis: initialLatestAnalysis = null,
   latestActivity: initialLatestActivity = null,
-  cycleCount = 6,
+  cycleCount = 0,
   recentEvents = [],
 }) => {
   // 1. DETERMINISTIC AUTONOMOUS STATE MACHINE
@@ -432,7 +432,7 @@ export const Hero: React.FC<HeroProps> = ({
   const [isDecisionRevealed, setIsDecisionRevealed] = useState<boolean>(false);
   const [selectedTab, setSelectedTab] = useState<AnalysisTab | null>(null);
   const [completedTabs, setCompletedTabs] = useState<Set<AnalysisTab>>(() => new Set());
-  const [cycleNum, setCycleNum] = useState<number>(() => cycleCount || 6);
+  const [cycleNum, setCycleNum] = useState<number>(() => cycleCount);
   const [mounted, setMounted] = useState<boolean>(false);
   const [liveLatestDecision, setLiveLatestDecision] = useState<LandingLatestDecision | null>(initialLatestDecision);
   const [liveLatestAnalysis, setLiveLatestAnalysis] = useState<LandingAnalysisState | null>(initialLatestAnalysis);
@@ -604,7 +604,14 @@ export const Hero: React.FC<HeroProps> = ({
   const hasActiveDecision = Boolean(latestDecision);
   const hasLatestActivity = Boolean(latestActivity?.asset);
   const isStandbyMode = !hasLatestActivity && !hasActivePosition && !hasActiveDecision && !latestAnalysis;
-  const rawAsset = latestActivity?.asset || latestAnalysis?.asset || latestDecision?.asset || openPosition?.asset || "STANDBY";
+  const operationStatus = isStandbyMode
+    ? "WAITING"
+    : latestActivity?.activityType === "TRADE"
+      ? "TRADE · EXECUTED"
+      : `ANALYSIS · ${latestActivity?.status || "COMPLETED"}`;
+  const rawAsset = isStandbyMode
+    ? "NO ACTIVE ANALYSIS"
+    : latestActivity?.asset || latestAnalysis?.asset || latestDecision?.asset || openPosition?.asset || "STANDBY";
   const asset = rawAsset.toUpperCase();
   const positionSubtitle = latestActivity
     ? `${latestActivity.activityType} · ${latestActivity.status}`
@@ -612,7 +619,7 @@ export const Hero: React.FC<HeroProps> = ({
       ? `${openPosition!.side} POSITION · ${openPosition!.leverage}× SIM`
       : hasActiveDecision
         ? "STANDBY // NO UNREALIZED RISK EXPOSURE"
-        : "STANDBY // AWAITING FIRST COGNITIVE CYCLE";
+        : "Glyph has not performed a market analysis yet.";
 
   // 3. INTERACTIVE TAB STATE (Follows Glyph's current stage)
   const rawThesis = latestDecision?.thesis;
@@ -760,7 +767,7 @@ export const Hero: React.FC<HeroProps> = ({
                   : "bg-[#6fe39a] shadow-[0_0_0_2px_rgba(111,227,154,0.25)] animate-livepulse"
               )} />
               <span className="font-mono text-xs sm:text-[13px] tracking-wider uppercase text-[#f3f3f4] font-medium">
-                {isStandbyMode ? "AUTONOMOUS AGENT // STANDBY" : "AUTONOMOUS OPERATION // LIVE"}
+                {isStandbyMode ? "AUTONOMOUS OPERATION // WAITING" : operationStatus}
               </span>
             </div>
             <div className="flex items-center gap-3 font-mono text-xs text-[#85858a]">
@@ -768,7 +775,7 @@ export const Hero: React.FC<HeroProps> = ({
                 "font-medium tracking-wider",
                 isStandbyMode ? "text-[#fbbf24]" : "text-[#6fe39a]"
               )}>
-                {isStandbyMode ? "STATUS: DORMANT / READY" : `CYCLE #${cycleNumber}`}
+                {isStandbyMode ? "NO ACTIVE ANALYSIS" : `CYCLE #${cycleNumber}`}
               </span>
             </div>
           </div>
@@ -789,16 +796,16 @@ export const Hero: React.FC<HeroProps> = ({
               {isStandbyMode ? (
                 <>
                   <div>
-                    <span className="text-[#55555a]">CYCLE TRIGGER </span>
-                    <span className="text-[#d4d4d8]">CRON SCHEDULED</span>
+                    <span className="text-[#55555a]">STATUS </span>
+                    <span className="text-[#d4d4d8]">NO ACTIVE ANALYSIS</span>
                   </div>
                   <div>
-                    <span className="text-[#55555a]">AGENT UPTIME </span>
-                    <span className="text-[#d4d4d8]">DAY 1</span>
+                    <span className="text-[#55555a]">DESCRIPTION </span>
+                    <span className="text-[#d4d4d8]">WAITING</span>
                   </div>
                   <div>
-                    <span className="text-[#55555a]">SYSTEM STATUS </span>
-                    <span className="text-[#fbbf24] font-medium">AWAITING INTAKE</span>
+                    <span className="text-[#55555a]">NEXT </span>
+                    <span className="text-[#fbbf24] font-medium">WAITING FOR NEXT MARKET CYCLE</span>
                   </div>
                 </>
               ) : (
@@ -836,10 +843,14 @@ export const Hero: React.FC<HeroProps> = ({
                   <span className={cn("w-2 h-2 rounded-full shrink-0", isStandbyMode ? "bg-[#fbbf24] animate-pulse" : "bg-[#6fe39a] animate-livepulse")} />
                   <span className="font-mono text-xs sm:text-[13px] tracking-wider uppercase text-[#f3f3f4] font-medium">
                     {isStandbyMode
-                      ? "SYSTEM DIAGNOSTICS // READINESS VERIFIED"
-                      : activeTab === "glyph-view"
-                        ? `GLYPH // FORMING VIEW ${asset}`
-                        : `${activeStageConfig.consoleTitle} ${asset}`}
+                      ? "AUTONOMOUS OPERATION // WAITING"
+                      : latestActivity?.activityType === "TRADE"
+                        ? `TRADE EXECUTED ${asset}`
+                        : latestActivity?.status === "FAILED"
+                          ? `ANALYSIS FAILED ${asset}`
+                          : activeTab === "glyph-view"
+                            ? `GLYPH // FORMING VIEW ${asset}`
+                            : `${activeStageConfig.consoleTitle} ${asset}`}
                   </span>
                 </div>
 
@@ -904,7 +915,7 @@ export const Hero: React.FC<HeroProps> = ({
                   <div className="p-3 bg-[#080808] border border-[#141414] space-y-1">
                     <div className="flex items-center justify-between">
                       <span className="text-[#85858a]">[02] PRIMARY WALLET</span>
-                      <span className="text-[#6fe39a] font-medium">ARMED</span>
+                      <span className="text-[#85858a] font-medium">STANDBY</span>
                     </div>
                     <p className="text-[11px] text-[#55555a] truncate">
                       Autonomous Safe account linked & gas funded.
@@ -927,17 +938,17 @@ export const Hero: React.FC<HeroProps> = ({
                       <span className="text-[#fbbf24] font-medium">STANDBY</span>
                     </div>
                     <p className="text-[11px] text-[#55555a]">
-                      Whitelisted universe: NVDA, AAPL, MSFT · Awaiting trigger.
+                      Waiting for the next market cycle before selecting an asset.
                     </p>
                   </div>
                 </div>
 
                 <div className="p-3 bg-[#080808]/60 border border-[#141414] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px]">
                   <span className="text-[#71717a]">
-                    No reasoning cycles recorded yet. Glyph is in autonomous standby awaiting scheduled cron intake.
+                    NO ACTIVE ANALYSIS · Glyph has not performed a market analysis yet.
                   </span>
                   <span className="text-[#85858a] shrink-0 font-medium">
-                    STATUS: READY
+                    WAITING FOR NEXT MARKET CYCLE
                   </span>
                 </div>
               </div>
@@ -1341,11 +1352,17 @@ export const Hero: React.FC<HeroProps> = ({
             <div className="flex items-center gap-2">
               <span className="text-[#55555a] uppercase tracking-wider">OPERATION STATUS:</span>
               <span className="text-[#f3f3f4] font-medium tracking-wide">
-                {isDecisionRevealed
-                  ? "POSITION ACTIVE · PAPER TRADE · SIMULATED CAPITAL"
-                  : stagePhase === "COUNTDOWN"
-                    ? "REASONING COMPLETE · COMMITTING CONCLUSION"
-                    : "CYCLE IN PROGRESS · PAPER TRADE · SIMULATED CAPITAL"}
+                {isStandbyMode
+                  ? "WAITING FOR NEXT MARKET CYCLE"
+                  : latestActivity?.activityType === "TRADE"
+                    ? "TRADE · EXECUTED"
+                    : latestActivity?.status === "FAILED"
+                      ? "ANALYSIS · FAILED"
+                      : isDecisionRevealed
+                        ? "POSITION ACTIVE · PAPER TRADE · SIMULATED CAPITAL"
+                        : stagePhase === "COUNTDOWN"
+                          ? "REASONING COMPLETE · COMMITTING CONCLUSION"
+                          : "CYCLE IN PROGRESS · PAPER TRADE · SIMULATED CAPITAL"}
               </span>
             </div>
             <div className="text-[#55555a]">
