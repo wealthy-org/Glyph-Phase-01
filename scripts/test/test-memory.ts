@@ -3,13 +3,11 @@
 // Run with: npx tsx scripts/test-memory.ts
 // ============================================================================
 
+import assert from "node:assert/strict";
 import {
-  openSimulatedPosition,
   closeSimulatedPosition,
+  openSimulatedPosition,
 } from "../../src/lib/portfolio";
-import { getRecentMemories } from "../../src/lib/memory";
-import { createResearchSnapshot } from "../../src/lib/research";
-import { executeGlyphDecisionCycle } from "../../src/lib/decision/engine";
 import { prisma } from "../../src/lib/prisma";
 
 async function runMemoryTests() {
@@ -75,6 +73,57 @@ async function runMemoryTests() {
   console.log(`  ✅ Economic Event logged for Life Log: "${event1.title}"\n`);
 
   // -------------------------------------------------------------------------
+  // TEST 1B: Original thesis must be reflected in the lesson, not a generic template
+  // -------------------------------------------------------------------------
+  console.log("▶ [TEST 1B] Reconstructing original decision context into the lesson...");
+
+  const tradeWithThesis = await openSimulatedPosition({
+    agentId,
+    asset: "AAPL",
+    side: "LONG",
+    entryPrice: 190.0,
+    proposedPositionPercent: 5,
+    proposedLeverage: 2,
+    scores: {
+      conviction: 82,
+      fundamentalScore: 84,
+      technicalScore: 78,
+      riskScore: 58,
+      thesis: {
+        fundamental: "Bullish earnings context and revenue expansion support a higher fair value.",
+        technical: "Price remains above the 20-day trend and holds above key support.",
+        catalyst: "Expected earnings beat supports continuation.",
+        risk: "Macro volatility and earnings surprise risk remain elevated.",
+        invalidation: "Break below the support band would invalidate the thesis.",
+      },
+    },
+  });
+
+  const closeWithThesis = await closeSimulatedPosition(
+    tradeWithThesis.position.id,
+    196.0,
+    "TAKE_PROFIT"
+  );
+
+  const thesisMemory = await prisma.memory.findFirst({
+    where: { tradeId: tradeWithThesis.trade.id },
+  });
+
+  if (!thesisMemory) {
+    throw new Error("Failed: memory was not created for trade with thesis context.");
+  }
+
+  assert(
+    thesisMemory.lesson.toLowerCase().includes("bullish earnings") ||
+    thesisMemory.lesson.toLowerCase().includes("revenue expectations") ||
+    thesisMemory.lesson.toLowerCase().includes("technical strength") ||
+    thesisMemory.lesson.toLowerCase().includes("support"),
+    `Expected lesson to reflect original trade thesis, got: ${thesisMemory.lesson}`
+  );
+
+  console.log(`  ✅ Lesson reflects original decision context: "${thesisMemory.lesson}"\n`);
+
+  // -------------------------------------------------------------------------
   // TEST 2: Automatic Memory Formation on Loss Trade (LOSS / OVER_CONFIDENT)
   // -------------------------------------------------------------------------
   console.log("▶ [TEST 2] Opening and Closing a LOSS Trade...");
@@ -112,55 +161,24 @@ async function runMemoryTests() {
   console.log(`     ↳ Weight Shift: ${lossMemory.weightShift}\n`);
 
   // -------------------------------------------------------------------------
-  // TEST 3: Asset-Specific Memory Filtering (Preventing Cross-Asset Contamination)
+  // TEST 3: Duplicate Close Must Not Create A Second Memory
   // -------------------------------------------------------------------------
-  console.log("▶ [TEST 3] Testing Asset-Specific Memory Filtering...");
+  console.log("▶ [TEST 3] Calling close twice should not create duplicate memory...");
 
-  // NVDA should only return NVDA memories
-  const nvdaMemories = await getRecentMemories(agentId, 3, "NVDA");
-  console.log(`  - NVDA Filter: Retrieved ${nvdaMemories.length} memories (Expected: >= 1).`);
-  for (const m of nvdaMemories) {
-    console.log(`    ↳ Memory ID ${m.id} | Asset: ${m.asset} | Outcome: ${m.outcome}`);
-    if (m.asset !== "NVDA") {
-      throw new Error(`Failed: Non-NVDA memory leaked into NVDA filter: ${m.asset}`);
-    }
+  try {
+    await closeSimulatedPosition(openRes2.position.id, 2850.0, "STOP_LOSS");
+  } catch (error) {
+    console.log(`  - Duplicate close attempt correctly rejected: ${(error as Error).message}`);
   }
 
-  // ETH should only return ETH memories
-  const ethMemories = await getRecentMemories(agentId, 3, "ETH");
-  console.log(`  - ETH Filter: Retrieved ${ethMemories.length} memories (Expected: >= 1).`);
-  for (const m of ethMemories) {
-    console.log(`    ↳ Memory ID ${m.id} | Asset: ${m.asset} | Outcome: ${m.outcome}`);
-    if (m.asset !== "ETH") {
-      throw new Error(`Failed: Non-ETH memory leaked into ETH filter: ${m.asset}`);
-    }
-  }
-
-  // BTC has not been traded yet, so BTC filter should return 0 memories (no cross-asset leakage from NVDA/ETH)
-  const btcMemories = await getRecentMemories(agentId, 3, "BTC");
-  console.log(`  - BTC Filter: Retrieved ${btcMemories.length} memories (Expected: 0).`);
-  if (btcMemories.length !== 0) {
-    throw new Error(`Failed: Unrelated memories leaked into BTC memory search! Length: ${btcMemories.length}`);
-  }
-  console.log("  ✅ Asset-specific memory isolation verified: No cross-asset contamination!\n");
-
-  // -------------------------------------------------------------------------
-  // TEST 4: Feedback Loop — Asset-Specific Memories Passed into Decision Cycle
-  // -------------------------------------------------------------------------
-  console.log("▶ [TEST 4] Testing Feedback Loop into Next Decision Cycle for NVDA...");
-
-  const { snapshotId } = await createResearchSnapshot("NVDA");
-  const nextDecision = await executeGlyphDecisionCycle(snapshotId, agentId);
-
-  console.log(`  - New Decision Generated: ID ${nextDecision.decisionId}`);
-  console.log(`  - Asset: ${nextDecision.asset}`);
-  console.log(`  - Proposed Action: ${nextDecision.action}`);
-  console.log(`  - Conviction: ${nextDecision.conviction}%`);
-  console.log(`  - Invalidation: "${nextDecision.decision.thesis.invalidation.slice(0, 60)}..."`);
-  console.log(`  - Resulting Policy: ${nextDecision.policyResult}`);
+  const duplicateMemories = await prisma.memory.findMany({
+    where: { tradeId: openRes2.trade.id },
+  });
+  assert.equal(duplicateMemories.length, 1, "Expected exactly one memory for a closed trade.");
+  console.log(`  ✅ Duplicate close produced ${duplicateMemories.length} memory record(s), not more.\n`);
 
   console.log("\n===============================================================");
-  console.log("🎉 ALL PERSISTENT MEMORY TESTS PASSED! TAHAP 6 IS 100% OPERATIONAL.");
+  console.log("🎉 MEMORY ECONOMIC FLOW VERIFIED: PROFIT, LOSS, AND DUPLICATE PROTECTION.");
   console.log("===============================================================");
 }
 

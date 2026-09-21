@@ -6,6 +6,7 @@
 
 import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
+import { z } from "zod";
 
 export type MemoryOutcome = "WIN" | "LOSS" | "BREAKEVEN";
 export type ThesisResult = "CORRECT" | "INCORRECT" | "PARTIAL" | "PENDING";
@@ -74,8 +75,232 @@ export function gradeConfidenceCalibration(
   return "NEUTRAL";
 }
 
+function normalizeText(value: unknown, fallback = "Unavailable"): string {
+  if (value == null) return fallback;
+  if (typeof value === "string") return value.trim() || fallback;
+  if (typeof value === "number" || typeof value === "boolean") return String(value);
+  try {
+    return JSON.stringify(value).slice(0, 500);
+  } catch {
+    return fallback;
+  }
+}
+
+function formattedPnl(value: number): string {
+  const sign = value >= 0 ? "+" : "-";
+  return `${sign}$${Math.abs(value).toFixed(2)}`;
+}
+
+function buildDeterministicLesson(context: {
+  asset: string;
+  side: string;
+  decision: string;
+  fundamental: string;
+  technical: string;
+  risk: string;
+  marketContext: string;
+  glyphView: string;
+  reasoning: string;
+  realizedPnl: number;
+  realizedPnlPercent: number;
+  outcome: "PROFIT" | "LOSS" | "BREAKEVEN";
+}): string {
+  const baseContext = [context.fundamental, context.technical]
+    .filter((part) => part && part !== "Unavailable")
+    .slice(0, 2)
+    .join(" ");
+
+  const decisionSummary = context.decision === "OPEN_LONG" ? "LONG" : context.decision === "OPEN_SHORT" ? "SHORT" : context.decision;
+
+  if (context.outcome === "PROFIT") {
+    return `The ${decisionSummary} decision for ${context.asset} was supported by the recorded ${baseContext || context.marketContext}, and the position closed with ${formattedPnl(context.realizedPnl)} realized PnL.`;
+  }
+
+  if (context.outcome === "LOSS") {
+    return `The ${decisionSummary} decision for ${context.asset} was supported by the recorded ${baseContext || context.marketContext}, but the expected direction did not materialize and the position closed with ${formattedPnl(context.realizedPnl)} realized PnL.`;
+  }
+
+  return `The ${decisionSummary} decision for ${context.asset} was supported by the recorded ${baseContext || context.marketContext}, and the position closed near breakeven at ${context.realizedPnlPercent.toFixed(2)}%.`;
+}
+
+const MemoryLessonSchema = z.object({
+  lesson: z.string().trim().min(1).max(280),
+});
+
+async function generateLessonFromContext(context: {
+  asset: string;
+  side: string;
+  decision: string;
+  fundamental: string;
+  technical: string;
+  risk: string;
+  marketContext: string;
+  glyphView: string;
+  reasoning: string;
+  realizedPnl: number;
+  realizedPnlPercent: number;
+  outcome: "PROFIT" | "LOSS" | "BREAKEVEN";
+}): Promise<string> {
+  const fallbackLesson = buildDeterministicLesson(context);
+  const apiKey = process.env.OPENROUTER_API_KEY;
+  if (!apiKey) {
+    return fallbackLesson;
+  }
+
+  const prompt = `You are generating an economic memory for Glyph.
+
+Review the completed trade using ONLY the factual data provided below.
+
+ORIGINAL DECISION CONTEXT
+- Asset: ${context.asset}
+- Decision: ${context.decision}
+- Fundamental: ${context.fundamental}
+- Technical: ${context.technical}
+- Risk: ${context.risk}
+- Market Context: ${context.marketContext}
+- Original Glyph View: ${context.glyphView}
+- Decision Reasoning: ${context.reasoning}
+
+TRADE
+- Side: ${context.side}
+- Final Outcome: ${context.outcome}
+- Realized PnL: ${formattedPnl(context.realizedPnl)}
+- Realized PnL %: ${context.realizedPnlPercent.toFixed(2)}%
+
+Generate ONE concise lesson describing what Glyph experienced from this completed trade.
+Rules:
+1. Use ONLY the provided facts.
+2. Do not invent indicators, events, market conditions, or reasons.
+3. Do not modify the calculated PnL or outcome.
+4. Do not create future trading advice.
+5. Do not claim that a factor caused the outcome unless the provided data supports it.
+6. Do not introduce information that was unavailable at the time of the original decision.
+7. The lesson should describe the relationship between Glyph's original decision context and the actual outcome.
+8. Keep the lesson concise, approximately 1-2 sentences.`;
+
+  for (let attempt = 0; attempt <= 2; attempt++) {
+    try {
+      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+          "HTTP-Referer": "https://glyph.network",
+          "X-Title": "Glyph Autonomous Agent",
+        },
+        body: JSON.stringify({
+          model: process.env.OPENROUTER_MODEL || "openai/gpt-4o-mini",
+          temperature: 0.2,
+          max_tokens: 250,
+          messages: [
+            { role: "user", content: prompt },
+          ],
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`OpenRouter HTTP ${response.status}`);
+      }
+
+      const json = await response.json();
+      const raw = json.choices?.[0]?.message?.content ?? "";
+      if (!raw) {
+        throw new Error("Empty lesson response");
+      }
+
+      const cleaned = raw.trim().replace(/^```(?:json)?\n?/, "").replace(/\n?```$/, "");
+      let parsed: unknown = cleaned;
+      try {
+        parsed = JSON.parse(cleaned);
+      } catch {
+        parsed = { lesson: cleaned || fallbackLesson };
+      }
+
+      const validation = MemoryLessonSchema.safeParse(parsed);
+      if (validation.success) {
+        return validation.data.lesson;
+      }
+      throw new Error(validation.error.issues.map((issue) => issue.message).join(", "));
+    } catch (error) {
+      if (attempt === 2) {
+        console.warn("[Memory] lesson generation failed; using deterministic fallback.", error);
+        return fallbackLesson;
+      }
+    }
+  }
+
+  return fallbackLesson;
+}
+
+async function reconstructTradeMemoryContext(
+  tx: Prisma.TransactionClient,
+  tradeId: string
+): Promise<{
+  asset: string;
+  side: string;
+  decision: string;
+  fundamental: string;
+  technical: string;
+  risk: string;
+  marketContext: string;
+  glyphView: string;
+  reasoning: string;
+  realizedPnl: number;
+  realizedPnlPercent: number;
+  outcome: "PROFIT" | "LOSS" | "BREAKEVEN";
+  decisionId: string | null;
+}> {
+  const trade = await tx.trade.findUnique({
+    where: { id: tradeId },
+    include: {
+      decision: { include: { researchSnapshot: true } },
+      position: true,
+    },
+  });
+
+  if (!trade) {
+    throw new Error(`Trade ${tradeId} not found while constructing economic memory.`);
+  }
+
+  const thesis = ((trade.decision?.thesis ?? trade.thesis ?? {}) as Record<string, unknown>);
+  const decisionAction = trade.decision?.action ?? (trade.action === "LONG" ? "OPEN_LONG" : "OPEN_SHORT");
+  const fundamental = normalizeText(thesis.fundamental ?? (trade.decision?.fundamentalScore != null ? `Fundamental score ${trade.decision.fundamentalScore}/100` : "Unavailable"));
+  const technical = normalizeText(thesis.technical ?? (trade.decision?.technicalScore != null ? `Technical score ${trade.decision.technicalScore}/100` : "Unavailable"));
+  const risk = normalizeText(thesis.risk ?? (trade.decision?.riskScore != null ? `Risk score ${trade.decision.riskScore}/100` : "Unavailable"));
+  const marketContext = normalizeText(
+    trade.decision?.researchSnapshot?.marketData ?? trade.decision?.researchSnapshot?.fundamentalData ?? trade.decision?.researchSnapshot?.technicalData ?? "Market context recorded at entry",
+    "Market context recorded at entry"
+  );
+  const glyphView = normalizeText(thesis.catalyst ?? thesis.fundamental ?? "Original glyph view available at entry");
+  const reasoning = normalizeText(
+    [thesis.catalyst, thesis.invalidation].filter(Boolean).join(" ") || "No additional reasoning recorded at entry.",
+    "No additional reasoning recorded at entry."
+  );
+
+  const realizedPnl = Number(trade.simulatedPnl ?? 0);
+  const realizedPnlPercent = Number(trade.simulatedPnlPercent ?? 0);
+  const outcome: "PROFIT" | "LOSS" | "BREAKEVEN" =
+    realizedPnl > 0 ? "PROFIT" : realizedPnl < 0 ? "LOSS" : "BREAKEVEN";
+
+  return {
+    asset: trade.asset,
+    side: trade.action,
+    decision: decisionAction,
+    fundamental,
+    technical,
+    risk,
+    marketContext,
+    glyphView,
+    reasoning,
+    realizedPnl,
+    realizedPnlPercent,
+    outcome,
+    decisionId: trade.decision?.id ?? null,
+  };
+}
+
 /**
- * Synthesizes an objective, grounded lesson based on trade outcome and thesis.
+ * Synthesizes an objective, grounded lesson based on trade outcome and original decision context.
  */
 export function synthesizeLesson(
   asset: string,
@@ -83,19 +308,28 @@ export function synthesizeLesson(
   outcome: MemoryOutcome,
   pnlPercent: number,
   calibration: ConfidenceCalibration,
-  reason?: string
+  reason?: string,
+  context?: {
+    fundamental?: string;
+    technical?: string;
+    risk?: string;
+    marketContext?: string;
+    glyphView?: string;
+    reasoning?: string;
+  }
 ): { lesson: string; adaptation: string; weightShift: string } {
   const pnlSign = pnlPercent >= 0 ? "+" : "";
+  const summary = context ? [context.fundamental, context.technical].filter(Boolean).join(" ") : "";
 
   if (outcome === "WIN") {
     return {
       lesson: `${asset} ${side} validated with ${pnlSign}${pnlPercent.toFixed(
         2
-      )}% gain. Momentum and fundamental thesis aligned favorably with execution timing.`,
+      )}% gain${summary ? ` under the recorded ${summary}` : ""}. Momentum and the original thesis aligned favorably with execution timing.`,
       adaptation:
         calibration === "GOOD"
-          ? "Reinforce high-conviction momentum thesis patterns for volatile tier-1 assets."
-          : "Calibrate conviction upward when technical breakout confirms fundamental catalysts.",
+          ? "Reinforce high-conviction thesis patterns for favorable market regimes."
+          : "Calibrate conviction upward when the recorded thesis is confirmed by evidence.",
       weightShift: "+3.8% Momentum / +2.1% Catalyst Alignment",
     };
   }
@@ -105,11 +339,11 @@ export function synthesizeLesson(
     return {
       lesson: `${asset} ${side} resulted in ${pnlPercent.toFixed(
         2
-      )}% loss${isLiq ? " (Simulated Liquidation)" : ""}. Invalidation boundary was breached before expected catalyst played out.`,
+      )}% loss${isLiq ? " (Simulated Liquidation)" : ""}${summary ? ` despite the recorded ${summary}` : ""}. The original expectation did not materialize before the position was closed.`,
       adaptation:
         calibration === "OVER_CONFIDENT"
-          ? "Reduce initial leverage and widen invalidation tolerance on macro volatility days."
-          : "Tighten stop-loss triggers to preserve treasury capital against sudden adverse momentum.",
+          ? "Reduce initial leverage and widen invalidation tolerance on volatile market conditions."
+          : "Tighten risk controls and ensure the original thesis remains supported by evidence before holding the position.",
       weightShift: "-4.5% Overconfidence Drag / +3.0% Volatility Sensitivity",
     };
   }
@@ -117,8 +351,8 @@ export function synthesizeLesson(
   return {
     lesson: `${asset} ${side} closed near breakeven (${pnlSign}${pnlPercent.toFixed(
       2
-    )}%). Market exhibited consolidation without decisive directional commitment.`,
-    adaptation: "Require stronger volume breakout confirmation before scaling position.",
+    )}%)${summary ? ` after the recorded ${summary}` : ""}. The trade remained directionally uncertain without a decisive catalyst.`,
+    adaptation: "Require stronger confirmation from the original thesis before scaling position risk.",
     weightShift: "Neutral weight distribution maintained.",
   };
 }
@@ -131,6 +365,23 @@ export async function createTradeMemoryInTransaction(
   tx: Prisma.TransactionClient,
   params: CreateMemoryParams
 ): Promise<TradeMemoryRecord> {
+  const existing = await tx.memory.findFirst({ where: { tradeId: params.tradeId } });
+  if (existing) {
+    return {
+      id: existing.id,
+      tradeId: existing.tradeId,
+      asset: params.asset,
+      outcome: existing.outcome as MemoryOutcome,
+      pnlPercent: Number(existing.pnlPercent ?? params.pnlPercent),
+      thesisResult: existing.thesisResult as ThesisResult,
+      lesson: existing.lesson,
+      confidenceCalibration: existing.confidenceCalibration as ConfidenceCalibration,
+      adaptation: existing.adaptation,
+      weightShift: existing.weightShift,
+      createdAt: existing.createdAt,
+    };
+  }
+
   const outcome = classifyOutcome(params.pnlPercent);
   const conviction = params.conviction ?? 70;
   const calibration = gradeConfidenceCalibration(outcome, conviction);
@@ -138,13 +389,37 @@ export async function createTradeMemoryInTransaction(
   const thesisResult: ThesisResult =
     outcome === "WIN" ? "CORRECT" : outcome === "LOSS" ? "INCORRECT" : "PARTIAL";
 
-  const { lesson, adaptation, weightShift } = synthesizeLesson(
+  const context = await reconstructTradeMemoryContext(tx, params.tradeId);
+  const lesson = await generateLessonFromContext({
+    asset: context.asset,
+    side: context.side,
+    decision: context.decision,
+    fundamental: context.fundamental,
+    technical: context.technical,
+    risk: context.risk,
+    marketContext: context.marketContext,
+    glyphView: context.glyphView,
+    reasoning: context.reasoning,
+    realizedPnl: context.realizedPnl,
+    realizedPnlPercent: context.realizedPnlPercent,
+    outcome: context.outcome,
+  });
+
+  const { adaptation, weightShift } = synthesizeLesson(
     params.asset,
     params.side,
     outcome,
     params.pnlPercent,
     calibration,
-    params.reason
+    params.reason,
+    {
+      fundamental: context.fundamental,
+      technical: context.technical,
+      risk: context.risk,
+      marketContext: context.marketContext,
+      glyphView: context.glyphView,
+      reasoning: context.reasoning,
+    }
   );
 
   const memory = await tx.memory.create({
@@ -168,6 +443,7 @@ export async function createTradeMemoryInTransaction(
       title: `Memory Formed: ${params.asset} ${outcome}`,
       description: `Reflected on trade: ${lesson} [Calibration: ${calibration}]`,
       tradeId: params.tradeId,
+      decisionId: context.decisionId,
       result: `${outcome} (${calibration})`,
     },
   });

@@ -1,4 +1,3 @@
-import React from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -23,7 +22,7 @@ export default function LifeLoading() {
 
           {/* Filter Bar Skeleton */}
           <div className="px-4 sm:px-6 py-2.5 border-b border-[#171717] bg-[#050505] flex items-center gap-2 overflow-x-auto no-scrollbar">
-            {["ALL", "MARKET", "ANALYSIS", "DECISION", "TRADE", "RISK", "MEMORY", "SYSTEM"].map(
+            {["ALL", "ANALYSIS", "TRADE", "MEMORY", "SYSTEM", "TREASURY"].map(
               (item) => (
                 <Skeleton key={item} className="h-6 w-16 bg-[#121212] border border-[#1e1e22]" />
               )

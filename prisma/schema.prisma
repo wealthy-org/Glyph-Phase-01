@@ -396,7 +396,7 @@ model Memory {
   agentId String
   agent   Agent  @relation(fields: [agentId], references: [id], onDelete: Cascade)
 
-  tradeId               String? // FK to trade this memory derives from
+  tradeId               String?               @unique // One economic memory per completed trade
   outcome               MemoryOutcome // WIN | LOSS | BREAKEVEN
   pnlPercent            Decimal?              @db.Decimal(8, 4)
   thesisResult          ThesisResult // CORRECT | INCORRECT | PARTIAL | PENDING

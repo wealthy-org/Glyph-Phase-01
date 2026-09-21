@@ -284,11 +284,11 @@ export type MemoryOrderByWithRelationInput = {
 
 export type MemoryWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  tradeId?: string
   AND?: Prisma.MemoryWhereInput | Prisma.MemoryWhereInput[]
   OR?: Prisma.MemoryWhereInput[]
   NOT?: Prisma.MemoryWhereInput | Prisma.MemoryWhereInput[]
   agentId?: Prisma.StringFilter<"Memory"> | string
-  tradeId?: Prisma.StringNullableFilter<"Memory"> | string | null
   outcome?: Prisma.EnumMemoryOutcomeFilter<"Memory"> | $Enums.MemoryOutcome
   pnlPercent?: Prisma.DecimalNullableFilter<"Memory"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   thesisResult?: Prisma.EnumThesisResultFilter<"Memory"> | $Enums.ThesisResult
@@ -298,7 +298,7 @@ export type MemoryWhereUniqueInput = Prisma.AtLeast<{
   weightShift?: Prisma.StringNullableFilter<"Memory"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Memory"> | Date | string
   agent?: Prisma.XOR<Prisma.AgentScalarRelationFilter, Prisma.AgentWhereInput>
-}, "id">
+}, "id" | "tradeId">
 
 export type MemoryOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

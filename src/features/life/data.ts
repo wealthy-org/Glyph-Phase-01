@@ -1,11 +1,10 @@
-import { LifeEvent, LifeCategory } from "./types";
+import { LifeCategory, LifeEvent } from "./types";
 
 export const LIFE_CATEGORIES: LifeCategory[] = [
   "ALL EVENTS",
   "GENESIS",
   "TREASURY",
   "THESIS",
-  "DECISION",
   "TRADE",
   "MEMORY",
 ];

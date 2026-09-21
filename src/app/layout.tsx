@@ -1,6 +1,6 @@
+import { Footer } from "@/components/layout/Footer";
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Footer } from "@/components/layout/Footer";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -21,6 +21,11 @@ export const metadata: Metadata = {
   applicationName: "Glyph",
   authors: [{ name: "Glyph Protocol" }],
   keywords: ["economic entity", "autonomous agent", "economic being", "observation interface"],
+  icons: {
+    icon: "/glyph-logo.png",
+    shortcut: "/glyph-logo.png",
+    apple: "/glyph-logo.png",
+  },
   openGraph: {
     title: "Glyph — Economic Being #001",
     description: "A persistent digital being with an observable economic life.",
