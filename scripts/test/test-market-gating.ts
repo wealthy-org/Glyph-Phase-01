@@ -1,18 +1,17 @@
 import "dotenv/config";
 import { runAutonomousGlyphCycle } from "../../src/lib/cycle/orchestrator";
-import { TwelveDataProvider } from "../../src/lib/market/twelve-data";
 import { validateTradeProposal } from "../../src/lib/policy";
 import { prisma } from "../../src/lib/prisma";
+import { getGlyphDecisionMarketStatus } from "../glyph-decision/trade-cycle/market-gate";
 
 async function runMarketGatingVerification() {
   console.log("===============================================================");
   console.log("🛡️ VERIFYING MARKET HOURS GATING VIA TWELVE DATA API");
   console.log("===============================================================\n");
 
-  // 1. Test Twelve Data getMarketStatus API
-  console.log("▶ [TEST 1] Querying real-time Market Status from Twelve Data API...");
-  const marketProvider = new TwelveDataProvider();
-  const status = await marketProvider.getMarketStatus("United States");
+  // 1. Test shared Alpha Vantage market gate
+  console.log("▶ [TEST 1] Querying real-time US Equity Market Status from Alpha Vantage...");
+  const status = await getGlyphDecisionMarketStatus();
   console.log("  ✅ Live Market Status fetched:");
   console.log(`     ↳ Region           : ${status.region}`);
   console.log(`     ↳ Status           : ${status.status.toUpperCase()}`);

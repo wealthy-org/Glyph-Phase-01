@@ -1,8 +1,8 @@
-import { TwelveDataProvider } from "@/lib/market/twelve-data";
 import { prisma } from "@/lib/prisma";
 import crypto from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { runMarketAnalysis } from "../../../../../scripts/glyph-decision/market-analysis";
+import { getGlyphDecisionMarketStatus } from "../../../../../scripts/glyph-decision/trade-cycle/market-gate";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -48,11 +48,21 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         }
 
         if (!body.force) {
-            const marketStatus = await new TwelveDataProvider().getMarketStatus("United States");
-            if (!marketStatus.isOpen) {
+            const marketStatus = await getGlyphDecisionMarketStatus();
+            if (marketStatus.status === "unknown") {
+                console.error("[MarketAnalysisCron] Market status is unknown", marketStatus.notes);
+                return NextResponse.json({
+                    status: "MARKET_STATUS_UNKNOWN",
+                    message: "Market analysis skipped because the US market status could not be verified.",
+                    marketStatus,
+                    checkedAt: marketStatus.checkedAt,
+                }, { status: 503 });
+            }
+            if (marketStatus.status === "closed") {
                 return NextResponse.json({
                     status: "MARKET_CLOSED",
                     message: `Market analysis skipped because the US market is ${marketStatus.status.toUpperCase()}.`,
+                    marketStatus,
                     checkedAt: marketStatus.checkedAt,
                 }, { status: 200 });
             }

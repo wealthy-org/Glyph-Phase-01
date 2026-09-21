@@ -18,7 +18,7 @@ import {
  * Hardcoded Whitelist of Allowed Assets (BRIEF §3.8, §10).
  * MUST NOT be stored solely in a database table that could be dynamically manipulated.
  */
-export const ALLOWED_ASSETS = ["NVDA", "MSFT", "AAPL"] as const;
+export const ALLOWED_ASSETS = ["NVDA", "AAPL"] as const;
 export type AllowedAsset = (typeof ALLOWED_ASSETS)[number];
 
 /**

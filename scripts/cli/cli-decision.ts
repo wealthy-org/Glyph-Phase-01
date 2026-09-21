@@ -9,7 +9,6 @@ import {
   buildDecisionUserPrompt,
 } from "../../src/lib/decision/prompt";
 import { GlyphDecisionOutput, GlyphDecisionSchema } from "../../src/lib/decision/schema";
-import { TwelveDataProvider } from "../../src/lib/market/twelve-data";
 import { getRecentMemories } from "../../src/lib/memory";
 import { commitDecisionOnchain } from "../../src/lib/onchain/registry";
 import { evaluateAgentTradeProposal } from "../../src/lib/policy";
@@ -18,6 +17,7 @@ import { prisma } from "../../src/lib/prisma";
 import { createResearchSnapshot } from "../../src/lib/research";
 import { getTreasurySummary } from "../../src/lib/treasury";
 import { SynthesizedResearch } from "../../src/types/market";
+import { getGlyphDecisionMarketStatus } from "../glyph-decision/trade-cycle/market-gate";
 
 // ============================================================================
 // GLYPH PHASE 01 — INTERACTIVE & FLEXIBLE DECISION CLI TOOL
@@ -256,8 +256,7 @@ async function main() {
   console.log(`📈 Total Equity:     $${treasurySummary.totalEquity.toFixed(2)} USD-SIM\n`);
 
   // Check market hours
-  const marketProvider = new TwelveDataProvider();
-  const marketStatus = await marketProvider.getMarketStatus("United States");
+  const marketStatus = await getGlyphDecisionMarketStatus();
   let bypassMarketHours = Boolean(opts.force);
 
   const isInteractive = !opts.nonInteractive && process.stdin.isTTY;

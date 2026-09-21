@@ -141,7 +141,17 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
     console.log(`[Glyph Decision Cron] Market status: ${marketStatus.status.toUpperCase()}`);
 
-    if (!marketStatus.isOpen) {
+    if (marketStatus.status === "unknown") {
+        console.error("[Glyph Decision Cron] Market status is unknown", marketStatus.notes);
+        return NextResponse.json({
+            success: false,
+            status: "MARKET_STATUS_UNKNOWN",
+            reason: "MARKET_STATUS_UNKNOWN",
+            marketStatus,
+        }, { status: 503 });
+    }
+
+    if (marketStatus.status === "closed") {
         console.log("[Glyph Decision Cron] Cycle skipped");
         return NextResponse.json({
             success: true,

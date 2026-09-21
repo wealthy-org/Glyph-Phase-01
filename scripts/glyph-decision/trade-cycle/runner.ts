@@ -229,7 +229,14 @@ export async function runTradeCycle(options: TradeCycleRunOptions = {}): Promise
     const agentId = options.agentId || process.env.GLYPH_AGENT_ID || "1";
     const assets = await loadAllowedAssets(agentId, options.asset?.toUpperCase());
     if (assets.length === 0) throw new Error("No allowed assets are configured.");
-    const marketOpen = options.marketOpen ?? (await getGlyphDecisionMarketStatus()).isOpen;
+    let marketOpen = options.marketOpen;
+    if (marketOpen === undefined) {
+        const marketStatus = await getGlyphDecisionMarketStatus();
+        if (marketStatus.status === "unknown") {
+            throw new Error(marketStatus.notes || "US market status could not be verified.");
+        }
+        marketOpen = marketStatus.isOpen;
+    }
 
     if (!marketOpen) {
         console.log("[Glyph Decision Cron] Trade-cycle skipped because market is closed");

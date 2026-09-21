@@ -7,10 +7,10 @@
 // ============================================================================
 
 import { runAutonomousGlyphCycle } from "@/lib/cycle/orchestrator";
-import { TwelveDataProvider } from "@/lib/market/twelve-data";
 import { prisma } from "@/lib/prisma";
 import crypto from "crypto";
 import { NextRequest, NextResponse } from "next/server";
+import { getGlyphDecisionMarketStatus } from "../../../../../scripts/glyph-decision/trade-cycle/market-gate";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -125,10 +125,21 @@ export async function POST(req: NextRequest) {
 
     // 4. Market Open Check via the configured Twelve Data provider (§Market Status)
     const bypassMarket = Boolean(body.force);
-    const marketProvider = new TwelveDataProvider();
-    const marketStatus = await marketProvider.getMarketStatus("United States");
+    const marketStatus = bypassMarket ? null : await getGlyphDecisionMarketStatus();
 
-    if (body.skipIfClosed && !marketStatus.isOpen && !bypassMarket) {
+    if (marketStatus?.status === "unknown") {
+      console.error("[CronAPI] Market status is unknown", marketStatus.notes);
+      return NextResponse.json(
+        {
+          status: "MARKET_STATUS_UNKNOWN",
+          message: "US market status could not be verified.",
+          data: { marketStatus, checkedAt: marketStatus.checkedAt },
+        },
+        { status: 503 }
+      );
+    }
+
+    if (body.skipIfClosed && marketStatus?.status === "closed") {
       return NextResponse.json(
         {
           status: "MARKET_CLOSED",

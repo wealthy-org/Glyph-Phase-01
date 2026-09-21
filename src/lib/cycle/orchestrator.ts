@@ -23,6 +23,7 @@ import {
 import { prisma } from "@/lib/prisma";
 import { createResearchSnapshot } from "@/lib/research";
 import { getTreasurySummary } from "@/lib/treasury";
+import { getGlyphDecisionMarketStatus } from "../../../scripts/glyph-decision/trade-cycle/market-gate";
 
 import { MarketStatusResult } from "@/types/market";
 
@@ -142,10 +143,13 @@ export async function runAutonomousGlyphCycle(
     // STEP 1.5: Verify US Stock Market Status via the configured provider
     // -------------------------------------------------------------------------
     console.log(`\n▶ [STEP 1.5] Verifying US Stock Market real-time open status...`);
-    const marketStatus = await marketProvider.getMarketStatus("United States");
     const bypassMarket = Boolean(
       options.bypassMarketHours || process.env.FORCE_MARKET_OPEN === "true"
     );
+    const marketStatus = await getGlyphDecisionMarketStatus();
+    if (marketStatus.status === "unknown" && !bypassMarket) {
+      throw new Error(marketStatus.notes || "US market status could not be verified.");
+    }
 
     console.log(
       `  ↳ Market Status: ${marketStatus.status.toUpperCase()} (${marketStatus.primaryExchanges}, Hours: ${marketStatus.localOpen} - ${marketStatus.localClose}) [Source: ${marketStatus.source}]`
@@ -219,7 +223,7 @@ export async function runAutonomousGlyphCycle(
       targetAsset: selectedAsset,
       positionsChecked,
       liquidatedCount,
-      marketClosed: !marketStatus.isOpen,
+      marketClosed: !isMarketOpen,
       marketStatus,
       decisionResult,
       executionDurationMs: duration,

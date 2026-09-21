@@ -2,9 +2,9 @@
 import "dotenv/config";
 
 import { readFile } from "node:fs/promises";
-import { TwelveDataProvider } from "../../../src/lib/market/twelve-data";
 import { prisma } from "../../../src/lib/prisma";
 import { runSingleAssetDecision } from "../llm-decision";
+import { getGlyphDecisionMarketStatus } from "../trade-cycle/market-gate";
 import { POLICY_CONFIG } from "./config";
 import { evaluatePolicy } from "./policy";
 import { PolicyResult } from "./types";
@@ -109,7 +109,14 @@ export async function loadState(
         ? metadata as { dataQuality?: unknown; riskContext?: { regime?: unknown; level?: unknown; details?: unknown } | null }
         : undefined;
     const riskContext = metadataRecord?.riskContext;
-    const marketOpen = options?.marketOpen ?? (await new TwelveDataProvider().getMarketStatus("United States")).isOpen;
+    let marketOpen = options?.marketOpen;
+    if (marketOpen === undefined) {
+        const marketStatus = await getGlyphDecisionMarketStatus();
+        if (marketStatus.status === "unknown") {
+            throw new Error(marketStatus.notes || "US market status could not be verified.");
+        }
+        marketOpen = marketStatus.isOpen;
+    }
     const positions = await prisma.position.findMany({
         where: { agentId: agent.id, isOpen: true },
         select: { id: true, asset: true, side: true },

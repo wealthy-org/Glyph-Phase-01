@@ -15,6 +15,44 @@ Panduan ringkas perintah operasional terminal untuk database, treasury, dan peng
 | `npm run db:seed` | **Isi ulang data demo 7 hari**. Menjalankan seed simulasi penuh tanpa menghapus ulang tabel database. |
 | `npm run reset:trades` | **Bersihkan trade saja**. Menghapus histori trade, keputusan, dan memori ke 0, tanpa mengubah identitas Agent. |
 
+### 1.1. Mengubah `allowedAssets`
+
+`allowedAssets` adalah whitelist asset yang boleh diproses oleh Glyph. Untuk menggantinya, misalnya hanya menjadi `NVDA` dan `AAPL`, sinkronkan tiga tempat berikut.
+
+1. Ubah whitelist hardcoded di `src/lib/policy.ts`:
+
+  ```ts
+  export const ALLOWED_ASSETS = ["NVDA", "AAPL"] as const;
+  ```
+
+2. Ubah nilai `allowedAssets` pada bagian `update` dan `create` di `prisma/seeds/policy.seed.ts`:
+
+  ```ts
+  allowedAssets: ["NVDA", "AAPL"],
+  ```
+
+3. Ubah nilai yang dipakai script sinkronisasi database di `scripts/db/update-policy-db.ts`:
+
+  ```ts
+  allowedAssets: ["NVDA", "AAPL"],
+  ```
+
+4. Jalankan script update policy terhadap database aktif:
+
+  ```bash
+  npx tsx scripts/db/update-policy-db.ts
+  ```
+
+5. Verifikasi hasilnya:
+
+  ```bash
+  npx tsx scripts/onchain/verify-setup.ts
+  ```
+
+  Atau buka Prisma Studio dengan `npx prisma studio`, lalu periksa field `AgentPolicy.allowedAssets`. Nilai akhirnya harus tepat `["NVDA", "AAPL"]`.
+
+> **Penting:** `npm run db:reset-genesis` menjalankan seed Genesis dan dapat mengisi ulang policy dari `prisma/seeds/policy.seed.ts`. Setelah reset database, jalankan kembali `npx tsx scripts/db/update-policy-db.ts` bila diperlukan. Jika menggunakan `analysis-only-v2.seed.ts`, sesuaikan juga konstanta `ALLOWED_ASSETS` dan `ANALYSIS_ORDER` di file tersebut karena seed V2 memiliki aturan asset sendiri.
+
 ---
 
 ## 2. Contoh Penggunaan
