@@ -22,7 +22,7 @@ export const LlmThesisSchema = z.object({
 
 export const LlmDecisionSchema = z.object({
     asset: z.string().min(1).transform((v) => v.trim().toUpperCase()),
-    action: z.enum(["LONG", "SHORT", "NO_TRADE"]),
+    action: z.enum(["LONG", "SHORT", "HOLD", "CLOSE", "NO_TRADE"]),
     conviction: z.number().int().min(0).max(100),
     thesis: LlmThesisSchema,
 });

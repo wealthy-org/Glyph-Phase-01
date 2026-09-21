@@ -14,7 +14,7 @@ import { SynthesizedResearch } from "../../../src/types/market";
  * Intentionally simpler than the full DecisionAction enum used by the
  * execution engine — this layer ONLY proposes direction, it does NOT execute.
  */
-export type LlmAction = "LONG" | "SHORT" | "NO_TRADE";
+export type LlmAction = "LONG" | "SHORT" | "HOLD" | "CLOSE" | "NO_TRADE";
 
 /**
  * The thesis breakdown required by the LLM Decision prompt (task §10).

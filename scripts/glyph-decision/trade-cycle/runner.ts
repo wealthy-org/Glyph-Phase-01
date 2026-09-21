@@ -1,5 +1,7 @@
+import { closeSimulatedPosition } from "../../../src/lib/portfolio";
 import { prisma } from "../../../src/lib/prisma";
 import { runSingleAssetDecision } from "../llm-decision";
+import { runMarketAnalysis } from "../market-analysis";
 import { executePaperTrade } from "../paper-trade";
 import { PaperTradeExecution } from "../paper-trade/types";
 import { loadState } from "../policy-validation";
@@ -16,7 +18,7 @@ export interface TradeCycleRunOptions {
 export interface TradeCycleAssetResult {
     asset: string;
     decisionId?: string;
-    action?: "LONG" | "SHORT" | "NO_TRADE";
+    action?: "LONG" | "SHORT" | "HOLD" | "CLOSE" | "NO_TRADE";
     conviction?: number;
     policyResult?: "APPROVED" | "REJECTED";
     policyRejectReason?: string;
@@ -31,19 +33,27 @@ export interface TradeCycleRunResult {
     status: "COMPLETED" | "FAILED";
 }
 
-function actionForDatabase(action: "LONG" | "SHORT" | "NO_TRADE") {
-    return action === "LONG" ? "OPEN_LONG" : action === "SHORT" ? "OPEN_SHORT" : "NO_TRADE";
+function actionForDatabase(action: "LONG" | "SHORT" | "HOLD" | "CLOSE" | "NO_TRADE") {
+    return action === "LONG" ? "OPEN_LONG" : action === "SHORT" ? "OPEN_SHORT" : action;
 }
 
 export async function loadAllowedAssets(agentId: string, requestedAsset?: string): Promise<string[]> {
     const agent = await prisma.agent.findUnique({
         where: { agentId },
-        select: { policy: { select: { allowedAssets: true } } },
+        select: { id: true, policy: { select: { allowedAssets: true } } },
     });
     if (!agent?.policy) throw new Error(`Agent #${agentId} does not have an active policy.`);
-    const assets = agent.policy.allowedAssets.map((asset) => asset.trim().toUpperCase()).filter(Boolean);
+    const policyAssets = agent.policy.allowedAssets.map((asset) => asset.trim().toUpperCase()).filter(Boolean);
+    const openPositions = await prisma.position.findMany({
+        where: { agentId: agent.id, isOpen: true },
+        select: { asset: true },
+    });
+    const assets = Array.from(new Set([
+        ...policyAssets,
+        ...openPositions.map((position) => position.asset.trim().toUpperCase()),
+    ]));
     if (requestedAsset) {
-        if (!assets.includes(requestedAsset)) throw new Error(`Asset ${requestedAsset} is not allowed by Agent #${agentId}.`);
+        if (!assets.includes(requestedAsset)) throw new Error(`Asset ${requestedAsset} is not allowed and has no active position for Agent #${agentId}.`);
         return [requestedAsset];
     }
     return assets;
@@ -84,7 +94,32 @@ async function processAsset(
     marketOpen: boolean
 ): Promise<TradeCycleAssetResult> {
     try {
-        const decision = await runSingleAssetDecision(asset, true);
+        const activePosition = await prisma.position.findFirst({
+            where: { agent: { agentId }, asset, isOpen: true },
+            select: {
+                id: true,
+                asset: true,
+                side: true,
+                entryPrice: true,
+                currentPrice: true,
+                quantity: true,
+                positionSize: true,
+                unrealizedPnl: true,
+                unrealizedPnlPercent: true,
+                openedAt: true,
+            },
+        });
+        const decision = await runSingleAssetDecision(asset, true, activePosition ? {
+            asset: activePosition.asset,
+            side: activePosition.side,
+            entryPrice: Number(activePosition.entryPrice),
+            currentPrice: Number(activePosition.currentPrice),
+            quantity: Number(activePosition.quantity),
+            positionSize: Number(activePosition.positionSize),
+            unrealizedPnl: Number(activePosition.unrealizedPnl),
+            unrealizedPnlPercent: Number(activePosition.unrealizedPnlPercent),
+            openedAt: activePosition.openedAt.toISOString(),
+        } : null);
         const { state, config } = await loadState(agentId, decision, { marketOpen });
         const policyResult = evaluatePolicy(decision, state, config);
         const decisionId = await persistDecision(agentId, decision, policyResult, cycleId);
@@ -92,7 +127,7 @@ async function processAsset(
         console.log(`[Glyph Decision Cron] ${asset}: decision ${decision.action} (${decision.conviction})`);
         console.log(`[Glyph Decision Cron] ${asset}: policy ${policyResult.result}`);
 
-        if (policyResult.result === "REJECTED" || !policyResult.allocation) {
+        if (policyResult.result === "REJECTED") {
             console.log(`[Glyph Decision Cron] ${asset}: paper trade skipped`);
             return {
                 asset,
@@ -101,6 +136,35 @@ async function processAsset(
                 conviction: decision.conviction,
                 policyResult: policyResult.result,
                 policyRejectReason: policyResult.reason,
+                execution: null,
+            };
+        }
+
+        if (decision.action === "CLOSE") {
+            if (!activePosition) throw new Error(`CLOSE approved without an active position for ${asset}.`);
+            const closeResult = await closeSimulatedPosition(activePosition.id, state.marketPrice, "MANUAL", {
+                decisionId,
+                cycleId,
+            });
+            console.log(`[Glyph Decision Cron] ${asset}: position closed (${closeResult.realizedPnl.toFixed(2)} realized PnL)`);
+            return {
+                asset,
+                decisionId,
+                action: decision.action,
+                conviction: decision.conviction,
+                policyResult: policyResult.result,
+                execution: null,
+            };
+        }
+
+        if (decision.action === "HOLD") {
+            console.log(`[Glyph Decision Cron] ${asset}: position held`);
+            return {
+                asset,
+                decisionId,
+                action: decision.action,
+                conviction: decision.conviction,
+                policyResult: policyResult.result,
                 execution: null,
             };
         }
@@ -172,9 +236,28 @@ export async function runTradeCycle(options: TradeCycleRunOptions = {}): Promise
         return { agentId, assets, results: [], status: "COMPLETED" };
     }
 
+    const executionId = options.cycleId || `trade-cycle:${agentId}:${Date.now()}`;
+    const analysis = await runMarketAnalysis({
+        agentId,
+        asset: options.asset,
+        executionId,
+    });
+    if (analysis.status === "FAILED") {
+        return {
+            agentId,
+            assets,
+            results: analysis.results.map((result) => ({
+                asset: result.asset,
+                execution: null,
+                error: result.error || "Market analysis failed.",
+            })),
+            status: "FAILED",
+        };
+    }
+
     console.log(`[Glyph Decision Cron] Starting trade-cycle for ${assets.join(", ")}`);
     const results: TradeCycleAssetResult[] = [];
-    for (const asset of assets) results.push(await processAsset(agentId, asset, options.cycleId, marketOpen));
+    for (const asset of assets) results.push(await processAsset(agentId, asset, executionId, marketOpen));
 
     return {
         agentId,

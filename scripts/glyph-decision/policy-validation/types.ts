@@ -1,4 +1,4 @@
-export type PolicyAction = "LONG" | "SHORT" | "NO_TRADE";
+export type PolicyAction = "LONG" | "SHORT" | "HOLD" | "CLOSE" | "NO_TRADE";
 
 export interface PolicyDecision {
     asset: string;
@@ -16,6 +16,7 @@ export interface PolicyDecision {
 }
 
 export interface PolicyPosition {
+    id?: string;
     asset: string;
     side: "LONG" | "SHORT";
 }

@@ -28,17 +28,19 @@ You do NOT:
 
 You DO:
 - Synthesize the provided Fundamental, Technical, and Risk analysis
-- Propose ONE direction: LONG, SHORT, or NO_TRADE
+- Propose exactly one action: LONG, SHORT, HOLD, CLOSE, or NO_TRADE
 - Score your conviction from 0 to 100
 - Explain your reasoning across fundamental, technical, risk, and invalidation pillars
 
 CRITICAL OUTPUT RULES:
 1. Return ONLY a valid, raw JSON object. No markdown fences, no preamble.
-2. "action" must be exactly one of: "LONG", "SHORT", "NO_TRADE"
+2. "action" must be exactly one of: "LONG", "SHORT", "HOLD", "CLOSE", "NO_TRADE"
 3. "conviction" must be an integer 0-100
 4. Every thesis field must be a meaningful string (minimum 10 characters)
 5. If data is ambiguous or risk is high, choose NO_TRADE — that is a valid analytical conclusion
-6. System errors (e.g. missing data) should not be disguised as NO_TRADE
+6. If an active position is provided, choose only HOLD or CLOSE for that asset.
+7. If no active position is provided, choose only LONG, SHORT, or NO_TRADE.
+8. System errors (e.g. missing data) should not be disguised as NO_TRADE
 
 Schema to follow exactly:
 {
@@ -57,7 +59,22 @@ Schema to follow exactly:
  * Builds the user-facing portion of the LLM prompt from a SynthesizedResearch result.
  * Uses the EXACT output persisted in ResearchSnapshot — no data is fabricated.
  */
-export function buildLlmDecisionUserPrompt(research: SynthesizedResearch): string {
+export interface ActivePositionContext {
+  asset: string;
+  side: "LONG" | "SHORT";
+  entryPrice: number;
+  currentPrice: number;
+  quantity: number;
+  positionSize: number;
+  unrealizedPnl: number;
+  unrealizedPnlPercent: number;
+  openedAt: string;
+}
+
+export function buildLlmDecisionUserPrompt(
+  research: SynthesizedResearch,
+  position?: ActivePositionContext | null
+): string {
   const { asset, marketData, fundamentalData, technicalData, riskContext, newsData, sourceMetadata } = research;
   const { quote } = marketData;
   const tech = technicalData;
@@ -69,10 +86,25 @@ export function buildLlmDecisionUserPrompt(research: SynthesizedResearch): strin
     .map((item, index) => `${index + 1}. ${item.title}`)
     .join("\n") || "  No headlines available.";
 
+  const positionBlock = position
+    ? `--- ACTIVE POSITION ---
+Side          : ${position.side}
+Entry Price   : $${position.entryPrice.toFixed(2)}
+Current Price : $${position.currentPrice.toFixed(2)}
+Quantity      : ${position.quantity}
+Position Size : $${position.positionSize.toFixed(2)}
+Unrealized PnL: $${position.unrealizedPnl.toFixed(2)} (${position.unrealizedPnlPercent.toFixed(2)}%)
+Holding Since : ${position.openedAt}
+Allowed Actions: HOLD or CLOSE
+`
+    : "--- ACTIVE POSITION ---\nNone\nAllowed Actions: LONG, SHORT, or NO_TRADE\n";
+
   return `=== GLYPH DECISION ANALYSIS REQUEST ===
 Asset: ${asset}
 Timestamp: ${research.timestamp}
 Data Provider: ${sourceMetadata.provider}
+
+${positionBlock}
 
 --- MARKET DATA ---
 Current Price : $${quote.price.toFixed(2)}

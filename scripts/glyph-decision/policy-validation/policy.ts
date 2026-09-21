@@ -26,13 +26,17 @@ export function evaluatePolicy(
         conviction: typeof (rawDecision as { conviction?: unknown })?.conviction === "number" ? (rawDecision as { conviction: number }).conviction : 0,
     } as PolicyDecision;
 
-    const allocationAmount = parsed.success ? calculateAllocation(state.availableCash, config) : 0;
+    const isPositionLifecycleAction = parsed.success && (decision.action === "HOLD" || decision.action === "CLOSE");
+    const allocationAmount = parsed.success && !isPositionLifecycleAction ? calculateAllocation(state.availableCash, config) : 0;
+    const hasMatchingPosition = parsed.success && state.positions.some(
+        (position) => position.asset.toUpperCase() === decision.asset.toUpperCase()
+    );
     const checks = {
         decisionValid: parsed.success,
         minimumConviction: parsed.success && validateConviction(decision.conviction, config),
-        treasurySufficient: parsed.success && validateTreasury(state.availableCash, allocationAmount),
-        minimumRemainingCash: parsed.success && validateRemainingCash(state.availableCash, allocationAmount, config.minRemainingCash),
-        noExistingPosition: parsed.success && !hasExistingPosition(decision.asset, state.positions),
+        treasurySufficient: isPositionLifecycleAction || (parsed.success && validateTreasury(state.availableCash, allocationAmount)),
+        minimumRemainingCash: isPositionLifecycleAction || (parsed.success && validateRemainingCash(state.availableCash, allocationAmount, config.minRemainingCash)),
+        noExistingPosition: isPositionLifecycleAction ? hasMatchingPosition : parsed.success && !hasExistingPosition(decision.asset, state.positions),
         marketOpen: parsed.success && validateMarketOpen(decision, state),
         riskValid: parsed.success && validateRisk(state),
         marketAnalysisValid: parsed.success && validateMarketAnalysis(state),
@@ -48,7 +52,7 @@ export function evaluatePolicy(
         action: decision.action,
         conviction: decision.conviction,
         result: approved ? "APPROVED" : "REJECTED",
-        allocation: approved ? {
+        allocation: approved && !isPositionLifecycleAction ? {
             percent: config.positionAllocationPercent,
             amount: allocationAmount,
             quantity: Number((allocationAmount / state.marketPrice).toFixed(8)),

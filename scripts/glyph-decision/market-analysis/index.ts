@@ -111,19 +111,20 @@ Options:
 async function loadAllowedAssets(agentId: string): Promise<string[]> {
     const agent = await prisma.agent.findUnique({
         where: { agentId },
-        select: { policy: { select: { allowedAssets: true } } },
+        select: { id: true, policy: { select: { allowedAssets: true } } },
     });
 
     if (!agent) throw new Error(`Agent #${agentId} was not found in the database.`);
     if (!agent.policy) throw new Error(`Agent #${agentId} does not have an active policy.`);
 
-    return Array.from(
-        new Set(
-            agent.policy.allowedAssets
-                .map((asset) => asset.trim().toUpperCase())
-                .filter((asset) => asset.length > 0)
-        )
-    );
+    const activePositions = await prisma.position.findMany({
+        where: { agentId: agent.id, isOpen: true },
+        select: { asset: true },
+    });
+    return Array.from(new Set([
+        ...agent.policy.allowedAssets.map((asset) => asset.trim().toUpperCase()).filter(Boolean),
+        ...activePositions.map((position) => position.asset.trim().toUpperCase()),
+    ]));
 }
 
 async function analyzeAsset(

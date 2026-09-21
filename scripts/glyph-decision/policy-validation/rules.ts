@@ -55,7 +55,11 @@ export function findRejectionReason(
     if (!validateConviction(decision.conviction, config)) return `Conviction ${decision.conviction} is below minimum ${config.minConviction}`;
     if (!validateMarketAnalysis(state)) return "Market-analysis snapshot is invalid or missing a valid market price";
     if (!validateRisk(state)) return "Required risk data is missing or invalid";
-    if (hasExistingPosition(decision.asset, state.positions)) return `Existing position already exists for ${decision.asset}`;
+    const existingPosition = state.positions.find((position) => position.asset.toUpperCase() === decision.asset.toUpperCase());
+    if (decision.action === "HOLD" || decision.action === "CLOSE") {
+        return existingPosition ? undefined : `${decision.action} requires an active position for ${decision.asset}`;
+    }
+    if (existingPosition) return `Existing position already exists for ${decision.asset}`;
     if (!validateTreasury(state.availableCash, allocation)) return "Available treasury cash is insufficient for allocation";
     if (!validateRemainingCash(state.availableCash, allocation, config.minRemainingCash)) {
         return `Allocation would leave less than the minimum remaining cash of $${config.minRemainingCash.toFixed(2)}`;

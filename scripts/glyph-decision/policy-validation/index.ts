@@ -83,7 +83,12 @@ export async function loadState(
     if (!agent) throw new Error(`Agent #${agentId} was not found in the database.`);
     if (!agent.treasury) throw new Error(`Agent #${agentId} does not have a treasury record.`);
     if (!agent.policy) throw new Error(`Agent #${agentId} does not have an active policy.`);
-    if (!agent.policy.allowedAssets.map((asset) => asset.toUpperCase()).includes(decision.asset)) {
+    const allowedAssets = agent.policy.allowedAssets.map((asset) => asset.toUpperCase());
+    const hasActivePosition = await prisma.position.findFirst({
+        where: { agentId: agent.id, asset: decision.asset, isOpen: true },
+        select: { id: true },
+    });
+    if (!allowedAssets.includes(decision.asset) && !hasActivePosition) {
         throw new Error(`Asset ${decision.asset} is not allowed by Agent #${agentId}.`);
     }
 
@@ -107,13 +112,13 @@ export async function loadState(
     const marketOpen = options?.marketOpen ?? (await new TwelveDataProvider().getMarketStatus("United States")).isOpen;
     const positions = await prisma.position.findMany({
         where: { agentId: agent.id, isOpen: true },
-        select: { asset: true, side: true },
+        select: { id: true, asset: true, side: true },
     });
 
     return {
         state: {
             availableCash: Number(agent.treasury.currentBalance),
-            positions: positions.map((position) => ({ asset: position.asset, side: position.side })),
+            positions: positions.map((position) => ({ id: position.id, asset: position.asset, side: position.side })),
             marketPrice: typeof quote?.price === "number" ? quote.price : Number(quote?.price),
             marketOpen,
             marketAnalysisValid: snapshot.id === decision.source.marketAnalysisSnapshotId && metadataRecord?.dataQuality === "PROVIDER_DATA",

@@ -5,19 +5,17 @@
 // ============================================================================
 
 import { prisma } from "@/lib/prisma";
+import { calculatePositionRequirements } from "./economic-precheck";
 import { createTradeMemoryInTransaction } from "./memory";
 import {
   calculateLiquidationPrice,
   calculatePnL,
-  calculatePositionMarginAndNotional,
   calculateTransactionFee,
-  clampLeverage,
   DEFAULT_FEE_PERCENT,
   isPositionLiquidated,
-  PositionSide,
+  PositionSide
 } from "./simulation-math";
 import { getTreasurySummary } from "./treasury";
-import { calculatePositionRequirements } from "./economic-precheck";
 
 export interface OpenPositionInput {
   agentId?: string;
@@ -54,6 +52,11 @@ export interface ClosePositionResult {
   fees: number;
   status: "CLOSED" | "LIQUIDATED";
   newBalance: number;
+}
+
+export interface ClosePositionContext {
+  decisionId?: string;
+  cycleId?: string;
 }
 
 /**
@@ -336,7 +339,8 @@ export async function updatePositionsMarketPrices(
 export async function closeSimulatedPosition(
   positionId: string,
   exitPrice: number,
-  reason: "MANUAL" | "LIQUIDATION" | "STOP_LOSS" | "TAKE_PROFIT" = "MANUAL"
+  reason: "MANUAL" | "LIQUIDATION" | "STOP_LOSS" | "TAKE_PROFIT" = "MANUAL",
+  context: ClosePositionContext = {}
 ): Promise<ClosePositionResult> {
   const position = await prisma.position.findUnique({
     where: { id: positionId },
@@ -429,6 +433,13 @@ export async function closeSimulatedPosition(
       },
     });
 
+    if (context.decisionId) {
+      await tx.decision.update({
+        where: { id: context.decisionId },
+        data: { tradeId: position.tradeId },
+      });
+    }
+
     // 4. Log Economic Event for trade closed / liquidation
     const pnlSign = realizedPnl >= 0 ? "+" : "";
     const formattedResult = `${pnlSign}${realizedPnlPercent.toFixed(2)}%`;
@@ -442,6 +453,8 @@ export async function closeSimulatedPosition(
           2
         )} (${formattedResult}). Returned $${returnedToTreasury.toFixed(2)} to treasury.`,
         tradeId: position.tradeId,
+        decisionId: context.decisionId,
+        cycleId: context.cycleId,
         result: formattedResult,
       },
     });
@@ -456,6 +469,8 @@ export async function closeSimulatedPosition(
           2
         )} net PnL.`,
         tradeId: position.tradeId,
+        decisionId: context.decisionId,
+        cycleId: context.cycleId,
         result: formattedResult,
       },
     });

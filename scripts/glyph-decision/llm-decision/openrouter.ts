@@ -13,7 +13,7 @@
 // ============================================================================
 
 import { SynthesizedResearch } from "../../../src/types/market";
-import { LLM_DECISION_SYSTEM_PROMPT, buildLlmDecisionUserPrompt } from "./prompt";
+import { ActivePositionContext, LLM_DECISION_SYSTEM_PROMPT, buildLlmDecisionUserPrompt } from "./prompt";
 import { LlmDecisionSchema } from "./schema";
 import { LlmDecisionOutput } from "./types";
 
@@ -36,7 +36,8 @@ function cleanJsonString(raw: string): string {
  * Throws on system errors — callers must handle these distinctly from NO_TRADE.
  */
 export async function callOpenRouterForDecision(
-    research: SynthesizedResearch
+    research: SynthesizedResearch,
+    position?: ActivePositionContext | null
 ): Promise<LlmDecisionOutput> {
     const apiKey = process.env.OPENROUTER_API_KEY;
     const model = process.env.OPENROUTER_MODEL || "openai/gpt-4.1-mini";
@@ -48,7 +49,7 @@ export async function callOpenRouterForDecision(
     }
 
     let lastError = "unknown error";
-    const userPrompt = buildLlmDecisionUserPrompt(research);
+    const userPrompt = buildLlmDecisionUserPrompt(research, position);
 
     for (let attempt = 0; attempt <= MAX_RETRIES; attempt += 1) {
         try {

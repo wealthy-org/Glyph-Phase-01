@@ -9,13 +9,14 @@ function runLifecycleTests() {
     const noPosition = null;
     const longPosition = { asset: "NVDA", side: "LONG" as const };
     const shortPosition = { asset: "NVDA", side: "SHORT" as const };
+    const economicContext = { availableCapital: 1000, totalEquity: 1000 };
 
     assert(
-        validateTradeProposal({ asset: "NVDA", action: "OPEN_LONG", conviction: 80 }, 0, 0, noPosition).approved,
+        validateTradeProposal({ asset: "NVDA", action: "OPEN_LONG", conviction: 80 }, 0, 0, noPosition, true, economicContext).approved,
         "NO_POSITION -> OPEN_LONG should be approved"
     );
     assert(
-        validateTradeProposal({ asset: "NVDA", action: "OPEN_SHORT", conviction: 80 }, 0, 0, noPosition).approved,
+        validateTradeProposal({ asset: "NVDA", action: "OPEN_SHORT", conviction: 80 }, 0, 0, noPosition, true, economicContext).approved,
         "NO_POSITION -> OPEN_SHORT should be approved"
     );
     assert(

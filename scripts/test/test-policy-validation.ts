@@ -74,7 +74,7 @@ expectRejected(
 );
 expectRejected(
     evaluatePolicy(decision({ action: "INVALID_ACTION" }), state(1000)),
-    "action: Invalid option: expected one of \"LONG\"|\"SHORT\"|\"NO_TRADE\""
+    "action: Invalid option: expected one of \"LONG\"|\"SHORT\"|\"HOLD\"|\"CLOSE\"|\"NO_TRADE\""
 );
 expectRejected(
     evaluatePolicy(decision(), state(1000, { riskValid: false })),
@@ -85,5 +85,17 @@ const lowCash = evaluatePolicy(decision(), state(100.01));
 assert.equal(lowCash.result, "REJECTED");
 assert.ok(lowCash.allocation === null || lowCash.allocation.remainingCash >= 0);
 
+expectRejected(
+    evaluatePolicy(decision({ action: "CLOSE" }), state(1000)),
+    "CLOSE requires an active position for NVDA"
+);
+const closeApproved = evaluatePolicy(
+    decision({ action: "CLOSE" }),
+    state(1000, { positions: [{ id: "position-1", asset: "NVDA", side: "LONG" }] })
+);
+assert.equal(closeApproved.result, "APPROVED");
+assert.equal(closeApproved.allocation, null);
+assert.equal(closeApproved.checks.noExistingPosition, true);
+
 assert.equal(POLICY_CONFIG.positionAllocationPercent, 10);
-console.log("Policy validation tests passed: 10 cases");
+console.log("Policy validation tests passed: 12 cases");

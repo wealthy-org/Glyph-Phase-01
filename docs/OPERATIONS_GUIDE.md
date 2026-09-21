@@ -93,14 +93,18 @@ Gunakan perintah ini untuk menjalankan alur lengkap secara berurutan:
 npm run trade:cycle
 ```
 
+`trade:cycle` selalu membuat market-analysis snapshot baru dalam cycle yang sama. Asset yang dianalisis adalah gabungan asset yang diizinkan policy dan asset yang masih memiliki posisi aktif. Untuk posisi aktif, Glyph menerima konteks posisi lalu memilih `HOLD` atau `CLOSE`; `CLOSE` memakai executor portfolio yang sama untuk menghitung PnL, fee, treasury, status trade, dan memory.
+
 Alurnya:
 
 ```text
 Market Analysis
   -> LLM Decision
   -> Policy Validation
-  -> Paper Trade jika APPROVED
-  -> Treasury dan Position diperbarui
+  -> Paper Trade jika OPEN dan APPROVED
+  -> HOLD tanpa mutasi accounting
+  -> CLOSE melalui closeSimulatedPosition jika APPROVED
+  -> Treasury, Position, Trade, dan Memory diperbarui sesuai action
 ```
 
 Setiap asset membaca state database terbaru sebelum diproses. Jika policy `REJECTED`, tidak ada trade atau perubahan treasury.

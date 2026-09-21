@@ -4,6 +4,7 @@ import "dotenv/config";
 import { prisma } from "../../../src/lib/prisma";
 import { FundamentalSummary, NewsItem, RiskContext, SynthesizedResearch, TechnicalSummary } from "../../../src/types/market";
 import { callOpenRouterForDecision } from "./openrouter";
+import { ActivePositionContext } from "./prompt";
 import { LlmDecisionOutput } from "./types";
 
 interface CliOptions {
@@ -76,7 +77,7 @@ async function loadAllowedAssets(agentId: string): Promise<string[]> {
     );
 }
 
-export async function runSingleAssetDecision(asset: string, quiet = false): Promise<LlmDecisionOutput & {
+export async function runSingleAssetDecision(asset: string, quiet = false, position?: ActivePositionContext | null): Promise<LlmDecisionOutput & {
     source: { marketAnalysisSnapshotId: string };
 }> {
     const snapshots = await prisma.researchSnapshot.findMany({
@@ -136,7 +137,7 @@ export async function runSingleAssetDecision(asset: string, quiet = false): Prom
         console.log(`✓ Snapshot ${snapshot.id} (${research.sourceMetadata.provider})`);
         console.log(`✓ Snapshot age: ${Math.round(ageMs / 60000)} minutes`);
     }
-    const decision = await callOpenRouterForDecision(research);
+    const decision = await callOpenRouterForDecision(research, position);
     return {
         ...decision,
         source: { marketAnalysisSnapshotId: snapshot.id },
