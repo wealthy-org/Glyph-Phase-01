@@ -5,6 +5,7 @@ import {
     hasExistingPosition,
     validateConviction,
     validateMarketAnalysis,
+    validateMarketOpen,
     validateRemainingCash,
     validateRisk,
     validateTreasury,
@@ -32,6 +33,7 @@ export function evaluatePolicy(
         treasurySufficient: parsed.success && validateTreasury(state.availableCash, allocationAmount),
         minimumRemainingCash: parsed.success && validateRemainingCash(state.availableCash, allocationAmount, config.minRemainingCash),
         noExistingPosition: parsed.success && !hasExistingPosition(decision.asset, state.positions),
+        marketOpen: parsed.success && validateMarketOpen(decision, state),
         riskValid: parsed.success && validateRisk(state),
         marketAnalysisValid: parsed.success && validateMarketAnalysis(state),
     };

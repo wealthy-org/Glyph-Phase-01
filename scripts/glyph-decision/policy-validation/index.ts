@@ -2,6 +2,7 @@
 import "dotenv/config";
 
 import { readFile } from "node:fs/promises";
+import { TwelveDataProvider } from "../../../src/lib/market/twelve-data";
 import { prisma } from "../../../src/lib/prisma";
 import { runSingleAssetDecision } from "../llm-decision";
 import { POLICY_CONFIG } from "./config";
@@ -70,7 +71,11 @@ async function loadDecision(options: CliOptions, asset: string) {
     return runSingleAssetDecision(asset, true);
 }
 
-export async function loadState(agentId: string, decision: { asset: string; source: { marketAnalysisSnapshotId: string } }) {
+export async function loadState(
+    agentId: string,
+    decision: { asset: string; source: { marketAnalysisSnapshotId: string } },
+    options?: { marketOpen?: boolean }
+) {
     const agent = await prisma.agent.findUnique({
         where: { agentId },
         include: { treasury: true, policy: true },
@@ -99,6 +104,7 @@ export async function loadState(agentId: string, decision: { asset: string; sour
         ? metadata as { dataQuality?: unknown; riskContext?: { regime?: unknown; level?: unknown; details?: unknown } | null }
         : undefined;
     const riskContext = metadataRecord?.riskContext;
+    const marketOpen = options?.marketOpen ?? (await new TwelveDataProvider().getMarketStatus("United States")).isOpen;
     const positions = await prisma.position.findMany({
         where: { agentId: agent.id, isOpen: true },
         select: { asset: true, side: true },
@@ -109,6 +115,7 @@ export async function loadState(agentId: string, decision: { asset: string; sour
             availableCash: Number(agent.treasury.currentBalance),
             positions: positions.map((position) => ({ asset: position.asset, side: position.side })),
             marketPrice: typeof quote?.price === "number" ? quote.price : Number(quote?.price),
+            marketOpen,
             marketAnalysisValid: snapshot.id === decision.source.marketAnalysisSnapshotId && metadataRecord?.dataQuality === "PROVIDER_DATA",
             riskValid: Boolean(riskContext && riskContext.regime && riskContext.level && riskContext.details),
         },

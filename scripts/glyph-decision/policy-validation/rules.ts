@@ -40,6 +40,10 @@ export function validateMarketAnalysis(state: PolicyState): boolean {
     return state.marketAnalysisValid === true && Number.isFinite(state.marketPrice) && state.marketPrice > 0;
 }
 
+export function validateMarketOpen(decision: PolicyDecision, state: PolicyState): boolean {
+    return decision.action === "NO_TRADE" || state.marketOpen === true;
+}
+
 export function findRejectionReason(
     decision: PolicyDecision,
     state: PolicyState,
@@ -47,6 +51,7 @@ export function findRejectionReason(
     allocation: number
 ): string | undefined {
     if (decision.action === "NO_TRADE") return "LLM decision is NO_TRADE";
+    if (!validateMarketOpen(decision, state)) return "US stock market is closed; opening a new position is not allowed";
     if (!validateConviction(decision.conviction, config)) return `Conviction ${decision.conviction} is below minimum ${config.minConviction}`;
     if (!validateMarketAnalysis(state)) return "Market-analysis snapshot is invalid or missing a valid market price";
     if (!validateRisk(state)) return "Required risk data is missing or invalid";

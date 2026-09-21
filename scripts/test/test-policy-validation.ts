@@ -20,6 +20,7 @@ const state = (availableCash: number, overrides: Record<string, unknown> = {}) =
     availableCash,
     positions: [],
     marketPrice: 180,
+    marketOpen: true,
     marketAnalysisValid: true,
     riskValid: true,
     ...overrides,
@@ -66,6 +67,10 @@ expectRejected(
 expectRejected(
     evaluatePolicy(decision({ action: "NO_TRADE" }), state(1000)),
     "LLM decision is NO_TRADE"
+);
+expectRejected(
+    evaluatePolicy(decision(), state(1000, { marketOpen: false })),
+    "US stock market is closed; opening a new position is not allowed"
 );
 expectRejected(
     evaluatePolicy(decision({ action: "INVALID_ACTION" }), state(1000)),

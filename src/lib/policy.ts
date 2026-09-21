@@ -8,8 +8,6 @@
 // The LLM cannot modify the policy. allowedAssets is hardcoded in code.
 // ============================================================================
 
-import { prisma } from "@/lib/prisma";
-import { clampLeverage } from "./simulation-math";
 import {
   calculatePositionRequirements,
   evaluateEconomicPreconditions,
@@ -75,12 +73,17 @@ export function validateTradeProposal(
   isMarketOpen: boolean = true,
   economicContext?: EconomicContextInput
 ): PolicyValidationResult {
-  // 0. Check Market Hours for new entry orders
-  if (!isMarketOpen && (proposal.action === "OPEN_LONG" || proposal.action === "OPEN_SHORT")) {
+  // 0. Check Market Hours for any order that would execute a trade.
+  if (
+    !isMarketOpen &&
+    (proposal.action === "OPEN_LONG" ||
+      proposal.action === "OPEN_SHORT" ||
+      proposal.action === "CLOSE")
+  ) {
     return {
       approved: false,
       policyResult: "REJECTED",
-      rejectReason: "Market is closed. Cannot open new positions outside regular trading hours.",
+      rejectReason: "Market is closed. Trade execution is not allowed outside regular trading hours.",
       clampedLeverage: 1,
       clampedPositionPercent: 0,
     };
@@ -222,8 +225,8 @@ export function validateTradeProposal(
       positionRequirements.requiredMargin <= 0
         ? "INSUFFICIENT_TREASURY: Calculated margin is $0.00. Cannot open position with zero margin."
         : `INSUFFICIENT_TREASURY: Required capital ($${positionRequirements.totalRequiredCapital.toFixed(
-            2
-          )}) exceeds available capital ($${availableCapital.toFixed(2)}).`;
+          2
+        )}) exceeds available capital ($${availableCapital.toFixed(2)}).`;
     return {
       approved: false,
       policyResult: "REJECTED",

@@ -24,6 +24,7 @@ export interface PolicyState {
     availableCash: number;
     positions: PolicyPosition[];
     marketPrice: number;
+    marketOpen: boolean;
     marketAnalysisValid: boolean;
     riskValid: boolean;
 }
@@ -34,6 +35,7 @@ export interface PolicyChecks {
     treasurySufficient: boolean;
     minimumRemainingCash: boolean;
     noExistingPosition: boolean;
+    marketOpen: boolean;
     riskValid: boolean;
     marketAnalysisValid: boolean;
 }

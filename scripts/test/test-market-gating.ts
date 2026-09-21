@@ -44,6 +44,24 @@ async function runMarketGatingVerification() {
   }
   console.log("  ✅ Policy Engine successfully rejected trade proposal due to closed market.");
 
+  const closeCheck = validateTradeProposal(
+    {
+      asset: "NVDA",
+      action: "CLOSE",
+      conviction: 85,
+      positionSizePercent: 0,
+      leverage: 1,
+    },
+    1,
+    0,
+    { asset: "NVDA", side: "LONG" },
+    false
+  );
+  if (closeCheck.approved || closeCheck.policyResult !== "REJECTED") {
+    throw new Error("Policy Engine allowed a close trade while the market was closed!");
+  }
+  console.log("  ✅ Policy Engine also rejected close execution while market is closed.");
+
   // 3. Test Orchestrator Gating (marketClosed: true when not bypassed)
   console.log("\n▶ [TEST 3] Testing Cycle Orchestrator Gating (bypassMarketHours: false)...");
   const testKey = `market-gate-test:${Date.now()}`;
