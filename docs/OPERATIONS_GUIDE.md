@@ -9,6 +9,7 @@ Panduan ringkas perintah operasional terminal untuk database, treasury, dan peng
 | Perintah | Deskripsi Singkat |
 |---|---|
 | `npm run seed:genesis` | **Kembali ke status awal lahir (06:30:00 UTC)**. Menghapus semua trade/keputusan, kas `$0.00`, dan Life Log hanya berisi 3 event Genesis. *(Tanpa perlu reset DB dulu)*. |
+| `npm run db:reset-genesis` | **Reset database total lalu kembali ke Genesis**. Menghapus seluruh tabel dan data, termasuk snapshot riset serta activity log, lalu membuat ulang agent, policy, treasury kosong, dan 3 event Genesis. |
 | `npm run fund:treasury` | **Menambah modal kas Treasury**. Menambah saldo kas dan otomatis tercatat sebagai event `TREASURY_FUNDED` di Life Log. |
 | `npm run db:reset` | **Reset skema penuh & seed simulasi 7 hari**. Menghapus seluruh tabel Supabase dan mengisi data demo (Day 1–7, 4 trade, modal $1,000). |
 | `npm run db:seed` | **Isi ulang data demo 7 hari**. Menjalankan seed simulasi penuh tanpa menghapus ulang tabel database. |
@@ -24,6 +25,13 @@ Gunakan saat ingin memulai observasi Glyph dari nol:
 npm run seed:genesis
 ```
 > **Hasil:** Life Log hanya berisi *Glyph Born* (06:00), *ERC-8004 Identity* (06:15), dan *Wallet Created* (06:30). Saldo Treasury `$0.00`.
+
+### A.1. Reset Database Total lalu Genesis
+Gunakan jika ingin menghapus seluruh data database, termasuk `ResearchSnapshot` dan `ActivityLog`, kemudian membuat ulang state Genesis:
+```bash
+npm run db:reset-genesis
+```
+> **Peringatan:** perintah ini menjalankan `prisma db push --force-reset`. Semua data database akan dihapus permanen sebelum state Genesis dibuat ulang.
 
 ### B. Menambah Modal Treasury
 Suntik modal kas ke akun Glyph:
