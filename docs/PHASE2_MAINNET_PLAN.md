@@ -58,9 +58,9 @@ explicit human approval.
 
 | Testnet Resource | Mainnet Resource | Action | Approval? | Verification |
 |---|---|---|---|---|
-| Smart Account `0x1Ba1BB...` (testnet) | New Smart Account (mainnet) | Create Safe on mainnet | **YES — REQUIRED** | Verify owner, verify address |
-| EOA private key (same) | Same key, mainnet context | No action needed — key is chain-agnostic | No | Verify by signing |
-| `NEXT_PUBLIC_GLYPH_WALLET_ADDRESS` | Mainnet smart account address | Update ENV | No | Verify UI shows correct address |
+| Primary Wallet `0x1Ba1BBeC...` (MetaMask EOA) | Same Primary Wallet `0x1Ba1BBeC...` | Reused as mainnet agent wallet | Approved | Public reference in UI + linked via `setAgentWallet()` onchain |
+| Server Signer `0xB635eFd...` | Same Server Signer `0xB635eFd...` | Preserved as backend relayer | Approved | Signs automated `commitDecision()` calls |
+| `NEXT_PUBLIC_GLYPH_WALLET_ADDRESS` | `0x1Ba1BBeC38CAf4454252f8Bd87245a41919dd27C` | Already configured in ENV | No change | Verify UI shows correct address |
 
 ### Environment Variables
 

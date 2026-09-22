@@ -32,16 +32,16 @@
 | :--- | :--- | :--- | :--- |
 | `GLYPH_AGENT_ID` | `<TBD>` | **Awaiting Registration** | Returned when calling `register("/agents/glyph.json")` on IdentityRegistry. |
 | `NEXT_PUBLIC_GLYPH_AGENT_ID` | `<TBD>` | **Awaiting Registration** | Matches `GLYPH_AGENT_ID` for UI components. |
-| `NEXT_PUBLIC_GLYPH_WALLET_ADDRESS` | `<TBD>` | **Awaiting Wallet Init** | Mainnet operational wallet / smart account. |
+| `NEXT_PUBLIC_GLYPH_WALLET_ADDRESS` | `0x1Ba1BBeC38CAf4454252f8Bd87245a41919dd27C` | **Configured** | User's MetaMask EOA — Primary Glyph wallet and beneficiary across testnet and mainnet. |
 | `NEXT_PUBLIC_REGISTRATION_TX` | `<TBD>` | **Awaiting Registration** | Transaction hash from ERC-8004 registration on mainnet. |
 
 ---
 
-## 4. Operational Signer Key
+## 4. Operational Signer Key (Backend Only)
 
-| Environment Variable | Mainnet Strategy | Status |
-| :--- | :--- | :--- |
-| `SMART_ACCOUNT_OWNER_PRIVATE_KEY` | Reuses existing EOA signer (`0xB635eFd761D352ed8a74166a292c8969AD541c8E`) | Ready (Requires gas funding on mainnet before transactions) |
+| Environment Variable | Mainnet Strategy | Status | Purpose |
+| :--- | :--- | :--- | :--- |
+| `SMART_ACCOUNT_OWNER_PRIVATE_KEY` | Server-side relayer key (`0xB635eFd761D352ed8a74166a292c8969AD541c8E`) | Funded (0.000978 ETH) | Automated backend signer to pay gas for `commitDecision()` during cron cycles. Never exposed to frontend or client. |
 
 ---
 

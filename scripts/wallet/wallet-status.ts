@@ -8,22 +8,9 @@ import { prisma } from "../../src/lib/prisma";
 // Usage: npm run glyph:wallet:status
 // ============================================================================
 
-const robinhoodTestnet = defineChain({
-  id: 46630,
-  name: "Robinhood Chain Testnet",
-  nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
-  rpcUrls: {
-    default: {
-      http: [process.env.NEXT_PUBLIC_RPC_URL || "https://rpc.testnet.chain.robinhood.com"],
-    },
-  },
-  blockExplorers: {
-    default: {
-      name: "Blockscout",
-      url: process.env.BLOCK_EXPLORER_URL || "https://explorer.testnet.chain.robinhood.com",
-    },
-  },
-});
+import { getActiveChain } from "../../src/lib/onchain/chains";
+
+const activeChain = getActiveChain();
 
 const identityRegistryAbi = parseAbi([
   "function getAgentWallet(uint256 agentId) external view returns (address)",
@@ -140,7 +127,7 @@ async function main() {
   // ── 5. Optional on-chain check ────────────────────────────────────
   if (contractAddr && agentId) {
     try {
-      const client = createPublicClient({ chain: robinhoodTestnet, transport: http() });
+      const client = createPublicClient({ chain: activeChain, transport: http() });
       const onchainWallet = await client.readContract({
         address: contractAddr as `0x${string}`,
         abi: identityRegistryAbi,

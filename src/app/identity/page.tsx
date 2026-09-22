@@ -49,20 +49,25 @@ export default async function IdentityPage() {
           subtext: "Trustless Agents Specification",
         },
         network: {
-          name: agent.wallet?.network || GLYPH_IDENTITY_DATA.network.name,
-          chainId: agent.wallet?.chainId || GLYPH_IDENTITY_DATA.network.chainId,
+          name: process.env.NEXT_PUBLIC_CHAIN_ID
+            ? GLYPH_IDENTITY_DATA.network.name
+            : (agent.wallet?.network || GLYPH_IDENTITY_DATA.network.name),
+          chainId: process.env.NEXT_PUBLIC_CHAIN_ID
+            ? GLYPH_IDENTITY_DATA.network.chainId
+            : (agent.wallet?.chainId || GLYPH_IDENTITY_DATA.network.chainId),
         },
         genesis: {
           epoch: epochDisplay,
           block: GLYPH_IDENTITY_DATA.genesis.block,
         },
         primaryWallet:
-          agent.wallet?.walletAddress ||
           process.env.NEXT_PUBLIC_GLYPH_WALLET_ADDRESS ||
+          agent.wallet?.walletAddress ||
           GLYPH_IDENTITY_DATA.primaryWallet,
         registrationTx:
-          regEvent?.txHash ||
+          process.env.NEXT_PUBLIC_REGISTRATION_TX ||
           process.env.NEXT_PUBLIC_IDENTITY_REGISTRATION_TX ||
+          regEvent?.txHash ||
           GLYPH_IDENTITY_DATA.registrationTx,
       };
     }
