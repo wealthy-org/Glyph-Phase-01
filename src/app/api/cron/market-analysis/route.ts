@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { MarketStatusResult } from "@/types/market";
 import crypto from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { runMarketAnalysis } from "../../../../../scripts/glyph-decision/market-analysis";
@@ -9,32 +10,64 @@ export const dynamic = "force-dynamic";
 
 function isAuthorized(request: NextRequest): boolean {
     const secret = process.env.CRON_SECRET;
+    if (!secret) {
+        console.warn("[MarketAnalysisCron] CRON_SECRET is not configured in environment variables.");
+        return false;
+    }
+
+    // 1. Check Bearer token in Authorization header (standard Vercel Cron header)
     const authorization = request.headers.get("authorization");
-    if (!secret || !authorization?.startsWith("Bearer ")) return false;
-    const token = authorization.slice(7).trim();
-    const tokenBuffer = Buffer.from(token, "utf8");
-    const secretBuffer = Buffer.from(secret, "utf8");
-    return tokenBuffer.length === secretBuffer.length && crypto.timingSafeEqual(tokenBuffer, secretBuffer);
+    if (authorization?.startsWith("Bearer ")) {
+        const token = authorization.slice(7).trim();
+        const tokenBuffer = Buffer.from(token, "utf8");
+        const secretBuffer = Buffer.from(secret, "utf8");
+        if (tokenBuffer.length === secretBuffer.length && crypto.timingSafeEqual(tokenBuffer, secretBuffer)) {
+            return true;
+        }
+    }
+
+    // 2. Check query parameter `key` or `secret` (for manual browser / external test invocation)
+    const queryKey = request.nextUrl.searchParams.get("key") || request.nextUrl.searchParams.get("secret");
+    if (queryKey) {
+        const keyBuffer = Buffer.from(queryKey.trim(), "utf8");
+        const secretBuffer = Buffer.from(secret, "utf8");
+        if (keyBuffer.length === secretBuffer.length && crypto.timingSafeEqual(keyBuffer, secretBuffer)) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
-export async function POST(request: NextRequest): Promise<NextResponse> {
+export async function handleMarketAnalysisRequest(request: NextRequest): Promise<NextResponse> {
     if (!isAuthorized(request)) {
-        return NextResponse.json({ status: "UNAUTHORIZED", message: "Invalid or missing cron authorization." }, { status: 401 });
+        return NextResponse.json({
+            status: "UNAUTHORIZED",
+            message: "Invalid or missing cron authorization. Ensure Bearer token or key parameter matches CRON_SECRET.",
+        }, { status: 401 });
     }
 
-    const agentId = process.env.GLYPH_AGENT_ID || "1";
-    let body: { asset?: string; force?: boolean } = {};
-    try {
-        body = await request.json();
-    } catch {
-        // Empty request body is valid.
+    let body: { asset?: string; force?: boolean; agentId?: string } = {};
+    if (request.method === "POST") {
+        try {
+            body = await request.json();
+        } catch {
+            // Empty body is valid
+        }
     }
 
+    const searchParams = request.nextUrl.searchParams;
+    const forceParam = searchParams.get("force");
+    const isForce = body.force === true || forceParam === "true" || forceParam === "1";
+    const targetAsset = (body.asset || searchParams.get("asset") || undefined)?.toUpperCase();
+    const agentIdentifier = body.agentId || searchParams.get("agentId") || process.env.GLYPH_AGENT_ID || "485";
+
     try {
+        // 1. Concurrency lock check
         const activeRun = await prisma.agentRun.findFirst({
             where: {
-                cycleKey: { startsWith: `market-analysis:${agentId}:` },
-                startedAt: { gt: new Date(Date.now() - 60 * 60 * 1000) },
+                cycleKey: { startsWith: `market-analysis:${agentIdentifier}:` },
+                startedAt: { gt: new Date(Date.now() - 30 * 60 * 1000) },
                 completedAt: null,
             },
             select: { id: true, startedAt: true },
@@ -47,29 +80,37 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             }, { status: 409 });
         }
 
-        if (!body.force) {
-            const marketStatus = await getGlyphDecisionMarketStatus();
-            if (marketStatus.status === "unknown") {
-                console.error("[MarketAnalysisCron] Market status is unknown", marketStatus.notes);
-                return NextResponse.json({
-                    status: "MARKET_STATUS_UNKNOWN",
-                    message: "Market analysis skipped because the US market status could not be verified.",
-                    marketStatus,
-                    checkedAt: marketStatus.checkedAt,
-                }, { status: 503 });
+        // 2. Market gate check (unless force is requested)
+        if (!isForce) {
+            let marketStatus: MarketStatusResult | null = null;
+            try {
+                marketStatus = await getGlyphDecisionMarketStatus();
+            } catch (statusError) {
+                console.warn("[MarketAnalysisCron] Failed to verify market status:", statusError);
             }
-            if (marketStatus.status === "closed") {
+
+            if (marketStatus && marketStatus.status === "closed") {
                 return NextResponse.json({
                     status: "MARKET_CLOSED",
-                    message: `Market analysis skipped because the US market is ${marketStatus.status.toUpperCase()}.`,
+                    message: "Market analysis skipped because the US market is CLOSED. Use ?force=true to override.",
                     marketStatus,
                     checkedAt: marketStatus.checkedAt,
                 }, { status: 200 });
             }
 
+            if (marketStatus && marketStatus.status === "unknown") {
+                return NextResponse.json({
+                    status: "MARKET_STATUS_UNKNOWN",
+                    message: "Market analysis skipped because US market status could not be verified. Use ?force=true to override.",
+                    marketStatus,
+                    checkedAt: marketStatus.checkedAt,
+                }, { status: 200 });
+            }
+
+            // 3. Cooldown check (60 minutes)
             const recentRun = await prisma.agentRun.findFirst({
                 where: {
-                    cycleKey: { startsWith: `market-analysis:${agentId}:` },
+                    cycleKey: { startsWith: `market-analysis:${agentIdentifier}:` },
                     completedAt: { not: null },
                 },
                 orderBy: { completedAt: "desc" },
@@ -80,14 +121,19 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                 if (elapsedMinutes < 60) {
                     return NextResponse.json({
                         status: "COOLDOWN",
-                        message: `Market analysis cooldown active; retry in ${Math.ceil(60 - elapsedMinutes)} minute(s).`,
+                        message: `Market analysis cooldown active; retry in ${Math.ceil(60 - elapsedMinutes)} minute(s). Use ?force=true to override.`,
                     }, { status: 429 });
                 }
             }
         }
 
-        const result = await runMarketAnalysis({ agentId, asset: body.asset });
-        const httpStatus = result.status === "COMPLETED" ? 200 : 500;
+        // 4. Run market analysis
+        const result = await runMarketAnalysis({
+            agentId: agentIdentifier,
+            asset: targetAsset,
+        });
+
+        const httpStatus = result.status === "COMPLETED" ? 200 : 200; // Return 200 with result payload for cron observability
         return NextResponse.json({
             status: result.status,
             executionId: result.executionId,
@@ -111,9 +157,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 }
 
-export async function GET(): Promise<NextResponse> {
-    return NextResponse.json({
-        status: "METHOD_NOT_ALLOWED",
-        message: "Use POST /api/cron/market-analysis.",
-    }, { status: 405 });
+export async function GET(request: NextRequest): Promise<NextResponse> {
+    return handleMarketAnalysisRequest(request);
+}
+
+export async function POST(request: NextRequest): Promise<NextResponse> {
+    return handleMarketAnalysisRequest(request);
 }

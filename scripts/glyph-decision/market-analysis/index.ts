@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import "dotenv/config";
 
+import { AlphaVantageProvider } from "../../../src/lib/market/alpha-vantage";
 import { StockfitProvider } from "../../../src/lib/market/stockfit";
 import { TwelveDataProvider } from "../../../src/lib/market/twelve-data";
 import { prisma } from "../../../src/lib/prisma";
@@ -26,6 +27,7 @@ export interface MarketAnalysisRunOptions {
     agentId?: string;
     asset?: string;
     executionId?: string;
+    provider?: MarketDataProvider;
 }
 
 export interface MarketAnalysisRunResult {
@@ -62,6 +64,36 @@ class CompositeMarketProvider implements MarketDataProvider {
     getNews(symbol: string): Promise<NewsItem[]> {
         return this.prices.getNews(symbol);
     }
+}
+
+export function resolveMarketProvider(): MarketDataProvider {
+    // 1. Prefer AlphaVantage if API key is configured (standard production provider with disk caching)
+    const hasAlphaVantageKey = Boolean(
+        process.env.MARKET_DATA_API_KEY ||
+        process.env.MARKET_DATA_BACKUP_API_KEY ||
+        process.env.ALPHA_VANTAGE_API_KEY ||
+        process.env.ALPHA_VANTAGE_BACKUP_API_KEY
+    );
+    if (hasAlphaVantageKey) {
+        return new AlphaVantageProvider();
+    }
+
+    // 2. Try Composite Stockfit + Twelve Data if both keys are present
+    const hasStockfitKey = Boolean(process.env.STOCKFIT_API_KEY);
+    const hasTwelveDataKey = Boolean(process.env.TWELVE_DATA_API_KEY);
+    if (hasStockfitKey && hasTwelveDataKey) {
+        try {
+            return new CompositeMarketProvider(
+                new StockfitProvider(),
+                new TwelveDataProvider()
+            );
+        } catch (err) {
+            console.warn("[MarketAnalysis] Failed to initialize composite provider:", err);
+        }
+    }
+
+    // 3. Fallback to AlphaVantageProvider (handles cached data gracefully)
+    return new AlphaVantageProvider();
 }
 
 function parseArgs(): CliOptions {
@@ -108,27 +140,44 @@ Options:
 `);
 }
 
-async function loadAllowedAssets(agentId: string): Promise<string[]> {
-    const agent = await prisma.agent.findUnique({
-        where: { agentId },
-        select: { id: true, policy: { select: { allowedAssets: true } } },
+async function resolveAgent(agentIdentifier?: string) {
+    if (agentIdentifier) {
+        const byAgentId = await prisma.agent.findUnique({
+            where: { agentId: agentIdentifier },
+            include: { policy: true },
+        });
+        if (byAgentId) return byAgentId;
+    }
+    const envAgentId = process.env.GLYPH_AGENT_ID;
+    if (envAgentId && envAgentId !== agentIdentifier) {
+        const byEnv = await prisma.agent.findUnique({
+            where: { agentId: envAgentId },
+            include: { policy: true },
+        });
+        if (byEnv) return byEnv;
+    }
+    const fallback = await prisma.agent.findFirst({
+        include: { policy: true },
     });
+    if (!fallback) throw new Error("No Agent found in the database.");
+    return fallback;
+}
 
-    if (!agent) throw new Error(`Agent #${agentId} was not found in the database.`);
-    if (!agent.policy) throw new Error(`Agent #${agentId} does not have an active policy.`);
+async function loadAllowedAssets(agent: Awaited<ReturnType<typeof resolveAgent>>): Promise<string[]> {
+    if (!agent.policy) throw new Error(`Agent #${agent.agentId} does not have an active policy.`);
 
     const activePositions = await prisma.position.findMany({
         where: { agentId: agent.id, isOpen: true },
         select: { asset: true },
     });
     return Array.from(new Set([
-        ...agent.policy.allowedAssets.map((asset) => asset.trim().toUpperCase()).filter(Boolean),
+        ...(agent.policy.allowedAssets || []).map((asset) => asset.trim().toUpperCase()).filter(Boolean),
         ...activePositions.map((position) => position.asset.trim().toUpperCase()),
     ]));
 }
 
 async function analyzeAsset(
-    provider: CompositeMarketProvider,
+    provider: MarketDataProvider,
     asset: string,
     executionId: string,
     agentId: string
@@ -195,16 +244,10 @@ function getDecisionSignal(fundamentalScore: number, technicalScore: number): "W
 }
 
 async function recordAnalysisLifeEvent(
-    agentId: string,
+    agent: Awaited<ReturnType<typeof resolveAgent>>,
     executionId: string,
     results: AnalysisResult[]
 ): Promise<void> {
-    const agent = await prisma.agent.findUnique({
-        where: { agentId },
-        select: { id: true, createdAt: true },
-    });
-    if (!agent) throw new Error(`Agent #${agentId} was not found in the database.`);
-
     const day = Math.max(1, Math.floor((Date.now() - agent.createdAt.getTime()) / (24 * 60 * 60 * 1000)) + 1);
     for (const analysis of results) {
         const alreadyRecorded = await prisma.economicEvent.findFirst({
@@ -242,35 +285,30 @@ export async function runMarketAnalysis(
     options: MarketAnalysisRunOptions = {}
 ): Promise<MarketAnalysisRunResult> {
     const startedAt = new Date();
-    const agentId = options.agentId || process.env.GLYPH_AGENT_ID || "1";
-    const allowedAssets = await loadAllowedAssets(agentId);
+    const agent = await resolveAgent(options.agentId);
+    const allowedAssets = await loadAllowedAssets(agent);
     const assets = options.asset ? [options.asset] : allowedAssets;
     const invalidAssets = assets.filter((asset) => !allowedAssets.includes(asset));
 
     if (invalidAssets.length > 0) {
         throw new Error(`Asset(s) [${invalidAssets.join(", ")}] are not in policy allowedAssets [${allowedAssets.join(", ")}].`);
     }
-    if (assets.length === 0) throw new Error(`Policy for agent #${options.agentId} has no allowedAssets.`);
+    if (assets.length === 0) throw new Error(`Policy for agent #${agent.agentId} has no allowedAssets.`);
 
-    const executionId = options.executionId || `market-analysis:${agentId}:${startedAt.getTime()}`;
-    const agent = await prisma.agent.findUnique({ where: { agentId }, select: { id: true } });
-    if (!agent) throw new Error(`Agent #${agentId} was not found in the database.`);
+    const executionId = options.executionId || `market-analysis:${agent.agentId}:${startedAt.getTime()}`;
     const run = await prisma.agentRun.create({
         data: { agentId: agent.id, cycleKey: executionId, startedAt },
         select: { id: true },
     });
 
-    const provider = new CompositeMarketProvider(
-        new StockfitProvider(),
-        new TwelveDataProvider()
-    );
+    const provider = options.provider || resolveMarketProvider();
     try {
         const results: AnalysisResult[] = [];
         for (const asset of assets) results.push(await analyzeAsset(provider, asset, executionId, agent.id));
 
         const status = results.some((result) => !result.ok) ? "FAILED" : "COMPLETED";
         const completedAt = new Date();
-        await recordAnalysisLifeEvent(agentId, executionId, results);
+        await recordAnalysisLifeEvent(agent, executionId, results);
         await prisma.agentRun.update({
             where: { id: run.id },
             data: {
@@ -282,7 +320,7 @@ export async function runMarketAnalysis(
 
         return {
             executionId,
-            agentId,
+            agentId: agent.agentId,
             assets,
             results,
             status,

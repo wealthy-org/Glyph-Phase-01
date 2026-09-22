@@ -84,7 +84,11 @@ export class AlphaVantageProvider implements MarketDataProvider {
         const isFresh = Date.now() - stats.mtimeMs < ttlMs;
         if (isFresh) {
           const content = fs.readFileSync(filePath, "utf-8");
-          return JSON.parse(content) as T;
+          const parsed = JSON.parse(content) as any;
+          // Guard against corrupted cache containing rate limit errors or info strings
+          if (parsed && typeof parsed === "object" && !parsed.Information && !parsed.Note && !parsed["Error Message"]) {
+            return parsed as T;
+          }
         }
       }
     } catch {
@@ -98,6 +102,11 @@ export class AlphaVantageProvider implements MarketDataProvider {
    */
   private setCachedData<T>(cacheKey: string, data: T): void {
     try {
+      if (!data || typeof data !== "object") return;
+      const anyData = data as any;
+      if (anyData.Information || anyData.Note || anyData["Error Message"]) {
+        return; // Never cache rate-limit notices or error messages
+      }
       if (!fs.existsSync(CACHE_DIR)) {
         fs.mkdirSync(CACHE_DIR, { recursive: true });
       }

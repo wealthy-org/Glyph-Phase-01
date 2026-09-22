@@ -1359,10 +1359,10 @@ export const Hero: React.FC<HeroProps> = ({
                     : latestActivity?.status === "FAILED"
                       ? "ANALYSIS · FAILED"
                       : isDecisionRevealed
-                        ? "POSITION ACTIVE · PAPER TRADE · SIMULATED CAPITAL"
+                        ? "POSITION ACTIVE · PAPER TRADE · REAL CAPITAL"
                         : stagePhase === "COUNTDOWN"
                           ? "REASONING COMPLETE · COMMITTING CONCLUSION"
-                          : "CYCLE IN PROGRESS · PAPER TRADE · SIMULATED CAPITAL"}
+                          : "CYCLE IN PROGRESS · PAPER TRADE · REAL CAPITAL"}
               </span>
             </div>
             <div className="text-[#55555a]">

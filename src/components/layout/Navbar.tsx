@@ -330,7 +330,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Metric 1: PnL */}
             <div className="py-2 px-3.5 sm:px-5 flex flex-col justify-center shrink-0 min-w-[110px] sm:min-w-[130px]">
               <span className="font-mono text-[9px] text-[#55555a] tracking-wider uppercase">
-                PNL (SIM)
+                PNL (REAL)
               </span>
               <div className="flex items-baseline gap-1.5 mt-0.5 min-h-[18px] sm:min-h-[20px]">
                 {isValueLoading ? (
