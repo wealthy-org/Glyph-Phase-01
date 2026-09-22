@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
 import { IdentitySection } from "@/features/identity";
-import { GLYPH_IDENTITY_DATA } from "@/features/identity/data";
+import { GLYPH_IDENTITY_DATA, getResolvedAgentId } from "@/features/identity/data";
 import { IdentityData } from "@/features/identity/types";
 import { prisma } from "@/lib/prisma";
 
@@ -10,7 +10,7 @@ export const revalidate = 0; // Dynamic server render for live registry
 export const metadata: Metadata = {
   title: "Glyph Identity — ERC-8004 Public Registry",
   description:
-    "Official public on-chain identity registry record for Glyph (Economic Being #001). Machine-verifiable ERC-8004 cryptographic identity on Robinhood Chain Testnet.",
+    "Official public on-chain identity registry record for Glyph (Economic Being #001). Machine-verifiable ERC-8004 cryptographic identity on Robinhood Chain.",
 };
 
 export default async function IdentityPage() {
@@ -28,8 +28,10 @@ export default async function IdentityPage() {
     });
 
     if (agent) {
+      const isMainnet = process.env.NEXT_PUBLIC_CHAIN_ID === "4663";
+      const resolvedAgentId = getResolvedAgentId(isMainnet);
+      const paddedId = String(resolvedAgentId).padStart(3, "0");
       const regEvent = agent.economicEvents[0];
-      const paddedId = String(agent.agentId || "3").padStart(3, "0");
       const epochDisplay = agent.createdAt
         ? agent.createdAt.toLocaleDateString("en-US", {
             month: "long",
@@ -40,7 +42,7 @@ export default async function IdentityPage() {
       identityData = {
         ...GLYPH_IDENTITY_DATA,
         beingNumber: "ECONOMIC BEING #001",
-        agentId: agent.agentId,
+        agentId: resolvedAgentId,
         agentIdFormatted: `ID #${paddedId}`,
         name: agent.name || "GLYPH",
         status: agent.status || "ACTIVE",
@@ -49,12 +51,8 @@ export default async function IdentityPage() {
           subtext: "Trustless Agents Specification",
         },
         network: {
-          name: process.env.NEXT_PUBLIC_CHAIN_ID
-            ? GLYPH_IDENTITY_DATA.network.name
-            : (agent.wallet?.network || GLYPH_IDENTITY_DATA.network.name),
-          chainId: process.env.NEXT_PUBLIC_CHAIN_ID
-            ? GLYPH_IDENTITY_DATA.network.chainId
-            : (agent.wallet?.chainId || GLYPH_IDENTITY_DATA.network.chainId),
+          name: GLYPH_IDENTITY_DATA.network.name,
+          chainId: GLYPH_IDENTITY_DATA.network.chainId,
         },
         genesis: {
           epoch: epochDisplay,
@@ -67,8 +65,9 @@ export default async function IdentityPage() {
         registrationTx:
           process.env.NEXT_PUBLIC_REGISTRATION_TX ||
           process.env.NEXT_PUBLIC_IDENTITY_REGISTRATION_TX ||
-          regEvent?.txHash ||
-          GLYPH_IDENTITY_DATA.registrationTx,
+          (isMainnet
+            ? GLYPH_IDENTITY_DATA.registrationTx
+            : (regEvent?.txHash || GLYPH_IDENTITY_DATA.registrationTx)),
       };
     }
   } catch (error) {

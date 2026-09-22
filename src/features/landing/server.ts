@@ -62,9 +62,12 @@ export async function getLandingPageData(agentIdentifier?: string): Promise<Land
   const activeDays = Math.floor(diffMs / (24 * 60 * 60 * 1000));
   const activeHours = Math.floor((diffMs % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
 
+  const isMainnet = process.env.NEXT_PUBLIC_CHAIN_ID === "4663";
+  const defaultAgentId = isMainnet ? "485" : "5";
+
   const agentMeta: LandingAgentMeta = {
     id: agent?.id || "",
-    agentId: agent?.agentId || agentIdentifier || process.env.GLYPH_AGENT_ID || "1",
+    agentId: isMainnet ? (process.env.GLYPH_AGENT_ID || defaultAgentId) : (agent?.agentId || agentIdentifier || process.env.GLYPH_AGENT_ID || defaultAgentId),
     name: agent?.name || "GLYPH",
     status: agent?.status || "ACTIVE",
     objective: GLYPH_CORE_OBJECTIVE,

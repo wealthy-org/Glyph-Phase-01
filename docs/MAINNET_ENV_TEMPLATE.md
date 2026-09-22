@@ -30,10 +30,10 @@
 
 | Environment Variable | Mainnet Value | Status | Action Required |
 | :--- | :--- | :--- | :--- |
-| `GLYPH_AGENT_ID` | `<TBD>` | **Awaiting Registration** | Returned when calling `register("/agents/glyph.json")` on IdentityRegistry. |
-| `NEXT_PUBLIC_GLYPH_AGENT_ID` | `<TBD>` | **Awaiting Registration** | Matches `GLYPH_AGENT_ID` for UI components. |
-| `NEXT_PUBLIC_GLYPH_WALLET_ADDRESS` | `0x1Ba1BBeC38CAf4454252f8Bd87245a41919dd27C` | **Configured** | User's MetaMask EOA — Primary Glyph wallet and beneficiary across testnet and mainnet. |
-| `NEXT_PUBLIC_REGISTRATION_TX` | `<TBD>` | **Awaiting Registration** | Transaction hash from ERC-8004 registration on mainnet. |
+| `GLYPH_AGENT_ID` | `485` | **Registered on Mainnet** | Minted via `register("/agents/glyph.json")` (Block 69599556). |
+| `NEXT_PUBLIC_GLYPH_AGENT_ID` | `485` | **Registered on Mainnet** | Matches `GLYPH_AGENT_ID` for UI components. |
+| `NEXT_PUBLIC_GLYPH_WALLET_ADDRESS` | `0x1Ba1BBeC38CAf4454252f8Bd87245a41919dd27C` | **Configured** | User's MetaMask EOA — Primary Glyph wallet & onchain owner/agent wallet. |
+| `NEXT_PUBLIC_REGISTRATION_TX` | `0x7bdb016a6ae01709d2fe5548593644ace465fae607e9cf51fe4a22a07556e794` | **Confirmed (Block 69599556)** | Transaction hash from ERC-8004 registration on mainnet. |
 
 ---
 

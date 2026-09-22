@@ -22,14 +22,19 @@ export interface HeaderMetricsData {
 }
 
 export async function getHeaderMetrics(agentIdentifier?: string): Promise<HeaderMetricsData> {
-  const targetAgentId = agentIdentifier || process.env.GLYPH_AGENT_ID || "1";
+  const isMainnet = process.env.NEXT_PUBLIC_CHAIN_ID === "4663";
+  const defaultAgentId = isMainnet ? "485" : "5";
+  const targetAgentId = agentIdentifier || process.env.GLYPH_AGENT_ID || defaultAgentId;
+  const networkName = isMainnet ? "ROBINHOOD MAINNET" : "ROBINHOOD TESTNET";
 
   try {
     const agent = await prisma.agent.findFirst({
       where: targetAgentId ? { agentId: targetAgentId } : undefined,
     }) || await prisma.agent.findFirst();
 
-    const resolvedAgentId = agent?.agentId || targetAgentId || "1";
+    const resolvedAgentId = isMainnet
+      ? (process.env.GLYPH_AGENT_ID || defaultAgentId)
+      : (agent?.agentId || targetAgentId || defaultAgentId);
 
     const [treasury, activePositionsData, closedTrades, decisionCount] = await Promise.all([
       getTreasurySummary(resolvedAgentId),
@@ -82,7 +87,7 @@ export async function getHeaderMetrics(agentIdentifier?: string): Promise<Header
       closedTradeCount: closedTradesCount,
       agentStatus: agent?.status || "ACTIVE",
       agentId: resolvedAgentId,
-      network: "ROBINHOOD TESTNET",
+      network: networkName,
       cycleCount: Math.max(1, decisionCount),
     };
   } catch (error) {
@@ -102,7 +107,7 @@ export async function getHeaderMetrics(agentIdentifier?: string): Promise<Header
       closedTradeCount: 0,
       agentStatus: "ACTIVE",
       agentId: targetAgentId,
-      network: "ROBINHOOD TESTNET",
+      network: networkName,
       cycleCount: 1,
     };
   }

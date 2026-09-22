@@ -32,7 +32,9 @@ let globalHeaderCache: HeaderMetricsData | null = null;
 let activeFetchPromise: Promise<HeaderMetricsData | null> | null = null;
 
 function formatAgentId(agentId: string | number | undefined): string {
-  return String(agentId || "1").padStart(3, "0");
+  const isMainnet = process.env.NEXT_PUBLIC_CHAIN_ID === "4663";
+  const fallback = isMainnet ? "485" : "5";
+  return String(agentId || fallback).padStart(3, "0");
 }
 
 async function fetchHeaderStats(): Promise<HeaderMetricsData | null> {
@@ -177,8 +179,10 @@ export const Navbar: React.FC<NavbarProps> = ({
     maximumFractionDigits: 2,
   }).format(value);
 
+  const isMainnet = process.env.NEXT_PUBLIC_CHAIN_ID === "4663";
+  const fallbackAgentId = isMainnet ? "485" : "5";
   const formattedAgentId = formatAgentId(
-    metrics?.agentId || propAgentId || process.env.NEXT_PUBLIC_GLYPH_AGENT_ID
+    metrics?.agentId || propAgentId || process.env.NEXT_PUBLIC_GLYPH_AGENT_ID || fallbackAgentId
   );
 
   const wins = metrics?.winningTradesCount ?? 0;

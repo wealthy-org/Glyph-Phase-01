@@ -403,11 +403,11 @@ Specifically awaiting approval for:
 # PHASE 4 — MAINNET IDENTITY
 
 - [x] Confirm approved ERC-8004 mainnet strategy — Canonical Registry @ `0x8004A169FB4a3325136EB29fA0ceB6D2e539a432`, Agent URI `/agents/glyph.json`, Agent Wallet bound to `0x1Ba1BBeC38CAf4454252f8Bd87245a41919dd27C`, Testnet ID #5 preserved
-- [ ] Register/create mainnet identity
-- [ ] Verify identity
-- [ ] Record mainnet identity
-- [ ] Configure application reference
-- [ ] Verify application resolves correct identity
+- [X] Register/create mainnet identity
+- [X] Verify identity
+- [x] Record mainnet identity — Agent ID: `#485`, Owner & Wallet: `0x1Ba1BBeC38CAf4454252f8Bd87245a41919dd27C`, Tx: `0x7bdb016a6ae01709d2fe5548593644ace465fae607e9cf51fe4a22a07556e794`, Block: `69599556`
+- [x] Configure application reference — Dynamic mainnet/testnet resolution in `data.ts`, `identity/page.tsx`, `Navbar.tsx`, `header-stats.ts`, and `landing/server.ts`
+- [x] Verify application resolves correct identity — Dynamic resolution tested; Testnet ID #5 preserved on 46630 and Mainnet ID #485 resolved on 4663
 
 IMPORTANT:
 
