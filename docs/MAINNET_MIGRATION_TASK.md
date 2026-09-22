@@ -402,7 +402,7 @@ Specifically awaiting approval for:
 
 # PHASE 4 — MAINNET IDENTITY
 
-- [ ] Confirm approved ERC-8004 mainnet strategy
+- [x] Confirm approved ERC-8004 mainnet strategy — Canonical Registry @ `0x8004A169FB4a3325136EB29fA0ceB6D2e539a432`, Agent URI `/agents/glyph.json`, Agent Wallet bound to `0x1Ba1BBeC38CAf4454252f8Bd87245a41919dd27C`, Testnet ID #5 preserved
 - [ ] Register/create mainnet identity
 - [ ] Verify identity
 - [ ] Record mainnet identity
