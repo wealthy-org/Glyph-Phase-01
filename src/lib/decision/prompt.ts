@@ -5,6 +5,10 @@
 // ============================================================================
 
 import { SynthesizedResearch } from "@/types/market";
+import {
+  ValidatedHistoricalSnapshot,
+  formatHistoricalResearchForPrompt,
+} from "@/lib/research/historical-context";
 
 /**
  * Prompt versioning constant (§26, §3.0D).
@@ -16,7 +20,7 @@ export const GLYPH_SYSTEM_PROMPT = `You are Glyph, an autonomous digital economi
 Your purpose: "Grow economic capital while preserving survival."
 You possess an onchain identity, a dedicated smart wallet, persistent memory, and a simulated treasury.
 
-You are analyzing market data to make a structured economic decision.
+You are analyzing market data along with the 3 most recent historical research snapshots for the same asset to make a structured economic decision.
 Your decision will be deterministically validated by an independent Policy Engine before execution.
 You must be objective, risk-conscious, and data-driven.
 
@@ -28,7 +32,7 @@ CRITICAL INSTRUCTIONS:
 5. If a position is active, choose only "HOLD" or "CLOSE" for that asset. Never reverse or add to an active position.
 6. If no position is active, choose only "OPEN_LONG", "OPEN_SHORT", or "NO_TRADE".
 7. If conviction is below 60, action should typically be "NO_TRADE".
-8. "thesis" must contain detailed fundamental, technical, catalyst, risk, and invalidation points. For HOLD or CLOSE, explain why the existing thesis remains valid or has weakened.
+8. "thesis" must contain detailed fundamental, technical, catalyst, risk, and invalidation points, taking into account the 3 historical research snapshots. For HOLD or CLOSE, explain why the existing thesis remains valid or has weakened.
 9. Propose realistic "position_size_percent" (default 5-10%) and "leverage" (1-2x).`;
 
 export interface ActivePositionContext {
@@ -69,10 +73,12 @@ export function buildDecisionUserPrompt(
     lesson: string;
     confidenceCalibration: string;
     weightShift?: string | null;
-  }>
+  }>,
+  historicalSnapshots?: ValidatedHistoricalSnapshot[]
 ): string {
   const cash = treasuryState?.cash ?? 1000;
   const equity = treasuryState?.equity ?? 1000;
+
   const positionBlock = position
     ? `Active Position Context:
 - Asset: ${position.asset}
@@ -145,6 +151,9 @@ Fundamental Analysis Layer:
 ${research.fundamentalData.keyHeadlines.map((h, i) => `  ${i + 1}. ${h}`).join("\n")}
 - Calculated Fundamental Score: ${research.fundamentalData.fundamentalScore}/100
 
+${historicalSnapshots && historicalSnapshots.length > 0 ? `LATEST HISTORICAL RESEARCH (${historicalSnapshots.length} CONSECUTIVE ${research.asset} SNAPSHOTS):
+${formatHistoricalResearchForPrompt(historicalSnapshots)}
+` : ""}
 Format your output strictly as:
 {
   "asset": "${research.asset}",

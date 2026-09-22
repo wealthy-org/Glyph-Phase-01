@@ -1,4 +1,4 @@
-﻿// ============================================================================
+// ============================================================================
 // GLYPH PHASE 01 — LLM DECISION MODULE: PROMPT BUILDER
 // scripts/glyph-decision/llm-decision/prompt.ts
 //
@@ -8,6 +8,10 @@
 // ============================================================================
 
 import { SynthesizedResearch } from "../../../src/types/market";
+import {
+  ValidatedHistoricalSnapshot,
+  formatHistoricalResearchForPrompt,
+} from "../../../src/lib/research/historical-context";
 
 /**
  * System prompt that instructs the LLM to act as Glyph Decision Analyst.
@@ -15,7 +19,7 @@ import { SynthesizedResearch } from "../../../src/types/market";
  */
 export const LLM_DECISION_SYSTEM_PROMPT = `You are Glyph Decision Analyst, an AI synthesis engine for Glyph Phase 01.
 
-Your ONLY role: read pre-computed analysis data and synthesize it into a single directional trading proposal.
+Your ONLY role: read pre-computed analysis data and historical research snapshots to synthesize them into a single directional trading proposal.
 
 You do NOT:
 - Execute trades
@@ -27,7 +31,8 @@ You do NOT:
 - Perform market research or fetch market data
 
 You DO:
-- Synthesize the provided Fundamental, Technical, and Risk analysis
+- Synthesize the provided Current Market Data and 3 Latest Same-Asset Historical Research Snapshots
+- Evaluate the chronological progression of scores, trend, momentum, and risk across the 3 snapshots
 - Propose exactly one action: LONG, SHORT, HOLD, CLOSE, or NO_TRADE
 - Score your conviction from 0 to 100
 - Explain your reasoning across fundamental, technical, risk, and invalidation pillars
@@ -73,7 +78,8 @@ export interface ActivePositionContext {
 
 export function buildLlmDecisionUserPrompt(
   research: SynthesizedResearch,
-  position?: ActivePositionContext | null
+  position?: ActivePositionContext | null,
+  historicalSnapshots?: ValidatedHistoricalSnapshot[]
 ): string {
   const { asset, marketData, fundamentalData, technicalData, riskContext, newsData, sourceMetadata } = research;
   const { quote } = marketData;
@@ -99,20 +105,25 @@ Allowed Actions: HOLD or CLOSE
 `
     : "--- ACTIVE POSITION ---\nNone\nAllowed Actions: LONG, SHORT, or NO_TRADE\n";
 
+  const historicalSection = historicalSnapshots && historicalSnapshots.length > 0
+    ? `--- LATEST HISTORICAL RESEARCH (${historicalSnapshots.length} CONSECUTIVE ${asset} SNAPSHOTS) ---
+${formatHistoricalResearchForPrompt(historicalSnapshots)}
+`
+    : "";
+
   return `=== GLYPH DECISION ANALYSIS REQUEST ===
-Asset: ${asset}
+TARGET ASSET: ${asset}
 Timestamp: ${research.timestamp}
 Data Provider: ${sourceMetadata.provider}
 
 ${positionBlock}
-
---- MARKET DATA ---
+--- CURRENT MARKET DATA ---
 Current Price : $${quote.price.toFixed(2)}
 Change        : ${quote.change >= 0 ? "+" : ""}${quote.change.toFixed(2)} (${quote.changePercent >= 0 ? "+" : ""}${quote.changePercent.toFixed(2)}%)
 Volume        : ${quote.volume.toLocaleString()}
 Day Range     : $${quote.low.toFixed(2)} – $${quote.high.toFixed(2)}
 
---- TECHNICAL ANALYSIS (pre-computed) ---
+--- CURRENT TECHNICAL ANALYSIS (pre-computed) ---
 Trend         : ${tech.trend}
 SMA 20        : $${tech.sma20.toFixed(2)}
 SMA 50        : $${tech.sma50.toFixed(2)}
@@ -123,7 +134,7 @@ Volatility    : ${tech.volatilityPercent.toFixed(2)}%
 Volume Ratio  : ${tech.volumeRatio.toFixed(2)}x (vs 20-day avg)
 Tech Score    : ${tech.technicalScore}/100
 
---- FUNDAMENTAL ANALYSIS (pre-computed) ---
+--- CURRENT FUNDAMENTAL ANALYSIS (pre-computed) ---
 Market Cap    : ${fund.marketCap ? `$${fund.marketCap.toLocaleString()}` : "N/A"}
 P/E Ratio     : ${fund.peRatio != null ? fund.peRatio.toFixed(2) : "N/A"}
 Revenue Growth: ${fund.revenueGrowthPercent.toFixed(2)}%
@@ -135,14 +146,16 @@ Fund Score    : ${fund.fundamentalScore}/100
 Top Headlines :
 ${topHeadlines}
 
---- RISK ANALYSIS (pre-computed) ---
+--- CURRENT RISK ANALYSIS (pre-computed) ---
 Market Regime : ${risk?.regime ?? "uncertain"}
 Risk Level    : ${risk?.level ?? "moderate"}
 Risk Details  : ${risk?.details ?? "No additional risk context."}
 
+${historicalSection}
 === YOUR TASK ===
-Based ONLY on the pre-computed analysis above, provide your synthesis decision.
-Do NOT re-compute any metrics. Use the scores and signals provided.
+Based on the current analysis and the progression across the 3 historical snapshots above, provide your synthesis decision for ${asset}.
+Do NOT re-compute any metrics. Use the scores and historical progression provided.
 Return ONLY the JSON object specified in the system prompt.`;
 }
+
 

@@ -1,4 +1,4 @@
-﻿// ============================================================================
+// ============================================================================
 // GLYPH PHASE 01 — LLM DECISION MODULE: OPENROUTER CLIENT
 // scripts/glyph-decision/llm-decision/openrouter.ts
 //
@@ -13,6 +13,7 @@
 // ============================================================================
 
 import { SynthesizedResearch } from "../../../src/types/market";
+import { ValidatedHistoricalSnapshot } from "../../../src/lib/research/historical-context";
 import { ActivePositionContext, LLM_DECISION_SYSTEM_PROMPT, buildLlmDecisionUserPrompt } from "./prompt";
 import { LlmDecisionSchema } from "./schema";
 import { LlmDecisionOutput } from "./types";
@@ -37,7 +38,8 @@ function cleanJsonString(raw: string): string {
  */
 export async function callOpenRouterForDecision(
     research: SynthesizedResearch,
-    position?: ActivePositionContext | null
+    position?: ActivePositionContext | null,
+    historicalSnapshots?: ValidatedHistoricalSnapshot[]
 ): Promise<LlmDecisionOutput> {
     const apiKey = process.env.OPENROUTER_API_KEY;
     const model = process.env.OPENROUTER_MODEL || "openai/gpt-4.1-mini";
@@ -49,7 +51,7 @@ export async function callOpenRouterForDecision(
     }
 
     let lastError = "unknown error";
-    const userPrompt = buildLlmDecisionUserPrompt(research, position);
+    const userPrompt = buildLlmDecisionUserPrompt(research, position, historicalSnapshots);
 
     for (let attempt = 0; attempt <= MAX_RETRIES; attempt += 1) {
         try {

@@ -67,18 +67,26 @@ async function persistDecision(
 ): Promise<string> {
     const agent = await prisma.agent.findUnique({ where: { agentId }, select: { id: true } });
     if (!agent) throw new Error(`Agent #${agentId} was not found in the database.`);
+
+    const thesisWithSnapshots = {
+        ...JSON.parse(JSON.stringify(decision.thesis)),
+        researchSnapshotIds: decision.source.researchSnapshotIds || [],
+    };
+
     const record = await prisma.decision.create({
         data: {
             agentId: agent.id,
             asset: decision.asset,
             action: actionForDatabase(decision.action),
             conviction: decision.conviction,
-            thesis: JSON.parse(JSON.stringify(decision.thesis)),
+            thesis: thesisWithSnapshots,
             policyResult: policyResult.result,
-            policyRejectReason: policyResult.reason ?? null,
+            policyRejectReason: decision.insufficientHistory
+                ? "INSUFFICIENT_HISTORICAL_RESEARCH"
+                : (policyResult.reason ?? null),
             positionSizePercent: policyResult.allocation?.percent.toString() ?? null,
             leverage: "1",
-            researchSnapshotId: decision.source.marketAnalysisSnapshotId,
+            researchSnapshotId: decision.source.marketAnalysisSnapshotId || null,
             cycleId,
             promptVersion: "LLM_DECISION_PHASE01",
         },
@@ -86,6 +94,7 @@ async function persistDecision(
     });
     return record.id;
 }
+
 
 async function processAsset(
     agentId: string,

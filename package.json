@@ -34,6 +34,7 @@
     "cli:test-cycle": "npx tsx scripts/test/test-cycle.ts",
     "test:research": "npx tsx scripts/test/test-research.ts",
     "test:wallet:rotation": "npx tsx scripts/test/test-wallet-rotation.ts",
+    "test:historical-research": "npx tsx scripts/test/test-asset-historical-research.ts",
     "glyph:wallet:status": "npx tsx scripts/wallet/wallet-status.ts",
     "glyph:wallet:set": "npx tsx scripts/wallet/wallet-set.ts",
     "glyph:wallet:verify": "npx tsx scripts/wallet/wallet-verify.ts"

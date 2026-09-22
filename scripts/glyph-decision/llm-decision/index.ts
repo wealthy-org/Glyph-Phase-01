@@ -77,72 +77,103 @@ async function loadAllowedAssets(agentId: string): Promise<string[]> {
     );
 }
 
-export async function runSingleAssetDecision(asset: string, quiet = false, position?: ActivePositionContext | null): Promise<LlmDecisionOutput & {
-    source: { marketAnalysisSnapshotId: string };
-}> {
-    const snapshots = await prisma.researchSnapshot.findMany({
-        where: { asset },
-        orderBy: { createdAt: "desc" },
-        take: 20,
-    });
-    const snapshot = snapshots.find((candidate) => {
-        const metadata = candidate.sourceMetadata;
-        return candidate.marketData !== null &&
-            candidate.fundamentalData !== null &&
-            candidate.technicalData !== null &&
-            Array.isArray(candidate.newsData) &&
-            metadata !== null &&
-            typeof metadata === "object" &&
-            !Array.isArray(metadata) &&
-            "provider" in metadata &&
-            metadata.dataQuality === "PROVIDER_DATA" &&
-            "riskContext" in metadata &&
-            metadata.riskContext !== null;
-    });
+import {
+    getHistoricalResearchSnapshots,
+    ValidatedHistoricalSnapshot,
+} from "../../../src/lib/research/historical-context";
 
-    if (!snapshot) {
-        throw new Error(
-            `Missing market-analysis snapshot for ${asset}. Run market:analysis first.`
-        );
+export interface SingleAssetDecisionResult extends LlmDecisionOutput {
+    source: {
+        marketAnalysisSnapshotId: string;
+        researchSnapshotIds: string[];
+    };
+    insufficientHistory?: {
+        availableSnapshots: number;
+        requiredSnapshots: number;
+        reason: string;
+    };
+}
+
+export async function runSingleAssetDecision(
+    asset: string,
+    quiet = false,
+    position?: ActivePositionContext | null
+): Promise<SingleAssetDecisionResult> {
+    const normAsset = asset.trim().toUpperCase();
+
+    // Query strictly for the exact target asset: newest -> previous -> oldest
+    const history = await getHistoricalResearchSnapshots(normAsset, 3);
+
+    if (!history.ok) {
+        if (!quiet) {
+            console.log(`\n[TRADE-DECISION]\nAsset: ${normAsset}\n\nAvailable Snapshots: ${history.availableSnapshots}\nRequired Snapshots: 3\n\nDecision: NO_TRADE\nReason: INSUFFICIENT_HISTORICAL_RESEARCH\n`);
+        }
+
+        return {
+            asset: normAsset,
+            action: "NO_TRADE",
+            conviction: 0,
+            thesis: {
+                fundamental: `Market analysis history for ${normAsset} is incomplete (${history.availableSnapshots}/3 required snapshots found).`,
+                technical: `Technical trend progression requires at least 3 historical snapshots of ${normAsset}.`,
+                risk: `Risk Policy mandates at least 3 valid research snapshots before capital deployment.`,
+                invalidation: `Thesis invalidation: will re-evaluate once 3 valid ${normAsset} research snapshots are recorded.`,
+            },
+            source: {
+                marketAnalysisSnapshotId: history.snapshots[0]?.id || "",
+                researchSnapshotIds: history.snapshots.map((s) => s.id),
+            },
+            insufficientHistory: {
+                availableSnapshots: history.availableSnapshots,
+                requiredSnapshots: 3,
+                reason: "INSUFFICIENT_HISTORICAL_RESEARCH",
+            },
+        };
     }
 
-    const metadata = snapshot.sourceMetadata as Record<string, unknown>;
-    const ageMs = Date.now() - snapshot.createdAt.getTime();
+    const [snapshot1, snapshot2, snapshot3] = history.snapshots;
+
+    if (!quiet) {
+        console.log(`\n[TRADE-DECISION]\nAsset: ${normAsset}\n\nHistorical Research:\n1. ${snapshot1.id} (${snapshot1.createdAt.toISOString()})\n2. ${snapshot2.id} (${snapshot2.createdAt.toISOString()})\n3. ${snapshot3.id} (${snapshot3.createdAt.toISOString()})\n\nSnapshot Count: 3\nAsset Match: PASS\nHistorical Context: READY\n`);
+    }
+
+    const metadata = snapshot1.sourceMetadata as Record<string, unknown>;
+    const ageMs = Date.now() - snapshot1.createdAt.getTime();
     const maxAgeMs = Number(process.env.RESEARCH_SNAPSHOT_MAX_AGE_MS || 24 * 60 * 60 * 1000);
     if (!Number.isFinite(maxAgeMs) || maxAgeMs <= 0) {
         throw new Error("RESEARCH_SNAPSHOT_MAX_AGE_MS must be a positive number.");
     }
     if (ageMs > maxAgeMs) {
         throw new Error(
-            `Stale market-analysis snapshot for ${asset}: ${Math.round(ageMs / 60000)} minutes old.`
+            `Stale market-analysis snapshot for ${normAsset}: ${Math.round(ageMs / 60000)} minutes old.`
         );
     }
 
     const research: SynthesizedResearch = {
-        asset: snapshot.asset,
-        timestamp: String(metadata.researchTimestamp || snapshot.createdAt.toISOString()),
-        marketData: snapshot.marketData as unknown as SynthesizedResearch["marketData"],
-        fundamentalData: snapshot.fundamentalData as unknown as FundamentalSummary,
-        technicalData: snapshot.technicalData as unknown as TechnicalSummary,
+        asset: snapshot1.asset,
+        timestamp: String(metadata.researchTimestamp || snapshot1.createdAt.toISOString()),
+        marketData: snapshot1.marketData as unknown as SynthesizedResearch["marketData"],
+        fundamentalData: snapshot1.fundamentalData as unknown as FundamentalSummary,
+        technicalData: snapshot1.technicalData as unknown as TechnicalSummary,
         riskContext: metadata.riskContext as RiskContext | undefined,
-        newsData: snapshot.newsData as unknown as NewsItem[],
+        newsData: snapshot1.newsData as unknown as NewsItem[],
         sourceMetadata: {
             provider: String(metadata.provider),
-            fetchedAt: String(metadata.fetchedAt || snapshot.createdAt.toISOString()),
+            fetchedAt: String(metadata.fetchedAt || snapshot1.createdAt.toISOString()),
             isCached: Boolean(metadata.isCached),
         },
     };
 
-    if (!quiet) {
-        console.log(`✓ Snapshot ${snapshot.id} (${research.sourceMetadata.provider})`);
-        console.log(`✓ Snapshot age: ${Math.round(ageMs / 60000)} minutes`);
-    }
-    const decision = await callOpenRouterForDecision(research, position);
+    const decision = await callOpenRouterForDecision(research, position, history.snapshots);
     return {
         ...decision,
-        source: { marketAnalysisSnapshotId: snapshot.id },
+        source: {
+            marketAnalysisSnapshotId: snapshot1.id,
+            researchSnapshotIds: history.snapshotIds,
+        },
     };
 }
+
 
 function printDecisionSummary(asset: string, decision: LlmDecisionOutput): void {
     console.log(`

@@ -21,12 +21,14 @@ import { closeSimulatedPosition, openSimulatedPosition } from "@/lib/portfolio";
 import { prisma } from "@/lib/prisma";
 import { getTreasurySummary } from "@/lib/treasury";
 import { SynthesizedResearch } from "@/types/market";
+import { getHistoricalResearchSnapshots } from "@/lib/research/historical-context";
 import {
   GLYPH_DECISION_PROMPT_VERSION,
   GLYPH_SYSTEM_PROMPT,
   buildDecisionUserPrompt,
 } from "./prompt";
 import { GlyphDecisionOutput, GlyphDecisionSchema } from "./schema";
+
 
 export interface DecisionRunResult {
   decisionId: string;
@@ -231,45 +233,65 @@ export async function executeGlyphDecisionCycle(
     orderBy: { timestamp: "desc" },
     take: 5,
   });
-  const userPrompt = buildDecisionUserPrompt(
-    researchPayload,
-    {
-      cash: treasurySummary.currentBalance,
-      equity: treasurySummary.totalEquity,
-    },
-    currentPosition
-      ? {
-        asset: currentPosition.asset,
-        side: currentPosition.side,
-        entryPrice: Number(currentPosition.entryPrice),
-        currentPrice: Number(currentPosition.currentPrice),
-        unrealizedPnl: Number(currentPosition.unrealizedPnl),
-        unrealizedPnlPercent: Number(currentPosition.unrealizedPnlPercent),
-        openedAt: currentPosition.openedAt.toISOString(),
-      }
-      : null,
-    previousDecisions.map((previous) => ({
-      action: previous.action,
-      policyResult: previous.policyResult,
-      conviction: previous.conviction,
-      thesis: JSON.stringify(previous.thesis),
-      createdAt: previous.createdAt.toISOString(),
-    })),
-    recentEvents.map((event) => ({
-      eventType: event.eventType,
-      title: event.title,
-      result: event.result,
-      timestamp: event.timestamp.toISOString(),
-    })),
-    recentMemories
-  );
+  // 1.5 Validate 3 latest same-asset historical snapshots (§Asset Isolation & Minimum Requirement)
+  const history = await getHistoricalResearchSnapshots(snapshot.asset, 3);
+  let decision: GlyphDecisionOutput;
+  let rawOutput: string = "{}";
 
-  // 3. Call LLM with Zod validation & retry (§3.4)
-  const { decision, rawOutput } = await callLlmWithRetry(
-    GLYPH_SYSTEM_PROMPT,
-    userPrompt,
-    snapshot.asset
-  );
+  if (!history.ok) {
+    console.log(`\n[TRADE-DECISION]\nAsset: ${snapshot.asset}\n\nAvailable Snapshots: ${history.availableSnapshots}\nRequired Snapshots: 3\n\nDecision: NO_TRADE\nReason: INSUFFICIENT_HISTORICAL_RESEARCH\n`);
+    decision = createFallbackDecision(
+      snapshot.asset,
+      `INSUFFICIENT_HISTORICAL_RESEARCH: ${history.availableSnapshots}/3 available`
+    );
+    decision.conviction = 0;
+  } else {
+    console.log(`\n[TRADE-DECISION]\nAsset: ${snapshot.asset}\n\nHistorical Research:\n1. ${history.snapshots[0].id} (${history.snapshots[0].createdAt.toISOString()})\n2. ${history.snapshots[1].id} (${history.snapshots[1].createdAt.toISOString()})\n3. ${history.snapshots[2].id} (${history.snapshots[2].createdAt.toISOString()})\n\nSnapshot Count: 3\nAsset Match: PASS\nHistorical Context: READY\n`);
+
+    const userPrompt = buildDecisionUserPrompt(
+      researchPayload,
+      {
+        cash: treasurySummary.currentBalance,
+        equity: treasurySummary.totalEquity,
+      },
+      currentPosition
+        ? {
+          asset: currentPosition.asset,
+          side: currentPosition.side,
+          entryPrice: Number(currentPosition.entryPrice),
+          currentPrice: Number(currentPosition.currentPrice),
+          unrealizedPnl: Number(currentPosition.unrealizedPnl),
+          unrealizedPnlPercent: Number(currentPosition.unrealizedPnlPercent),
+          openedAt: currentPosition.openedAt.toISOString(),
+        }
+        : null,
+      previousDecisions.map((previous) => ({
+        action: previous.action,
+        policyResult: previous.policyResult,
+        conviction: previous.conviction,
+        thesis: JSON.stringify(previous.thesis),
+        createdAt: previous.createdAt.toISOString(),
+      })),
+      recentEvents.map((event) => ({
+        eventType: event.eventType,
+        title: event.title,
+        result: event.result,
+        timestamp: event.timestamp.toISOString(),
+      })),
+      recentMemories,
+      history.snapshots
+    );
+
+    // 3. Call LLM with Zod validation & retry (§3.4)
+    const llmResult = await callLlmWithRetry(
+      GLYPH_SYSTEM_PROMPT,
+      userPrompt,
+      snapshot.asset
+    );
+    decision = llmResult.decision;
+    rawOutput = llmResult.rawOutput;
+  }
+
 
   // 3.5. Evaluate Economic Preconditions (§Mandatory Economic Safety)
   const economicPrecheck = await evaluateEconomicPreconditions(
@@ -317,6 +339,11 @@ export async function executeGlyphDecisionCycle(
   );
 
   // 5. Store Decision record in database (§3.0B)
+  const thesisPayload = {
+    ...(typeof decision.thesis === "object" ? decision.thesis : {}),
+    researchSnapshotIds: history.snapshots.map((s) => s.id),
+  };
+
   const decisionRecord = await prisma.decision.create({
     data: {
       agentId: agent.id,
@@ -330,13 +357,14 @@ export async function executeGlyphDecisionCycle(
       riskScore: decision.risk_score,
       positionSizePercent: policyResult.clampedPositionPercent,
       leverage: policyResult.clampedLeverage,
-      thesis: decision.thesis as any,
+      thesis: thesisPayload as any,
       policyResult: policyResult.policyResult,
-      policyRejectReason: policyResult.rejectReason,
-      researchSnapshotId: snapshot.id,
+      policyRejectReason: !history.ok ? "INSUFFICIENT_HISTORICAL_RESEARCH" : policyResult.rejectReason,
+      researchSnapshotId: history.snapshots[0]?.id || snapshot.id,
       promptVersion: GLYPH_DECISION_PROMPT_VERSION,
     },
   });
+
 
   // Log DECISION Activity (§Mandatory Logging)
   if (cycleId) {
