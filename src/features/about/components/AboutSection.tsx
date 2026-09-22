@@ -42,12 +42,14 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ className }) => {
       <footer className="pt-6 pb-8 border-t border-[#1b1b1b] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 font-mono text-[11px] text-[#55555a]">
         <div className="flex items-center gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-[#6fe39a]" />
-          <span>SPECIFICATION REVISION: 2026.09 // PHASE 01 TESTNET</span>
+          <span>SPECIFICATION REVISION: 2026.09 // {process.env.NEXT_PUBLIC_CHAIN_ID === "4663" ? "PHASE 01 MAINNET" : "PHASE 01 TESTNET"}</span>
         </div>
         <div className="flex items-center gap-2">
           <span>ARCHITECTURE: AUTONOMOUS ECONOMIC PERSISTENCE</span>
           <span className="text-[#333333]">·</span>
-          <span className="text-[#85858a]">ROBINHOOD TESTNET 46630</span>
+          <span className="text-[#85858a]">
+            {process.env.NEXT_PUBLIC_CHAIN_ID === "4663" ? "ROBINHOOD MAINNET 4663" : "ROBINHOOD TESTNET 46630"}
+          </span>
         </div>
       </footer>
     </div>

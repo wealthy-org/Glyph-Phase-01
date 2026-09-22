@@ -10,7 +10,7 @@ export function setupDnsFix() {
     connect: {
       lookup: (hostname, opts, cb) => {
         if (hostname.includes("robinhood.com")) {
-          // Bypass ISP DNS hijacking (Telkomsel/Indihome) for Robinhood Chain Testnet
+          // Bypass ISP DNS hijacking (Telkomsel/Indihome) for Robinhood Chain Mainnet & Testnet
           return (cb as any)(null, [
             { address: ROBINHOOD_IPS[0], family: 4 },
             { address: ROBINHOOD_IPS[1], family: 4 },

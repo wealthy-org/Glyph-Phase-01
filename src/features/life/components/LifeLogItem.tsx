@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { LifeEvent } from "../types";
 import { Badge } from "@/components/ui/badge";
+import { getExplorerTxUrl } from "@/lib/onchain/chains";
 import { cn } from "@/lib/utils";
 
 interface LifeLogItemProps {
@@ -122,7 +123,7 @@ export const LifeLogItem: React.FC<LifeLogItemProps> = ({ event, isLast = false 
           <div className="pt-1">
             {event.txHash ? (
               <a
-                href={`https://explorer.testnet.chain.robinhood.com/tx/${event.txHash}`}
+                href={getExplorerTxUrl(event.txHash)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 font-mono text-[11px] text-[#55555a] hover:text-[#6fe39a] transition-colors select-all"

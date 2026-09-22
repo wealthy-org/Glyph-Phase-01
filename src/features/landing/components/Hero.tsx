@@ -1366,7 +1366,7 @@ export const Hero: React.FC<HeroProps> = ({
               </span>
             </div>
             <div className="text-[#55555a]">
-              NETWORK: ROBINHOOD TESTNET // 46630
+              NETWORK: {process.env.NEXT_PUBLIC_CHAIN_ID === "4663" ? "ROBINHOOD MAINNET // 4663" : "ROBINHOOD TESTNET // 46630"}
             </div>
           </div>
         </div>

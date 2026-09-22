@@ -43,8 +43,8 @@ explicit human approval.
 
 | Testnet Resource | Mainnet Resource | Action | Approval? | Verification |
 |---|---|---|---|---|
-| DecisionRegistry @ `0x7Ae7f962...` (testnet) | DecisionRegistry @ `???` (mainnet) | Deploy new contract | **YES — REQUIRED** | Call `commitDecision()` on mainnet |
-| IdentityRegistry @ `0x66399E25...` (testnet) | IdentityRegistry @ `???` (mainnet) | Deploy new contract | **YES — REQUIRED** | Call `register()` on mainnet |
+| IdentityRegistry @ `0x66399E25...` (testnet) | Canonical ERC-8004 @ `0x8004A169FB4a3325136EB29fA0ceB6D2e539a432` (mainnet) | **Verified on Mainnet** (No deployment needed). Function `register(string)` and `setAgentWallet(uint256, address)` active. | No (Already deployed) | Verified via mainnet RPC call + gas estimation |
+| DecisionRegistry @ `0x7Ae7f962...` (testnet) | DecisionRegistry @ `TBD` (mainnet) | **REQUIRES DEPLOYMENT** (`contracts/DecisionRegistry.sol`) | **YES — REQUIRED** | Deploy, then call `commitDecision()` on mainnet |
 
 ### Identity (ERC-8004)
 
@@ -208,55 +208,64 @@ These components already call `getExplorerTxUrl` in some places but still have
 
 ---
 
+## Gas Requirements & Estimation (Robinhood Chain Mainnet)
+
+| Operation | Gas Limit (Est.) | Base Fee / Gas Price | Estimated Cost (ETH) | Notes |
+| :--- | :--- | :--- | :--- | :--- |
+| **1. Deploy `DecisionRegistry.sol`** | ~150,000 gas | ~0.0525 Gwei + L1 calldata | ~0.00006 ETH | Simple contract, no dependencies |
+| **2. Identity `register(agentURI)`** | ~135,000 gas | ~0.0525 Gwei + L1 calldata | ~0.00006 ETH | Simulated on live RPC: 134,804 gas |
+| **3. `setAgentWallet(agentId, wallet)`** | ~45,000 gas | ~0.0525 Gwei | ~0.00001 ETH | Mapping update in IdentityRegistry |
+| **4. Operational `commitDecision`** | ~50,000 gas/cycle | ~0.0525 Gwei | ~0.00001 ETH/cycle | ~0.0003 ETH for 30 daily cycles |
+| **Total Buffer Recommended** | — | — | **0.002 – 0.005 ETH** | Ample buffer (~$5–$15 USD) for months of cycles |
+
+> **Current Deployer Status:**
+> - EOA Address: `0xB635eFd761D352ed8a74166a292c8969AD541c8E`
+> - Mainnet Balance: `0.0 ETH`
+> - Nonce: `0`
+> - Funding required before Step 4. **STOP: Awaiting Human Approval before funding.**
+
+---
+
 ## Deployment Order
 
 This order must be followed exactly. Each step depends on the previous.
 
 ```
-Step 1 — Verify mainnet RPC connectivity
-  └── eth_chainId call returns 4663
-  └── No approval needed
+Step 1 — Verify mainnet RPC connectivity & DNS bypass
+  └── [COMPLETED in Phase 3] eth_chainId returns 4663 (0x1237), block ~69.5M
 
-Step 2 — Deploy IdentityRegistry.sol to mainnet
+Step 2 — Audit onchain contracts
+  └── [COMPLETED in Phase 3]
+      - Canonical ERC-8004 IdentityRegistry ALREADY DEPLOYED: 0x8004A169FB4a3325136EB29fA0ceB6D2e539a432
+      - DecisionRegistry NOT DEPLOYED: Marked as REQUIRES DEPLOYMENT
+
+Step 3 — Fund deployer EOA with minimal mainnet gas (0.002 - 0.005 ETH)
+  └── REQUIRES EXPLICIT APPROVAL (involves real ETH funding)
+  └── Verify balance on mainnet RPC
+
+Step 4 — Deploy DecisionRegistry.sol to mainnet
   └── REQUIRES EXPLICIT APPROVAL
-  └── Record deployed address
+  └── Record deployed address to DECISION_REGISTRY_CONTRACT_ADDRESS
 
-Step 3 — Deploy DecisionRegistry.sol to mainnet
-  └── REQUIRES EXPLICIT APPROVAL
-  └── Record deployed address
-
-Step 4 — Create mainnet Smart Account
-  └── REQUIRES EXPLICIT APPROVAL (involves gas + mainnet tx)
-  └── Record new wallet address
-
-Step 5 — Register Glyph identity on mainnet IdentityRegistry
+Step 5 — Register Glyph identity on canonical IdentityRegistry
   └── REQUIRES EXPLICIT APPROVAL (involves mainnet tx)
-  └── Record new Agent ID
+  └── Calls register("/agents/glyph.json") on 0x8004A169FB4a3325136EB29fA0ceB6D2e539a432
+  └── Record new Agent ID and registrationTx
 
-Step 6 — Fund wallet with minimum mainnet gas
-  └── REQUIRES EXPLICIT APPROVAL (involves real ETH)
-  └── Verify balance
-
-Step 7 — Update ENV variables (production)
-  └── No approval needed (config only)
-  └── Testnet ENV preserved separately
-
-Step 8 — Update source code (12 files, 7 UI + 5 critical)
-  └── No approval needed (code changes only)
-
-Step 9 — Update prisma/schema.prisma defaults
-  └── Run Prisma migration (non-destructive)
-  └── No approval needed
-
-Step 10 — Deploy to Vercel / production
-  └── Standard deployment
-  └── CRON remains disabled
-
-Step 11 — Controlled mainnet test (Phase 11)
+Step 6 — Configure mainnet Smart Account / Wallet
   └── REQUIRES EXPLICIT APPROVAL
-  └── Run exactly 1 Glyph cycle
+  └── Record new wallet address to NEXT_PUBLIC_GLYPH_WALLET_ADDRESS
 
-Step 12 — Enable production cron (Phase 12 Go Live)
+Step 7 — Update ENV variables & database Agent record
+  └── Non-destructive config update
+  └── Set NEXT_PUBLIC_CHAIN_ID=4663
+
+Step 8 — Controlled mainnet test (Phase 11)
+  └── REQUIRES EXPLICIT APPROVAL
+  └── Run exactly 1 cycle in paper trading mode
+  └── Verify decision hash committed on mainnet Blockscout
+
+Step 9 — Resume cron-job.org (Phase 12 Go Live)
   └── REQUIRES EXPLICIT APPROVAL
 ```
 

@@ -28,8 +28,8 @@ export async function fetchLiveTradesData(): Promise<{
           netPnl: "N/A",
           winRatio: "N/A",
           loggedRatio: "0 / 0 ATTESTED",
-          network: "ROBINHOOD",
-          networkChain: "TESTNET // 46630",
+          network: process.env.NEXT_PUBLIC_CHAIN_ID === "4663" ? "MAINNET" : "ROBINHOOD",
+          networkChain: process.env.NEXT_PUBLIC_CHAIN_ID === "4663" ? "MAINNET // 4663" : "TESTNET // 46630",
         },
       };
     }
@@ -140,8 +140,8 @@ export async function fetchLiveTradesData(): Promise<{
       netPnl: netPnlStr,
       winRatio: winRatioStr,
       loggedRatio: `${loggedCount} OF ${dbTrades.length} LOGGED`,
-      network: "TESTNET",
-      networkChain: "ROBINHOOD CHAIN",
+      network: process.env.NEXT_PUBLIC_CHAIN_ID === "4663" ? "MAINNET" : "TESTNET",
+      networkChain: process.env.NEXT_PUBLIC_CHAIN_ID === "4663" ? "ROBINHOOD MAINNET // 4663" : "ROBINHOOD TESTNET // 46630",
     };
 
     return { trades, stats };

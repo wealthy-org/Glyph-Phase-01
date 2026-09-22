@@ -1,5 +1,6 @@
 "use client";
 
+import { getExplorerTxUrl } from "@/lib/onchain/chains";
 import { cn } from "@/lib/utils";
 import { ChevronDown, ChevronUp, ExternalLink, Search, X } from "lucide-react";
 import Link from "next/link";
@@ -377,7 +378,7 @@ export const LifeLogSection: React.FC<LifeLogSectionProps> = ({ initialEvents })
                       {/* Onchain verification icon if available and no action button */}
                       {!hasAction && evt.txHash && (
                         <a
-                          href={`https://explorer.testnet.chain.robinhood.com/tx/${evt.txHash}`}
+                          href={getExplorerTxUrl(evt.txHash)}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="font-mono text-[10px] text-[#55555a] hover:text-[#6fe39a] flex items-center gap-1 transition-colors"
@@ -565,7 +566,7 @@ export const LifeLogSection: React.FC<LifeLogSectionProps> = ({ initialEvents })
                             <div className="pt-2 flex items-center justify-between text-[11px] border-t border-[#171717]">
                               <span className="text-[#55555a]">ONCHAIN ATTESTATION:</span>
                               <a
-                                href={`https://explorer.testnet.chain.robinhood.com/tx/${evt.txHash}`}
+                                href={getExplorerTxUrl(evt.txHash)}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-[#85858a] hover:text-[#6fe39a] flex items-center gap-1.5 transition-colors"
@@ -735,7 +736,7 @@ export const LifeLogSection: React.FC<LifeLogSectionProps> = ({ initialEvents })
             <span>SHOWING {filteredEvents.length} OF {events.length} EVENTS</span>
           </div>
           <div className="flex items-center gap-3">
-            <span>NETWORK: ROBINHOOD TESTNET // 46630</span>
+            <span>NETWORK: {process.env.NEXT_PUBLIC_CHAIN_ID === "4663" ? "ROBINHOOD MAINNET // 4663" : "ROBINHOOD TESTNET // 46630"}</span>
           </div>
         </div>
       </div>

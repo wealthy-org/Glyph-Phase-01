@@ -88,7 +88,7 @@ async function main() {
   });
 
   // ── Check 3: DB connected, identity exists ────────────────────────
-  let agent: Awaited<ReturnType<typeof prisma.agent.findFirst>> = null;
+  let agent: any = null;
   let dbConnected = false;
 
   try {

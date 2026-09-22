@@ -34,8 +34,8 @@ export const GLYPH_ABOUT_DATA: AboutPageData = {
     },
     {
       label: "EXECUTION NETWORK",
-      value: "ROBINHOOD TESTNET",
-      subtext: "Chain ID: 46630",
+      value: process.env.NEXT_PUBLIC_CHAIN_ID === "4663" ? "ROBINHOOD MAINNET" : "ROBINHOOD TESTNET",
+      subtext: `Chain ID: ${process.env.NEXT_PUBLIC_CHAIN_ID || "46630"}`,
     },
     {
       label: "OBSERVABILITY",
@@ -151,8 +151,10 @@ export const GLYPH_ABOUT_DATA: AboutPageData = {
     },
     {
       label: "NETWORK",
-      value: "TESTNET",
-      description: "Anchored to Robinhood Chain Testnet (Chain ID 46630) for public state verification.",
+      value: process.env.NEXT_PUBLIC_CHAIN_ID === "4663" ? "MAINNET" : "TESTNET",
+      description: process.env.NEXT_PUBLIC_CHAIN_ID === "4663"
+        ? "Anchored to Robinhood Chain Mainnet (Chain ID 4663) for public state verification."
+        : "Anchored to Robinhood Chain Testnet (Chain ID 46630) for public state verification.",
     },
     {
       label: "DECISION",

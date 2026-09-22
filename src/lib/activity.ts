@@ -352,8 +352,14 @@ export async function logProofActivity(params: {
   const title = isCommitted
     ? "Onchain Proof Committed"
     : "Onchain Proof Failed";
+  const activeChainId = process.env.NEXT_PUBLIC_CHAIN_ID
+    ? parseInt(process.env.NEXT_PUBLIC_CHAIN_ID, 10)
+    : 46630;
+  const networkName =
+    activeChainId === 4663 ? "Robinhood Chain" : "Robinhood Chain Testnet";
+
   const description = isCommitted
-    ? `Canonical decision hash committed to DecisionRegistry on Robinhood Testnet: ${params.transactionHash}`
+    ? `Canonical decision hash committed to DecisionRegistry on ${networkName}: ${params.transactionHash}`
     : `Failed to commit onchain proof: ${params.error}`;
 
   return logCycleActivity({
@@ -368,7 +374,7 @@ export async function logProofActivity(params: {
     data: {
       decisionHash: params.decisionHash,
       transactionHash: params.transactionHash,
-      chainId: 46630,
+      chainId: activeChainId,
     },
     error: params.error,
   });

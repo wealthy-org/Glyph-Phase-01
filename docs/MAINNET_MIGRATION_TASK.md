@@ -372,18 +372,31 @@ Wait for explicit human approval.
 
 Execute ONLY the approved Phase 2 plan.
 
-- [ ] Configure mainnet chain
-- [ ] Configure mainnet RPC
-- [ ] Configure mainnet explorer
-- [ ] Configure gas configuration
-- [ ] Prepare mainnet ENV configuration
-- [ ] Separate testnet and mainnet configuration
-- [ ] Verify no secrets are committed
-- [ ] Verify build configuration
+- [x] Configure mainnet chain — `robinhoodMainnet` (4663) in `src/lib/onchain/chains.ts` & `registry.ts`
+- [x] Configure mainnet RPC — `https://rpc.mainnet.chain.robinhood.com` verified (Chain ID `0x1237`)
+- [x] Configure mainnet explorer — `https://robinhoodchain.blockscout.com` via `getExplorerTxUrl()` & dynamic UI
+- [x] Configure gas configuration — Mainnet gas audited (~0.0525 Gwei), estimates recorded (~0.002 - 0.005 ETH buffer)
+- [x] Prepare mainnet ENV configuration — Created `docs/MAINNET_ENV_TEMPLATE.md`
+- [x] Separate testnet and mainnet configuration — Dynamic selection via `NEXT_PUBLIC_CHAIN_ID`
+- [x] Verify no secrets are committed — Git working tree verified clean of exposed secrets
+- [x] Verify build configuration — `tsc --noEmit` passed with 0 errors; HTTP 200 on local app
 
-Any unexpected requirement:
+## Deliverable & Audit Findings
 
-STOP and request approval.
+1. **IdentityRegistry Audit**: Canonical ERC-8004 IdentityRegistry ALREADY EXISTS on Robinhood Chain Mainnet at `0x8004A169FB4a3325136EB29fA0ceB6D2e539a432` (`AgentIdentity`, ERC-1967 proxy, `register(string)` confirmed). **No deployment needed.**
+2. **DecisionRegistry Audit**: Custom contract `contracts/DecisionRegistry.sol` is NOT deployed on mainnet. **REQUIRES DEPLOYMENT**.
+3. **Gas Estimation**: Total estimated cost for deployment, registration, and initial operation is ~0.0003 ETH. Recommended buffer: **0.002 – 0.005 ETH**. Current deployer EOA balance is 0.0 ETH.
+4. **Non-destructive Code Updates**: 12 files updated to support dynamic mainnet/testnet switching without changing Phase 01 paper trading or decision lifecycle.
+
+## STOP CLAUSE
+
+Do NOT proceed to Phase 4 (Identity Registration), Phase 5 (Wallet/Smart Account), or Phase 6 (Contract Deployment) without explicit human approval.
+
+Specifically awaiting approval for:
+1. **Gas funding approval** (Funding deployer EOA `0xB635eFd761D352ed8a74166a292c8969AD541c8E` with ~0.002 - 0.005 ETH)
+2. **Deployment approval** (Deploying `DecisionRegistry.sol` to mainnet)
+3. **Identity registration approval** (Calling `register("/agents/glyph.json")` on mainnet IdentityRegistry)
+
 
 ---
 

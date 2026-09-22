@@ -203,11 +203,15 @@ const ReputationComponent: React.FC<ReputationProps> = ({ reputation }) => {
               <div className="space-y-2 text-[11px] sm:text-xs text-[#d4d4d8]">
                 <div className="flex items-center justify-between">
                   <span className="text-[#71717a]">NETWORK:</span>
-                  <span className="text-[#f3f3f4] font-medium">ROBINHOOD CHAIN TESTNET</span>
+                  <span className="text-[#f3f3f4] font-medium">
+                    {process.env.NEXT_PUBLIC_CHAIN_ID === "4663" ? "ROBINHOOD CHAIN" : "ROBINHOOD CHAIN TESTNET"}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-[#71717a]">CHAIN ID:</span>
-                  <span className="text-[#f3f3f4] font-medium tabular-nums">46630</span>
+                  <span className="text-[#f3f3f4] font-medium tabular-nums">
+                    {process.env.NEXT_PUBLIC_CHAIN_ID || "46630"}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-[#71717a]">ATTESTATION STATE:</span>

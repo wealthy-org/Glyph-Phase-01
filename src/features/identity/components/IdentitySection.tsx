@@ -36,9 +36,9 @@ export const IdentitySection: React.FC<IdentitySectionProps> = ({
           <span>REGISTRY SPECIFICATION: ERC-8004 // PHASE 01</span>
         </div>
         <div className="flex items-center gap-2">
-          <span>ATTESTATION: TESTNET / PUBLIC RECORD</span>
+          <span>ATTESTATION: {data.network.chainId === 4663 ? "MAINNET" : "TESTNET"} / PUBLIC RECORD</span>
           <span className="text-[#333333]">·</span>
-          <span className="text-[#85858a]">CHAIN 46630</span>
+          <span className="text-[#85858a]">CHAIN {data.network.chainId}</span>
         </div>
       </footer>
     </div>

@@ -9,34 +9,26 @@ import { prisma } from "@/lib/prisma";
 import {
   createPublicClient,
   createWalletClient,
-  defineChain,
   Hex,
   http,
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { calculateDecisionHash, CanonicalDecisionPayload } from "./hash";
+import {
+  robinhoodMainnet,
+  robinhoodTestnet,
+  getActiveChain,
+  getExplorerTxUrl,
+  getExplorerAddressUrl,
+} from "./chains";
 
-export const robinhoodTestnet = defineChain({
-  id: 46630,
-  name: "Robinhood Chain Testnet",
-  nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
-  rpcUrls: {
-    default: {
-      http: [
-        process.env.NEXT_PUBLIC_RPC_URL ||
-        "https://rpc.testnet.chain.robinhood.com",
-      ],
-    },
-  },
-  blockExplorers: {
-    default: {
-      name: "Blockscout",
-      url:
-        process.env.BLOCK_EXPLORER_URL ||
-        "https://explorer.testnet.chain.robinhood.com",
-    },
-  },
-});
+export {
+  robinhoodMainnet,
+  robinhoodTestnet,
+  getActiveChain,
+  getExplorerTxUrl,
+  getExplorerAddressUrl,
+};
 
 export const DECISION_REGISTRY_ABI = [
   {
@@ -68,15 +60,6 @@ export interface CommitOnchainResult {
   explorerUrl: string;
 }
 
-/**
- * Returns block explorer URL for a given transaction hash.
- */
-export function getExplorerTxUrl(txHash: string): string {
-  const baseUrl =
-    process.env.BLOCK_EXPLORER_URL ||
-    "https://explorer.testnet.chain.robinhood.com";
-  return `${baseUrl.replace(/\/$/, "")}/tx/${txHash}`;
-}
 
 /**
  * Commits a decision's canonical hash to the onchain DecisionRegistry contract (§12, §3.5).
@@ -119,26 +102,34 @@ export async function commitDecisionOnchain(
 
   const { decisionHash } = calculateDecisionHash(canonicalPayload);
 
+  const activeChain = getActiveChain();
   const contractAddress =
     (process.env.DECISION_REGISTRY_CONTRACT_ADDRESS as `0x${string}`) ||
-    "0x7Ae7f962DC15e65De46a5b4d43744C7ed750B525";
+    (activeChain.id === 4663
+      ? undefined
+      : "0x7Ae7f962DC15e65De46a5b4d43744C7ed750B525");
 
   const privateKey = process.env.SMART_ACCOUNT_OWNER_PRIVATE_KEY as Hex;
 
   let transactionHash: string = "";
   let blockNumber: number = 0;
 
-  // 2. Submit Transaction to Robinhood Chain Testnet
+  // 2. Submit Transaction to Active Network (Mainnet or Testnet)
   if (privateKey && privateKey.startsWith("0x")) {
+    if (!contractAddress) {
+      throw new Error(
+        `[OnchainRegistry] DECISION_REGISTRY_CONTRACT_ADDRESS is not set for chain ${activeChain.id} (${activeChain.name}). Please deploy and configure the contract address.`
+      );
+    }
     try {
       const account = privateKeyToAccount(privateKey);
       const publicClient = createPublicClient({
-        chain: robinhoodTestnet,
+        chain: activeChain,
         transport: http(),
       });
       const walletClient = createWalletClient({
         account,
-        chain: robinhoodTestnet,
+        chain: activeChain,
         transport: http(),
       });
 
@@ -155,13 +146,13 @@ export async function commitDecisionOnchain(
       // Wait for block confirmation
       const receipt = await publicClient.waitForTransactionReceipt({
         hash: tx,
-        timeout: 20000,
+        timeout: 30000,
       });
 
       blockNumber = Number(receipt.blockNumber);
     } catch (error: any) {
       console.error(
-        `[OnchainRegistry] Live broadcast failed: ${error?.message || error}`
+        `[OnchainRegistry] Live broadcast failed on ${activeChain.name}: ${error?.message || error}`
       );
       throw error;
     }
@@ -219,7 +210,7 @@ export async function commitDecisionOnchain(
     decisionHash,
     transactionHash,
     contractAddress,
-    chainId: robinhoodTestnet.id,
+    chainId: activeChain.id,
     blockNumber,
     explorerUrl: explorerUrl || "",
   };

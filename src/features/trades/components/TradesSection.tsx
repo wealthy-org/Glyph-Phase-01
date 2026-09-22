@@ -292,7 +292,7 @@ export const TradesSection: React.FC<TradesSectionProps> = ({
           <div className="flex items-center gap-3">
             <span>SETTLEMENT: USDC-SIMULATED MARGIN</span>
             <span className="text-[#333333]">·</span>
-            <span>NETWORK: ROBINHOOD TESTNET // 46630</span>
+            <span>NETWORK: {process.env.NEXT_PUBLIC_CHAIN_ID === "4663" ? "ROBINHOOD MAINNET // 4663" : "ROBINHOOD TESTNET // 46630"}</span>
           </div>
         </div>
       </div>
