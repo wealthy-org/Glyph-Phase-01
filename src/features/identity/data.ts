@@ -45,7 +45,11 @@ export const GLYPH_IDENTITY_DATA: IdentityData = {
     epoch: "September 2026",
     block: "Block 121,888,511",
   },
-  primaryWallet: "0xB635eFd761D352ed8a74166a292c8969AD541c8E",
+  // NOTE: Read from ENV so this fallback stays in sync after wallet rotations.
+  // The identity page always prefers DB wallet → ENV wallet → this fallback.
+  primaryWallet:
+    process.env.NEXT_PUBLIC_GLYPH_WALLET_ADDRESS ||
+    "0x0000000000000000000000000000000000000000",
   registrationTx: "0x651f3838a424c489bbb1f5792f8c20c2346d8cf542a604ce4853a07381b138da",
   registrationNetwork: "ROBINHOOD CHAIN TESTNET",
   explorerBaseUrl: "https://explorer.testnet.chain.robinhood.com/tx/",

@@ -57,6 +57,7 @@ enum EconomicEventType {
   AGENT_BORN
   IDENTITY_REGISTERED
   WALLET_CREATED
+  WALLET_ROTATED // Operational wallet changed — identity and history unchanged
   TREASURY_FUNDED
   RESEARCH_STARTED
   DECISION_MADE

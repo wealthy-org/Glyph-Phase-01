@@ -32,7 +32,11 @@
     "test:decision-coverage": "npx tsx scripts/test/test-decision-coverage.ts",
     "test:cycle": "npx tsx scripts/test/test-cycle.ts",
     "cli:test-cycle": "npx tsx scripts/test/test-cycle.ts",
-    "test:research": "npx tsx scripts/test/test-research.ts"
+    "test:research": "npx tsx scripts/test/test-research.ts",
+    "test:wallet:rotation": "npx tsx scripts/test/test-wallet-rotation.ts",
+    "glyph:wallet:status": "npx tsx scripts/wallet/wallet-status.ts",
+    "glyph:wallet:set": "npx tsx scripts/wallet/wallet-set.ts",
+    "glyph:wallet:verify": "npx tsx scripts/wallet/wallet-verify.ts"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"

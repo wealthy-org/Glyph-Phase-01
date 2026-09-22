@@ -209,3 +209,200 @@ Glyph secara otomatis memverifikasi status buka/tutup bursa saham AS (**NASDAQ, 
     ```bash
     npm run test:cycle -- --force
     ```
+
+---
+
+## 6. Glyph Wallet Rotation
+
+Wallet Glyph dapat diganti tanpa mereset database atau merusak kontinuitas trading history, PnL, identity, dan memory.
+
+### Core Principle
+
+```
+Glyph Identity   ≠   Wallet Identity   ≠   Trading Portfolio   ≠   Historical Transactions
+```
+
+Pergantian wallet **tidak** berarti membuat Glyph baru.
+
+---
+
+### 6.1 Check current wallet
+
+```bash
+npm run glyph:wallet:status
+```
+
+Menampilkan:
+- Network dan Chain ID
+- ENV wallet (`NEXT_PUBLIC_GLYPH_WALLET_ADDRESS`)
+- DB wallet (`agent_wallets.walletAddress`)
+- On-chain wallet (via IdentityRegistry, jika contract terkonfigurasi)
+- Portfolio continuity: trades, decisions, memories, treasury
+- Last wallet rotation date
+- Overall status: `READY` atau `ATTENTION REQUIRED`
+
+---
+
+### 6.2 Change wallet
+
+```bash
+npm run glyph:wallet:set -- 0xNEW_WALLET_ADDRESS
+```
+
+CLI akan secara otomatis:
+
+1. Validate format address (hex, 42 karakter)
+2. Validate EIP-55 checksum
+3. Load current wallet dari database
+4. Deteksi apakah address sudah aktif (early exit jika sama)
+5. Tampilkan ringkasan rotation: current vs new wallet
+6. Tampilkan impact: apa yang **TIDAK** berubah
+7. **Require explicit `y` confirmation** (default: `N`)
+8. Update `agent_wallets.walletAddress` di database
+9. Update `NEXT_PUBLIC_GLYPH_WALLET_ADDRESS` di file `.env`
+10. Buat event `WALLET_ROTATED` di Life Log
+11. Verifikasi perubahan database
+12. Tampilkan migration summary
+
+> **Penting:** CLI ini **tidak** melakukan on-chain transaction secara otomatis. Lihat §6.4 untuk on-chain update.
+
+---
+
+### 6.3 Verify wallet
+
+```bash
+npm run glyph:wallet:verify
+```
+
+Menjalankan full verification:
+
+| Check | Critical |
+|---|---|
+| ENV wallet address valid | ✓ |
+| Network ENV set | — |
+| Database connection | ✓ |
+| Glyph identity exists | ✓ |
+| DB wallet configured | ✓ |
+| DB wallet === ENV wallet | ✓ |
+| Onchain wallet match | — |
+| Trading history | — |
+| Memory | — |
+| Paper portfolio | — |
+
+Jika ada critical check yang gagal:
+```
+STATUS: ✗ BLOCKED
+```
+Tidak ada production changes yang diapply. Resolve dulu sebelum melanjutkan.
+
+---
+
+### 6.4 On-chain wallet update (optional, manual step)
+
+Mengubah konfigurasi wallet tidak otomatis mengubah `setAgentWallet` di IdentityRegistry on-chain.
+
+Setelah menjalankan `glyph:wallet:set`, jika perlu sinkronisasi on-chain:
+
+```bash
+npx tsx scripts/onchain/update-wallet.ts
+```
+
+Script ini:
+1. Membaca wallet aktif dari database dan ENV
+2. Memeriksa apakah signer adalah NFT owner
+3. **Hanya** memanggil `setAgentWallet()` jika signer adalah NFT owner
+4. Menampilkan tx hash dan blok konfirmasi
+
+> ⚠ **Catatan:** On-chain update membutuhkan `SMART_ACCOUNT_OWNER_PRIVATE_KEY` dikonfigurasi. Script tidak akan melanjutkan jika signer bukan NFT owner.
+
+---
+
+### 6.5 Automated tests
+
+```bash
+npm run test:wallet:rotation
+```
+
+Menjalankan 13 automated tests:
+
+| Test | Scope |
+|---|---|
+| T01–T04 | Address validation dan EIP-55 checksum |
+| T05 | Same-wallet detection |
+| T06 | DB rotation update |
+| T07–T10 | Historical continuity: trades, decisions, memories, treasury |
+| T11 | Life log event creation |
+| T12–T13 | Second rotation dan continuity |
+
+Semua mutasi di-reverse setelah test selesai. Database dikembalikan ke state semula.
+
+---
+
+### 6.6 Safety guarantees
+
+Wallet rotation:
+
+- ✓ does NOT reset database
+- ✓ does NOT reset paper portfolio
+- ✓ does NOT delete trades
+- ✓ does NOT delete decisions
+- ✓ does NOT delete memory
+- ✓ does NOT delete life log
+- ✓ does NOT recreate Glyph identity
+- ✓ does NOT automatically move assets
+- ✓ does NOT automatically change Safe ownership
+- ✗ never prints private keys
+- ✗ never stores private keys in database
+- ✗ never broadcasts mainnet transaction without explicit approval
+
+---
+
+### 6.7 Example flow
+
+**Before rotation:**
+```
+Glyph
+Wallet: 0xOLD...
+PnL: +$150
+Trades: 25
+Decisions: 40
+Memories: 18
+```
+
+**Run rotation:**
+```bash
+npm run glyph:wallet:set -- 0xNEW_ADDRESS
+# → Confirm: y
+```
+
+**After rotation:**
+```
+Glyph
+Wallet: 0xNEW...    ← changed
+PnL: +$150          ← unchanged
+Trades: 25          ← unchanged
+Decisions: 40       ← unchanged
+Memories: 18        ← unchanged
+```
+
+Historical records tetap terhubung dengan wallet/address yang aktif pada saat transaksi terjadi.
+
+Life Log akan menampilkan:
+```
+WALLET_ROTATED — Wallet Rotated
+0xOLD... → 0xNEW...
+(Glyph identity, trading history, PnL, memories unchanged)
+```
+
+---
+
+### 6.8 Peringatan: Vercel / Production ENV
+
+File `.env` lokal diupdate otomatis oleh `glyph:wallet:set`. Namun jika project di-deploy ke Vercel atau hosting lain:
+
+1. Login ke Vercel dashboard
+2. Settings → Environment Variables
+3. Update `NEXT_PUBLIC_GLYPH_WALLET_ADDRESS` ke wallet baru
+4. Redeploy
+
+Tanpa langkah ini, production UI akan tetap menampilkan wallet lama sampai redeploy.
