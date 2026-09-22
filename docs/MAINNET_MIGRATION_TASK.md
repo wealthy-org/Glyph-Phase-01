@@ -1,293 +1,310 @@
-# GLYPH — TESTNET → MAINNET MIGRATION TODO
+# GLYPH — TESTNET TO MAINNET MIGRATION
 
-## P0 — Audit & Preparation
+## Objective
 
-- [ ] Audit all Testnet configurations
-- [ ] Find all chain ID references
-- [ ] Find all RPC URL references
-- [ ] Find all wallet address references
-- [ ] Find all contract address references
-- [ ] Find all Smart Account / Safe configurations
-- [ ] Find all explorer URL references
-- [ ] Find all blockchain-related environment variables
-- [ ] Find all transaction execution logic
-- [ ] Find all cron endpoints
-- [ ] Identify all hardcoded Testnet values
-- [ ] Ensure historical Testnet data will not be modified
+Migrate Glyph from the current testnet environment to mainnet
+while preserving the existing Phase 01 architecture and behavior.
+
+Final state:
+
+TESTNET
+→ MAINNET
+
+The system must remain PAPER TRADING.
+Mainnet migration must NOT introduce real-money trading.
 
 ---
 
-## P1 — Mainnet Network Configuration
+# RULES
 
-- [ ] Add Mainnet network configuration
-- [ ] Set Mainnet chain ID
-- [ ] Set Mainnet RPC URL
-- [ ] Set Mainnet explorer URL
-- [ ] Centralize blockchain network configuration
-- [ ] Separate Testnet and Mainnet configuration
-- [ ] Add `GLYPH_ENV=mainnet`
-- [ ] Add `GLYPH_EXECUTION_MODE`
-- [ ] Add `GLYPH_MAINNET_ENABLED`
-
----
-
-## P2 — Mainnet Wallet
-
-- [ ] Create / configure Glyph Mainnet wallet
-- [ ] Verify Mainnet wallet address
-- [ ] Configure Mainnet Smart Account
-- [ ] Configure Safe if applicable
-- [ ] Update wallet configuration
-- [ ] Update database references if required
-- [ ] Ensure private keys are server-side only
-- [ ] Ensure private keys are not committed to Git
-- [ ] Ensure private keys are not exposed to frontend
-- [ ] Ensure private keys are not stored in database
-- [ ] Ensure private keys are not written to logs
+- Do not redesign Glyph architecture.
+- Do not remove existing functionality.
+- Do not reset or delete production database data.
+- Do not modify database schema unless strictly required.
+- Do not expose private keys or secrets.
+- Do not execute irreversible mainnet transactions without explicit approval.
+- Do not deploy mainnet contracts without explicit approval.
+- Do not fund mainnet wallets without explicit approval.
+- Do not assume a testnet resource can simply be reused on mainnet.
+- Identify every resource that must be newly created on mainnet.
+- Preserve the existing Decision → Policy → Paper Trade → Onchain Proof lifecycle.
+- Preserve asset-specific historical ResearchSnapshot logic.
+- All network-specific configuration must come from environment/configuration.
+- No hardcoded testnet configuration may remain in production.
 
 ---
 
-## P3 — Mainnet Contracts
+# PHASE 0 — BACKUP & FREEZE
 
-- [ ] Audit all Testnet contracts used by Glyph
-- [ ] Prepare Mainnet deployment
-- [ ] Deploy `DecisionRegistry` to Mainnet
-- [ ] Save Mainnet contract address
-- [ ] Save deployment transaction hash
-- [ ] Verify contract on Mainnet explorer
-- [ ] Test contract read functions
-- [ ] Test contract write functions
-- [ ] Update contract configuration
-- [ ] Verify ABI matches deployed contract
-- [ ] Preserve Testnet contract addresses for historical data
+- [ ] Create migration branch
+- [ ] Record current git commit
+- [ ] Backup database
+- [ ] Record current testnet configuration
+- [ ] Record current contract addresses
+- [ ] Record current wallet/smart account addresses
+- [ ] Record current ERC-8004 identity
+- [ ] Record current environment variables
+- [ ] Freeze unrelated feature development
 
 ---
 
-## P4 — Database
+# PHASE 1 — CODEBASE AUDIT
 
-- [ ] Audit blockchain-related database models
-- [ ] Support `TESTNET` and `MAINNET` networks
-- [ ] Store chain ID where required
-- [ ] Store wallet address where required
-- [ ] Store contract address where required
-- [ ] Store transaction hash where required
-- [ ] Mark historical records as Testnet
-- [ ] Ensure Testnet records are not overwritten
-- [ ] Ensure new records use Mainnet
-- [ ] Run Prisma generate
-- [ ] Run database migration / push
-- [ ] Verify database after migration
+- [ ] Identify current testnet chain
+- [ ] Identify current chain ID
+- [ ] Identify all RPC configuration
+- [ ] Identify all contract addresses
+- [ ] Identify wallet configuration
+- [ ] Identify smart account configuration
+- [ ] Identify ERC-8004 configuration
+- [ ] Identify explorer URLs
+- [ ] Identify cron configuration
+- [ ] Identify network-specific environment variables
+- [ ] Search for hardcoded testnet chain IDs
+- [ ] Search for hardcoded testnet RPC URLs
+- [ ] Search for hardcoded testnet contract addresses
+- [ ] Search for hardcoded testnet explorer URLs
+- [ ] Search for testnet-only logic
 
----
+### Deliverable
 
-## P5 — Transaction Layer
+AI must produce an audit report containing:
 
-- [ ] Update blockchain client to Mainnet
-- [ ] Update wallet client
-- [ ] Update Smart Account
-- [ ] Update contract addresses
-- [ ] Update chain validation
-- [ ] Update transaction execution
-- [ ] Update transaction receipt handling
-- [ ] Verify gas handling
-- [ ] Verify nonce handling
-- [ ] Only mark transactions successful after receipt confirmation
-- [ ] Prevent duplicate transaction execution
-- [ ] Ensure failed transactions are not recorded as successful
+- Current testnet dependencies
+- Mainnet dependencies required
+- Resources that can be reused
+- Resources that must be recreated
+- Files that require modification
+- Potential migration risks
 
----
-
-## P6 — Decision Engine
-
-- [ ] Verify Market Data pipeline
-- [ ] Verify Fundamental Analysis
-- [ ] Verify Technical Analysis
-- [ ] Verify Market Context
-- [ ] Verify Glyph's View / Thesis
-- [ ] Verify Decision generation
-- [ ] Verify Zod validation
-- [ ] Verify Policy Engine
-- [ ] Ensure no trade/action happens without a valid Thesis
-- [ ] Ensure LLM cannot directly control the wallet
-- [ ] Ensure Policy Engine remains deterministic
+STOP HERE FOR HUMAN REVIEW.
 
 ---
 
-## P7 — Cron
+# PHASE 2 — MAINNET MIGRATION PLAN
 
-- [ ] Audit `/api/cron/glyph-cycle`
-- [ ] Audit `/api/cron/trade-decision`
-- [ ] Verify `CRON_SECRET`
-- [ ] Verify POST-only behavior
-- [ ] Update cron configuration for Mainnet
-- [ ] Verify market-open check
-- [ ] Ensure market closed = no trade/action
-- [ ] Prevent duplicate cron execution
-- [ ] Update cron-job.org configuration
-- [ ] Test cron manually
-- [ ] Test cron through cron-job.org
+- [ ] Define target mainnet
+- [ ] Define target chain ID
+- [ ] Define mainnet RPC
+- [ ] Define mainnet explorer
+- [ ] Define required contracts
+- [ ] Define mainnet wallet architecture
+- [ ] Define mainnet ERC-8004 identity
+- [ ] Define required ENV variables
+- [ ] Define deployment order
+- [ ] Define verification steps
+- [ ] Define rollback strategy
 
----
+### Deliverable
 
-## P8 — Explorer & Verification
+AI must produce a detailed implementation plan.
 
-- [ ] Update transaction explorer URLs
-- [ ] Update wallet explorer URLs
-- [ ] Update contract explorer URLs
-- [ ] Keep historical Testnet links pointing to Testnet explorer
-- [ ] Ensure Mainnet transactions use Mainnet explorer
-- [ ] Test explorer links
-- [ ] Test transaction hash verification
+STOP HERE FOR HUMAN REVIEW.
 
 ---
 
-## P9 — Frontend
+# PHASE 3 — MAINNET INFRASTRUCTURE
 
-- [ ] Update network indicator
-- [ ] Update wallet information
-- [ ] Update contract information
-- [ ] Update explorer links
-- [ ] Remove incorrect Testnet information from production UI
-- [ ] Keep Testnet labels for historical records
-- [ ] Add Mainnet status
-- [ ] Remove mock wallet data
-- [ ] Remove mock transaction data
-- [ ] Remove mock contract addresses
+- [ ] Configure mainnet network
+- [ ] Configure mainnet RPC
+- [ ] Configure mainnet chain ID
+- [ ] Configure mainnet explorer
+- [ ] Configure gas configuration
+- [ ] Create mainnet ENV configuration
+- [ ] Ensure secrets are not committed
+- [ ] Ensure testnet ENV remains isolated
 
 ---
 
-## P10 — Security
+# PHASE 4 — GLYPH IDENTITY
 
-- [ ] Audit environment variables
-- [ ] Audit `.gitignore`
-- [ ] Ensure no secrets are committed
-- [ ] Ensure private keys are not exposed
-- [ ] Verify cron authentication
-- [ ] Verify contract address allowlist
-- [ ] Verify chain ID validation
-- [ ] Verify wallet address validation
-- [ ] Verify transaction limits
+- [ ] Determine mainnet ERC-8004 requirements
+- [ ] Create/register mainnet Glyph identity
+- [ ] Verify identity
+- [ ] Record mainnet identity reference
+- [ ] Update application configuration
+- [ ] Verify application resolves the correct identity
+
+IMPORTANT:
+Do not overwrite the historical testnet identity record.
+
+---
+
+# PHASE 5 — GLYPH WALLET / SMART ACCOUNT
+
+- [ ] Determine whether existing wallet architecture can be reused
+- [ ] Create/initialize mainnet smart account if required
+- [ ] Verify owner
+- [ ] Verify smart account address
+- [ ] Configure mainnet wallet address
+- [ ] Verify signer configuration
+- [ ] Verify permissions
+- [ ] Fund required gas ONLY after explicit approval
+- [ ] Perform controlled wallet verification
+
+---
+
+# PHASE 6 — MAINNET CONTRACTS
+
+- [ ] Identify contracts required by Glyph
+- [ ] Determine which contracts actually need mainnet deployment
+- [ ] Prepare deployment configuration
+- [ ] Review deployment configuration
+- [ ] Deploy contracts ONLY after explicit approval
+- [ ] Verify deployed contracts
+- [ ] Record mainnet contract addresses
+- [ ] Configure contract addresses through ENV
+- [ ] Test contract interaction
+
+---
+
+# PHASE 7 — DATABASE & DATA
+
+- [ ] Review existing database structure
+- [ ] Review testnet-specific records
+- [ ] Determine which historical records must remain
+- [ ] Determine whether network metadata is required
+- [ ] Do NOT delete historical research
+- [ ] Do NOT delete decisions
+- [ ] Do NOT delete trades
+- [ ] Do NOT delete Glyph memory
+- [ ] Do NOT reset the database
+- [ ] Update only records that explicitly require mainnet references
+
+---
+
+# PHASE 8 — GLYPH DECISION ENGINE
+
+Verify that the existing lifecycle remains unchanged:
+
+Market Data
+→ Research
+→ Historical Research Context
+→ Decision
+→ Zod Validation
+→ Policy Engine
+→ Paper Trade
+→ Onchain Proof
+→ Memory / Reputation
+
 - [ ] Verify allowed assets
-- [ ] Ensure LLM cannot bypass Policy Engine
-- [ ] Add / verify emergency kill switch
-
----
-
-## P11 — Testnet Regression
-
-- [ ] Test market analysis
-- [ ] Test Glyph's View
-- [ ] Test Decision generation
-- [ ] Test Zod validation
-- [ ] Test Policy Engine
-- [ ] Test trade creation
-- [ ] Test onchain proof
-- [ ] Test transaction hash
-- [ ] Test Life Log
-- [ ] Test Memory
-- [ ] Test Dashboard
-- [ ] Test Trades page
-- [ ] Test Analysis page
-
----
-
-## P12 — Mainnet Dry Run
-
-- [ ] Deploy production with Mainnet configuration
-- [ ] Set `GLYPH_EXECUTION_MODE=paper`
-- [ ] Set `GLYPH_MAINNET_ENABLED=false`
-- [ ] Test Mainnet RPC
-- [ ] Test Mainnet chain detection
-- [ ] Test Mainnet wallet detection
-- [ ] Test Mainnet contract reads
-- [ ] Test database writes
-- [ ] Test analysis pipeline
-- [ ] Test decision pipeline
-- [ ] Test cron
-- [ ] Test explorer links
-- [ ] Verify no real economic action occurs
-
----
-
-## P13 — Controlled Mainnet Test
-
-- [ ] Enable Mainnet
-- [ ] Keep execution limits enabled
-- [ ] Execute one controlled transaction
+- [ ] Verify same-asset ResearchSnapshot isolation
+- [ ] Verify minimum 3 valid historical snapshots
+- [ ] Verify NO_TRADE behavior when history is insufficient
+- [ ] Verify Decision creation
+- [ ] Verify Policy Engine
+- [ ] Verify Paper Trade
+- [ ] Verify onchain commit
 - [ ] Verify transaction hash
-- [ ] Verify transaction receipt
-- [ ] Verify transaction on explorer
-- [ ] Verify contract state
+- [ ] Verify memory update
+- [ ] Verify reputation update
+
+Do not modify this logic unless required by the network migration.
+
+---
+
+# PHASE 9 — CRON / AUTOMATION
+
+- [ ] Verify cron endpoint
+- [ ] Verify CRON_SECRET
+- [ ] Verify market-open check
+- [ ] Verify market-closed behavior
+- [ ] Verify mainnet environment
+- [ ] Disable automatic execution during migration
+- [ ] Run controlled manual test
+- [ ] Verify successful cycle
+- [ ] Re-enable scheduled execution only after approval
+
+---
+
+# PHASE 10 — TESTING
+
+## Build
+
+- [ ] TypeScript passes
+- [ ] Lint passes
+- [ ] Build passes
+- [ ] Deployment succeeds
+
+## Network
+
+- [ ] Correct chain ID
+- [ ] Correct RPC
+- [ ] Correct explorer
+- [ ] Correct wallet
+- [ ] Correct smart account
+- [ ] Correct identity
+- [ ] Correct contract addresses
+
+## Application
+
+- [ ] Homepage works
+- [ ] Glyph observation works
+- [ ] Research works
+- [ ] Decision works
+- [ ] Paper trading works
+- [ ] Life Log works
+- [ ] Onchain verification works
+
+## Security
+
+- [ ] No private key exposed
+- [ ] No secret committed
+- [ ] No testnet credentials used in production
+- [ ] No testnet address accidentally used by production
+- [ ] No unintended real-money trading path exists
+
+---
+
+# PHASE 11 — CONTROLLED MAINNET TEST
+
+- [ ] Confirm human approval
+- [ ] Run one controlled Glyph cycle
+- [ ] Verify market data
+- [ ] Verify research
+- [ ] Verify decision
+- [ ] Verify policy
+- [ ] Verify paper trade
+- [ ] Verify onchain transaction
+- [ ] Verify transaction hash
 - [ ] Verify database record
-- [ ] Verify frontend display
 - [ ] Verify Life Log
-- [ ] Verify Memory
-- [ ] Disable Mainnet immediately if validation fails
+- [ ] Verify public UI
+
+STOP if any unexpected behavior occurs.
 
 ---
 
-## P14 — Production Deployment
+# PHASE 12 — GO LIVE
 
-- [ ] Configure production environment
-- [ ] Configure Mainnet RPC
-- [ ] Configure Mainnet chain ID
-- [ ] Configure Mainnet wallet
-- [ ] Configure Mainnet Smart Account
-- [ ] Configure Mainnet contract addresses
-- [ ] Configure Mainnet explorer
-- [ ] Configure production secrets
-- [ ] Deploy production
-- [ ] Verify production build
-- [ ] Verify database
-- [ ] Verify cron
-- [ ] Verify frontend
-- [ ] Verify blockchain
+- [ ] Confirm all previous phases completed
+- [ ] Confirm no testnet configuration remains in production
+- [ ] Confirm mainnet wallet
+- [ ] Confirm mainnet identity
+- [ ] Confirm mainnet contracts
+- [ ] Confirm cron configuration
+- [ ] Confirm security checks
+- [ ] Enable mainnet production configuration
+- [ ] Enable scheduled Glyph cycle
+- [ ] Monitor first production cycles
+- [ ] Record migration completion
 
 ---
 
-## P15 — Final Verification
+# FINAL ACCEPTANCE CRITERIA
 
-- [ ] Glyph is running on Mainnet
-- [ ] Mainnet wallet is correct
-- [ ] Mainnet Smart Account is correct
-- [ ] Mainnet contract is correct
-- [ ] Mainnet RPC is correct
-- [ ] Mainnet chain ID is correct
-- [ ] Mainnet explorer is correct
-- [ ] Database stores network correctly
-- [ ] Historical Testnet data is preserved
-- [ ] Cron is working
-- [ ] Market-open check is working
-- [ ] Policy Engine is working
-- [ ] Transaction verification is working
-- [ ] Security audit is complete
-- [ ] Rollback plan is ready
+Glyph is considered successfully migrated when:
 
----
-
-## P16 — Rollback
-
-- [ ] Verify `GLYPH_MAINNET_ENABLED=false`
-- [ ] Verify `GLYPH_EXECUTION_MODE=paper`
-- [ ] Test emergency disable
-- [ ] Verify cron can be stopped
-- [ ] Verify no automatic transactions occur after disable
-- [ ] Preserve transaction history
-- [ ] Document rollback procedure
-
----
-
-# FINAL STATUS
-
-- [ ] TESTNET AUDIT COMPLETE
-- [ ] MAINNET CONFIGURATION COMPLETE
-- [ ] MAINNET WALLET COMPLETE
-- [ ] MAINNET CONTRACT COMPLETE
-- [ ] DATABASE MIGRATION COMPLETE
-- [ ] TRANSACTION LAYER COMPLETE
-- [ ] CRON MIGRATION COMPLETE
-- [ ] SECURITY AUDIT COMPLETE
-- [ ] MAINNET DRY RUN COMPLETE
-- [ ] CONTROLLED MAINNET TEST COMPLETE
-- [ ] PRODUCTION DEPLOYMENT COMPLETE
-- [ ] MAINNET READY
+- [ ] Production runs on mainnet
+- [ ] Glyph has valid mainnet identity
+- [ ] Glyph uses the correct mainnet wallet/smart account
+- [ ] Required contracts are deployed and verified
+- [ ] Production uses mainnet configuration
+- [ ] No testnet dependency remains unintentionally
+- [ ] Existing Phase 01 logic still works
+- [ ] Glyph remains paper trading
+- [ ] Research history remains intact
+- [ ] Decision history remains intact
+- [ ] Onchain proof works
+- [ ] Cron works
+- [ ] Public Glyph interface works
