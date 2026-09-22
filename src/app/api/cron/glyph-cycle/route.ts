@@ -139,15 +139,15 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (body.skipIfClosed && marketStatus?.status === "closed") {
+    if (marketStatus?.status === "closed") {
       return NextResponse.json(
         {
           status: "MARKET_CLOSED",
-          message: `US Stock Market is currently ${marketStatus.status.toUpperCase()} (${marketStatus.primaryExchanges}, Regular Hours: ${marketStatus.localOpen} - ${marketStatus.localClose}). Cycle skipped as requested.`,
+          message: `US Stock Market is currently ${marketStatus.status.toUpperCase()} (${marketStatus.primaryExchanges}, Regular Hours: ${marketStatus.localOpen} - ${marketStatus.localClose}). Autonomous cycle skipped.`,
           data: {
             marketStatus,
             checkedAt: marketStatus.checkedAt,
-            hint: "Remove skipIfClosed or use { force: true } to run full cycle.",
+            hint: "Use { force: true } to bypass market hours check.",
           },
         },
         { status: 200 }

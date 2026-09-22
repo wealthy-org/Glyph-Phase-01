@@ -30,6 +30,26 @@ export {
   getExplorerAddressUrl,
 };
 
+export function getDecisionRegistryContractAddress(chainId?: number): `0x${string}` {
+  const activeChain = chainId
+    ? (chainId === 4663 ? robinhoodMainnet : robinhoodTestnet)
+    : getActiveChain();
+  const isMainnet = activeChain.id === 4663;
+  if (isMainnet) {
+    return (
+      (process.env.DECISION_REGISTRY_CONTRACT_ADDRESS as `0x${string}`) ||
+      "0x4ce11C76a6BBe68d8F0694f668c2Aa2e4c7280Df"
+    );
+  }
+  return (
+    (process.env.TESTNET_DECISION_REGISTRY_CONTRACT_ADDRESS as `0x${string}`) ||
+    (process.env.NEXT_PUBLIC_CHAIN_ID === "46630"
+      ? (process.env.DECISION_REGISTRY_CONTRACT_ADDRESS as `0x${string}`)
+      : undefined) ||
+    "0x7Ae7f962DC15e65De46a5b4d43744C7ed750B525"
+  );
+}
+
 export const DECISION_REGISTRY_ABI = [
   {
     name: "commitDecision",
@@ -103,11 +123,7 @@ export async function commitDecisionOnchain(
   const { decisionHash } = calculateDecisionHash(canonicalPayload);
 
   const activeChain = getActiveChain();
-  const contractAddress =
-    (process.env.DECISION_REGISTRY_CONTRACT_ADDRESS as `0x${string}`) ||
-    (activeChain.id === 4663
-      ? undefined
-      : "0x7Ae7f962DC15e65De46a5b4d43744C7ed750B525");
+  const contractAddress = getDecisionRegistryContractAddress(activeChain.id);
 
   const privateKey = process.env.SMART_ACCOUNT_OWNER_PRIVATE_KEY as Hex;
 

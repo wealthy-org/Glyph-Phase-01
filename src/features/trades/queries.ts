@@ -308,7 +308,11 @@ export async function fetchLiveTradeDetail(
       invalidationLevel: readText(thesisObj.invalidation) ?? "N/A",
       onchainProof: {
         txHash,
-        network: txHash ? "ROBINHOOD CHAIN TESTNET" : "N/A",
+        network: txHash
+          ? (process.env.NEXT_PUBLIC_CHAIN_ID === "4663"
+              ? "ROBINHOOD CHAIN MAINNET"
+              : "ROBINHOOD CHAIN TESTNET")
+          : "N/A",
         explorerUrl,
       },
       memory: formattedMemory,

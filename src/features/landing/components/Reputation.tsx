@@ -48,7 +48,9 @@ const ReputationComponent: React.FC<ReputationProps> = ({ reputation }) => {
 
             <div className="flex items-center gap-2 font-mono text-[11px] text-[#85858a] border border-[#222222] bg-[#090909] px-2.5 py-1 self-start sm:self-auto shrink-0">
               <span className="w-1.5 h-1.5 rounded-full bg-[#6fe39a] shrink-0" />
-              <span className="tracking-wider text-[#a1a1aa]">TESTNET</span>
+              <span className="tracking-wider text-[#a1a1aa]">
+                {process.env.NEXT_PUBLIC_CHAIN_ID === "4663" ? "MAINNET" : "TESTNET"}
+              </span>
             </div>
           </div>
 
@@ -160,7 +162,7 @@ const ReputationComponent: React.FC<ReputationProps> = ({ reputation }) => {
                 {reputation.onchainAttestationsCount}
               </div>
               <span className="font-mono text-[10px] text-[#55555a] uppercase">
-                Testnet records
+                {process.env.NEXT_PUBLIC_CHAIN_ID === "4663" ? "Mainnet records" : "Testnet records"}
               </span>
             </div>
           </div>

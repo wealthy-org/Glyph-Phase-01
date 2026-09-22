@@ -22,7 +22,7 @@
 | Environment Variable | Mainnet Value | Status | Action Required |
 | :--- | :--- | :--- | :--- |
 | `IDENTITY_REGISTRY_CONTRACT_ADDRESS` | `0x8004A169FB4a3325136EB29fA0ceB6D2e539a432` | **Verified on Mainnet** | Official ERC-8004 canonical IdentityRegistry. No deployment needed. |
-| `DECISION_REGISTRY_CONTRACT_ADDRESS` | `<TBD>` | **REQUIRES DEPLOYMENT** | Must deploy `contracts/DecisionRegistry.sol` to mainnet after approval & funding. |
+| `DECISION_REGISTRY_CONTRACT_ADDRESS` | `0x4ce11C76a6BBe68d8F0694f668c2Aa2e4c7280Df` | **Verified on Mainnet (Block 69636942)** | Deployed via `contracts/DecisionRegistry.sol` (Sourcify Verified). |
 
 ---
 

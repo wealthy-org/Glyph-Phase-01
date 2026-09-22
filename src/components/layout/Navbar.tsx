@@ -466,7 +466,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   </span>
                 ) : (
                   <span className="font-mono text-xs sm:text-sm text-[#55555a]">
-                    ROBINHOOD TESTNET
+                    ROBINHOOD ....
                   </span>
                 )}
               </div>

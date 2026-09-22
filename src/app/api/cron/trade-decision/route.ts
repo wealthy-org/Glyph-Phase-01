@@ -24,6 +24,18 @@ export async function POST(request: NextRequest) {
         };
     } | null;
 
+    if (responseBody?.status === "MARKET_CLOSED") {
+        return NextResponse.json(
+            {
+                success: true,
+                status: "MARKET_CLOSED",
+                message: responseBody.message,
+                data: responseBody.data,
+            },
+            { status: 200 }
+        );
+    }
+
     if (upstreamResponse.status !== 200 || responseBody?.status !== "SUCCESS") {
         if (upstreamResponse.status === 401 || upstreamResponse.status === 403) {
             return NextResponse.json(

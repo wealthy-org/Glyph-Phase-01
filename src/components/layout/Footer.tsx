@@ -115,7 +115,9 @@ export const Footer: React.FC = () => {
             GLYPH PROTOCOL &copy; 2026 — PUBLIC OBSERVATION INTERFACE
           </div>
           <div className="inline-flex items-center gap-2 px-3 py-1 border border-[#1f1f1f] bg-[#050505] text-[#85858a] text-[10px] tracking-wider uppercase">
-            <span>◈ Phase 01 · Testnet Build</span>
+            <span>
+              ◈ {process.env.NEXT_PUBLIC_CHAIN_ID === "4663" ? "Phase 02 · Mainnet Build" : "Phase 01 · Testnet Build"}
+            </span>
           </div>
         </div>
       </div>

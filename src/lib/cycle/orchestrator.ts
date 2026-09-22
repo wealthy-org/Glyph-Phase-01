@@ -14,7 +14,7 @@
 // ============================================================================
 
 import { DecisionRunResult, executeGlyphDecisionCycle } from "@/lib/decision/engine";
-import { TwelveDataProvider } from "@/lib/market/twelve-data";
+import { AlphaVantageProvider } from "@/lib/market/alpha-vantage";
 import { ALLOWED_ASSETS } from "@/lib/policy";
 import {
   getActivePositions,
@@ -57,7 +57,7 @@ export async function runAutonomousGlyphCycle(
 ): Promise<CycleSummary> {
   const startTime = Date.now();
   const agentIdentifier = options.agentIdentifier || process.env.GLYPH_AGENT_ID || "1";
-  const marketProvider = new TwelveDataProvider();
+  const marketProvider = new AlphaVantageProvider();
 
   // 1. Verify agent existence
   const agent = await prisma.agent.findFirst({

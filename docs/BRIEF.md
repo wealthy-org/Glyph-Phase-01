@@ -394,7 +394,7 @@ OPENROUTER_API_KEY=                    # dari openrouter.ai, pakai model gratis 
 OPENROUTER_MODEL=                      # lihat rekomendasi model di 3.4
 
 # Blockchain — Robinhood Chain Testnet (CONFIRMED, bukan Ethereum testnet generik)
-NEXT_PUBLIC_CHAIN_ID=46630
+NEXT_PUBLIC_CHAIN_ID=4663
 NEXT_PUBLIC_RPC_URL=https://rpc.testnet.chain.robinhood.com
 BLOCK_EXPLORER_URL=https://robinhoodchain.blockscout.com
 
