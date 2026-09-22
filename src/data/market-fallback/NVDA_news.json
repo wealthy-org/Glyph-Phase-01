@@ -1,0 +1,2570 @@
+{
+  "items": "50",
+  "sentiment_score_definition": "x <= -0.35: Bearish; -0.35 < x <= -0.15: Somewhat-Bearish; -0.15 < x < 0.15: Neutral; 0.15 <= x < 0.35: Somewhat_Bullish; x >= 0.35: Bullish",
+  "relevance_score_definition": "0 < x <= 1, with a higher score indicating higher relevance.",
+  "feed": [
+    {
+      "title": "Prediction: Broadcom Will Be a $3 Trillion Company by the End of 2030",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/prediction-broadcom-3-trillion-company-124601695.html",
+      "time_published": "20260922T124555",
+      "authors": [
+        "Daniel Sparks",
+        "The Motley Fool"
+      ],
+      "summary": "The article predicts that Broadcom will become a $3 trillion company by the end of 2030, representing about 76% upside from its current market value of $1.7 trillion. This prediction is largely based on Broadcom's aggressive revenue targets, particularly in AI semiconductors, which management expects to reach $230 billion in fiscal year 2028. The author argues that achieving this valuation does not require multiple expansion, but rather the company delivering on its secured supply and revenue forecasts, though profitability margins are noted as a key risk.",
+      "banner_image": "https://s.yimg.com/lo/mysterio/api/ecf053599bde0389a9fdbd6366aeb28634f34079b3cbef04cc2f7a3f97418f1e/lightyear_networkapi/resizefill_h48%3Bquality_100%3Bformat_webp/https%3A%2F%2Fs.yimg.com%2Fos%2Fcreatr-uploaded-images%2F2020-10%2F515f50a0-0f30-11eb-9ebf-0273aacc9ef0",
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.910531"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.839584"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.739125"
+        }
+      ],
+      "overall_sentiment_score": 0.288479,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AVGO",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.467517",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.716699",
+          "ticker_sentiment_score": "0.381318",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "COIN",
+          "relevance_score": "0.611644",
+          "ticker_sentiment_score": "0.014160",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Bull of the Day: NVIDIA Corp. (NVDA)",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/bull-day-nvidia-corp-nvda-100400485.html",
+      "time_published": "20260922T094410",
+      "authors": [
+        "Tracey Ryniec"
+      ],
+      "summary": "NVIDIA Corp. (NVDA) has regained its Zacks Rank #1 (Strong Buy) status, driven by strong fiscal second-quarter 2027 results where it beat earnings estimates and saw revenue soar 106%. Analysts remain bullish, with estimates for fiscal 2027 and 2028 showing significant earnings and sales growth. Despite a \"break\" in its stock performance in 2026, NVDA is still up 20.4% year-to-date and is considered attractively priced with a forward P/E of 24.",
+      "banner_image": "https://s.yimg.com/lo/mysterio/api/a73763c47ad26c8308399a737960c7a684ec33769f857efbf2ebc361f827aae7/lightyear_networkapi/resizefill_h48%3Bquality_100%3Bformat_webp/https%3A%2F%2Fs.yimg.com%2Fos%2Fcreatr-uploaded-images%2F2020-11%2F3bc15d30-250e-11eb-bffb-472fe5eb11fe",
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.900479"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.824948"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.731013"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.631858"
+        }
+      ],
+      "overall_sentiment_score": 0.472714,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "NVDA",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.832471",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "COIN",
+          "relevance_score": "0.636520",
+          "ticker_sentiment_score": "0.149711",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "SmartHarvest Portfolios LLC Increases Holdings in NVIDIA Corporation $NVDA",
+      "url": "https://www.marketbeat.com/instant-alerts/filing-smartharvest-portfolios-llc-increases-holdings-in-nvidia-corporation-nvda-2026-09-22/",
+      "time_published": "20260922T081417",
+      "authors": [
+        "MarketBeat"
+      ],
+      "summary": "SmartHarvest Portfolios LLC significantly increased its stake in NVIDIA Corporation (NASDAQ:NVDA) by 12.7% in the second quarter, making it their largest holding with a value of $20.5 million. This comes as NVIDIA reported robust earnings, with revenue up 105.9% year-over-year and EPS exceeding analyst expectations. Despite strong analyst sentiment and growth prospects, risks include valuation concerns and significant insider selling, with executives and directors selling $392.7 million in stock over the past 90 days.",
+      "banner_image": "https://www.marketbeat.com/logos/nvidia-co-logo-1200x675.jpg?v=20221020142916",
+      "source": "MarketBeat",
+      "category_within_source": "General",
+      "source_domain": "MarketBeat",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.935111"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.828886"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.827196"
+        }
+      ],
+      "overall_sentiment_score": 0.240128,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "NVDA",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.282624",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "HPE",
+          "relevance_score": "0.584437",
+          "ticker_sentiment_score": "0.199134",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Kraft Heinz Trades at a Fraction of PepsiCo's Valuation. Is the Discount Deserved?",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/kraft-heinz-trades-fraction-pepsicos-080500932.html",
+      "time_published": "20260922T080554",
+      "authors": [
+        "Lawrence Rothman",
+        "CFA",
+        "The Motley Fool"
+      ],
+      "summary": "This article analyzes whether Kraft Heinz's significantly lower valuation compared to PepsiCo and the S&P 500 is justified. It highlights Kraft Heinz's ongoing struggles with declining sales despite management's turnaround efforts, suggesting it might be a value trap. Conversely, PepsiCo's recent turnaround initiatives and positive sales growth make it a more appealing prospect for value investors.",
+      "banner_image": "https://s.yimg.com/lo/mysterio/api/ecf053599bde0389a9fdbd6366aeb28634f34079b3cbef04cc2f7a3f97418f1e/lightyear_networkapi/resizefill_h48%3Bquality_100%3Bformat_webp/https%3A%2F%2Fs.yimg.com%2Fos%2Fcreatr-uploaded-images%2F2020-10%2F515f50a0-0f30-11eb-9ebf-0273aacc9ef0",
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.911922"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.842428"
+        },
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.700312"
+        }
+      ],
+      "overall_sentiment_score": 0.302423,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "PEP",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.285454",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.628230",
+          "ticker_sentiment_score": "0.319891",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Alibaba Just Supercharged its AI Ambitions: New Zhenwu V900 AI Chip Promises 3X Performance, Targets 20GW",
+      "url": "https://www.benzinga.com/markets/tech/26/09/61912697/alibaba-just-supercharged-its-ai-ambitions-new-zhenwu-v900-ai-chip-promises-3x-performance-targets-20gw-data-center-expansion-by-2032",
+      "time_published": "20260922T080529",
+      "authors": [
+        "Benzinga Staff Writer"
+      ],
+      "summary": "Alibaba Group Holding Ltd. has unveiled its new Zhenwu V900 AI chip, promising three times the performance of its predecessor, and plans to expand Alibaba Cloud's global data center capacity to over 20 gigawatts by 2032. The new chip is set for mass production and commercial release in Q1 2027, with existing Zhenwu chips already serving over 650 customers. This move aligns with a broader trend among tech giants like Nvidia and Meta Platforms to significantly boost AI infrastructure.",
+      "banner_image": "https://cdn.benzinga.com/cdn-cgi/image/width=3840,format=auto,quality=85/files/images/story/2026/09/22/Tianjin-china-oct-24-2022-Logo-Of-Alibab.jpg",
+      "source": "Benzinga",
+      "category_within_source": "General",
+      "source_domain": "Benzinga",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.726006"
+        }
+      ],
+      "overall_sentiment_score": 0.236326,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "BABA",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.406110",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.714375",
+          "ticker_sentiment_score": "0.278936",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "META",
+          "relevance_score": "0.643816",
+          "ticker_sentiment_score": "0.214134",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "GOOGL",
+          "relevance_score": "0.550940",
+          "ticker_sentiment_score": "0.105275",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "MSFT",
+          "relevance_score": "0.551545",
+          "ticker_sentiment_score": "0.111521",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Why Rackspace Technology (RXT) Is Up 15.8% After Joining NVIDIA’s Cloud Partner Program",
+      "url": "https://finance.yahoo.com/technology/ai/articles/why-rackspace-technology-rxt-15-011428011.html",
+      "time_published": "20260922T004553",
+      "authors": [
+        "Sasha Jovanovic"
+      ],
+      "summary": "Rackspace Technology (RXT) experienced a 15.8% stock increase after joining NVIDIA’s Cloud Partner Program, which enhances its ability to offer NVIDIA-accelerated computing and governed AI cloud services. This partnership, especially the introduction of Rackspace's Institutional Sovereign Pod combining NVIDIA Blackwell and Palantir Foundry, is crucial for its pivot towards regulated enterprise AI. While this move could drive growth in complex AI workloads, investors are cautioned about potential sustained pressure on margins and free cash flow if AI offerings don't scale rapidly enough to offset challenges in legacy cloud services.",
+      "banner_image": null,
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.945829"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.811863"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.729126"
+        }
+      ],
+      "overall_sentiment_score": 0.272665,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "RXT",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.384039",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.842210",
+          "ticker_sentiment_score": "0.343191",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "AMD",
+          "relevance_score": "0.605381",
+          "ticker_sentiment_score": "0.243019",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "PLTR",
+          "relevance_score": "0.605309",
+          "ticker_sentiment_score": "0.202716",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Goldman Leads Sale of $1.1 Billion Junk Bond for CoreWeave-Leased Data Center",
+      "url": "https://www.briefs.co/news/goldman-leads-sale-of-1-1-billion-junk-bond-for-coreweave-le/",
+      "time_published": "20260921T231524",
+      "authors": [
+        "Milena Thomas"
+      ],
+      "summary": "A Goldman Sachs-led group is marketing $1.1 billion in high-yield debt to finance a new data center near Richmond, Virginia. The Digital Drive campus will provide 76 megawatts of IT capacity, fully contracted by CoreWeave for 15 years in a $2.94 billion deal. The bonds are expected to yield in the low to mid 9 percent range, with pricing anticipated for Wednesday.",
+      "banner_image": "https://www.briefs.co/wp-content/uploads/2026/09/goldman-leads-sale-of-1-1-billion-junk-bond-for-coreweave-le.png",
+      "source": "Briefs Finance",
+      "category_within_source": "General",
+      "source_domain": "Briefs Finance",
+      "topics": [
+        {
+          "topic": "finance",
+          "relevance_score": "0.829774"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.729470"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.607061"
+        }
+      ],
+      "overall_sentiment_score": 0.319352,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "GS",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.306518",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "MSFT",
+          "relevance_score": "0.633642",
+          "ticker_sentiment_score": "0.358938",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.630250",
+          "ticker_sentiment_score": "0.361626",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "BX",
+          "relevance_score": "0.594348",
+          "ticker_sentiment_score": "0.273753",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Adobe CEO Shantanu Narayen Sells $31.3 Million Stock",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/adobe-ceo-shantanu-narayen-sells-212001776.html",
+      "time_published": "20260921T212000",
+      "authors": [
+        "Will Healy",
+        "The Motley Fool"
+      ],
+      "summary": "Adobe CEO Shantanu Narayen sold approximately 125,000 shares of Adobe Inc. stock for a total of $31.3 million on September 16-17, 2026, representing 34% of his total position. The sale was executed through The Narayen Family Trust and cited as being for personal tax and estate planning purposes. Despite the significant sale and a 30% decline in the stock's value over the past year, the company's growth in fiscal 2026 and current valuation suggest the sale was not driven by concerns about Adobe's business prospects.",
+      "banner_image": "https://media.zenfs.com/en/motleyfool.com/6df4b60a8ec56b07e8006b55fcfdc96a.png",
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.908497"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.813096"
+        }
+      ],
+      "overall_sentiment_score": 0.15288,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "ADBE",
+          "relevance_score": "0.979428",
+          "ticker_sentiment_score": "0.218808",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "COIN",
+          "relevance_score": "0.608502",
+          "ticker_sentiment_score": "0.101241",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "NFLX",
+          "relevance_score": "0.560804",
+          "ticker_sentiment_score": "0.104064",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.563003",
+          "ticker_sentiment_score": "0.124652",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Coherent launches optical platform for AI datacenters",
+      "url": "https://www.investing.com/news/company-news/coherent-launches-optical-platform-for-ai-datacenters-93CH-4909583",
+      "time_published": "20260921T202953",
+      "authors": [
+        "Investing.com"
+      ],
+      "summary": "Coherent Corp. (NYSE:COHR) has launched PhotonLink, an integrated optical platform designed for AI datacenters. This new platform combines various photonics technologies to support co-packaged optics, near-packaged optics, and chip-to-chip connectivity. Coherent expects revenue from PhotonLink to start ramping up in the fourth quarter of calendar year 2026.",
+      "banner_image": "https://content-media.investing.com/news/LYNXMPEM3917D_1200_L.jpg",
+      "source": "Investing.com",
+      "category_within_source": "General",
+      "source_domain": "Investing.com",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.726903"
+        }
+      ],
+      "overall_sentiment_score": 0.152668,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "IIVI",
+          "relevance_score": "0.303622",
+          "ticker_sentiment_score": "0.038254",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "AMD",
+          "relevance_score": "0.625383",
+          "ticker_sentiment_score": "0.268199",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.574995",
+          "ticker_sentiment_score": "0.230890",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "AMD joins the $1 trillion club, leaving Intel behind",
+      "url": "https://www.notebookcheck.net/AMD-joins-the-1-trillion-club-leaving-Intel-behind.1404984.0.html",
+      "time_published": "20260921T191844",
+      "authors": [
+        "Andrew Sozinov"
+      ],
+      "summary": "AMD has achieved a $1 trillion market capitalization for the first time, driven by investor enthusiasm for its growing AI and data-center business. This milestone places AMD ahead of longtime rival Intel, whose market value is around $644 billion, though it remains significantly smaller than Nvidia. The company's recent stock rally, with shares up over 180% this year, reflects strong demand for AI hardware and AMD's robust growth in its Data Center segment.",
+      "banner_image": null,
+      "source": "Notebookcheck",
+      "category_within_source": "General",
+      "source_domain": "Notebookcheck",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.915220"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.908631"
+        }
+      ],
+      "overall_sentiment_score": 0.150117,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "INTC",
+          "relevance_score": "0.809941",
+          "ticker_sentiment_score": "-0.347236",
+          "ticker_sentiment_label": "Somewhat-Bearish"
+        },
+        {
+          "ticker": "AMD",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.402692",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.702487",
+          "ticker_sentiment_score": "0.314362",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Super Micro Computer (SMCI) Is Up 12.1% After Record AI Backlog Sparks Major Capacity Expansion",
+      "url": "https://finance.yahoo.com/technology/ai/articles/super-micro-computer-smci-12-221802270.html",
+      "time_published": "20260921T181800",
+      "authors": [
+        "Sasha Jovanovic"
+      ],
+      "summary": "Super Micro Computer (SMCI) has seen its stock rise by 12.1% following a record AI-focused order backlog, including over US$60 billion in new fourth-quarter orders. The company is expanding its global manufacturing capacity to produce more than 6,000 racks per month to meet growing data center demand, with AI solutions now contributing the majority of its quarterly revenue. This growth sharpens the company's investment narrative but also highlights risks related to customer concentration and potential order lumpiness.",
+      "banner_image": "https://s.yimg.com/lo/mysterio/api/9a39f515c50e540db53988579fc374fd143054e5458c2f273e36313ac4b66ad2/lightyear_networkapi/resizefill_h48%3Bquality_100%3Bformat_webp/https%3A%2F%2Fd29szjachogqwa.cloudfront.net%2Fimages%2Fuser-uploaded%2Fgray-horizontal-text_8328.png",
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.932459"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.827860"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.934543"
+        }
+      ],
+      "overall_sentiment_score": 0.337945,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "SMCI",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.493916",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "COIN",
+          "relevance_score": "0.615363",
+          "ticker_sentiment_score": "0.114353",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.629009",
+          "ticker_sentiment_score": "0.309472",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Why Turning Point Brands Stock Dived by 10% Today",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/why-turning-point-brands-stock-221816310.html",
+      "time_published": "20260921T181800",
+      "authors": [
+        "Eric Volkman"
+      ],
+      "summary": "Turning Point Brands' stock dropped 10% following two key announcements: an unexpected change in leadership with CEO Graham Purdy stepping down due to personal reasons, and a reduction in the high end of its full-year EBITDA forecast from $90 million to $70 million. These developments, coupled with existing challenges in the tobacco industry, have increased investor concern, despite the company maintaining its sales estimates for oral tobacco products. The article suggests that while not necessarily a cause for panic, the stock is not considered a buy given the industry's difficulties.",
+      "banner_image": "https://s.yimg.com/lo/mysterio/api/ecf053599bde0389a9fdbd6366aeb28634f34079b3cbef04cc2f7a3f97418f1e/lightyear_networkapi/resizefill_h48%3Bquality_100%3Bformat_webp/https%3A%2F%2Fs.yimg.com%2Fos%2Fcreatr-uploaded-images%2F2020-10%2F515f50a0-0f30-11eb-9ebf-0273aacc9ef0",
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.948688"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.809319"
+        }
+      ],
+      "overall_sentiment_score": -0.139916,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "TPB",
+          "relevance_score": "0.968636",
+          "ticker_sentiment_score": "-0.424323",
+          "ticker_sentiment_label": "Bearish"
+        },
+        {
+          "ticker": "PM",
+          "relevance_score": "0.633056",
+          "ticker_sentiment_score": "-0.101514",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.554520",
+          "ticker_sentiment_score": "0.241554",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Jefferies Financial stock may move 5.8% on Sept. 28 earnings",
+      "url": "https://www.investing.com/news/stock-market-news/jefferies-financial-stock-may-move-58-on-sept-28-earnings-93CH-4909353",
+      "time_published": "20260921T155139",
+      "authors": [
+        "Louis Juricic"
+      ],
+      "summary": "Jefferies Financial Group Inc. stock is predicted to move 5.8% based on options data when the company reports earnings on September 28. Historically, the actual stock price movement has exceeded this implied volatility in three out of the last eight earnings announcements. For instance, in June, options suggested a 6.4% move, but the stock fell 15.1% after the earnings release.",
+      "banner_image": "https://content-media.investing.com/news/LYNXNPEB9M0BY_L.jpg",
+      "source": "Investing.com",
+      "category_within_source": "General",
+      "source_domain": "Investing.com",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.935140"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.611008"
+        }
+      ],
+      "overall_sentiment_score": 0.281764,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "JEF",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.022798",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "META",
+          "relevance_score": "0.643267",
+          "ticker_sentiment_score": "0.390241",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "AMD",
+          "relevance_score": "0.570648",
+          "ticker_sentiment_score": "0.339174",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "INTC",
+          "relevance_score": "0.576078",
+          "ticker_sentiment_score": "0.321766",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.570928",
+          "ticker_sentiment_score": "0.341521",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Broadcom’s AI Opportunity Is Bigger Than Its Stock Price Suggests",
+      "url": "https://247wallst.com/investing/2026/09/21/broadcoms-ai-opportunity-is-bigger-than-its-stock-price-suggests/",
+      "time_published": "20260921T153829",
+      "authors": [
+        "Vandita Jadeja"
+      ],
+      "summary": "Broadcom (NASDAQ: AVGO) recently reported its ninth consecutive earnings beat, with AI revenue skyrocketing 221% year-over-year, yet its stock has remained relatively flat in 2026. Despite this performance, the company's shares are trading at a discount compared to competitors like NVIDIA, suggesting a significant undervalued AI opportunity. Analysts project a strong upside for Broadcom, driven by robust partnerships with major hyperscalers like Meta and OpenAI, and an insatiable demand for XPUs and networking solutions in the AI sector.",
+      "banner_image": "https://247wallst.com/wp-content/uploads/2026/08/35761930473_3d67705e45_b-400x225.jpg",
+      "source": "24/7 Wall St.",
+      "category_within_source": "General",
+      "source_domain": "24/7 Wall St.",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.926652"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.821877"
+        }
+      ],
+      "overall_sentiment_score": 0.33644,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AVGO",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.451875",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.738267",
+          "ticker_sentiment_score": "0.316782",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "META",
+          "relevance_score": "0.571981",
+          "ticker_sentiment_score": "0.219182",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Amd stock hits all-time high at 584.95 USD",
+      "url": "https://www.investing.com/news/company-news/amd-stock-hits-alltime-high-at-58495-usd-93CH-4909198",
+      "time_published": "20260921T133703",
+      "authors": [
+        "Investing.com"
+      ],
+      "summary": "Advanced Micro Devices (AMD) stock has reached an all-time high of $584.95, representing a 255.69% total return over the past year and commanding a market capitalization of $913.89 billion. Despite trading above its fair value according to InvestingPro analysis, AMD has seen significant revenue growth of 39.54% and numerous upward revisions to earnings estimates by analysts, who cite strong demand for CPU and GPU products, particularly in AI-related sectors.",
+      "banner_image": "https://content-media.investing.com/news/LisaSupresidentandCEOofAMD_800x533_L_1644852645.jpg",
+      "source": "Investing.com",
+      "category_within_source": "General",
+      "source_domain": "Investing.com",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.929395"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.944173"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.802880"
+        }
+      ],
+      "overall_sentiment_score": 0.37941,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AMD",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.493173",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.627758",
+          "ticker_sentiment_score": "0.317377",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "INTC",
+          "relevance_score": "0.593930",
+          "ticker_sentiment_score": "0.338450",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Intuitive Surgical price dominated by upward correctional trend - Forecast today - 21-09-2026",
+      "url": "https://www.economies.com/stocks/united-states-analysis/intuitive-surgical-price-dominated-by-upward-correctional-trend---forecast-today---21-09-2026-130346",
+      "time_published": "20260921T125038",
+      "authors": [
+        "Economies.com"
+      ],
+      "summary": "Intuitive Surgical (ISRG) is currently experiencing an upward correctional trend, supported by an ascending trendline and trading above its 50-day Simple Moving Average. The bullish outlook is expected to continue, with the stock targeting a key resistance level of $405.00 as long as the $372.00 support level holds. This forecast indicates a bullish day for the stock.",
+      "banner_image": "https://dylta6p24nxqg.cloudfront.net/images/1789995089.png",
+      "source": "Economies.com",
+      "category_within_source": "General",
+      "source_domain": "Economies.com",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.938820"
+        },
+        {
+          "topic": "life_sciences",
+          "relevance_score": "0.732461"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.634185"
+        }
+      ],
+      "overall_sentiment_score": 0.466474,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "ISRG",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.427590",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.628265",
+          "ticker_sentiment_score": "0.477019",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Marvell Technology Fell Hard Over 3 Months: It Has Momentum and a Wall Street Pro’s Confidence That 78% Gains are Coming",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/marvell-technology-fell-hard-over-125348635.html",
+      "time_published": "20260921T124807",
+      "authors": [
+        "Alex Sirois"
+      ],
+      "summary": "Marvell Technology (MRVL) experienced a 20% drop over the last three months despite strong revenue growth and a new partnership with Google. However, analysts like KeyBanc's John Vinh maintain a bullish outlook with a $400 price target, citing the company's strong position in custom AI accelerators and optical interconnects. The stock's recent pullback is seen as a positioning-driven selloff rather than a fundamental issue, with strong analyst confidence and upcoming catalysts like its Investor Day.",
+      "banner_image": "https://s.yimg.com/lo/mysterio/api/37f659f74872dff191321c32b3f9fbaca42150b6e52bd8e10b1f7e3c7d574038/lightyear_networkapi/resizefill_h48%3Bquality_100%3Bformat_webp/https%3A%2F%2Fs.yimg.com%2Fos%2Fcreatr-uploaded-images%2F2025-10%2F4c1b1d40-ab89-11f0-8fcd-756508880954",
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.902290"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.815716"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.702731"
+        }
+      ],
+      "overall_sentiment_score": 0.244773,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "MRVL",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.308024",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "AVGO",
+          "relevance_score": "0.708448",
+          "ticker_sentiment_score": "0.220261",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.639339",
+          "ticker_sentiment_score": "0.208772",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Analog Devices price pierces downward correctional trend line - Forecast today - 21-09-2026",
+      "url": "https://www.economies.com/stocks/united-states-analysis/analog-devices-price-pierces-downward-correctional-trend-line---forecast-today---21-09-2026-130348",
+      "time_published": "20260921T123954",
+      "authors": [
+        "Rami Haddad"
+      ],
+      "summary": "Analog Devices (ADI) has shown a bullish trend, breaking through a short-term bearish correctional trendline and surpassing its 50-day Simple Moving Average. This upward movement is supported by momentum indicators reaching oversold territory and then showing fresh bullish signals. The stock is forecasted to target a key resistance level at $396.00, provided the support at $362.00 holds.",
+      "banner_image": "https://dylta6p24nxqg.cloudfront.net/images/1789995133.png",
+      "source": "Economies.com",
+      "category_within_source": "General",
+      "source_domain": "Economies.com",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.946869"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.817342"
+        }
+      ],
+      "overall_sentiment_score": 0.504028,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "ADI",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.513405",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "TXN",
+          "relevance_score": "0.731335",
+          "ticker_sentiment_score": "0.549161",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "ISRG",
+          "relevance_score": "0.627173",
+          "ticker_sentiment_score": "0.502640",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.607549",
+          "ticker_sentiment_score": "0.548270",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Nike, On Holding, and Deckers Outdoor Are Down Between 23% and 43%. Here's the Stock to Buy, Even if the Fed Keeps Hiking Interest Rates.",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/nike-holding-deckers-outdoor-down-160500455.html",
+      "time_published": "20260921T120500",
+      "authors": [
+        "Micah Zimmerman",
+        "The Motley Fool"
+      ],
+      "summary": "Despite recent stock dips for Nike, On Holding, and Deckers Outdoor, Nike is presented as the most resilient investment, even with potential continued interest rate hikes from the Federal Reserve. Nike's strong brand equity and ongoing modernization efforts are highlighted as key differentiators, positioning it for long-term relevance. However, the article also notes a significant shift with Kylian Mbappé moving from Nike to On Holding, indicating a rising competitive threat in the sports apparel market.",
+      "banner_image": "https://s.yimg.com/lo/mysterio/api/ecf053599bde0389a9fdbd6366aeb28634f34079b3cbef04cc2f7a3f97418f1e/lightyear_networkapi/resizefill_h48%3Bquality_100%3Bformat_webp/https%3A%2F%2Fs.yimg.com%2Fos%2Fcreatr-uploaded-images%2F2020-10%2F515f50a0-0f30-11eb-9ebf-0273aacc9ef0",
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.909784"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.842354"
+        },
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.706527"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.646517"
+        }
+      ],
+      "overall_sentiment_score": 0.119409,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "DECK",
+          "relevance_score": "0.900479",
+          "ticker_sentiment_score": "-0.214702",
+          "ticker_sentiment_label": "Somewhat-Bearish"
+        },
+        {
+          "ticker": "NKE",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.290732",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.625390",
+          "ticker_sentiment_score": "0.311523",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Buy Top-Ranked DELL, SMCI & HPE to Form a Powerful AI-Server Portfolio",
+      "url": "https://finance.yahoo.com/technology/ai/articles/buy-top-ranked-dell-smci-115500323.html",
+      "time_published": "20260921T114114",
+      "authors": [
+        "Nalak Das"
+      ],
+      "summary": "The article highlights Dell Technologies (DELL), Super Micro Computer (SMCI), and Hewlett Packard Enterprise (HPE) as top AI-server manufacturers with strong buy ratings. It details their robust financial performance, significant growth in AI-optimized server revenue and orders, and attractive valuations. The companies are benefiting from the surging demand for AI infrastructure, including high-density rack space and liquid cooling solutions, indicating continued growth for 2027 and beyond.",
+      "banner_image": "https://s.yimg.com/lo/mysterio/api/a73763c47ad26c8308399a737960c7a684ec33769f857efbf2ebc361f827aae7/lightyear_networkapi/resizefill_h48%3Bquality_100%3Bformat_webp/https%3A%2F%2Fs.yimg.com%2Fos%2Fcreatr-uploaded-images%2F2020-11%2F3bc15d30-250e-11eb-bffb-472fe5eb11fe",
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.924718"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.904407"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.940461"
+        }
+      ],
+      "overall_sentiment_score": 0.475591,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "SMCI",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.604505",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "DELL",
+          "relevance_score": "0.903579",
+          "ticker_sentiment_score": "0.567860",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "HPE",
+          "relevance_score": "0.874281",
+          "ticker_sentiment_score": "0.521327",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.604226",
+          "ticker_sentiment_score": "0.309038",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "AMD",
+          "relevance_score": "0.569353",
+          "ticker_sentiment_score": "0.291533",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Should You Buy UnitedHealth Group Stock Before Oct. 13?",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/buy-unitedhealth-group-stock-oct-110125097.html",
+      "time_published": "20260921T110925",
+      "authors": [
+        "David Jagielski",
+        "CPA",
+        "The Motley Fool"
+      ],
+      "summary": "UnitedHealth Group (UNH) stock has recovered this year, rising 14% after a period of decline. With its upcoming Q3 earnings report on October 13th, the article discusses whether investors should consider buying the stock, noting its current valuation and improving financial conditions. The company's forward price-to-earnings multiple is attractive compared to the S&P 500 average, and its medical benefits ratio is improving.",
+      "banner_image": "https://s.yimg.com/os/creatr-uploaded-images/2020-10/515f50a0-0f30-11eb-9ebf-0273aacc9ef0",
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.940995"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.813792"
+        },
+        {
+          "topic": "life_sciences",
+          "relevance_score": "0.715284"
+        }
+      ],
+      "overall_sentiment_score": 0.394283,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "UNH",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.471680",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.738734",
+          "ticker_sentiment_score": "0.319735",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "No CXMT Jitters? Micron, AMD, SanDisk, Intel, Other Chip Stocks Surge Up To 6% Pre-Market",
+      "url": "https://www.ndtvprofit.com/markets/no-cxmt-jitters-micron-amd-sandisk-intel-other-chip-stocks-surge-up-to-6-pre-market-12076206",
+      "time_published": "20260921T110625",
+      "authors": [
+        "Prajwal Jayaraj"
+      ],
+      "summary": "Semiconductor chip companies' stock futures surged up to 6% in pre-market trading, continuing their rebound despite China's CXMT announcing mass production of a new memory chip platform. This rally follows a shift in investor focus from AI spending concerns to tight chip supply and strong data-center demand. Shares of major companies like Intel, AMD, Micron, and SanDisk all saw significant gains.",
+      "banner_image": "https://c.ndtvimg.com/2026-09/fvjfote8_chip-stocks_625x300_21_September_26.jpg?im=FeatureCrop,algorithm=dnn,width=773,height=435",
+      "source": "NDTV Profit",
+      "category_within_source": "General",
+      "source_domain": "NDTV Profit",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.939049"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.811873"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.741076"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.629348"
+        }
+      ],
+      "overall_sentiment_score": 0.416844,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AMD",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.406536",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "INTC",
+          "relevance_score": "0.830198",
+          "ticker_sentiment_score": "0.444494",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "MU",
+          "relevance_score": "0.730988",
+          "ticker_sentiment_score": "0.422168",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.604613",
+          "ticker_sentiment_score": "0.311241",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Insights Into Broadcom's Performance Versus Peers In Semiconductors & Semiconductor Equipment Sector",
+      "url": "https://www.benzinga.com/news/26/09/61888986/insights-broadcom-s-performance-versus-peers-semiconductors-amp-semiconductor-equipment-sector",
+      "time_published": "20260921T095852",
+      "authors": [
+        "Benzinga Staff Writer"
+      ],
+      "summary": "This article provides a comprehensive comparison of Broadcom (NASDAQ: AVGO) against its peers in the Semiconductors & Semiconductor Equipment sector, analyzing key financial metrics. It highlights Broadcom's valuation ratios (P/E, P/B, P/S) suggesting potential overvaluation, contrasted with its strong profitability and growth indicators like ROE, EBITDA, gross profit, and revenue growth. The analysis also points out Broadcom's favorable debt-to-equity ratio compared to its top competitors.",
+      "banner_image": "https://cdn.benzinga.com/cdn-cgi/image/width=3840,format=auto,quality=85/files/images/story/2025/11/06/earnings_preview_4.jpg",
+      "source": "Benzinga",
+      "category_within_source": "General",
+      "source_domain": "Benzinga",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.920803"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.824744"
+        }
+      ],
+      "overall_sentiment_score": 0.127203,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "AVGO",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.208986",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.810006",
+          "ticker_sentiment_score": "0.103444",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "MU",
+          "relevance_score": "0.737622",
+          "ticker_sentiment_score": "0.119677",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "AMD",
+          "relevance_score": "0.706321",
+          "ticker_sentiment_score": "0.108234",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "TXN",
+          "relevance_score": "0.643468",
+          "ticker_sentiment_score": "0.107033",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Morgan Stanley Adjusts PT on Marvell Technology to $268 From $246, Keeps Equalweight Rating",
+      "url": "https://www.marketscreener.com/news/morgan-stanley-adjusts-pt-on-marvell-technology-to-268-from-246-keeps-equalweight-rating-ce785adbda8ff026",
+      "time_published": "20260921T094622",
+      "authors": [
+        "MT Newswires"
+      ],
+      "summary": "Morgan Stanley has raised its price target for Marvell Technology (MRVL) from $246 to $268, while maintaining an Equalweight rating on the stock. The adjustment reflects the firm's updated outlook for the semiconductor company.",
+      "banner_image": null,
+      "source": "www.marketscreener.com",
+      "category_within_source": "General",
+      "source_domain": "www.marketscreener.com",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.921549"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.810539"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.703537"
+        }
+      ],
+      "overall_sentiment_score": 0.072328,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "MRVL",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.270913",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "MS",
+          "relevance_score": "0.647280",
+          "ticker_sentiment_score": "0.192886",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "MSFT",
+          "relevance_score": "0.611599",
+          "ticker_sentiment_score": "0.025351",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.621710",
+          "ticker_sentiment_score": "-0.338609",
+          "ticker_sentiment_label": "Somewhat-Bearish"
+        }
+      ]
+    },
+    {
+      "title": "SpaceX and Tesla’s AI linkup is getting deeper. Here’s what Morgan Stanley sees",
+      "url": "https://www.investing.com/news/stock-market-news/spacex-and-teslas-ai-linkup-is-getting-deeper-heres-what-morgan-stanley-sees-4908397",
+      "time_published": "20260921T084032",
+      "authors": [
+        "Vahid Karaahmetovic"
+      ],
+      "summary": "Morgan Stanley highlights the deepening collaboration between SpaceX and Tesla, driven by their shared focus on physical AI, which applies artificial intelligence to real-world applications like robotics and manufacturing. The report details several joint initiatives, including a chip factory, shared resources like Tesla batteries and Cybertrucks for SpaceX's compute clusters, and co-development of an agentic platform. This synergy is aimed at addressing the expanding field of physical AI, leveraging each company's strengths in technology, talent, and infrastructure.",
+      "banner_image": "https://content-media.investing.com/news/moved_LYNXMPEM6M02C_L.jpg",
+      "source": "Investing.com",
+      "category_within_source": "General",
+      "source_domain": "Investing.com",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.925206"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.823407"
+        },
+        {
+          "topic": "ipo",
+          "relevance_score": "0.710819"
+        },
+        {
+          "topic": "manufacturing",
+          "relevance_score": "0.611661"
+        },
+        {
+          "topic": "energy_transportation",
+          "relevance_score": "0.616833"
+        }
+      ],
+      "overall_sentiment_score": 0.19256,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "MS",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.268304",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "TSLA",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.329359",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "INTC",
+          "relevance_score": "0.627522",
+          "ticker_sentiment_score": "0.103770",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "AMD",
+          "relevance_score": "0.619228",
+          "ticker_sentiment_score": "0.140692",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.611398",
+          "ticker_sentiment_score": "0.106569",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "NVIDIA Corporation $NVDA Shares Acquired by SWS Partners",
+      "url": "https://www.marketbeat.com/instant-alerts/filing-nvidia-corporation-nvda-shares-acquired-by-sws-partners-2026-09-21/",
+      "time_published": "20260921T081336",
+      "authors": [
+        "MarketBeat"
+      ],
+      "summary": "SWS Partners increased its holdings in NVIDIA Corporation (NASDAQ:NVDA) by 13.7% in the second quarter, bringing its total to 83,644 shares valued at $16.7 million. This increase contributes to the 65.27% institutional ownership of NVIDIA, a company that recently reported strong quarterly results with $2.22 adjusted earnings per share and $96.22 billion in revenue. Despite some insider selling, Wall Street analysts maintain a \"Buy\" rating with a consensus price target of $324.34, supported by positive sentiment regarding AI chip demand and strategic investments.",
+      "banner_image": "https://www.marketbeat.com/logos/nvidia-co-logo-1200x675.jpg?v=20221020142916",
+      "source": "MarketBeat",
+      "category_within_source": "General",
+      "source_domain": "MarketBeat",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.934405"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.841039"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.701560"
+        }
+      ],
+      "overall_sentiment_score": 0.195016,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "NVDA",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.407462",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "AMD",
+          "relevance_score": "0.627900",
+          "ticker_sentiment_score": "0.128281",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "INTC",
+          "relevance_score": "0.605485",
+          "ticker_sentiment_score": "0.101483",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "AVGO",
+          "relevance_score": "0.630795",
+          "ticker_sentiment_score": "0.110425",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Rothschild Redburn initiates Equinix stock with buy rating By Investing.com",
+      "url": "https://za.investing.com/news/stock-market-news/rothschild-redburn-initiates-equinix-stock-with-buy-rating-93CH-4470796",
+      "time_published": "20260921T081335",
+      "authors": [
+        "Investing.com"
+      ],
+      "summary": "Rothschild Redburn has initiated coverage on Equinix Inc. (NASDAQ:EQIX) with a buy rating and a price target of $1,261.00, suggesting a 23% upside. The company, a prominent specialized REIT, is noted for its premium valuation, consistent dividend increases, and its role in network interconnection and supporting AI/high-performance computing workloads. Equinix recently launched its Inference Exchange in collaboration with Nvidia and Together AI, aiming to enhance AI workload deployment.",
+      "banner_image": "https://content-media.investing.com/news/moved_LYNXMPEM3Q0V4_1200_L.jpg",
+      "source": "Investing.com South Africa",
+      "category_within_source": "General",
+      "source_domain": "Investing.com South Africa",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.904490"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.849644"
+        },
+        {
+          "topic": "real_estate",
+          "relevance_score": "0.746260"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.608382"
+        }
+      ],
+      "overall_sentiment_score": 0.312031,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "EQIX",
+          "relevance_score": "0.954089",
+          "ticker_sentiment_score": "0.395936",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.642072",
+          "ticker_sentiment_score": "0.341767",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "DLR",
+          "relevance_score": "0.560455",
+          "ticker_sentiment_score": "0.285245",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Rothschild Redburn initiates Equinix stock with buy rating By Investing.com",
+      "url": "https://ca.investing.com/news/stock-market-news/rothschild-redburn-initiates-equinix-stock-with-buy-rating-93CH-4845808",
+      "time_published": "20260921T074310",
+      "authors": [
+        "Investing.com"
+      ],
+      "summary": "Rothschild Redburn has initiated coverage on Equinix Inc. (NASDAQ:EQIX) with a buy rating and a price target of $1,261.00, suggesting a 23% upside. The firm notes that Equinix, a prominent player in the specialized REITs industry, has consistently raised its dividend for nine years and provides critical network interconnection and hosting for enterprise IT infrastructure, including AI and high-performance computing workloads. Despite being considered overvalued based on its P/E ratio, its role as connective tissue for the internet and cloud services, coupled with its dividend history, makes it an attractive investment according to the rating.",
+      "banner_image": "https://content-media.investing.com/news/moved_LYNXMPEM3Q0V4_1200_L.jpg",
+      "source": "Investing.com Canada",
+      "category_within_source": "General",
+      "source_domain": "Investing.com Canada",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.906617"
+        },
+        {
+          "topic": "real_estate",
+          "relevance_score": "0.718180"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.809289"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.639353"
+        }
+      ],
+      "overall_sentiment_score": 0.248937,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "EQIX",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.318820",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.624682",
+          "ticker_sentiment_score": "0.213613",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "DLR",
+          "relevance_score": "0.629082",
+          "ticker_sentiment_score": "0.141687",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Jensen Huang Isn't 'Afraid' of Paying $8 Billion in California's Billionaire Tax: Nvidia CEO Says This Is What Scares Him Instead",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/jensen-huang-isnt-afraid-paying-065437968.html",
+      "time_published": "20260921T071131",
+      "authors": [
+        "Ananya Gairola"
+      ],
+      "summary": "Nvidia CEO Jensen Huang stated he would view paying billions in additional taxes as a privilege if California's proposed one-time 5% billionaire tax passes. Huang, with an estimated $184 billion fortune, joked that he's not afraid of paying taxes, but rather of being poor. He described himself as \"the ultimate American dream,\" attributing his success to opportunities in the U.S. and his early career as a dishwasher.",
+      "banner_image": "https://s.yimg.com/lo/mysterio/api/2617dd79959bdd29c754be1a708e233b948b107a4561065fbc5d9c5b7bc6011b/lightyear_networkapi/resizefit_w960%3Bquality_80%3Bformat_webp/https%3A%2F%2Fmedia.zenfs.com%2Fen%2FBenzinga%2F5dba2bc5b15408d46f728541817cfdc7.jpg",
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "economy_fiscal",
+          "relevance_score": "0.904585"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.842604"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.618694"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.624486"
+        }
+      ],
+      "overall_sentiment_score": 0.401809,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "NVDA",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.427266",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Nvidia boss rejects AI extinction fears as 'doomsday narratives'",
+      "url": "https://www.bbc.com/news/articles/cr5ye7p13jg7o",
+      "time_published": "20260921T062553",
+      "authors": [
+        "Osmond Chia"
+      ],
+      "summary": "Nvidia CEO Jensen Huang has dismissed warnings about AI leading to humanity's extinction as \"doomsday narratives,\" calling such fears irresponsible and not grounded in science. He suggested that some AI firms pushing for a slowdown in development might be seeking liability protections rather than genuine regulatory changes. Huang's stance aligns with other tech workers who are skeptical of mass extinction scenarios from AI.",
+      "banner_image": "https://ichef.bbci.co.uk/news/480/cpsprodpb/ba1f/live/38ae4b30-b54a-11f1-a718-f1288d239f82.jpg.webp",
+      "source": "BBC",
+      "category_within_source": "General",
+      "source_domain": "BBC",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.936260"
+        }
+      ],
+      "overall_sentiment_score": 0.428263,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "NVDA",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.417155",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Nvidia’s Vera CPU Changes the Fight With Intel and AMD",
+      "url": "https://drrobertcastellano.substack.com/p/nvidias-vera-cpu-changes-the-fight",
+      "time_published": "20260921T012400",
+      "authors": [
+        "Dr. Robert Castellano"
+      ],
+      "summary": "Nvidia's new Vera server CPU is poised to disrupt the CPU market currently dominated by Intel and AMD. Instead of directly competing chip-for-chip, Nvidia aims to integrate Vera into complete AI computing systems, leveraging its existing relationships with customers for GPUs, networking, and software. This strategy focuses on providing an entire AI infrastructure solution, allowing Nvidia to capture a larger share of the rapidly growing AI data center market.",
+      "banner_image": "https://substackcdn.com/image/fetch/$s_!otCb!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F1201f918-986f-4d5a-b4b5-4d08d066c691_1508x512.png",
+      "source": "Dr. Robert Castellano's Semiconductor Deep Dive Newsletter",
+      "category_within_source": "General",
+      "source_domain": "Dr. Robert Castellano's Semiconductor Deep Dive Newsletter",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.701819"
+        }
+      ],
+      "overall_sentiment_score": 0.196636,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AMD",
+          "relevance_score": "0.922421",
+          "ticker_sentiment_score": "0.130209",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.923280",
+          "ticker_sentiment_score": "0.435816",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "INTC",
+          "relevance_score": "0.832879",
+          "ticker_sentiment_score": "0.108958",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "HPE",
+          "relevance_score": "0.579264",
+          "ticker_sentiment_score": "0.134795",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "The AI Slowdown Trade Has Some Winners: CrowdStrike and Palo Alto Rally While Chips Fall",
+      "url": "https://finance.yahoo.com/technology/ai/articles/ai-slowdown-trade-winners-crowdstrike-212311977.html",
+      "time_published": "20260920T212300",
+      "authors": [
+        "Sheryar Siddiq"
+      ],
+      "summary": "Amid calls for a slowdown in AI development, a \"risk-off\" market move saw money shift from chip stocks to cybersecurity companies like Palo Alto Networks (PANW) and CrowdStrike Holdings (CRWD), which rallied significantly. Industry leaders, including OpenAI's Sam Altman and Elon Musk, supported Anthropic CEO Dario Amodei's essay advocating for a slower pace of AI advancement due to potential threats. Cybersecurity firms capitalized on this narrative, arguing that increased AI capabilities necessitate more robust security investments, although investors are cautioned to await actual demand data from upcoming earnings reports rather than relying solely on this sentiment-driven rally.",
+      "banner_image": "https://s.yimg.com/lo/mysterio/api/fde014164016c5a574b833ee436c0b4e0c886e1dc807f6fb1a9fe3779d9a2248/lightyear_networkapi/resizefill_h48%3Bquality_100%3Bformat_webp/https%3A%2F%2Fs.yimg.com%2Fos%2Fcreatr-uploaded-images%2F2020-12%2Fd7df1000-34e4-11eb-b6ae-ac87660fe5ee",
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.928982"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.821160"
+        }
+      ],
+      "overall_sentiment_score": 0.13427,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "PANW",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.304681",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "CRWD",
+          "relevance_score": "0.936094",
+          "ticker_sentiment_score": "0.443879",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.642158",
+          "ticker_sentiment_score": "-0.338927",
+          "ticker_sentiment_label": "Somewhat-Bearish"
+        }
+      ]
+    },
+    {
+      "title": "Coherent Showcases Optical Innovations to Scale AI Infrastructure at ECOC 2026",
+      "url": "https://www.manilatimes.net/2026/09/21/tmt-newswire/globenewswire/coherent-showcases-optical-innovations-to-scale-ai-infrastructure-at-ecoc-2026/2429005",
+      "time_published": "20260920T201349",
+      "authors": [
+        "GlobeNewswire"
+      ],
+      "summary": "Coherent Corp. (NYSE: COHR) is showcasing new optical technologies and live demonstrations at ECOC 2026 in Málaga, Spain, aimed at scaling AI infrastructure. The innovations address challenges in power, integration, and thermal management, with a focus on datacenter connectivity, co-packaged and near-packaged optics, next-generation transceivers, and advanced materials. Key demonstrations include a new PhotonLink integrated optics platform, 3.2T 2xDR4 transceivers, 6.4T NPO optical engines, and various optical components designed for high-density AI applications.",
+      "banner_image": "https://ml.globenewswire.com/media/MGIzOTZmYWYtYzZkNC00ZmQ3LTgwZmUtOTkwM2IwZTE0ZDEzLTEwMjgyMzktMjAyNi0wOS0yMC1lbg==/tiny/Coherent-Corp-.png",
+      "source": "The Manila Times",
+      "category_within_source": "General",
+      "source_domain": "The Manila Times",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.935126"
+        }
+      ],
+      "overall_sentiment_score": 0.379312,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "COHR",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.471750",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.636852",
+          "ticker_sentiment_score": "0.320061",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "AMAT",
+          "relevance_score": "0.630864",
+          "ticker_sentiment_score": "0.311609",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Apple's Big Week: iPhone 18 Pro, Nvidia AI Servers, Musk Drops Lawsuit - Apple (NASDAQ:AAPL), SAMSUNG ELE",
+      "url": "https://www.benzinga.com/markets/tech/26/09/61885260/apple-aapl-weekly-recap-iphone-18-pro-nvidia-ai-server-musk-lawsuit",
+      "time_published": "20260920T112701",
+      "authors": [],
+      "summary": "This past week was significant for Apple, marked by the launch of its new iPhone 18 Pro lineup with higher price points and strong carrier incentives expected to boost upgrade cycles. Apple is also reportedly exploring a major entry into the AI server market, potentially integrating its M8 Ultra chips with Nvidia's NVLink Fusion technology. Meanwhile, Samsung has recaptured the lead in the global smartphone market, and Elon Musk's xAI has dropped Apple from its antitrust lawsuit.",
+      "banner_image": "https://cdn.benzinga.com/cdn-cgi/image/width=3840,format=auto,quality=85/files/images/story/2025/07/24/article-header-background-image.png",
+      "source": "Benzinga",
+      "category_within_source": "General",
+      "source_domain": "Benzinga",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.845931"
+        },
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.723132"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.645385"
+        }
+      ],
+      "overall_sentiment_score": 0.30214,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.965078",
+          "ticker_sentiment_score": "0.432984",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.747813",
+          "ticker_sentiment_score": "0.303675",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "BAC",
+          "relevance_score": "0.688746",
+          "ticker_sentiment_score": "0.276782",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "SMCI",
+          "relevance_score": "0.554703",
+          "ticker_sentiment_score": "0.232832",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Bank of America Corp DE Buys Shares of 2,491,103 Gen Digital Inc. $GEN",
+      "url": "https://www.marketbeat.com/instant-alerts/filing-bank-of-america-corp-de-buys-shares-of-2491103-gen-digital-inc-gen-2026-09-20/",
+      "time_published": "20260920T074007",
+      "authors": [
+        "MarketBeat"
+      ],
+      "summary": "Bank of America Corp DE has acquired 2,491,103 shares of Gen Digital Inc. (NASDAQ:GEN) valued at approximately $62 million, representing a 0.42% stake in the company. Despite analyst caution with an average \"Hold\" rating, Gen Digital has exceeded quarterly earnings expectations, reporting $0.71 EPS and $1.34 billion in revenue, and maintains a quarterly dividend. Insiders, however, have sold over 558,000 shares worth $16.4 million in the last 90 days.",
+      "banner_image": "https://www.marketbeat.com/logos/gen-digital-logo-1200x675.png?v=20230316142124",
+      "source": "MarketBeat",
+      "category_within_source": "General",
+      "source_domain": "MarketBeat",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.910357"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.824280"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.842734"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.705029"
+        }
+      ],
+      "overall_sentiment_score": 0.089515,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "GEN",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.288404",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "BAC",
+          "relevance_score": "0.739022",
+          "ticker_sentiment_score": "0.105996",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.610798",
+          "ticker_sentiment_score": "0.046464",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "LEN",
+          "relevance_score": "0.573609",
+          "ticker_sentiment_score": "0.006499",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Clear Harbor Asset Management LLC Takes Position in Amazon.com, Inc. $AMZN",
+      "url": "https://www.marketbeat.com/instant-alerts/filing-clear-harbor-asset-management-llc-takes-position-in-amazoncom-inc-amzn-2026-09-20/",
+      "time_published": "20260920T071527",
+      "authors": [
+        "MarketBeat"
+      ],
+      "summary": "Clear Harbor Asset Management LLC has acquired a significant stake in Amazon.com, Inc. (NASDAQ:AMZN), purchasing 110,031 shares valued at approximately $26.2 million, making it their 14th largest holding. The article highlights Amazon's strong quarterly earnings, significant institutional ownership, and a generally bullish outlook from analysts with a \"Moderate Buy\" consensus. It also covers recent news, including a major deal with Generac and Amazon's expansion plans, alongside concerns regarding capital expenditures and regulatory scrutiny.",
+      "banner_image": "https://www.marketbeat.com/logos/amazoncom-inc-logo-1200x675.jpg",
+      "source": "MarketBeat",
+      "category_within_source": "General",
+      "source_domain": "MarketBeat",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.940522"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.840535"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.711808"
+        },
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.644589"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.605602"
+        }
+      ],
+      "overall_sentiment_score": 0.20797,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AMZN",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.404334",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "GNRC",
+          "relevance_score": "0.615280",
+          "ticker_sentiment_score": "0.315200",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "WMT",
+          "relevance_score": "0.642599",
+          "ticker_sentiment_score": "0.234041",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "QCOM",
+          "relevance_score": "0.633503",
+          "ticker_sentiment_score": "-0.121575",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.613507",
+          "ticker_sentiment_score": "0.213955",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Uranium Energy vs. Cameco: If I Could Only Own 1 Uranium Stock for the Next Decade, I'd Buy This 1",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/uranium-energy-vs-cameco-could-102300254.html",
+      "time_published": "20260920T032300",
+      "authors": [
+        "Courtney Carlsen",
+        "The Motley Fool"
+      ],
+      "summary": "As global energy demand rises and the perspective on nuclear energy shifts, the uranium mining sector is experiencing significant tailwinds. This article compares two major uranium players, Uranium Energy (UEC) and Cameco (CCJ), highlighting their different risk profiles and business models. While Uranium Energy offers higher upside potential for aggressive investors due to its unhedged uranium sales and U.S. focus, Cameco is presented as a more stable investment for the next decade, owing to its integrated business model, long-term contracts, and broader exposure across the nuclear value chain.",
+      "banner_image": "https://s.yimg.com/lo/mysterio/api/ecf053599bde0389a9fdbd6366aeb28634f34079b3cbef04cc2f7a3f97418f1e/lightyear_networkapi/resizefill_h48%3Bquality_100%3Bformat_webp/https%3A%2F%2Fs.yimg.com%2Fos%2Fcreatr-uploaded-images%2F2020-10%2F515f50a0-0f30-11eb-9ebf-0273aacc9ef0",
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.938570"
+        },
+        {
+          "topic": "energy_transportation",
+          "relevance_score": "0.828291"
+        }
+      ],
+      "overall_sentiment_score": 0.142394,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "CCJ",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.313870",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "COIN",
+          "relevance_score": "0.627351",
+          "ticker_sentiment_score": "0.035474",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.564087",
+          "ticker_sentiment_score": "0.012763",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "United Airlines CEO Scott Kirby Has a Simple PowerPoint Rule — And This Strict Limit Shows How Seriously He Takes It",
+      "url": "https://www.tradingview.com/news/benzinga:702feb8ca094b:0-united-airlines-ceo-scott-kirby-has-a-simple-powerpoint-rule-and-this-strict-limit-shows-how-seriously-he-takes-it/",
+      "time_published": "20260919T211110",
+      "authors": [],
+      "summary": "United Airlines CEO Scott Kirby enforces a strict \"no reading slides\" rule for meetings, requiring PowerPoint decks to be sent in advance to encourage conversation. He believes his job as CEO is to \"think hard,\" not \"work hard,\" dedicating significant time to reading and focusing on future strategy. This approach is similar to other prominent CEOs like Jeff Bezos and Jensen Huang, who have also redefined traditional meeting norms to foster more substantive discussions.",
+      "banner_image": "https://photo.benzinga.com/images/content/24/09/25895780_1600.jpg",
+      "source": "TradingView",
+      "category_within_source": "General",
+      "source_domain": "TradingView",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.810942"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.647501"
+        },
+        {
+          "topic": "energy_transportation",
+          "relevance_score": "0.935883"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.721589"
+        }
+      ],
+      "overall_sentiment_score": 0.17457,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "UAL",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.346714",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "AMZN",
+          "relevance_score": "0.629238",
+          "ticker_sentiment_score": "0.120979",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.620556",
+          "ticker_sentiment_score": "0.118133",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "DAL",
+          "relevance_score": "0.631914",
+          "ticker_sentiment_score": "0.122872",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Equinix Sees AI Driving Data Center Demand, Interconnection Growth",
+      "url": "https://www.marketbeat.com/instant-alerts/event-equinix-sees-ai-driving-data-center-demand-interconnection-growth-2026-09-19/",
+      "time_published": "20260919T200636",
+      "authors": [
+        "MarketBeat"
+      ],
+      "summary": "Equinix executives indicate that artificial intelligence is significantly accelerating demand for high-density data center capacity and interconnection services, requiring more complex, low-latency infrastructure. The company's interconnection business grew 9% this year, supported by new offerings like Fabric One and Inference Exchange, which address the complex networking needs of AI workloads. Equinix anticipates 9%-12% annual adjusted funds from operations per-share growth through 2029, driven by robust demand and development projects generating mid-20% cash yields.",
+      "banner_image": "https://www.marketbeat.com/logos/equinix-inc-logo-1200x675.jpg",
+      "source": "MarketBeat",
+      "category_within_source": "General",
+      "source_domain": "MarketBeat",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.933909"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.836685"
+        },
+        {
+          "topic": "real_estate",
+          "relevance_score": "0.618091"
+        }
+      ],
+      "overall_sentiment_score": 0.371018,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "EQIX",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.443560",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.602894",
+          "ticker_sentiment_score": "0.312858",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "KeyCorp Reaffirms 2026 Outlook as Loan Growth, Margins and Fees Gain Momentum",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/keycorp-reaffirms-2026-outlook-loan-170204026.html",
+      "time_published": "20260919T170245",
+      "authors": [
+        "MarketBeat"
+      ],
+      "summary": "KeyCorp has reaffirmed its 2026 outlook, citing strong client activity, anticipated commercial loan growth at the higher end of its 4-5% target, improved credit quality, and deposit growth exceeding 2% in the latter half of the year. The bank raised its fee-income growth outlook to 4-5% following the Clearwater acquisition and is increasingly confident in achieving a core return on tangible common equity of over 15% by 2027. Despite a changing economic backdrop with expected rate increases, KeyCorp sees continued healthy activity in both lending and fee-based businesses.",
+      "banner_image": "https://s.yimg.com/lo/mysterio/api/76cc315649da054c17a141e8ca66f3c8736d182353c5c848be41781918a43ee7/lightyear_networkapi/resizefit_w960%3Bquality_80%3Bformat_webp/https%3A%2F%2Fmedia.zenfs.com%2Fen%2Fmarketbeat_955%2F7dbb22e784b445542d85ad011e0e1e4a.jpg",
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.940988"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.818870"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.738691"
+        },
+        {
+          "topic": "mergers_and_acquisitions",
+          "relevance_score": "0.615399"
+        }
+      ],
+      "overall_sentiment_score": 0.19405,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "KEY",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.460900",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "COIN",
+          "relevance_score": "0.615943",
+          "ticker_sentiment_score": "0.134222",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "MSFT",
+          "relevance_score": "0.630253",
+          "ticker_sentiment_score": "0.132984",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.589645",
+          "ticker_sentiment_score": "0.126951",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "RF",
+          "relevance_score": "0.579710",
+          "ticker_sentiment_score": "0.121231",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Better Artificial Intelligence Stock: Aehr Test Systems vs. Super Micro Computer",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/better-artificial-intelligence-stock-aehr-023630743.html",
+      "time_published": "20260919T164114",
+      "authors": [
+        "Robert Izquierdo",
+        "The Motley Fool"
+      ],
+      "summary": "This article compares Aehr Test Systems and Super Micro Computer as artificial intelligence stocks, highlighting their roles in the AI ecosystem, financial health, and risk profiles. While Aehr focuses on semiconductor testing, Super Micro provides high-performance server racks, with the author ultimately recommending Super Micro due to its strong sales growth and lower valuation despite recent controversies.",
+      "banner_image": "https://media.zenfs.com/en/motleyfool.com/470277c333061d051105b57eb74e9761.png",
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.949604"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.834824"
+        }
+      ],
+      "overall_sentiment_score": 0.167221,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "SMCI",
+          "relevance_score": "0.933767",
+          "ticker_sentiment_score": "0.306831",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.644998",
+          "ticker_sentiment_score": "0.146840",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "INTC",
+          "relevance_score": "0.573577",
+          "ticker_sentiment_score": "0.025241",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Is Fidelity High Dividend ETF (FDVV) a Strong ETF Right Now?",
+      "url": "https://www.easternprogress.com/is-fidelity-high-dividend-etf-fdvv-a-strong-etf-right-now/article_17a2f740-607b-5e63-b89e-cb3aa4efddbe.html",
+      "time_published": "20260919T162835",
+      "authors": [
+        "Zacks Equity Research"
+      ],
+      "summary": "The article analyzes the Fidelity High Dividend ETF (FDVV), a smart beta ETF launched in 2016, noting its significant asset base of over $9.66 billion. It details the fund's objective to track the Fidelity Core Dividend Index, focusing on high-dividend-paying companies, and highlights its low expense ratio of 0.15% and a 12-month trailing dividend yield of 3.59%. The ETF's sector exposure, top holdings, and performance are also discussed, along with potential alternatives for investors.",
+      "banner_image": null,
+      "source": "Eastern Progress",
+      "category_within_source": "General",
+      "source_domain": "Eastern Progress",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.948233"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.809281"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.617783"
+        }
+      ],
+      "overall_sentiment_score": 0.224926,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "FDVV",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.297849",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.609501",
+          "ticker_sentiment_score": "0.231667",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.630626",
+          "ticker_sentiment_score": "0.239675",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "MSFT",
+          "relevance_score": "0.641125",
+          "ticker_sentiment_score": "0.235771",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Vistra Corp (VST) — Power Infrastructure Play for Data Centers Beyond Nuclear",
+      "url": "https://news.alphastreet.com/vistra-corp-vst-power-infrastructure-play-for-data-centers-beyond-nuclear/",
+      "time_published": "20260919T151424",
+      "authors": [],
+      "summary": "Vistra Corp (VST) reported strong Q2 2026 results with over 30% year-over-year growth in Adjusted EBITDA, driven by increasing demand for reliable power from data centers. The company has secured long-term power purchase agreements with major tech companies like Amazon Web Services and Meta, providing significant revenue visibility. Vistra is strategically expanding its capacity through acquisitions and partnerships, positioning itself as a key player in the data center infrastructure ecosystem.",
+      "banner_image": "https://cdn.news.alphastreet.com/wp-content/uploads/2026/03/03072345/market-news-1024x576.jpg",
+      "source": "AlphaStreet",
+      "category_within_source": "General",
+      "source_domain": "AlphaStreet",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "energy_transportation",
+          "relevance_score": "0.920642"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.820972"
+        }
+      ],
+      "overall_sentiment_score": 0.323298,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "VST",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.489461",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.628702",
+          "ticker_sentiment_score": "0.323807",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "KKR",
+          "relevance_score": "0.574016",
+          "ticker_sentiment_score": "0.281337",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "META",
+          "relevance_score": "0.741788",
+          "ticker_sentiment_score": "0.310489",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "AMZN",
+          "relevance_score": "0.662705",
+          "ticker_sentiment_score": "0.331339",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "How Investors Are Reacting To Ultragenyx Pharmaceutical (RARE) First-In-Disease Gene Therapy Approval For FAYUVI",
+      "url": "https://finance.yahoo.com/healthcare/articles/investors-reacting-ultragenyx-pharmaceutical-rare-141033462.html",
+      "time_published": "20260919T141000",
+      "authors": [
+        "Sasha Jovanovic"
+      ],
+      "summary": "Ultragenyx Pharmaceutical received full FDA approval for FAYUVI (UX111), a first-in-disease gene therapy for pediatric Sanfilippo syndrome Type A, alongside a Priority Review Voucher. This approval, coupled with another recent gene therapy approval for GENGLYCOS, expands Ultragenyx's commercial gene therapy portfolio. While these approvals improve the near-term outlook, investors should consider the company's high cash burn and potential for dilution, as the speed of adoption and reimbursement will be crucial for reaching profitability goals.",
+      "banner_image": "https://s.yimg.com/lo/mysterio/api/9a39f515c50e540db53988579fc374fd143054e5458c2f273e36313ac4b66ad1/lightyear_networkapi/resizefill_1200_675_true_false_a_h263_f263_d263/https%3A%2F%2Fs.yimg.com%2Fos%2Fcreatr-uploaded-images%2F2023-01%2Fa8953ea0-98fc-11ed-bd0f-24d18721c54b",
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "life_sciences",
+          "relevance_score": "0.931923"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.803318"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.741274"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.612876"
+        }
+      ],
+      "overall_sentiment_score": 0.183236,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "RARE",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.303438",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.561077",
+          "ticker_sentiment_score": "0.124602",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "MSFT",
+          "relevance_score": "0.567246",
+          "ticker_sentiment_score": "0.148038",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Keysight Technologies Sees AI Data-Center Boom, Targets 6G and Defense Growth",
+      "url": "https://finance.yahoo.com/technology/ai/articles/keysight-technologies-sees-ai-data-140206897.html",
+      "time_published": "20260919T140211",
+      "authors": [
+        "MarketBeat"
+      ],
+      "summary": "Keysight Technologies is experiencing strong demand from AI data-center buildouts, particularly in high-speed networking and silicon photonics, and is targeting future growth in 6G wireless, aerospace and defense, and software-defined vehicles. Despite supply constraints, the company is expanding capacity and expects to maintain high incremental margins while investing in R&D to capture these emerging opportunities.",
+      "banner_image": "https://s.yimg.com/lo/mysterio/api/f2185116e98722914e2fcfcfcef2367a6fee3596e4d47edb70c9f8a382a5e08a/lightyear_networkapi/resizefit_w960%3Bquality_80%3Bformat_webp/https%3A%2F%2Fmedia.zenfs.com%2Fen%2Fmarketbeat_955%2F0ecf23f324b45b8720f02a433c07bd0a.png",
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.904662"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.834479"
+        }
+      ],
+      "overall_sentiment_score": 0.360232,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "KEYS",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.414306",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "MU",
+          "relevance_score": "0.614541",
+          "ticker_sentiment_score": "0.318429",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.601120",
+          "ticker_sentiment_score": "0.306916",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Intel, Apple, Nvidia and More: 5 Stocks Investors Couldn't Stop Buzzing About This Week",
+      "url": "https://www.benzinga.com/markets/equities/26/09/61884295/intel-apple-nvidia-and-more-5-stocks-investors-couldnt-stop-buzzing-about-this-week",
+      "time_published": "20260919T122512",
+      "authors": [],
+      "summary": "This article highlights the five stocks that retail investors were most interested in this week: Intel, Apple, Nvidia, Nebius Group, and Oracle. These companies, spanning various tech sectors, saw significant discussion on social media platforms like X and Reddit, driven by factors such as AI infrastructure developments, earnings, and corporate news. The report provides a brief overview of the key events and stock performance for each company during the week.",
+      "banner_image": "https://cdn.benzinga.com/cdn-cgi/image/width=3840,format=auto,quality=85/files/images/story/2026/09/19/Financial-Trader-Monitoring-Market-Trend.jpg",
+      "source": "Benzinga",
+      "category_within_source": "General",
+      "source_domain": "Benzinga",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.816092"
+        },
+        {
+          "topic": "ipo",
+          "relevance_score": "0.622461"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.922101"
+        }
+      ],
+      "overall_sentiment_score": 0.123406,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.967087",
+          "ticker_sentiment_score": "0.308416",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "INTC",
+          "relevance_score": "0.936810",
+          "ticker_sentiment_score": "0.306003",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.886571",
+          "ticker_sentiment_score": "0.114152",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "ORCL",
+          "relevance_score": "0.871902",
+          "ticker_sentiment_score": "-0.222699",
+          "ticker_sentiment_label": "Somewhat-Bearish"
+        },
+        {
+          "ticker": "AMD",
+          "relevance_score": "0.585797",
+          "ticker_sentiment_score": "-0.139600",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Equinix Plans $5B-$7B Annual Data Center Buildout as AI Demand Accelerates",
+      "url": "https://finance.yahoo.com/technology/ai/articles/equinix-plans-5b-7b-annual-120203982.html",
+      "time_published": "20260919T120231",
+      "authors": [
+        "MarketBeat"
+      ],
+      "summary": "Equinix plans to invest $5 billion to $7 billion annually in data center development, primarily in existing markets, driven by accelerating AI adoption among enterprise customers. The company aims for cash-on-cash returns in the low 20% range and expects to significantly increase its power capacity under development. Executives emphasized a customer-centric approach, building infrastructure where demand is visible and preparing facilities for higher-density AI workloads.",
+      "banner_image": "https://s.yimg.com/lo/mysterio/api/aaf3e96787a6c5c8f92582e6c50a93a63afe6784080154851c564b350a949f1d/lightyear_networkapi/resizefit_w960%3Bquality_80%3Bformat_webp/https%3A%2F%2Fmedia.zenfs.com%2Fen%2Fmarketbeat_955%2F5845919efae9d42b6fa5b30886245140.jpg",
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "real_estate",
+          "relevance_score": "0.819924"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.741352"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.629140"
+        }
+      ],
+      "overall_sentiment_score": 0.346074,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "EQIX",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.484627",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.625355",
+          "ticker_sentiment_score": "0.349440",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "MSFT",
+          "relevance_score": "0.581400",
+          "ticker_sentiment_score": "0.299094",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "AMZN",
+          "relevance_score": "0.590585",
+          "ticker_sentiment_score": "0.252356",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "GOOGL",
+          "relevance_score": "0.576422",
+          "ticker_sentiment_score": "0.297216",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "NVIDIA Corporation $NVDA Holdings Decreased by a16z Perennial Management L.P.",
+      "url": "https://www.marketbeat.com/instant-alerts/filing-nvidia-corporation-nvda-holdings-decreased-by-a16z-perennial-management-lp-2026-09-19/",
+      "time_published": "20260919T074154",
+      "authors": [
+        "MarketBeat"
+      ],
+      "summary": "a16z Perennial Management L.P. significantly reduced its holdings in NVIDIA Corporation by 91.4% in the second quarter, selling 34,015 shares and retaining 3,200 shares. Despite this, institutional investors still own a majority of NVIDIA stock, and the company reported strong financial results with revenue up 105.9% year-over-year and analysts maintaining a \"Buy\" rating. However, insider sales and potential risks like competition and rising memory costs are noted as areas of investor focus.",
+      "banner_image": "https://www.marketbeat.com/logos/nvidia-co-logo-1200x675.jpg?v=20221020142916",
+      "source": "MarketBeat",
+      "category_within_source": "General",
+      "source_domain": "MarketBeat",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.908485"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.939195"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.823979"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.634164"
+        }
+      ],
+      "overall_sentiment_score": 0.320024,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "NVDA",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.302519",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Joby Aviation (JOBY) Completes First Autonomous Cross Country Flight In The United States",
+      "url": "https://finance.yahoo.com/technology/articles/joby-aviation-joby-completes-first-071632461.html",
+      "time_published": "20260919T071600",
+      "authors": [
+        "Bailey Pemberton"
+      ],
+      "summary": "Joby Aviation (JOBY) has completed the first fully autonomous cross-country flight in the U.S., with its electric vertical takeoff and landing (eVTOL) aircraft flying without a pilot, monitored remotely. This milestone supports Joby's strategy for autonomous logistics, focusing on commercial cargo, medical supply, disaster relief, and defense logistics. The company aims to monetize its technology stack beyond passenger air taxis, but faces challenges in managing a broad business model compared to more focused rivals.",
+      "banner_image": "https://s.yimg.com/lo/mysterio/api/9a39f515c50e540db53988579fc374fd143054e5458c2f273e36313ac4b66ad2/lightyear_networkapi/resizefill_h48%3Bquality_100%3Bformat_webp/https%3A%2F%2Fd29szjachogqwa.cloudfront.net%2Fimages%2Fuser-uploaded%2Fgray-horizontal-text_8328.png",
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.848423"
+        },
+        {
+          "topic": "energy_transportation",
+          "relevance_score": "0.733905"
+        }
+      ],
+      "overall_sentiment_score": 0.309214,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "JOBY",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.422897",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.645160",
+          "ticker_sentiment_score": "0.248226",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Nvidia CEO Jensen Huang Rejects Calls to Slow Down AI Development: ‘We Are Going to Go as Fast We Can, But…’",
+      "url": "https://www.benzinga.com/markets/tech/26/09/61884010/nvidia-ceo-jensen-huang-rejects-calls-to-slow-down-ai-development-we-are-going-to-go-as-fast-we-can-but",
+      "time_published": "20260919T071308",
+      "authors": [
+        "Ananya Gairola"
+      ],
+      "summary": "Nvidia CEO Jensen Huang has rejected calls to slow down AI development, asserting that the industry should advance as quickly as possible while ensuring product safety. He emphasized the importance of rapid AI progress for U.S. economic growth, even as other tech leaders like Anthropic CEO Dario Amodei and Meta CEO Mark Zuckerberg have voiced concerns about the pace and called for increased safety measures and independent evaluations. Huang's comments come as Nvidia's stock continues to perform strongly amid surging AI demand.",
+      "banner_image": "https://cdn.benzinga.com/cdn-cgi/image/width=3840,format=auto,quality=85/files/images/story/2025/07/24/article-header-background-image.png",
+      "source": "Benzinga",
+      "category_within_source": "General",
+      "source_domain": "Benzinga",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.717995"
+        }
+      ],
+      "overall_sentiment_score": 0.298836,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "NVDA",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.407344",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "META",
+          "relevance_score": "0.745034",
+          "ticker_sentiment_score": "0.145633",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    }
+  ]
+}

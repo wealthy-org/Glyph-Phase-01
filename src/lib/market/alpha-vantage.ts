@@ -13,9 +13,15 @@ import {
   Quote,
 } from "@/types/market";
 import fs from "fs";
+import os from "os";
 import path from "path";
+import { getBundledFallbackData } from "./fallback-data";
 
-const CACHE_DIR = path.join(process.cwd(), ".cache", "market");
+// In Vercel serverless environments, root filesystem is read-only.
+// We use os.tmpdir() for writable runtime cache, and pre-bundled data for baseline fallback.
+const CACHE_DIR = process.env.VERCEL
+  ? path.join(os.tmpdir(), "glyph-market-cache")
+  : path.join(process.cwd(), ".cache", "market");
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours caching (§68 TIPS)
 const MARKET_STATUS_CACHE_TTL_MS = 5 * 60 * 1000;
 
@@ -63,7 +69,7 @@ export class AlphaVantageProvider implements MarketDataProvider {
 
     this.apiKeys = Array.from(new Set(rawKeys));
 
-    // Ensure cache directory exists
+    // Ensure writable cache directory exists
     try {
       if (!fs.existsSync(CACHE_DIR)) {
         fs.mkdirSync(CACHE_DIR, { recursive: true });
@@ -74,26 +80,45 @@ export class AlphaVantageProvider implements MarketDataProvider {
   }
 
   /**
-   * Reads fresh cached payload from disk if valid.
+   * Reads cached payload from runtime disk cache or pre-bundled fallback data.
    */
-  private getCachedData<T>(cacheKey: string, ttlMs: number = CACHE_TTL_MS): T | null {
+  private getCachedData<T>(
+    cacheKey: string,
+    ttlMs: number = CACHE_TTL_MS,
+    allowStale = false
+  ): T | null {
+    // 1. Try runtime disk cache
     try {
       const filePath = path.join(CACHE_DIR, `${cacheKey}.json`);
       if (fs.existsSync(filePath)) {
         const stats = fs.statSync(filePath);
         const isFresh = Date.now() - stats.mtimeMs < ttlMs;
-        if (isFresh) {
+        if (isFresh || allowStale) {
           const content = fs.readFileSync(filePath, "utf-8");
           const parsed = JSON.parse(content) as any;
-          // Guard against corrupted cache containing rate limit errors or info strings
-          if (parsed && typeof parsed === "object" && !parsed.Information && !parsed.Note && !parsed["Error Message"]) {
+          if (
+            parsed &&
+            typeof parsed === "object" &&
+            !parsed.Information &&
+            !parsed.Note &&
+            !parsed["Error Message"]
+          ) {
             return parsed as T;
           }
         }
       }
     } catch {
-      return null;
+      // Ignore disk read errors
     }
+
+    // 2. Fallback to pre-bundled seed data (guaranteed available in serverless bundle)
+    if (allowStale) {
+      const bundled = getBundledFallbackData<T>(cacheKey);
+      if (bundled) {
+        return bundled;
+      }
+    }
+
     return null;
   }
 
@@ -127,28 +152,36 @@ export class AlphaVantageProvider implements MarketDataProvider {
     allowStaleOnError = true
   ): Promise<{ data: T; isCached: boolean }> {
     // 1. Check local cache first to protect 25 req/day limit
-    const cached = this.getCachedData<T>(cacheKey, customTtlMs ?? CACHE_TTL_MS);
+    const cached = this.getCachedData<T>(cacheKey, customTtlMs ?? CACHE_TTL_MS, false);
     if (cached) {
       return { data: cached, isCached: true };
     }
 
     if (this.apiKeys.length === 0) {
+      const fallback = this.getCachedData<T>(cacheKey, CACHE_TTL_MS, true);
+      if (fallback) {
+        console.warn(`[AlphaVantage] No API key configured. Using fallback data for ${cacheKey}.`);
+        return { data: fallback, isCached: true };
+      }
       throw new Error(
         "MARKET_DATA_API_KEY is not configured in environment variables."
       );
     }
 
     if (this.rateLimitUntil > Date.now()) {
-      const stale = this.getCachedData<T>(cacheKey);
+      const stale = this.getCachedData<T>(cacheKey, CACHE_TTL_MS, true);
       if (stale && allowStaleOnError) {
+        console.warn(
+          `[AlphaVantage] Rate-limit cooldown active for ${cacheKey}. Successfully using fallback data.`
+        );
         return { data: stale, isCached: true };
       }
 
       console.warn(
-        `[AlphaVantage] Rate-limit cooldown active for ${cacheKey}. Skipping live request and using fallback data only.`
+        `[AlphaVantage] Rate-limit cooldown active for ${cacheKey} and no fallback data available.`
       );
       throw new Error(
-        `Alpha Vantage is currently rate-limited. Using fallback data for ${cacheKey}.`
+        `Alpha Vantage is currently rate-limited and no cached/fallback data is available for ${cacheKey}.`
       );
     }
 
@@ -174,7 +207,7 @@ export class AlphaVantageProvider implements MarketDataProvider {
             this.rateLimitUntil = Date.now() + 60_000;
             this.rateLimitMessage = reason;
             console.warn(
-              `[AlphaVantage] Rate limit note on key ending ...${currentKey.slice(-4)}: ${reason}`
+              `[AlphaVantage] Rate limit HTTP 429 on key ending ...${currentKey.slice(-4)}: ${reason}`
             );
           }
           throw new Error(`Alpha Vantage HTTP error: ${response.statusText}`);
@@ -199,9 +232,12 @@ export class AlphaVantageProvider implements MarketDataProvider {
             continue;
           }
 
-          // Fallback to existing cache if exists, or return parsed payload
-          const stale = this.getCachedData<T>(cacheKey);
-          if (stale) return { data: stale, isCached: true };
+          // Fallback to existing cache if exists
+          const stale = this.getCachedData<T>(cacheKey, CACHE_TTL_MS, true);
+          if (stale && allowStaleOnError) {
+            console.warn(`[AlphaVantage] API rate-limited. Falling back to cached data for ${cacheKey}.`);
+            return { data: stale, isCached: true };
+          }
         } else {
           // Success! Update activeKeyIndex to current working key
           this.activeKeyIndex = keyIndex;
@@ -217,16 +253,18 @@ export class AlphaVantageProvider implements MarketDataProvider {
           console.log(`[AlphaVantage] Trying next backup API key...`);
           continue;
         }
-        const stale = this.getCachedData<T>(cacheKey);
+        const stale = this.getCachedData<T>(cacheKey, CACHE_TTL_MS, true);
         if (stale && allowStaleOnError) {
+          console.warn(`[AlphaVantage] Fetch failed. Falling back to cached data for ${cacheKey}.`);
           return { data: stale, isCached: true };
         }
         throw error;
       }
     }
 
-    const stale = this.getCachedData<T>(cacheKey);
-    if (stale) {
+    const stale = this.getCachedData<T>(cacheKey, CACHE_TTL_MS, true);
+    if (stale && allowStaleOnError) {
+      console.warn(`[AlphaVantage] All keys exhausted. Falling back to cached data for ${cacheKey}.`);
       return { data: stale, isCached: true };
     }
     throw new Error(`All Alpha Vantage API keys rate-limited or failed for ${cacheKey}`);
@@ -422,7 +460,7 @@ export class AlphaVantageProvider implements MarketDataProvider {
         { function: "MARKET_STATUS" },
         "market_status",
         MARKET_STATUS_CACHE_TTL_MS,
-        false
+        true
       );
 
       const response = data as AlphaVantageMarketStatusResponse;
