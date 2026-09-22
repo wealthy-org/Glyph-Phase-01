@@ -30,6 +30,11 @@ export interface IdentityData {
   network: IdentityNetwork;
   genesis: IdentityGenesis;
   primaryWallet: string;
+  owner?: string;
+  agentWallet?: string;
+  agentURI?: string;
+  registryAddress?: string;
+  onchainVerified?: boolean;
   registrationTx: string;
   registrationNetwork: string;
   explorerBaseUrl: string;

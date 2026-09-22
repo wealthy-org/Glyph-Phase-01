@@ -429,6 +429,7 @@ approved architecture explicitly states otherwise.
 - [ ] Configure mainnet address
 - [ ] Confirm required gas
 
+
 ### Approval Gate
 
 Before funding or sending any mainnet transaction:

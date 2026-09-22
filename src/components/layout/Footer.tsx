@@ -83,7 +83,9 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <span className="text-[#55555a]">
-                  ROBINHOOD CHAIN TESTNET
+                  {process.env.NEXT_PUBLIC_CHAIN_ID === "4663"
+                    ? "ROBINHOOD MAINNET"
+                    : "ROBINHOOD CHAIN TESTNET"}
                 </span>
               </li>
             </ul>

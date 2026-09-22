@@ -54,6 +54,11 @@ export const IdentityRecordCard: React.FC<IdentityRecordCardProps> = ({
           <span className="text-[#f3f3f4] font-medium">VERIFIED AGENT</span>
           <span className="text-[#333333]">·</span>
           <span className="text-[#a1a1aa]">{formattedAgentId}</span>
+          {data.onchainVerified && (
+            <span className="ml-2 border border-[#6fe39a]/40 bg-[#6fe39a]/10 text-[#6fe39a] text-[10px] px-2 py-0.5 font-medium tracking-wider">
+              ON-CHAIN VERIFIED
+            </span>
+          )}
         </div>
 
         <div className="flex items-center gap-2 border border-[#222222] bg-[#0a0a0a] px-2.5 py-0.5 text-[11px] tracking-wider text-[#6fe39a] uppercase">
@@ -168,7 +173,76 @@ export const IdentityRecordCard: React.FC<IdentityRecordCardProps> = ({
         </div>
       </div>
 
-      {/* 4. PRIMARY WALLET ROW */}
+      {/* 4. ON-CHAIN AGENT BINDING DETAILS (OWNER & WALLET) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-[#1b1b1b] border-b border-[#1b1b1b] bg-[#050505]">
+        {/* OWNER */}
+        <div className="p-4 sm:p-5 space-y-1.5">
+          <span className="font-mono text-[10px] text-[#66666e] uppercase tracking-wider block">
+            OWNER (IDENTITY HOLDER)
+          </span>
+          <div className="font-mono text-xs sm:text-sm text-[#d4d4d8] break-all select-all">
+            {data.owner || data.primaryWallet}
+          </div>
+          <p className="font-mono text-[11px] text-[#55555a]">
+            MetaMask EOA controlling Agent Identity NFT
+          </p>
+        </div>
+
+        {/* AGENT WALLET */}
+        <div className="p-4 sm:p-5 space-y-1.5">
+          <span className="font-mono text-[10px] text-[#66666e] uppercase tracking-wider block">
+            AGENT WALLET (OPERATIONAL ADDRESS)
+          </span>
+          <div className="font-mono text-xs sm:text-sm text-[#d4d4d8] break-all select-all">
+            {data.agentWallet || data.primaryWallet}
+          </div>
+          <p className="font-mono text-[11px] text-[#55555a]">
+            Bound via setAgentWallet() on Canonical Registry
+          </p>
+        </div>
+      </div>
+
+      {/* 5. REGISTRY CONTRACT & AGENT URI */}
+      <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-[#1b1b1b] border-b border-[#1b1b1b] bg-[#040404]">
+        {/* REGISTRY CONTRACT */}
+        <div className="p-4 sm:p-5 space-y-1.5">
+          <span className="font-mono text-[10px] text-[#66666e] uppercase tracking-wider block">
+            IDENTITY REGISTRY CONTRACT
+          </span>
+          <div className="flex items-center justify-between gap-2">
+            <span className="font-mono text-xs sm:text-sm text-[#d4d4d8] break-all select-all">
+              {data.registryAddress || (data.network.chainId === 4663 ? "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432" : "0x66399E25D3FBb5De462d06dE835D07B2957060D2")}
+            </span>
+            <a
+              href={`${data.explorerBaseUrl.replace(/\/tx\/$/, "/address/")}${data.registryAddress || (data.network.chainId === 4663 ? "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432" : "0x66399E25D3FBb5De462d06dE835D07B2957060D2")}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#6fe39a] hover:text-[#88f5b0] shrink-0 p-1"
+              title="View contract on explorer"
+            >
+              <ExternalLink size={12} />
+            </a>
+          </div>
+          <p className="font-mono text-[11px] text-[#55555a]">
+            ERC-8004 Canonical Identity Registry
+          </p>
+        </div>
+
+        {/* AGENT URI */}
+        <div className="p-4 sm:p-5 space-y-1.5">
+          <span className="font-mono text-[10px] text-[#66666e] uppercase tracking-wider block">
+            AGENT URI
+          </span>
+          <div className="font-mono text-xs sm:text-sm text-[#6fe39a] break-all">
+            {data.agentURI || "/agents/glyph.json"}
+          </div>
+          <p className="font-mono text-[11px] text-[#55555a]">
+            Decentralized Agent Registration Manifest
+          </p>
+        </div>
+      </div>
+
+      {/* 6. PRIMARY WALLET ROW */}
       <div className="p-4 sm:p-5 border-b border-[#1b1b1b] bg-[#050505] space-y-2">
         <span className="font-mono text-[10px] text-[#66666e] uppercase tracking-wider block">
           PRIMARY WALLET
