@@ -1,0 +1,2348 @@
+{
+  "items": "50",
+  "sentiment_score_definition": "x <= -0.35: Bearish; -0.35 < x <= -0.15: Somewhat-Bearish; -0.15 < x < 0.15: Neutral; 0.15 <= x < 0.35: Somewhat_Bullish; x >= 0.35: Bullish",
+  "relevance_score_definition": "0 < x <= 1, with a higher score indicating higher relevance.",
+  "feed": [
+    {
+      "title": "Apple stock hits all-time high at 344.94 USD",
+      "url": "https://www.investing.com/news/company-news/apple-stock-hits-alltime-high-at-34494-usd-93CH-4911037",
+      "time_published": "20260922T133800",
+      "authors": [
+        "Investing.com"
+      ],
+      "summary": "Apple stock has reached an all-time high of $344.94, marking a 33.71% increase over the last year, despite an InvestingPro analysis suggesting it is overvalued. Recent developments include mixed demand reports for the iPhone 18 series from analysts like UBS and Evercore ISI, while carrier incentives and AI features are noted as potential drivers for future growth and market share gains.",
+      "banner_image": "https://content-media.investing.com/news/LYNXMPED9U0NU_L.jpg",
+      "source": "Investing.com",
+      "category_within_source": "General",
+      "source_domain": "Investing.com",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.835510"
+        }
+      ],
+      "overall_sentiment_score": 0.387523,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.428248",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Apple May Return to Servers With Its Own AI Chips. Nvidia Could Still Get Paid",
+      "url": "https://finance.yahoo.com/technology/ai/articles/apple-may-return-servers-own-124420628.html",
+      "time_published": "20260922T124523",
+      "authors": [
+        "Habib Ur Rehman"
+      ],
+      "summary": "Apple is reportedly developing enterprise servers powered by its M8 Ultra chips, potentially targeting a 2029 launch for AI inference. Surprisingly, Apple is considering using NVIDIA's NVLink Fusion technology to connect these processors, suggesting Nvidia could still profit from its networking solutions even if Apple uses its own AI silicon. This move highlights Nvidia's strategy to monetize an increasingly diverse AI hardware market, while Apple aims to re-enter the server business with energy-efficient solutions.",
+      "banner_image": "https://s.yimg.com/lo/mysterio/api/fde014164016c5a574b833ee436c0b4e0c886e1dc807f6fb1a9fe3779d9a2248/lightyear_networkapi/resizefill_h48%3Bquality_100%3Bformat_webp/https%3A%2F%2Fs.yimg.com%2Fos%2Fcreatr-uploaded-images%2F2020-12%2Fd7df1000-34e4-11eb-b6ae-ac87660fe5ee",
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.938712"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.719737"
+        }
+      ],
+      "overall_sentiment_score": 0.070987,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.968751",
+          "ticker_sentiment_score": "0.056335",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.929763",
+          "ticker_sentiment_score": "0.144559",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "COIN",
+          "relevance_score": "0.631485",
+          "ticker_sentiment_score": "0.029644",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "What's Driving Apple's Move in Bluechip Stocks This Week?",
+      "url": "https://kalkinemedia.com/us/stocks/bluechip/whats-driving-apples-move-in-bluechip-stocks-this-week",
+      "time_published": "20260922T124023",
+      "authors": [
+        "Anmol Khazanchi"
+      ],
+      "summary": "Apple's stock movement this week is primarily driven by device demand and services execution amidst a selective market influenced by interest rates, energy prices, and global trade discussions. The article emphasizes that company-specific execution and business model durability are crucial for bluechip stocks like Apple in the current nuanced economic environment. Investors should focus on verified operating themes and upcoming company communications to assess long-term business changes versus daily market fluctuations.",
+      "banner_image": "https://kalkinemedia.com/storage/uploads/large/shutterstock_2310006961_09_22_2026_12_40_45_686085.jpg",
+      "source": "Kalkine Media",
+      "category_within_source": "General",
+      "source_domain": "Kalkine Media",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.914019"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.838537"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.742188"
+        }
+      ],
+      "overall_sentiment_score": 0.270327,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.277170",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Apple settlement offers eligible iPhone owners up to $95. Here is how to file a claim.",
+      "url": "https://www.cbsnews.com/news/apple-settlement-iphone-siri-claim/",
+      "time_published": "20260922T122600",
+      "authors": [
+        "Mary Cunningham"
+      ],
+      "summary": "Apple has agreed to a $250 million settlement for allegedly misleading customers about Siri's Apple Intelligence features. Eligible iPhone owners, specifically those who purchased an iPhone 15 Pro, iPhone 15 Pro Max, or any iPhone 16 model between June 10, 2024, and March 29, 2025, can file a claim to receive up to $95. Claims can be submitted online at SmartphoneAISettlement.com, with a deadline of December 21, 2026.",
+      "banner_image": null,
+      "source": "CBS News",
+      "category_within_source": "General",
+      "source_domain": "CBS News",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.907154"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.707444"
+        }
+      ],
+      "overall_sentiment_score": -0.232663,
+      "overall_sentiment_label": "Somewhat-Bearish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "-0.237008",
+          "ticker_sentiment_label": "Somewhat-Bearish"
+        }
+      ]
+    },
+    {
+      "title": "AMD Stock Beat Nvidia By 160 Points In 2026: A Historic AI Boom First",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/amd-stock-beat-nvidia-160-154526567.html",
+      "time_published": "20260922T114500",
+      "authors": [
+        "Piero Cingari"
+      ],
+      "summary": "In 2026, AMD's stock performance significantly outpaced Nvidia's, with AMD shares surging 187% compared to Nvidia's 22%, marking AMD's widest lead since ChatGPT's launch. This shift is attributed to the rise of \"agentic AI,\" which relies heavily on CPUs, a market where AMD has a strong presence with its EPYC server line. The article suggests that Wall Street is re-evaluating AMD not just as an alternative to Nvidia, but as a key player in a different layer of the AI stack, driven by increasing CPU demand for persistent AI workloads.",
+      "banner_image": "https://s.yimg.com/lo/mysterio/api/368bdbe05384c870854d980527a07877ee19bb274fdac1f523eaf995b8f1620f/lightyear_networkapi/resizefill_h48%3Bquality_100%3Bformat_webp/https%3A%2F%2Fs.yimg.com%2Fos%2Fcreatr-uploaded-images%2F2020-11%2Ff4b4e310-2b77-11eb-afee-ca1478f0e9ef",
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.918552"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.833327"
+        }
+      ],
+      "overall_sentiment_score": 0.165036,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AMD",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.486959",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.956813",
+          "ticker_sentiment_score": "-0.252696",
+          "ticker_sentiment_label": "Somewhat-Bearish"
+        },
+        {
+          "ticker": "META",
+          "relevance_score": "0.745922",
+          "ticker_sentiment_score": "0.301342",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.551130",
+          "ticker_sentiment_score": "0.145643",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Form 144 Structure Therapeutics Inc. For: 22 September By Investing.com",
+      "url": "https://ca.investing.com/news/stock-market-news/form-144-structure-therapeutics-inc-for-22-september-93CH-4847594",
+      "time_published": "20260922T113510",
+      "authors": [
+        "Investing.com"
+      ],
+      "summary": "The article reports on the filing of Form 144 by Structure Therapeutics Inc. for September 22. It provides a brief financial update on GPCR with a 5.17% increase. The content is very short and serves primarily as an announcement of the filing.",
+      "banner_image": "https://content-media.investing.com/news/moved_LYNXMPEM4519D_1200_L.jpg",
+      "source": "Investing.com Canada",
+      "category_within_source": "General",
+      "source_domain": "Investing.com Canada",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.901832"
+        },
+        {
+          "topic": "life_sciences",
+          "relevance_score": "0.627996"
+        }
+      ],
+      "overall_sentiment_score": 0.167881,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "GPCR",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.058606",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "AVGO",
+          "relevance_score": "0.628426",
+          "ticker_sentiment_score": "0.182912",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.615350",
+          "ticker_sentiment_score": "0.178549",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "TSLA",
+          "relevance_score": "0.632473",
+          "ticker_sentiment_score": "0.292164",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Claims now being accepted for Apple's iPhone AI settlement. Here's who is eligible",
+      "url": "https://www.nbcchicago.com/news/business/you-could-get-money-from-apples-iphone-ai-settlement-heres-who-eligible-and-how-to-submit-a-claim/3991842/",
+      "time_published": "20260921T221730",
+      "authors": [
+        "Matt Stefanski"
+      ],
+      "summary": "Claims are now open for Apple's $250 million settlement regarding alleged unfulfilled Siri and Apple Intelligence features on certain iPhone models. U.S. residents who purchased an eligible iPhone 15 Pro, 15 Pro Max, or any iPhone 16 model between June 10, 2024, and March 29, 2025, can file a claim by December 21. Eligible claimants can receive $25 per device, with potential increases up to $95, following a final approval hearing on February 24, 2027.",
+      "banner_image": "https://media.nbcchicago.com/2024/09/108031650-17259706862024-09-09t211443z_2082202891_rc28x9a9h7rq_rtrmadp_0_apple-event_5c0730.jpeg?quality=85&strip=all&resize=320%2C180",
+      "source": "NBC 5 Chicago",
+      "category_within_source": "General",
+      "source_domain": "NBC 5 Chicago",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.837817"
+        },
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.646855"
+        }
+      ],
+      "overall_sentiment_score": -0.207789,
+      "overall_sentiment_label": "Somewhat-Bearish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "-0.187021",
+          "ticker_sentiment_label": "Somewhat-Bearish"
+        }
+      ]
+    },
+    {
+      "title": "Apple Should Acquire Disney, Robinhood, Uber or these Companies, All-In Podcast Host Says",
+      "url": "https://www.benzinga.com/trading-ideas/long-ideas/26/09/61909226/apple-should-acquire-disney-robinhood-uber-or-these-companies-all-in-podcast-host-says",
+      "time_published": "20260921T203805",
+      "authors": [
+        "Chris Katje"
+      ],
+      "summary": "Jason Calacanis, co-host of the All-In Podcast, suggests that Apple should use its \"war chest\" to make significant acquisitions, despite the company's historical preference for internal growth. He named 10 companies, including public entities like Robinhood, Disney, DoorDash, and Uber, as well as private AI firms, highlighting potential strategic moves for Apple's new CEO, John Ternus. Calacanis believes such acquisitions could help Apple expand into new sectors like AI, finance, logistics, and media, building upon its successful Services segment.",
+      "banner_image": "https://cdn.benzinga.com/cdn-cgi/image/width=3840,format=auto,quality=85/files/images/story/2025/07/24/article-header-background-image.png",
+      "source": "Benzinga",
+      "category_within_source": "General",
+      "source_domain": "Benzinga",
+      "topics": [
+        {
+          "topic": "mergers_and_acquisitions",
+          "relevance_score": "0.927648"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.812251"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.703351"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.634933"
+        }
+      ],
+      "overall_sentiment_score": 0.192221,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "UBER",
+          "relevance_score": "0.920984",
+          "ticker_sentiment_score": "0.144174",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.935316",
+          "ticker_sentiment_score": "0.340544",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "DIS",
+          "relevance_score": "0.819227",
+          "ticker_sentiment_score": "0.155720",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "DASH",
+          "relevance_score": "0.725393",
+          "ticker_sentiment_score": "0.140790",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Fort Worth Makes Rare Earths Great Again at MP Materials' Alliance Facility",
+      "url": "https://fortworthinc.com/innovators/fort-worth-makes-rare-earths-great-again/",
+      "time_published": "20260921T203005",
+      "authors": [
+        "John Henry"
+      ],
+      "summary": "MP Materials is establishing a critical rare-earth magnet supply chain in Fort Worth, Texas, at its Independence facility, turning domestically mined rare earths into high-performance permanent magnets. This initiative, supported by General Motors and the city of Fort Worth, aims to reduce U.S. dependence on foreign supply chains for strategic minerals, with a larger mega-complex planned in Northlake. The company expects to produce over a million magnets daily at Independence, significantly bolstering American national security and advanced manufacturing.",
+      "banner_image": "https://fortworthinc.com/downloads/9274/download/Shilpan%20Amin%20GM%20James%20Litinsky%20MP%20Materials%20Fort%20Worth.jpg?cb=e6ef1d1a848e2c7f7ccbda0db08896e4",
+      "source": "Fort Worth Inc.",
+      "category_within_source": "General",
+      "source_domain": "Fort Worth Inc.",
+      "topics": [
+        {
+          "topic": "manufacturing",
+          "relevance_score": "0.940873"
+        },
+        {
+          "topic": "energy_transportation",
+          "relevance_score": "0.736888"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.605655"
+        }
+      ],
+      "overall_sentiment_score": 0.58498,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "MP",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.847101",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "GM",
+          "relevance_score": "0.848385",
+          "ticker_sentiment_score": "0.630317",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.634215",
+          "ticker_sentiment_score": "0.305106",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Apple (NASDAQ: AAPL) Cuts Fitness+ Audio Staff As Company Eyes Major Service Overhaul",
+      "url": "https://www.foreignpolicyjournal.com/2026/09/21/apple-nasdaq-aapl-cuts-fitness-audio-staff-as-company-eyes-major-service-overhaul/",
+      "time_published": "20260921T194843",
+      "authors": [
+        "David Prior"
+      ],
+      "summary": "Apple Inc. has laid off employees from its Fitness+ audio division, specifically targeting staff involved in \"Time to Walk\" and \"Time to Run\" sessions, as it reconsiders the subscription service's future. The company plans to reduce the frequency of new audio releases and is looking at integrating Fitness+ more deeply into a redesigned Health app. This move comes amidst competitive pressure and coincides with the launch of the new iPhone Duo, with Apple's stock seeing varied short-term sentiment but remaining up 23.3% year to date.",
+      "banner_image": "https://www.foreignpolicyjournal.com/wp-content/uploads/2026/05/apple-1280x640.jpg",
+      "source": "Foreign Policy Journal",
+      "category_within_source": "General",
+      "source_domain": "Foreign Policy Journal",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.922983"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.733658"
+        }
+      ],
+      "overall_sentiment_score": -0.128893,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.968566",
+          "ticker_sentiment_score": "-0.126055",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Meta’s Muse is outpacing ChatGPT’s early mobile launch",
+      "url": "https://techcrunch.com/2026/09/21/metas-muse-is-outpacing-chatgpts-early-mobile-launch/",
+      "time_published": "20260921T191923",
+      "authors": [
+        "Sarah Perez"
+      ],
+      "summary": "Meta's new AI app, Muse, is showing stronger initial mobile performance than ChatGPT did in its early days, according to Apptopia data. Muse has garnered more downloads and daily active users in the U.S. and Canada during its first twelve days, even when comparing only iOS data. This early success suggests Muse could become another major hit for Meta, potentially leveraging the company's powerful cross-promotion strategies seen with apps like Threads.",
+      "banner_image": "https://techcrunch.com/wp-content/uploads/2026/09/meta-muse-finger-on-app-GettyImages-2293791808.jpg?w=1024",
+      "source": "TechCrunch",
+      "category_within_source": "General",
+      "source_domain": "TechCrunch",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "1.000000"
+        }
+      ],
+      "overall_sentiment_score": 0.190468,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "MUSE",
+          "relevance_score": "0.342166",
+          "ticker_sentiment_score": "0.020679",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "META",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.403047",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.727240",
+          "ticker_sentiment_score": "0.131679",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "GOOG",
+          "relevance_score": "0.621478",
+          "ticker_sentiment_score": "0.139473",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "CCIA Joins Supreme Court Amicus Brief in Apple v. Epic",
+      "url": "https://ccianet.org/news/2026/09/ccia-joins-supreme-court-amicus-brief-in-apple-v-epic/",
+      "time_published": "20260921T175621",
+      "authors": [],
+      "summary": "The Computer & Communications Industry Association (CCIA) has filed an amicus brief supporting Apple Inc. in the Supreme Court case Apple v. Epic. The brief argues against a lower court's ruling that found Apple in contempt for violating the \"spirit\" of an order, even without explicit prohibition, stating that such a standard creates uncertainty and contradicts federal law. CCIA President & CEO Matt Schruers emphasized the importance of clear, text-based court orders, especially concerning protected speech and editorial curation.",
+      "banner_image": "https://ccianet.org/wp-content/uploads/2026/09/Schruers.Epic_.09212026.rev_.png",
+      "source": "CCIA",
+      "category_within_source": "General",
+      "source_domain": "CCIA",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.831028"
+        }
+      ],
+      "overall_sentiment_score": 0.141961,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.999987",
+          "ticker_sentiment_score": "0.129195",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Apple Siri settlement claims window now open. How to file for money",
+      "url": "https://www.usatoday.com/story/money/personal-finance/income/2026/09/21/apple-siri-class-action-settlement-claims-window-file/91869875007/",
+      "time_published": "20260921T124309",
+      "authors": [
+        "Melina Khan"
+      ],
+      "summary": "Eligible iPhone owners can now file claims for a share of a $250 million settlement in a class action lawsuit against Apple, which alleged the company deceptively advertised AI enhancements for the iPhone 16. The settlement, awaiting final court approval, offers $25 per device, potentially rising to $95, for owners of specific iPhone 16 and 15 Pro models purchased between June 10, 2024, and March 29, 2025. Claims must be filed by December 21, and payments are expected after the final approval hearing on February 24, 2027.",
+      "banner_image": null,
+      "source": "USA Today",
+      "category_within_source": "General",
+      "source_domain": "USA Today",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.905157"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.740725"
+        }
+      ],
+      "overall_sentiment_score": -0.283116,
+      "overall_sentiment_label": "Somewhat-Bearish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "-0.269278",
+          "ticker_sentiment_label": "Somewhat-Bearish"
+        }
+      ]
+    },
+    {
+      "title": "KeyBanc raises Paycom Software stock price target on margin confidence By Investing.com",
+      "url": "https://ca.investing.com/news/stock-market-news/keybanc-raises-paycom-software-stock-price-target-on-margin-confidence-93CH-4846287",
+      "time_published": "20260921T120848",
+      "authors": [
+        "Investing.com"
+      ],
+      "summary": "KeyBanc has increased its price target for Paycom Software (NYSE:PAYC) to $280 from $270, maintaining an Overweight rating due to increased confidence in the company's margin expansion sustainability and accelerated product innovation. This decision follows Paycom's strong second-quarter results, which surpassed analyst expectations, and positive adjustments from other analyst firms. InvestingPro analysis suggests Paycom's stock is currently undervalued despite its strong financial performance.",
+      "banner_image": "https://content-media.investing.com/news/moved_LYNXMPEM3T1K3_1200_L.jpg",
+      "source": "Investing.com Canada",
+      "category_within_source": "General",
+      "source_domain": "Investing.com Canada",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.944265"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.823211"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.724977"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.623663"
+        }
+      ],
+      "overall_sentiment_score": 0.183638,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "PAYC",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.871654",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "AVGO",
+          "relevance_score": "0.583524",
+          "ticker_sentiment_score": "0.011546",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.554987",
+          "ticker_sentiment_score": "-0.132623",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "TSLA",
+          "relevance_score": "0.588703",
+          "ticker_sentiment_score": "-0.113575",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Coca-Cola elevates Rishav Gandhi as VP, people & culture for Eurasia and Middle East",
+      "url": "https://www.hrkatha.com/people/movement/coca-cola-elevates-rishav-gandhi-as-vp-people-culture-for-eurasia-and-middle-east/",
+      "time_published": "20260921T071039",
+      "authors": [
+        "HRK News Bureau"
+      ],
+      "summary": "Rishav Gandhi has been promoted to vice president – people & culture for Eurasia and the Middle East at The Coca-Cola Company, effective August 2026. This new role is based in Türkiye and marks an expanded international mandate for Gandhi, who has been with Coca-Cola for nearly eight years. He previously served as VP, people & culture for global marketing and the McDonald’s division from April 2023.",
+      "banner_image": "https://www.hrkatha.com/wp-content/uploads/2026/09/Rishav-Gandhi.png",
+      "source": "HR Katha",
+      "category_within_source": "General",
+      "source_domain": "HR Katha",
+      "topics": [
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.706135"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.632226"
+        }
+      ],
+      "overall_sentiment_score": 0.070939,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "KO",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.325771",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "MCD",
+          "relevance_score": "0.603995",
+          "ticker_sentiment_score": "0.212484",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.621843",
+          "ticker_sentiment_score": "-0.323608",
+          "ticker_sentiment_label": "Somewhat-Bearish"
+        }
+      ]
+    },
+    {
+      "title": "Four-Year-Old iPhones Are Hitting Trade-In Bins, and Assurant (AIZ) Is Ready",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/four-old-iphones-hitting-trade-044621474.html",
+      "time_published": "20260921T044609",
+      "authors": [
+        "Maham Fatima"
+      ],
+      "summary": "Assurant (AIZ) is benefiting from consumers holding onto their iPhones longer, with the average iPhone traded in now over four years old. The company's Global Lifestyle segment, which includes device repair and resale, saw a 21% increase in adjusted EBITDA, leading management to raise its full-year outlook. While the company's financial performance looks strong, some of the gains are attributed to lower catastrophe losses and favorable reserve releases, raising questions about the long-term durability of the growth.",
+      "banner_image": "https://s.yimg.com/lo/mysterio/api/fde014164016c5a574b833ee436c0b4e0c886e1dc807f6fb1a9fe3779d9a2248/lightyear_networkapi/resizefill_h48%3Bquality_100%3Bformat_webp/https%3A%2F%2Fs.yimg.com%2Fos%2Fcreatr-uploaded-images%2F2020-12%2Fd7df1000-34e4-11eb-b6ae-ac87660fe5ee",
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.910497"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.813356"
+        },
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.706253"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.603417"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.640679"
+        }
+      ],
+      "overall_sentiment_score": 0.102854,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "AIZ",
+          "relevance_score": "0.977676",
+          "ticker_sentiment_score": "0.347696",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.749475",
+          "ticker_sentiment_score": "0.112662",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "COIN",
+          "relevance_score": "0.621225",
+          "ticker_sentiment_score": "0.017826",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "MSFT",
+          "relevance_score": "0.595319",
+          "ticker_sentiment_score": "0.018693",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Claim Form Open: $250 million Apple iPhone false advertising class action settlement",
+      "url": "https://www.claimdepot.com/settlements/smartphone-ai-settlement",
+      "time_published": "20260920T211844",
+      "authors": [
+        "Nicole Aljets"
+      ],
+      "summary": "Apple has agreed to a $250 million class action settlement for consumers who purchased specific iPhone 15 Pro or iPhone 16 models between June 10, 2024, and March 29, 2025. The lawsuit alleged that Apple failed to deliver certain Siri Apple Intelligence features as expected. Eligible class members can claim between $25 and $95 per device by submitting a claim form by December 21, 2026.",
+      "banner_image": "https://cdn.prod.website-files.com/642f23e5f54b794300ac12a6/6ab04da743f69c2fb4af92c0_UMxRbWwmiX04fiO_T-sfajBhJwjGPPP1XUrHZVhv2dA.webp",
+      "source": "Claim Depot",
+      "category_within_source": "General",
+      "source_domain": "Claim Depot",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.801645"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.741956"
+        }
+      ],
+      "overall_sentiment_score": -0.229434,
+      "overall_sentiment_label": "Somewhat-Bearish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "-0.206385",
+          "ticker_sentiment_label": "Somewhat-Bearish"
+        }
+      ]
+    },
+    {
+      "title": "Oregon Woman’s Lawsuit Alleges Apple AirTag Enabled Stalking by Ex-Boyfriend",
+      "url": "https://www.yahoo.com/news/videos/oregon-woman-lawsuit-alleges-apple-205655943.html",
+      "time_published": "20260920T205600",
+      "authors": [],
+      "summary": "An Oregon woman is suing Apple Inc., claiming her ex-boyfriend used an AirTag hidden in her car to stalk her. The lawsuit alleges that she never received an alert from Apple about the tracker and points to internal Apple data showing over 40,000 stalking reports involving AirTags between 2021 and 2024. Medford police have charged the former boyfriend with stalking using a GPS device.",
+      "banner_image": "https://s.yimg.com/lo/mysterio/api/96abad7091b4cd29996edf41874e6686250b73596af2bb6d17e60fb9c769b4ff/lightyear_networkapi/resizefill_w640%3Bquality_80%3Bformat_webp/https%3A%2F%2Fmedia.zenfs.com%2Fen%2Foregonlive_com_videos_842%2F8b1896bfc020d87af5333efea40a3692.jpg",
+      "source": "Yahoo",
+      "category_within_source": "General",
+      "source_domain": "Yahoo",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.849578"
+        }
+      ],
+      "overall_sentiment_score": -0.222442,
+      "overall_sentiment_label": "Somewhat-Bearish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "-0.221851",
+          "ticker_sentiment_label": "Somewhat-Bearish"
+        }
+      ]
+    },
+    {
+      "title": "Apple's Big Week: iPhone 18 Pro, Nvidia AI Servers, Musk Drops Lawsuit - Apple (NASDAQ:AAPL), SAMSUNG ELE",
+      "url": "https://www.benzinga.com/markets/tech/26/09/61885260/apple-aapl-weekly-recap-iphone-18-pro-nvidia-ai-server-musk-lawsuit",
+      "time_published": "20260920T112701",
+      "authors": [],
+      "summary": "This past week was significant for Apple, marked by the launch of its new iPhone 18 Pro lineup with higher price points and strong carrier incentives expected to boost upgrade cycles. Apple is also reportedly exploring a major entry into the AI server market, potentially integrating its M8 Ultra chips with Nvidia's NVLink Fusion technology. Meanwhile, Samsung has recaptured the lead in the global smartphone market, and Elon Musk's xAI has dropped Apple from its antitrust lawsuit.",
+      "banner_image": "https://cdn.benzinga.com/cdn-cgi/image/width=3840,format=auto,quality=85/files/images/story/2025/07/24/article-header-background-image.png",
+      "source": "Benzinga",
+      "category_within_source": "General",
+      "source_domain": "Benzinga",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.839315"
+        },
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.732692"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.645130"
+        }
+      ],
+      "overall_sentiment_score": 0.296921,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.990592",
+          "ticker_sentiment_score": "0.428609",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.716951",
+          "ticker_sentiment_score": "0.330636",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "BAC",
+          "relevance_score": "0.665499",
+          "ticker_sentiment_score": "0.282577",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "SMCI",
+          "relevance_score": "0.564994",
+          "ticker_sentiment_score": "0.248497",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Is Fidelity High Dividend ETF (FDVV) a Strong ETF Right Now?",
+      "url": "https://www.easternprogress.com/is-fidelity-high-dividend-etf-fdvv-a-strong-etf-right-now/article_17a2f740-607b-5e63-b89e-cb3aa4efddbe.html",
+      "time_published": "20260919T162835",
+      "authors": [
+        "Zacks Equity Research"
+      ],
+      "summary": "The article analyzes the Fidelity High Dividend ETF (FDVV), a smart beta ETF launched in 2016, noting its significant asset base of over $9.66 billion. It details the fund's objective to track the Fidelity Core Dividend Index, focusing on high-dividend-paying companies, and highlights its low expense ratio of 0.15% and a 12-month trailing dividend yield of 3.59%. The ETF's sector exposure, top holdings, and performance are also discussed, along with potential alternatives for investors.",
+      "banner_image": null,
+      "source": "Eastern Progress",
+      "category_within_source": "General",
+      "source_domain": "Eastern Progress",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.940249"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.847417"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.606889"
+        }
+      ],
+      "overall_sentiment_score": 0.229874,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "FDVV",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.252796",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.605582",
+          "ticker_sentiment_score": "0.238357",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.646815",
+          "ticker_sentiment_score": "0.249652",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "MSFT",
+          "relevance_score": "0.646363",
+          "ticker_sentiment_score": "0.216094",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "A20 Pro brings 2nm performance and new cooling to iPhone 18 Pro and iPhone Duo - AppleMagazine",
+      "url": "https://applemagazine.com/a20-pro-iphone-18-pro-iphone-duo-performance/",
+      "time_published": "20260919T141725",
+      "authors": [
+        "Ivan Castilho"
+      ],
+      "summary": "Apple's new A20 Pro chip, built on a 2nm process, powers both the iPhone 18 Pro lineup and the foldable iPhone Duo, offering significant performance boosts in CPU, GPU, and AI capabilities. A key innovation is a redesigned thermal system, including vapor chambers, to maintain sustained high performance across both device types despite their different physical constraints. The chip features a Dual 16-core Neural Engine and increased memory bandwidth, enhancing on-device AI for features like Apple Intelligence and Siri, and improving graphics for gaming and professional applications.",
+      "banner_image": "https://applemagazine.com/wp-content/uploads/2026/09/A20-Pro-1.jpg",
+      "source": "AppleMagazine",
+      "category_within_source": "General",
+      "source_domain": "AppleMagazine",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.917656"
+        }
+      ],
+      "overall_sentiment_score": 0.49769,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.453496",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Intel, Apple, Nvidia and More: 5 Stocks Investors Couldn't Stop Buzzing About This Week",
+      "url": "https://www.benzinga.com/markets/equities/26/09/61884295/intel-apple-nvidia-and-more-5-stocks-investors-couldnt-stop-buzzing-about-this-week",
+      "time_published": "20260919T122512",
+      "authors": [],
+      "summary": "This article highlights the five stocks that retail investors were most interested in this week: Intel, Apple, Nvidia, Nebius Group, and Oracle. These companies, spanning various tech sectors, saw significant discussion on social media platforms like X and Reddit, driven by factors such as AI infrastructure developments, earnings, and corporate news. The report provides a brief overview of the key events and stock performance for each company during the week.",
+      "banner_image": "https://cdn.benzinga.com/cdn-cgi/image/width=3840,format=auto,quality=85/files/images/story/2026/09/19/Financial-Trader-Monitoring-Market-Trend.jpg",
+      "source": "Benzinga",
+      "category_within_source": "General",
+      "source_domain": "Benzinga",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.827810"
+        },
+        {
+          "topic": "ipo",
+          "relevance_score": "0.600190"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.927436"
+        }
+      ],
+      "overall_sentiment_score": 0.083621,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.974151",
+          "ticker_sentiment_score": "0.345704",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "INTC",
+          "relevance_score": "0.907176",
+          "ticker_sentiment_score": "0.331064",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.915035",
+          "ticker_sentiment_score": "0.106478",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "ORCL",
+          "relevance_score": "0.870175",
+          "ticker_sentiment_score": "-0.230106",
+          "ticker_sentiment_label": "Somewhat-Bearish"
+        },
+        {
+          "ticker": "AMD",
+          "relevance_score": "0.587800",
+          "ticker_sentiment_score": "-0.118381",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Key facts: Apple Inc. $109.4B rev; A20 Pro tops PCs; iPhone Duo",
+      "url": "https://www.tradingview.com/news/tradingview:3cd3b90b8d5ba:0-key-facts-apple-inc-109-4b-rev-a20-pro-tops-pcs-iphone-duo/",
+      "time_published": "20260919T011725",
+      "authors": [],
+      "summary": "Apple (AAPL) reported quarterly revenue of $109.4 billion, with Services revenue accounting for 28.1%. The company launched the iPhone 18 Pro with A20 Pro SoC, which outperforms top Intel/AMD PC chips in single-core scores, and introduced its first foldable phone, the iPhone Duo. Additionally, Apple plans to sell on-premises servers to AI developers and will incorporate in-house server hardware using M8 Ultra chips for data-center AI.",
+      "banner_image": null,
+      "source": "TradingView",
+      "category_within_source": "General",
+      "source_domain": "TradingView",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.824906"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "1.000000"
+        }
+      ],
+      "overall_sentiment_score": 0.088535,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.491008",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "INTC",
+          "relevance_score": "0.636119",
+          "ticker_sentiment_score": "-0.116178",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "AMD",
+          "relevance_score": "0.636743",
+          "ticker_sentiment_score": "-0.115551",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Morgan Stanley’s Woodring on Apple: Early demand seems fine, supply is better, lead times are flat",
+      "url": "https://www.cnbc.com/video/2026/09/18/morgan-stanleys-woodring-on-apple-early-demand-seems-fine-supply-is-better-lead-times-are-flat.html",
+      "time_published": "20260918T201131",
+      "authors": [],
+      "summary": "Erik Woodring, head of US technology hardware research at Morgan Stanley, provided an update on Apple's iPhone. He noted that early demand appears to be satisfactory, while the supply situation has improved. Consequently, lead times for the devices remain flat.",
+      "banner_image": "https://image.cnbcfm.com/api/v1/image/108365131-17897597901789759787-48461942549-1080pnbcnews.jpg?v=1789759789&w=750&h=422&vtcrop=y",
+      "source": "CNBC",
+      "category_within_source": "General",
+      "source_domain": "CNBC",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.806607"
+        }
+      ],
+      "overall_sentiment_score": 0.232749,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "MS",
+          "relevance_score": "0.732260",
+          "ticker_sentiment_score": "0.121105",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.936001",
+          "ticker_sentiment_score": "0.334604",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Intel vs. SK Hynix: Which Chip Stock Is Worth Chasing After This Week's Surge?",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/intel-vs-sk-hynix-chip-191000596.html",
+      "time_published": "20260918T192120",
+      "authors": [
+        "Shaun Pruitt"
+      ],
+      "summary": "Intel (INTC) and SK Hynix (SKHY) have seen their stock prices surge this week due to reports of potential memory chip manufacturing partnerships in the U.S., specifically involving Intel's Ohio complex. While Intel's turnaround shows promise with strong Q2 results and a positive outlook for 2026 and 2027, its valuation is currently high. SK Hynix, on the other hand, benefits from its leadership in high-bandwidth memory (HBM) for AI accelerators, boasts impressive growth projections, and trades at a significantly lower forward P/E multiple, making it a \"Buy\" according to Zacks Investment Research, while Intel is rated a \"Hold.\"",
+      "banner_image": "https://s.yimg.com/lo/mysterio/api/a73763c47ad26c8308399a737960c7a684ec33769f857efbf2ebc361f827aae7/lightyear_networkapi/resizefill_h48%3Bquality_100%3Bformat_webp/https%3A%2F%2Fs.yimg.com%2Fos%2Fcreatr-uploaded-images%2F2020-11%2F3bc15d30-250e-11eb-bffb-472fe5eb11fe",
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.819441"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.911602"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "1.000000"
+        }
+      ],
+      "overall_sentiment_score": 0.286647,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "SKHY",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.431826",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "INTC",
+          "relevance_score": "0.903301",
+          "ticker_sentiment_score": "0.323250",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.619057",
+          "ticker_sentiment_score": "0.307509",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.621520",
+          "ticker_sentiment_score": "0.204066",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "MSFT",
+          "relevance_score": "0.637447",
+          "ticker_sentiment_score": "0.232880",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Apple Raised Stakes with its $2000-Priced Foldable. But Can it Be the New Growth Engine?",
+      "url": "https://www.insidermonkey.com/news/apple-raised-stakes-with-its-2000-priced-foldable-but-can-it-be-the-new-growth-engine-1840334/",
+      "time_published": "20260918T174349",
+      "authors": [
+        "Sanmit Amin"
+      ],
+      "summary": "Apple has launched its first foldable iPhone, the $1,999 Duo, which CEO John Ternus hails as the most transformational change since the original iPhone. While Apple's premiumization strategy and market share projections for foldables are strong, the high price, established competition from Samsung and Huawei, and ongoing AI challenges pose significant risks. The article concludes by questioning if the Duo can truly be Apple's next major growth engine despite consumer willingness to buy premium products.",
+      "banner_image": "https://d2w7kw43nye0pi.cloudfront.net/M9138ocyH8HPwuZjDlXGj6EhTymvZwJonlnH-lefVUU/resize:fit:480:269:0/plain/https://imonkeyblog.s3.us-east-1.amazonaws.com/blog/wp-content/uploads/2023/09/19155253/AAPL-insidermonkey-1695153171712.jpg",
+      "source": "Insider Monkey",
+      "category_within_source": "General",
+      "source_domain": "Insider Monkey",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.919371"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.842430"
+        }
+      ],
+      "overall_sentiment_score": -0.053938,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.962564",
+          "ticker_sentiment_score": "-0.098074",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Form 8K Ameren Corp For: 18 September By Investing.com",
+      "url": "https://ca.investing.com/news/stock-market-news/form-8k-ameren-corp-for-18-september-93CH-4845314",
+      "time_published": "20260918T173432",
+      "authors": [
+        "Investing.com"
+      ],
+      "summary": "This article announces that Ameren Corp filed a Form 8K on September 18. The Form 8K filing is a mandatory report by U.S. companies to notify investors of unscheduled material events or corporate changes that could be important to shareholders. The brief piece indicates that this news was published by Investing.com.",
+      "banner_image": "https://content-media.investing.com/news/moved_LYNXMPEM431A2_1200_L.jpg",
+      "source": "Investing.com Canada",
+      "category_within_source": "General",
+      "source_domain": "Investing.com Canada",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.929159"
+        }
+      ],
+      "overall_sentiment_score": 0.070839,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "AEE",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.012570",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.605174",
+          "ticker_sentiment_score": "-0.068237",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "AVGO",
+          "relevance_score": "0.637645",
+          "ticker_sentiment_score": "0.260443",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "TSLA",
+          "relevance_score": "0.636786",
+          "ticker_sentiment_score": "-0.131281",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Oregon woman alleges Apple AirTag enabled stalking by ex",
+      "url": "https://www.oregonlive.com/crime/2026/09/oregon-woman-alleges-apple-airtag-enabled-stalking-by-ex.html",
+      "time_published": "20260918T154840",
+      "authors": [
+        "Maxine Bernstein"
+      ],
+      "summary": "A Medford woman is suing Apple Inc., alleging her ex-boyfriend used an Apple AirTag to stalk her by secretly attaching it to her car. The lawsuit claims Apple failed to implement adequate anti-stalking safeguards despite receiving over 40,000 stalking reports involving AirTags, and seeks compensatory damages and a court order to block sales without better protections. This case is one of more than 30 similar lawsuits filed against Apple after a class-action suit was declined in March.",
+      "banner_image": "https://www.oregonlive.com/resizer/v2/E2AJFI4WBFCUFIWG4HKP26EIQQ.png?auth=ab84d396bc9091ab388fedf91b0bda59704a7ae55b3575ba4ef3f7732375c5bc&width=1280&smart=true&quality=90",
+      "source": "OregonLive.com",
+      "category_within_source": "General",
+      "source_domain": "OregonLive.com",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.915843"
+        }
+      ],
+      "overall_sentiment_score": -0.402332,
+      "overall_sentiment_label": "Bearish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "-0.442586",
+          "ticker_sentiment_label": "Bearish"
+        }
+      ]
+    },
+    {
+      "title": "This Crude Refiner Has Beaten Every Magnificent Seven Stock in the Last 2 Years",
+      "url": "https://www.tradingview.com/news/benzinga:8065bac0b094b:0-this-crude-refiner-has-beaten-every-magnificent-seven-stock-in-the-last-2-years/",
+      "time_published": "20260918T154205",
+      "authors": [],
+      "summary": "Valero Energy Corp. (VLO), a crude oil refiner, has significantly outperformed all Magnificent Seven stocks over the past two years, with a 203.8% rally. This performance is attributed to the widening crack spread as geopolitical disruptions have tightened both crude and refined product markets, leading to record refining margins. Despite its strong performance and earnings, the average Wall Street analyst target price for Valero is still considerably below its current trading price, though recent analyst revisions show higher targets.",
+      "banner_image": "https://s3.tradingview.com/news/image/benzinga:8065bac0b094b-6185ddf7359aff7dfa9bef2a1d75071f-resized.webp",
+      "source": "TradingView",
+      "category_within_source": "General",
+      "source_domain": "TradingView",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.944209"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.921233"
+        },
+        {
+          "topic": "energy_transportation",
+          "relevance_score": "0.940902"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.622114"
+        }
+      ],
+      "overall_sentiment_score": 0.046392,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "VLO",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.408742",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "GOOGL",
+          "relevance_score": "0.719038",
+          "ticker_sentiment_score": "-0.108855",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.602718",
+          "ticker_sentiment_score": "-0.130215",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "TSLA",
+          "relevance_score": "0.615746",
+          "ticker_sentiment_score": "-0.137486",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.637765",
+          "ticker_sentiment_score": "-0.105470",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Recent Report Shows That Sen. Alan Armstrong Bought Up to $65K Worth of Williams Companies Stock",
+      "url": "https://www.benzinga.com/government/26/09/61871668/recent-report-shows-sen-alan-armstrong-bought-65k-worth-williams-companies-stock",
+      "time_published": "20260918T150846",
+      "authors": [
+        "Benzinga Staff Writer"
+      ],
+      "summary": "Senator Alan Armstrong recently purchased Williams Companies (NYSE: WMB) stock worth between $16,002 and $65,000 on August 20, 2026. This transaction is part of his extensive trading activity over the past three years, which totals over $8.52 million and includes significant dealings in Williams Companies and Apple stock. Congressional transactions provide insights for investors, though they should not be the sole basis for investment decisions.",
+      "banner_image": "https://cdn.benzinga.com/cdn-cgi/image/width=3840,format=auto,quality=85/files/images/story/2025/07/24/article-header-background-image.png",
+      "source": "Benzinga",
+      "category_within_source": "General",
+      "source_domain": "Benzinga",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.937295"
+        },
+        {
+          "topic": "economy_fiscal",
+          "relevance_score": "0.814609"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.725609"
+        },
+        {
+          "topic": "energy_transportation",
+          "relevance_score": "0.623344"
+        }
+      ],
+      "overall_sentiment_score": 0.170699,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "WMB",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.254356",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.610267",
+          "ticker_sentiment_score": "0.101057",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "AVB",
+          "relevance_score": "0.584700",
+          "ticker_sentiment_score": "0.128144",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "EA",
+          "relevance_score": "0.599878",
+          "ticker_sentiment_score": "0.117476",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Apple To Rally Around 13%? Here Are 10 Top Analyst Forecasts For Friday",
+      "url": "https://www.benzinga.com/analyst-stock-ratings/price-target/26/09/61865873/apple-to-rally-around-13-here-are-10-top-analyst-forecasts-for-friday",
+      "time_published": "20260918T121817",
+      "authors": [],
+      "summary": "This article compiles analyst rating changes for ten different companies, including price target adjustments and rating upgrades/downgrades. Notably, Evercore ISI Group raised its price target for Apple Inc. (NASDAQ: AAPL) to $380, suggesting a potential 13% rally, while Tigress Financial also increased its target for Alphabet Inc. (NASDAQ: GOOGL). Conversely, some analysts cut price targets and downgraded ratings for companies like Xenon Pharmaceuticals Inc. (NASDAQ: XENE), Netflix Inc. (NASDAQ: NFLX), and Magna International Inc. (NYSE: MGA).",
+      "banner_image": "https://cdn.benzinga.com/cdn-cgi/image/width=3840,format=auto,quality=85/files/images/story/2025/07/24/article-header-background-image.png",
+      "source": "Benzinga",
+      "category_within_source": "General",
+      "source_domain": "Benzinga",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.936223"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.832113"
+        },
+        {
+          "topic": "life_sciences",
+          "relevance_score": "0.724002"
+        },
+        {
+          "topic": "manufacturing",
+          "relevance_score": "0.617563"
+        }
+      ],
+      "overall_sentiment_score": -0.148698,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.920825",
+          "ticker_sentiment_score": "0.338556",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "NFLX",
+          "relevance_score": "0.749996",
+          "ticker_sentiment_score": "-0.507821",
+          "ticker_sentiment_label": "Bearish"
+        }
+      ]
+    },
+    {
+      "title": "Boston Trust Walden Corp Has $252.65 Million Stake in NVIDIA Corporation $NVDA",
+      "url": "https://www.marketbeat.com/instant-alerts/filing-boston-trust-walden-corp-has-25265-million-stake-in-nvidia-corporation-nvda-2026-09-18/",
+      "time_published": "20260918T073801",
+      "authors": [
+        "MarketBeat"
+      ],
+      "summary": "Boston Trust Walden Corp significantly increased its stake in NVIDIA Corporation, now holding 1,262,697 shares valued at over $252 million, making it their 5th largest position. Other institutional investors have also adjusted their holdings in NVIDIA. The article details NVIDIA's financial performance, including its recent earnings beat, dividend announcement, and analyst ratings, alongside recent insider trading activity and market sentiment factors.",
+      "banner_image": "https://www.marketbeat.com/logos/nvidia-co-logo-1200x675.jpg?v=20221020142916",
+      "source": "MarketBeat",
+      "category_within_source": "General",
+      "source_domain": "MarketBeat",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.905604"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.839980"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.714583"
+        }
+      ],
+      "overall_sentiment_score": 0.286792,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "NVDA",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.448347",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "AMD",
+          "relevance_score": "0.638301",
+          "ticker_sentiment_score": "0.116722",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.710757",
+          "ticker_sentiment_score": "0.345899",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Licensable picture: Apple Launches New IPhone 18 In Thailand.",
+      "url": "https://www.reutersconnect.com/item/apple-launches-new-iphone-18-in-thailand/dGFnOnJldXRlcnMuY29tLDIwMjY6bmV3c21sX01UMU5VUlBITzAwMEQ4R1dRUg",
+      "time_published": "20260918T052350",
+      "authors": [
+        "NURPHOTO"
+      ],
+      "summary": "Apple Inc. has launched its new iPhone 18 and iPhone 18 Plus models in Thailand, with products widely available to consumers from September 18, 2026. This launch is anticipated to significantly boost smartphone sales in Thailand during the final quarter of 2026. The devices were displayed at an Apple Store in Bangkok.",
+      "banner_image": "https://www.reutersconnect.com/_next/image?url=https%3A%2F%2Fcdn2.agency.thomsonreuters.com%2Fwatermark%2Ftag%3Areuters.com%2C2026%3Anewsml_MT1NURPHO000D8GWQR%3A936099708%2Ftag%3Areuters.com%2C2026%3Abinary_MT1NURPHO000D8GWQR-VIEWIMAGE%2F800x800%3Fpartner%3Dtrue%26Expires%3D2105080486%26Signature%3Df9kTiIiAOnGrutAWhkFVUSkSiqEFJ4TFO2mWa3Icp4tnscaI1uHjOhW2In6tjvGo2ccUsdAe2ftZCEr1lihGEB~fspRaV8tjPVlE3p8TbHNzF-xDqqgD4y-vDYv8VBb5ru0z8W4N1mWTvXYgdIL71txYuBkOJur1KhDwCHn3cPUcAtANtDHGZnJ39Gsz3RF9w5ewCUMQFYu58I3Mt-haSlmiehjwcfk9u1PEYpXMOILZX4VxAEUo-VJaSnLNM9oo2lkSQFaX1vBzGZeUCOH97QmeOC4d3wKNwwIxlsERyIBbbJwZPKrkUsqiOAIdpPKhzOndUaXIVv5zDlRu5dfsDHBQow__%26Key-Pair-Id%3DAPKAJ7VIBMO3UCTTZSWQ&w=3840&q=75",
+      "source": "Reuters Connect",
+      "category_within_source": "General",
+      "source_domain": "Reuters Connect",
+      "topics": [
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.934130"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.843384"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.632464"
+        }
+      ],
+      "overall_sentiment_score": 0.524066,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.543362",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Enovix reaffirms Q3 guidance, details $552M balance sheet amid CEO transition",
+      "url": "https://scanx.trade/stock-market-news/companies/enovix-shares-slide-15-72-3-69-ceo-raj-talluri-steps-down/48529934",
+      "time_published": "20260918T033038",
+      "authors": [
+        "Riya D ScanX News Team"
+      ],
+      "summary": "Enovix Corporation reaffirmed its Q3 2026 financial guidance and detailed a strong $552.1 million cash balance during an investor webcast following its CEO's resignation. Ryan Benton was appointed Interim CEO, and the company emphasized operational continuity with key executive leadership. Enovix also highlighted progress in smartphone battery cycle-life testing and a growing pipeline in defense and drone applications.",
+      "banner_image": "https://news-images.dhan.co/enovix-shares-slide-15-72-3-69-ceo-raj-talluri-steps-down.jpg",
+      "source": "scanx.trade",
+      "category_within_source": "General",
+      "source_domain": "scanx.trade",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.924771"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.849338"
+        }
+      ],
+      "overall_sentiment_score": 0.179449,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "ENVX",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.289353",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.707943",
+          "ticker_sentiment_score": "0.130929",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Apple's iPhone 18 lineup keeps Bank of America bullish | NASDAQ:AAPL, XETRA:APC",
+      "url": "https://www.proactiveinvestors.com/companies/news/1098719/apple-s-iphone-18-lineup-keeps-bank-of-america-bullish-1098719.html",
+      "time_published": "20260918T011725",
+      "authors": [],
+      "summary": "Bank of America has reiterated its \"buy\" rating on Apple (NASDAQ:AAPL, XETRA:APC), citing capital returns, anticipated leadership in AI at the edge, and new product and market opportunities. The bank expects higher average selling prices and increased Duo uptake to drive a strong iPhone cycle, with Siri AI boosting upgrade interest. Despite slightly less extended shipment lead times for the iPhone 18 Pro and Pro Max compared to last year, carrier incentives and financing options continue to support affordability and sales.",
+      "banner_image": "https://cdn.proactiveinvestors.com/eyJidWNrZXQiOiJwYS1jZG4iLCJrZXkiOiJ1cGxvYWRcL05ld3NcL0ltYWdlXC8yMDI2XzA5XC8yMDI2LTA5LTE0LTEzLTA5LTQ0LWQ1ZWVjMDUxODU1YzE2NjEzMzYyYmEyNTllODMyYjNiXzZhYWMzZjUxMTg5NTguanBnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjoxMjgwLCJoZWlnaHQiOjcyMCwiZml0IjoiY292ZXIifX19",
+      "source": "Proactive financial news",
+      "category_within_source": "General",
+      "source_domain": "Proactive financial news",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.946426"
+        },
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.738991"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.634817"
+        }
+      ],
+      "overall_sentiment_score": 0.286968,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.452055",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "BAC",
+          "relevance_score": "0.708302",
+          "ticker_sentiment_score": "0.351650",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "VZ",
+          "relevance_score": "0.630738",
+          "ticker_sentiment_score": "0.151277",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "T",
+          "relevance_score": "0.644887",
+          "ticker_sentiment_score": "0.188610",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "TMUS",
+          "relevance_score": "0.559320",
+          "ticker_sentiment_score": "0.190710",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "$500,000 Split Between VOO and QQQ Owns the Same Seven Stocks Twice, and Nobody Adds Up the Overlap",
+      "url": "https://247wallst.com/investing/etf/2026/09/17/500000-split-between-voo-and-qqq-owns-the-same-seven-stocks-twice-and-nobody-adds-up-the-overlap/",
+      "time_published": "20260917T221500",
+      "authors": [
+        "Ryne Mauck"
+      ],
+      "summary": "Investing a combined $500,000 into popular ETFs VOO and QQQ results in significant overlap, with approximately $167,000 concentrated in the same seven mega-cap stocks. This apparent diversification actually leads to duplication and higher fees, as QQQ's expense ratio is six times that of VOO. The article suggests replacing QQQ with lower-cost alternatives like QQQM or SPLG to maintain exposure while reducing redundant costs.",
+      "banner_image": "https://247wallst.com/wp-content/uploads/2026/03/shutterstock-2644820037-huge-licensed-scaled-400x225.jpg",
+      "source": "24/7 Wall St.",
+      "category_within_source": "General",
+      "source_domain": "24/7 Wall St.",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.919314"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.733370"
+        }
+      ],
+      "overall_sentiment_score": -0.205684,
+      "overall_sentiment_label": "Somewhat-Bearish",
+      "ticker_sentiment": [
+        {
+          "ticker": "VOO",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "-0.345084",
+          "ticker_sentiment_label": "Somewhat-Bearish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.731304",
+          "ticker_sentiment_score": "-0.104070",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.728878",
+          "ticker_sentiment_score": "-0.108915",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Apple (AAPL) Outperforms Broader Market: What You Need to Know",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/apple-aapl-outperforms-broader-market-214506898.html",
+      "time_published": "20260917T214730",
+      "authors": [
+        "Zacks Equity Research"
+      ],
+      "summary": "Apple (AAPL) demonstrated strong performance in its latest trading session, closing up 1.47% and outperforming the broader S&P 500, Dow, and Nasdaq indices. The company's stock has also seen significant gains over the past month, exceeding its sector and the S&P 500. Analysts anticipate strong earnings and revenue growth for Apple's upcoming disclosure, holding a Zacks Rank of #3 (Hold).",
+      "banner_image": "https://s.yimg.com/lo/mysterio/api/c4a7641ae07df0489eb4b436807b2388f27647bb1277e35e8db5625c8ac72a14/lightyear_networkapi/resizefit_w960%3Bquality_80%3Bformat_webp/https%3A%2F%2Fmedia.zenfs.com%2Fen%2Fzacks.com%2F17a4db66bb13bdabcbf848550a6ea15a.jpg",
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.930095"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.845735"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.700596"
+        }
+      ],
+      "overall_sentiment_score": 0.41588,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.409754",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Apple (AAPL) Faces a $2.7 Billion UK Lawsuit over its App Tracking Rules",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/apple-aapl-faces-2-7-164412973.html",
+      "time_published": "20260917T164419",
+      "authors": [
+        "Fatima Gulzar"
+      ],
+      "summary": "Apple Inc. is facing a £2 billion ($2.7 billion) lawsuit in the UK over its App Tracking Transparency feature, which app developers allege unfairly favors Apple's own advertising services. This legal challenge is part of a broader pattern of European regulatory scrutiny on Apple's tracking practices, with similar actions in France, Italy, and Germany. Despite Apple's strong financial position to absorb potential legal costs, the lawsuit could force the company to make significant changes to its platform and advertising policies, potentially setting a precedent for its control over the app ecosystem.",
+      "banner_image": "https://s.yimg.com/lo/mysterio/api/fde014164016c5a574b833ee436c0b4e0c886e1dc807f6fb1a9fe3779d9a2248/lightyear_networkapi/resizefill_h48%3Bquality_100%3Bformat_webp/https%3A%2F%2Fs.yimg.com%2Fos%2Fcreatr-uploaded-images%2F2020-12%2Fd7df1000-34e4-11eb-b6ae-ac87660fe5ee",
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.939607"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.812937"
+        }
+      ],
+      "overall_sentiment_score": 0.170223,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.968068",
+          "ticker_sentiment_score": "0.129585",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "META",
+          "relevance_score": "0.728615",
+          "ticker_sentiment_score": "0.182418",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Nvidia Is an ‘Awesome Company,’ but Its Stock Is Priced as ‘Greatest Company Ever,’ Damodaran Says",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/nvidia-awesome-company-stock-priced-152847132.html",
+      "time_published": "20260917T153949",
+      "authors": [
+        "Daragh Thomas"
+      ],
+      "summary": "NYU Stern finance professor Aswath Damodaran views Nvidia as an \"awesome company\" but believes its stock valuation, exceeding $5 trillion, is priced as the \"greatest company ever.\" He suggests that the current AI sector revenue and investment would require annual revenues of $8 trillion to $10 trillion to justify the infrastructure buildout, far beyond today's $250 billion. Damodaran posits that such growth is only achievable if AI replaces workers rather than merely augmenting productivity, which would then pose new economic challenges regarding consumer spending.",
+      "banner_image": "https://s.yimg.com/lo/mysterio/api/f38eec84d33f83aac83236a7faf17b16c094b602d81f163510168d1b119d80ea/lightyear_networkapi/resizefit_w960%3Bquality_80%3Bformat_webp/https%3A%2F%2Fmedia.zenfs.com%2Fen%2Fbenzinga_prediction_markets_613%2Fbc7a3004e713e1687ff3c1c341710816.jpg",
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.818935"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.928480"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "1.000000"
+        }
+      ],
+      "overall_sentiment_score": -0.104297,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "NVDA",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "-0.230509",
+          "ticker_sentiment_label": "Somewhat-Bearish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.728584",
+          "ticker_sentiment_score": "0.037587",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "COIN",
+          "relevance_score": "0.608794",
+          "ticker_sentiment_score": "0.003924",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "OpenAI Fires Back at Apple (AAPL)",
+      "url": "https://currently.att.yahoo.com/att/openai-fires-back-apple-aapl-142906076.html",
+      "time_published": "20260917T142900",
+      "authors": [
+        "Fatima Gulzar"
+      ],
+      "summary": "OpenAI has denied Apple's allegations of trade secret theft in a recent court filing, labeling the dispute a \"mess of Apple's own making\" and asserting employees' right to free movement between employers. This legal battle arises as OpenAI recruits former Apple employees for its hardware initiatives, while Apple diversifies its AI partnerships beyond OpenAI. The article analyzes the bull and bear cases for Apple, highlighting the impact of talent loss and potential competitive threats from OpenAI's expansion into consumer hardware.",
+      "banner_image": "https://s.yimg.com/lo/mysterio/api/771bccee5b6c0100d6eb099bf977aa5870e0f11d5ac25dc95dca6a629a7fc657/lightyear_networkapi/resizefill_w960%3Bquality_80%3Bformat_webp/https%3A%2F%2Fmedia.zenfs.com%2Fen%2Finsidermonkey.com%2F410ac07c4c90786d8592963501a2ed84.jpg",
+      "source": "Currently.com",
+      "category_within_source": "General",
+      "source_domain": "Currently.com",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.905984"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.621498"
+        }
+      ],
+      "overall_sentiment_score": 0.147063,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.973374",
+          "ticker_sentiment_score": "-0.100029",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "GOOGL",
+          "relevance_score": "0.704145",
+          "ticker_sentiment_score": "0.247376",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "GOOG",
+          "relevance_score": "0.708276",
+          "ticker_sentiment_score": "0.231280",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "MSFT",
+          "relevance_score": "0.636262",
+          "ticker_sentiment_score": "0.140459",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Form 8K Brinker International Inc For: 17 September By Investing.com",
+      "url": "https://ca.investing.com/news/stock-market-news/form-8k-brinker-international-inc-for-17-september-93CH-4843287",
+      "time_published": "20260917T120117",
+      "authors": [],
+      "summary": "This article from Investing.com announces the filing of a Form 8K by Brinker International Inc. on September 17. The Form 8K is a crucial SEC filing used to disclose material events that shareholders should know about. The article itself does not provide details about the contents of this specific Form 8K.",
+      "banner_image": "https://content-media.investing.com/news/moved_LYNXMPEM3T1K3_1200_L.jpg",
+      "source": "Investing.com Canada",
+      "category_within_source": "General",
+      "source_domain": "Investing.com Canada",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.930329"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.633242"
+        }
+      ],
+      "overall_sentiment_score": 0.121476,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "EAT",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "-0.386562",
+          "ticker_sentiment_label": "Bearish"
+        },
+        {
+          "ticker": "AVGO",
+          "relevance_score": "0.603880",
+          "ticker_sentiment_score": "0.337795",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.614251",
+          "ticker_sentiment_score": "0.235432",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "TSLA",
+          "relevance_score": "0.647563",
+          "ticker_sentiment_score": "0.305632",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Intel Stock Could Nearly Double to $200 in 2 Years, Analyst Says — Potential Apple, Tesla, and AI Chip De",
+      "url": "https://www.benzinga.com/markets/equities/26/09/61839701/intel-stock-could-nearly-double-to-200-in-2-years-analyst-says-potential-apple-tesla-and-ai-chip-deals-could-fuel-the-rally",
+      "time_published": "20260917T115640",
+      "authors": [
+        "Namrata Sen"
+      ],
+      "summary": "Melius Research analyst Ben Reitzes predicts Intel stock could nearly double to $200 within two years, driven by potential foundry agreements with companies like Apple and Tesla, as well as strong product earnings. He highlights Intel's 14A chip manufacturing process and robust server CPU pricing as key factors. Tigress Financial Partners also maintains a Buy rating on Intel, citing its strengthening AI-focused turnaround and catalysts in data-center computing and advanced semiconductor manufacturing.",
+      "banner_image": "https://cdn.benzinga.com/cdn-cgi/image/width=3840,format=auto,quality=85/files/images/story/2026/09/17/Santa-Clara--Ca--Usa---Nov-22--2023-Inte.jpg",
+      "source": "Benzinga",
+      "category_within_source": "General",
+      "source_domain": "Benzinga",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.920328"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.927810"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "manufacturing",
+          "relevance_score": "0.738992"
+        }
+      ],
+      "overall_sentiment_score": 0.373429,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.745966",
+          "ticker_sentiment_score": "0.319636",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "INTC",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.478065",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "TSLA",
+          "relevance_score": "0.625333",
+          "ticker_sentiment_score": "0.328708",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Benjamin Edwards Inc. Has $169.90 Million Stake in NVIDIA Corporation $NVDA",
+      "url": "https://www.marketbeat.com/instant-alerts/filing-benjamin-edwards-inc-has-16990-million-stake-in-nvidia-corporation-nvda-2026-09-17/",
+      "time_published": "20260917T081329",
+      "authors": [
+        "MarketBeat"
+      ],
+      "summary": "Benjamin Edwards Inc. significantly increased its stake in NVIDIA Corporation, owning over 849,000 shares valued at nearly $170 million, making NVIDIA its 11th largest holding. Institutional investors collectively hold 65.27% of NVIDIA's stock. Despite strong growth prospects driven by AI demand and expansion into new technologies, the company faces risks such as increasing competition and insider selling.",
+      "banner_image": "https://www.marketbeat.com/logos/nvidia-co-logo-1200x675.jpg?v=20221020142916",
+      "source": "MarketBeat",
+      "category_within_source": "General",
+      "source_domain": "MarketBeat",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.926555"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.812107"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.722366"
+        }
+      ],
+      "overall_sentiment_score": 0.174432,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "NVDA",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.307876",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "AMD",
+          "relevance_score": "0.731150",
+          "ticker_sentiment_score": "-0.123775",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "GOOGL",
+          "relevance_score": "0.614167",
+          "ticker_sentiment_score": "0.208170",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.628830",
+          "ticker_sentiment_score": "0.120748",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Form 8K Smith & Wesson Brands Inc For: 16 September By Investing.com",
+      "url": "https://ca.investing.com/news/stock-market-news/form-8k-smith--wesson-brands-inc-for-16-september-93CH-4842424",
+      "time_published": "20260916T210302",
+      "authors": [
+        "Investing.com"
+      ],
+      "summary": "This article announces the filing of a Form 8K by Smith & Wesson Brands Inc. on September 16. It includes general market data and related news headlines, but no specific details about the 8K filing itself.",
+      "banner_image": "https://content-media.investing.com/news/moved_LYNXMPEM4416N_1200_L.jpg",
+      "source": "Investing.com Canada",
+      "category_within_source": "General",
+      "source_domain": "Investing.com Canada",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "1.000000"
+        }
+      ],
+      "overall_sentiment_score": 0.086942,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "SWBI",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.078462",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "TSLA",
+          "relevance_score": "0.643188",
+          "ticker_sentiment_score": "0.080350",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.622093",
+          "ticker_sentiment_score": "0.064575",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Titan America stock hits 52-week low at 13.89 USD By Investing.com",
+      "url": "https://ca.investing.com/news/stock-market-news/titan-america-stock-hits-52week-low-at-1389-usd-93CH-4842248",
+      "time_published": "20260916T190059",
+      "authors": [
+        "Investing.com"
+      ],
+      "summary": "Titan America's stock has fallen to a 52-week low of $13.89, representing a nearly 29% decline from its high. Despite this downturn and a 7.59% drop over the past year, InvestingPro analysis suggests the stock is undervalued. The company recently reported mixed Q2 2026 results, with revenue surpassing expectations but EPS falling short due to various operational challenges and acquisition costs.",
+      "banner_image": "https://content-media.investing.com/news/LYNXMPEM4L1MC_1200_L.jpg",
+      "source": "Investing.com Canada",
+      "category_within_source": "General",
+      "source_domain": "Investing.com Canada",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.908579"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.817641"
+        }
+      ],
+      "overall_sentiment_score": -0.039693,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "TTAM",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "-0.290577",
+          "ticker_sentiment_label": "Somewhat-Bearish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.581163",
+          "ticker_sentiment_score": "0.138775",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "TSLA",
+          "relevance_score": "0.575794",
+          "ticker_sentiment_score": "0.146047",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "AVGO",
+          "relevance_score": "0.563577",
+          "ticker_sentiment_score": "-0.071554",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Snap targets enterprises with Salesforce, Nvidia AI tools for augmented-reality glasses",
+      "url": "https://finance.yahoo.com/technology/ai/articles/snap-targets-enterprises-salesforce-nvidia-234512914.html",
+      "time_published": "20260916T184500",
+      "authors": [
+        "Reuters"
+      ],
+      "summary": "Snap is partnering with Salesforce, Nvidia, and Amazon Web Services to integrate workplace tools into its $2,195 Specs augmented-reality glasses, aiming to attract enterprise customers. The initiative positions Specs as a hands-free computing solution for various work environments, leveraging AI to access company data, automate tasks, and interpret visual information. The glasses are expected to ship later this fall in the U.S., UK, and France, with consumer trials beginning in October.",
+      "banner_image": "https://s.yimg.com/lo/mysterio/api/4aac682d241a2350ff3641a071f32a3b3b914858fad2dad4c3cf9a24713ae46c/lightyear_networkapi/resizefit_w960%3Bquality_80%3Bformat_webp/https%3A%2F%2Fmedia.zenfs.com%2Fen%2Freuters.com%2Fd6c0f5f60e9f69c905c758582d1df18b.jpg",
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.636552"
+        },
+        {
+          "topic": "manufacturing",
+          "relevance_score": "0.623127"
+        }
+      ],
+      "overall_sentiment_score": 0.157238,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "CRM",
+          "relevance_score": "0.942320",
+          "ticker_sentiment_score": "0.312371",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.891449",
+          "ticker_sentiment_score": "0.346842",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "AMZN",
+          "relevance_score": "0.723934",
+          "ticker_sentiment_score": "0.294565",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.636637",
+          "ticker_sentiment_score": "-0.124434",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "META",
+          "relevance_score": "0.612125",
+          "ticker_sentiment_score": "-0.119957",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Salesforce’s Marc Benioff to AI industry: Regulate yourselves or get sued",
+      "url": "https://finance.yahoo.com/technology/ai/articles/salesforce-marc-benioff-ai-industry-214856057.html",
+      "time_published": "20260916T174800",
+      "authors": [
+        "Sebastian Herrera"
+      ],
+      "summary": "Marc Benioff, CEO of Salesforce, emphasized the need for AI companies to self-regulate or face legal repercussions, drawing parallels to early social media issues. During Dreamforce, he advocated for corporate accountability for AI risks, suggesting product liability laws could apply. Benioff also highlighted Salesforce's approach to AI safety through a \"trust layer\" and dismissed concerns about AI-driven job losses and a \"SaaSpocalypse\" for his company.",
+      "banner_image": "https://s.yimg.com/lo/mysterio/api/ef4fc4532ede67274a9e786928c46b36fb6a61a878c1da394a82b8c25ceb21f4/lightyear_networkapi/resizefill_h48%3Bquality_100%3Bformat_webp/https%3A%2F%2Fs.yimg.com%2Fos%2Fcreatr-uploaded-images%2F2020-12%2F2b82d430-3567-11eb-be1f-26e8c03de24e",
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.941018"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.725768"
+        }
+      ],
+      "overall_sentiment_score": 0.163506,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "CRM",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.303634",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.646987",
+          "ticker_sentiment_score": "0.146346",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "META",
+          "relevance_score": "0.600947",
+          "ticker_sentiment_score": "0.108796",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.608452",
+          "ticker_sentiment_score": "0.131823",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "COIN",
+          "relevance_score": "0.625752",
+          "ticker_sentiment_score": "0.036617",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Movado’s Turnaround Gains Momentum",
+      "url": "https://www.marketbeat.com/articles/movados-turnaround-gains-momentum/",
+      "time_published": "20260916T161044",
+      "authors": [
+        "Peter Frank",
+        "Clare Titus"
+      ],
+      "summary": "Movado Group (MOV) has experienced a significant turnaround, driven by two consecutive quarters of strong earnings, a debt-free balance sheet, and a raised dividend. Analysts have given the stock a \"Strong Buy\" rating with a price target implying a 22% upside. While the company's recent performance includes some temporary benefits like tariff refunds, a genuine consumer shift back to traditional watches and strategic partnerships suggest continued momentum, though investors should be mindful of the stock's recent sharp run-up and competitive risks.",
+      "banner_image": "https://www.marketbeat.com/img/logos/articles/20260916102111_image.png?s=large",
+      "source": "MarketBeat",
+      "category_within_source": "General",
+      "source_domain": "MarketBeat",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.938658"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.840130"
+        },
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.710325"
+        },
+        {
+          "topic": "economy_fiscal",
+          "relevance_score": "0.634368"
+        }
+      ],
+      "overall_sentiment_score": 0.100261,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "MOV",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.456858",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "TPR",
+          "relevance_score": "0.722100",
+          "ticker_sentiment_score": "0.326831",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.628065",
+          "ticker_sentiment_score": "-0.301924",
+          "ticker_sentiment_label": "Somewhat-Bearish"
+        },
+        {
+          "ticker": "GRMN",
+          "relevance_score": "0.624701",
+          "ticker_sentiment_score": "-0.236274",
+          "ticker_sentiment_label": "Somewhat-Bearish"
+        }
+      ]
+    },
+    {
+      "title": "Western Digital Corp Stock (WDC) Moved Up by 3.48% on Sep 16: What Signal Does It Send?",
+      "url": "https://www.tradingkey.com/news/market-movers/262171106-market-movers-wdc-20260916",
+      "time_published": "20260916T134648",
+      "authors": [
+        "TradingKey"
+      ],
+      "summary": "Western Digital Corp (WDC) saw its stock price increase by 3.48% on September 16, driven by institutional dip-buying and strong demand for mass-capacity storage, particularly in data centers and AI workloads. Despite technical sell signals and some insider stock sales, the company benefits from tight supply conditions for enterprise drives and new high-capacity drive architectures. Its financial performance shows $12.92 billion in annual revenue and $9.29 billion in net profit, with analysts maintaining a \"Buy\" rating and an average price target of $650.78.",
+      "banner_image": "https://resource.tradingkey.com/uploads/20251024/68658377675a42e2bbed98144a729ddatradingkeylogo-ed79a44cf96240a287ca1bb541f06bff.png",
+      "source": "TradingKey",
+      "category_within_source": "General",
+      "source_domain": "TradingKey",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.909310"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.949897"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.819480"
+        }
+      ],
+      "overall_sentiment_score": 0.228884,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "WDC",
+          "relevance_score": "0.953798",
+          "ticker_sentiment_score": "0.256279",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "DELL",
+          "relevance_score": "0.603989",
+          "ticker_sentiment_score": "0.224451",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.571679",
+          "ticker_sentiment_score": "0.082554",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "INTC",
+          "relevance_score": "0.551651",
+          "ticker_sentiment_score": "0.236101",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.588128",
+          "ticker_sentiment_score": "0.340983",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Why Traders Are Watching Colgate-Palmolive in dividend stocks Today?",
+      "url": "https://kalkinemedia.com/us/stocks/dividend/why-traders-are-watching-colgate-palmolive-in-dividend-stocks-today",
+      "time_published": "20260916T125519",
+      "authors": [
+        "Anmol Khazanchi"
+      ],
+      "summary": "Colgate-Palmolive (NYSE: CL) is attracting trader attention today amidst rising oil costs, firming Treasury yields, and an unsettled market ahead of the Federal Reserve decision. The company, a dividend stock, is being evaluated based on its operational execution, customer demand, and how it responds to broader market shifts, including technology strength and energy sensitivity. The article highlights that company-specific performance and competitive conditions remain central to its market perception, alongside wider economic narratives.",
+      "banner_image": "https://kalkinemedia.com/storage/uploads/large/shutterstock_1889863138(1)_09_16_2026_12_28_14_166222.jpg",
+      "source": "Kalkine Media",
+      "category_within_source": "General",
+      "source_domain": "Kalkine Media",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.915965"
+        },
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.731019"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.633722"
+        }
+      ],
+      "overall_sentiment_score": -0.102139,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "CL",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.114100",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "GOOGL",
+          "relevance_score": "0.639270",
+          "ticker_sentiment_score": "-0.100888",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "GOOG",
+          "relevance_score": "0.602588",
+          "ticker_sentiment_score": "-0.140545",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.638962",
+          "ticker_sentiment_score": "-0.143511",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "MSFT",
+          "relevance_score": "0.617410",
+          "ticker_sentiment_score": "-0.130961",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    }
+  ]
+}
