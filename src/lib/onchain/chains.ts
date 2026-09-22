@@ -12,8 +12,9 @@ export const robinhoodMainnet = defineChain({
   rpcUrls: {
     default: {
       http: [
-        process.env.NEXT_PUBLIC_RPC_URL ||
-        "https://rpc.mainnet.chain.robinhood.com",
+        process.env.NEXT_PUBLIC_CHAIN_ID === "4663" && process.env.NEXT_PUBLIC_RPC_URL
+          ? process.env.NEXT_PUBLIC_RPC_URL
+          : "https://rpc.mainnet.chain.robinhood.com",
       ],
     },
   },
@@ -21,9 +22,10 @@ export const robinhoodMainnet = defineChain({
     default: {
       name: "Blockscout",
       url:
-        process.env.BLOCK_EXPLORER_URL ||
-        process.env.NEXT_PUBLIC_BLOCK_EXPLORER_URL ||
-        "https://robinhoodchain.blockscout.com",
+        process.env.NEXT_PUBLIC_CHAIN_ID === "4663" &&
+        (process.env.BLOCK_EXPLORER_URL || process.env.NEXT_PUBLIC_BLOCK_EXPLORER_URL)
+          ? (process.env.BLOCK_EXPLORER_URL || process.env.NEXT_PUBLIC_BLOCK_EXPLORER_URL)!
+          : "https://robinhoodchain.blockscout.com",
     },
   },
 });
@@ -35,8 +37,9 @@ export const robinhoodTestnet = defineChain({
   rpcUrls: {
     default: {
       http: [
-        process.env.NEXT_PUBLIC_RPC_URL ||
-        "https://rpc.testnet.chain.robinhood.com",
+        process.env.NEXT_PUBLIC_CHAIN_ID === "46630" && process.env.NEXT_PUBLIC_RPC_URL
+          ? process.env.NEXT_PUBLIC_RPC_URL
+          : "https://rpc.testnet.chain.robinhood.com",
       ],
     },
   },
@@ -44,9 +47,10 @@ export const robinhoodTestnet = defineChain({
     default: {
       name: "Blockscout",
       url:
-        process.env.BLOCK_EXPLORER_URL ||
-        process.env.NEXT_PUBLIC_BLOCK_EXPLORER_URL ||
-        "https://explorer.testnet.chain.robinhood.com",
+        process.env.NEXT_PUBLIC_CHAIN_ID === "46630" &&
+        (process.env.BLOCK_EXPLORER_URL || process.env.NEXT_PUBLIC_BLOCK_EXPLORER_URL)
+          ? (process.env.BLOCK_EXPLORER_URL || process.env.NEXT_PUBLIC_BLOCK_EXPLORER_URL)!
+          : "https://explorer.testnet.chain.robinhood.com",
     },
   },
 });
