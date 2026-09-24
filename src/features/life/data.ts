@@ -5,6 +5,7 @@ export const LIFE_CATEGORIES: LifeCategory[] = [
   "GENESIS",
   "TREASURY",
   "THESIS",
+  "DECISION",
   "TRADE",
   "MEMORY",
 ];

@@ -10,6 +10,7 @@ import { LifeEvent, StreamFilterCategory } from "../types";
 const STREAM_FILTERS: StreamFilterCategory[] = [
   "ALL",
   "ANALYSIS",
+  "DECISION",
   "TRADE",
   "MEMORY",
   "SYSTEM",
@@ -99,6 +100,12 @@ export const LifeLogSection: React.FC<LifeLogSectionProps> = ({ initialEvents })
           evt.streamType === "ANALYSIS" ||
           evt.streamType === "MARKET" ||
           evt.eventType === "RESEARCH_STARTED";
+      } else if (activeFilter === "DECISION") {
+        matchesFilter =
+          evt.streamType === "DECISION" ||
+          evt.category === "DECISION" ||
+          evt.eventType === "DECISION_MADE" ||
+          Boolean(evt.decision);
       } else if (activeFilter === "TRADE") {
         matchesFilter =
           evt.streamType === "TRADE" ||

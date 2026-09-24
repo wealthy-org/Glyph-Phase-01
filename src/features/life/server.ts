@@ -102,7 +102,10 @@ export async function getLifeEvents(agentIdentifier?: string): Promise<LifeEvent
       }),
     ]);
 
-    if (!events || events.length === 0) {
+    if (
+      (!events || events.length === 0) &&
+      (!allDecisions || allDecisions.length === 0)
+    ) {
       return [];
     }
 
@@ -114,7 +117,7 @@ export async function getLifeEvents(agentIdentifier?: string): Promise<LifeEvent
         .map((snapshot) => [`${snapshot.cycleId}:${snapshot.asset.toUpperCase()}`, snapshot])
     );
 
-    return events.map((evt) => {
+    const mappedEvents = events.map((evt) => {
       const d = new Date(evt.timestamp);
       const day = evt.day ?? calculateAgentDay(d, birthDate);
       const date = d.toLocaleDateString("en-US", {
@@ -450,6 +453,90 @@ export async function getLifeEvents(agentIdentifier?: string): Promise<LifeEvent
         analysis: analysisDetail,
       };
     });
+
+    // Synthesize LifeEvents for decisions not already covered by economicEvents
+    const coveredDecisionIds = new Set(
+      events.map((e) => e.decisionId).filter(Boolean)
+    );
+    const unlinkedDecisions = allDecisions.filter(
+      (d) => !coveredDecisionIds.has(d.id)
+    );
+
+    const synthesizedDecisions: LifeEvent[] = unlinkedDecisions.map((d) => {
+      const dt = new Date(d.createdAt);
+      const day = calculateAgentDay(dt, birthDate);
+      const date = dt.toLocaleDateString("en-US", {
+        month: "short",
+        day: "2-digit",
+        year: "numeric",
+      });
+      const time =
+        dt.toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: false,
+          timeZone: "UTC",
+        }) + " UTC";
+
+      const isApproved = d.policyResult === "APPROVED";
+      const thesisObj = (d.thesis as Record<string, string>) || {};
+      const conviction = d.conviction ?? 75;
+
+      const decisionDetail: DecisionDetail = {
+        id: d.id,
+        asset: d.asset,
+        action: d.action,
+        conviction: d.conviction,
+        timeHorizon: d.timeHorizon,
+        fundamentalScore: d.fundamentalScore,
+        technicalScore: d.technicalScore,
+        riskScore: d.riskScore,
+        policyResult: d.policyResult,
+        policyRejectReason: d.policyRejectReason,
+        thesis: {
+          fundamental: thesisObj.fundamental,
+          technical: thesisObj.technical,
+          catalyst: thesisObj.catalyst,
+          risk: thesisObj.risk,
+          invalidation: thesisObj.invalidation,
+        },
+        decisionHash: d.decisionHash,
+        transactionHash: d.transactionHash,
+      };
+
+      return {
+        id: `decision-event-${d.id}`,
+        day,
+        date,
+        time,
+        timestamp: d.createdAt.toISOString(),
+        category: "DECISION",
+        eventType: "DECISION_MADE",
+        streamType: "DECISION",
+        refNumber: `#${d.id.slice(0, 4).toUpperCase()}`,
+        status: d.policyResult,
+        statusTone: isApproved ? "positive" : "negative",
+        title: `Evaluated ${d.asset} — Proposed ${d.action} (${conviction}%)`,
+        description: `Autonomous decision engine committed ${d.action} on ${d.asset} following algorithmic risk check. Conviction: ${conviction}%. Invalidation: ${thesisObj.invalidation || "N/A"}`,
+        shortMeta: `Risk policy ${d.policyResult.toLowerCase()} · Conviction ${conviction}%`,
+        actionLabel: "GLYPHS VIEW →",
+        tx: d.transactionHash ? formatShortHash(d.transactionHash) : null,
+        txHash: d.transactionHash || null,
+        result: d.policyResult,
+        tradeId: d.tradeId || null,
+        decisionId: d.id,
+        cycleId: d.cycleId || null,
+        decision: decisionDetail,
+        trade: null,
+        memory: null,
+        analysis: null,
+      };
+    });
+
+    return [...mappedEvents, ...synthesizedDecisions].sort(
+      (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+    );
   } catch (error) {
     console.error("[LifeLogServer] Error fetching economic events from DB:", error);
     return [];

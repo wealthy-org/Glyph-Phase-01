@@ -1,6 +1,7 @@
 export type StreamFilterCategory =
   | "ALL"
   | "ANALYSIS"
+  | "DECISION"
   | "TRADE"
   | "MEMORY"
   | "SYSTEM"
